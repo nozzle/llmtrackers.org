@@ -31,9 +31,14 @@ interface FormSubmission {
   currentValue?: string;
   suggestedValue: string;
   sourceUrl?: string;
-  email?: string;
   notes?: string;
+  website?: string;
 }
+
+const MAX_BODY_BYTES = 16 * 1024;
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const MAX_REQUESTS_PER_WINDOW = 5;
+const submissionLog = new Map<string, number[]>();
 
 // ---- Validation ----
 
@@ -82,11 +87,27 @@ function validateSubmission(data: unknown): {
   if (d.sourceUrl !== undefined && typeof d.sourceUrl !== "string") {
     return { ok: false, error: "sourceUrl must be a string" };
   }
-  if (d.email !== undefined && typeof d.email !== "string") {
-    return { ok: false, error: "email must be a string" };
-  }
   if (d.notes !== undefined && typeof d.notes !== "string") {
     return { ok: false, error: "notes must be a string" };
+  }
+  if (d.website !== undefined && typeof d.website !== "string") {
+    return { ok: false, error: "website must be a string" };
+  }
+
+  if (typeof d.suggestedValue === "string" && d.suggestedValue.trim().length > 2000) {
+    return { ok: false, error: "suggestedValue is too long" };
+  }
+  if (typeof d.currentValue === "string" && d.currentValue.trim().length > 1000) {
+    return { ok: false, error: "currentValue is too long" };
+  }
+  if (typeof d.notes === "string" && d.notes.trim().length > 4000) {
+    return { ok: false, error: "notes are too long" };
+  }
+  if (typeof d.sourceUrl === "string" && !isValidUrl(d.sourceUrl)) {
+    return { ok: false, error: "sourceUrl must be a valid URL" };
+  }
+  if (typeof d.website === "string" && d.website.trim().length > 0) {
+    return { ok: false, error: "Spam submission rejected" };
   }
 
   return {
@@ -98,8 +119,8 @@ function validateSubmission(data: unknown): {
         typeof d.currentValue === "string" ? d.currentValue : undefined,
       suggestedValue: d.suggestedValue as string,
       sourceUrl: typeof d.sourceUrl === "string" ? d.sourceUrl : undefined,
-      email: typeof d.email === "string" ? d.email : undefined,
       notes: typeof d.notes === "string" ? d.notes : undefined,
+      website: typeof d.website === "string" ? d.website : undefined,
     },
   };
 }
@@ -148,10 +169,6 @@ function formatIssueBody(form: FormSubmission): string {
 
   lines.push("", "---", "*Submitted via the LLM Tracker Comparison website.*");
 
-  if (form.email) {
-    lines.push(`*Contact: ${form.email}*`);
-  }
-
   return lines.join("\n");
 }
 
@@ -184,6 +201,59 @@ function corsHeaders(origin: string, allowedOrigin: string): HeadersInit {
   };
 }
 
+function isAllowedOrigin(origin: string, allowedOrigin: string): boolean {
+  return Boolean(
+    origin && (!allowedOrigin || origin === allowedOrigin || origin.startsWith("http://localhost:"))
+  );
+}
+
+function isJsonRequest(request: Request): boolean {
+  const contentType = request.headers.get("Content-Type") ?? "";
+  return contentType.includes("application/json");
+}
+
+function requestBodyTooLarge(request: Request): boolean {
+  const contentLength = request.headers.get("Content-Length");
+  if (!contentLength) {
+    return false;
+  }
+
+  const bytes = Number(contentLength);
+  return Number.isFinite(bytes) && bytes > MAX_BODY_BYTES;
+}
+
+function getClientIdentifier(request: Request): string {
+  return (
+    request.headers.get("CF-Connecting-IP") ??
+    request.headers.get("X-Forwarded-For")?.split(",")[0]?.trim() ??
+    "unknown"
+  );
+}
+
+function isRateLimited(clientId: string, now: number = Date.now()): boolean {
+  const recent = (submissionLog.get(clientId) ?? []).filter(
+    (timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS
+  );
+
+  if (recent.length >= MAX_REQUESTS_PER_WINDOW) {
+    submissionLog.set(clientId, recent);
+    return true;
+  }
+
+  recent.push(now);
+  submissionLog.set(clientId, recent);
+  return false;
+}
+
+function isValidUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 // ---- Worker ----
 
 export default {
@@ -196,11 +266,39 @@ export default {
       return new Response(null, { status: 204, headers: cors });
     }
 
+    if (!isAllowedOrigin(origin, env.ALLOWED_ORIGIN)) {
+      return jsonResponse({ error: "Origin not allowed" }, 403, cors);
+    }
+
     // Only accept POST
     if (request.method !== "POST") {
       return jsonResponse(
         { error: "Method not allowed" },
         405,
+        cors
+      );
+    }
+
+    if (!isJsonRequest(request)) {
+      return jsonResponse(
+        { error: "Content-Type must be application/json" },
+        415,
+        cors
+      );
+    }
+
+    if (requestBodyTooLarge(request)) {
+      return jsonResponse(
+        { error: "Request body is too large" },
+        413,
+        cors
+      );
+    }
+
+    if (isRateLimited(getClientIdentifier(request))) {
+      return jsonResponse(
+        { error: "Too many submissions. Please try again later." },
+        429,
         cors
       );
     }

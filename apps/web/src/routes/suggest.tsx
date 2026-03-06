@@ -28,8 +28,8 @@ interface FormData {
   currentValue: string;
   suggestedValue: string;
   sourceUrl: string;
-  email: string;
   notes: string;
+  website: string;
 }
 
 function SuggestPage() {
@@ -37,12 +37,12 @@ function SuggestPage() {
   const [formData, setFormData] = useState<FormData>({
     companySlug: "",
     field: "",
-    currentValue: "",
-    suggestedValue: "",
-    sourceUrl: "",
-    email: "",
-    notes: "",
-  });
+      currentValue: "",
+      suggestedValue: "",
+      sourceUrl: "",
+      notes: "",
+      website: "",
+    });
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -76,8 +76,8 @@ function SuggestPage() {
         currentValue: "",
         suggestedValue: "",
         sourceUrl: "",
-        email: "",
         notes: "",
+        website: "",
       });
     } catch (err) {
       setStatus("error");
@@ -127,6 +127,10 @@ function SuggestPage() {
         <p className="mt-1 text-gray-600">
           Found outdated or incorrect data? Submit a suggestion and we&apos;ll review
           it. Your submission will create a GitHub issue for transparency.
+        </p>
+        <p className="mt-2 text-sm text-gray-500">
+          Please do not include personal contact information. Submissions become
+          public GitHub issues.
         </p>
         <p className="mt-2 text-sm text-gray-500">
           Alternatively, you can{" "}
@@ -253,23 +257,6 @@ function SuggestPage() {
 
         <div>
           <label
-            htmlFor="email"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Your Email (optional, for follow-up)
-          </label>
-          <input
-            id="email"
-            type="email"
-            value={formData.email}
-            onChange={(e) => updateField("email", e.target.value)}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            placeholder="you@example.com"
-          />
-        </div>
-
-        <div>
-          <label
             htmlFor="notes"
             className="block text-sm font-medium text-gray-700"
           >
@@ -284,6 +271,17 @@ function SuggestPage() {
             placeholder="Any additional context..."
           />
         </div>
+
+        <input
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+          type="text"
+          name="website"
+          value={formData.website}
+          onChange={(e) => updateField("website", e.target.value)}
+          className="hidden"
+        />
 
         <button
           type="submit"
