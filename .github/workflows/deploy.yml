@@ -10,10 +10,52 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Detect Changed Areas
+    runs-on: ubuntu-latest
+    outputs:
+      web: ${{ steps.filter.outputs.web }}
+      form-worker: ${{ steps.filter.outputs.form-worker }}
+      update-checker: ${{ steps.filter.outputs.update-checker }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect changed files
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            web:
+              - 'apps/web/**'
+              - 'packages/shared/**'
+              - 'data/companies/**'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - 'tsconfig.json'
+            form-worker:
+              - 'apps/form-worker/**'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - 'tsconfig.json'
+            update-checker:
+              - 'apps/update-checker/**'
+              - 'packages/shared/**'
+              - 'data/companies/**'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - 'tsconfig.json'
+
   # Build and deploy the static web app to Cloudflare Pages
   deploy-web:
     name: Deploy Web App
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
 
     permissions:
       contents: read
@@ -51,8 +93,8 @@ jobs:
   deploy-form-worker:
     name: Deploy Form Worker
     runs-on: ubuntu-latest
-    # Only deploy if form-worker files changed
-    # (always deploys on main push for simplicity; can add path filters if needed)
+    needs: changes
+    if: needs.changes.outputs['form-worker'] == 'true'
 
     steps:
       - name: Checkout
@@ -94,6 +136,8 @@ jobs:
   deploy-update-checker:
     name: Deploy Update Checker
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs['update-checker'] == 'true'
 
     steps:
       - name: Checkout
