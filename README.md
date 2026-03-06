@@ -32,7 +32,7 @@ packages/
 
 ## Requirements
 
-- Node.js 20+
+- Node.js 24+
 - pnpm 9+
 
 ## Install
@@ -151,7 +151,7 @@ Recommended Cloudflare Pages settings:
 - Production branch: `main`
 - Build command: `pnpm build`
 - Build output directory: `apps/web/dist/client`
-- Node.js version: `20`
+- Node.js version: `24`
 
 ### Workers
 
