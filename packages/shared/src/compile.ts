@@ -21,6 +21,7 @@ function compile() {
 
   const companies = [];
   let hasErrors = false;
+  const companySlugs = new Set<string>();
 
   for (const file of files) {
     const filePath = path.join(dataDir, file);
@@ -37,8 +38,54 @@ function compile() {
       continue;
     }
 
-    companies.push(result.data);
-    console.log(`  OK: ${file} (${result.data.name}, ${result.data.plans.length} plans)`);
+    const company = result.data;
+    const expectedSlug = file.replace(/\.ya?ml$/, "");
+
+    if (company.slug !== expectedSlug) {
+      console.error(
+        `\nInvariant error in ${file}: slug must match filename (${expectedSlug})`
+      );
+      hasErrors = true;
+      continue;
+    }
+
+    if (companySlugs.has(company.slug)) {
+      console.error(`\nInvariant error in ${file}: duplicate company slug ${company.slug}`);
+      hasErrors = true;
+      continue;
+    }
+    companySlugs.add(company.slug);
+
+    const planSlugs = new Set<string>();
+    const planNames = new Set<string>();
+    let companyHasPlanErrors = false;
+
+    for (const plan of company.plans) {
+      if (planSlugs.has(plan.slug)) {
+        console.error(
+          `\nInvariant error in ${file}: duplicate plan slug ${plan.slug}`
+        );
+        hasErrors = true;
+        companyHasPlanErrors = true;
+      }
+      if (planNames.has(plan.name.toLowerCase())) {
+        console.error(
+          `\nInvariant error in ${file}: duplicate plan name ${plan.name}`
+        );
+        hasErrors = true;
+        companyHasPlanErrors = true;
+      }
+
+      planSlugs.add(plan.slug);
+      planNames.add(plan.name.toLowerCase());
+    }
+
+    if (companyHasPlanErrors) {
+      continue;
+    }
+
+    companies.push(company);
+    console.log(`  OK: ${file} (${company.name}, ${company.plans.length} plans)`);
   }
 
   if (hasErrors) {
