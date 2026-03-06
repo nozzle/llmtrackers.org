@@ -183,6 +183,27 @@ export async function createPullRequest(
   return res.json() as Promise<{ html_url: string; number: number }>;
 }
 
+export async function findOpenPullRequestByHead(
+  token: string,
+  owner: string,
+  repo: string,
+  head: string
+): Promise<{ html_url: string; number: number } | null> {
+  const url = new URL(`https://api.github.com/repos/${owner}/${repo}/pulls`);
+  url.searchParams.set("state", "open");
+  url.searchParams.set("head", `${owner}:${head}`);
+
+  const res = await ghFetch(url.toString(), {
+    headers: { Authorization: `token ${token}` },
+  });
+  if (!res.ok) {
+    throw new Error(`findOpenPullRequestByHead failed: ${res.status} ${await res.text()}`);
+  }
+
+  const pulls = (await res.json()) as Array<{ html_url: string; number: number }>;
+  return pulls[0] ?? null;
+}
+
 // ---- Helpers ----
 
 async function ghFetch(

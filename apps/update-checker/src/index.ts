@@ -18,6 +18,7 @@ import {
   createBranch,
   upsertFile,
   createPullRequest,
+  findOpenPullRequestByHead,
 } from "./github";
 import {
   parseCompanyYaml,
@@ -180,7 +181,7 @@ async function checkCompany(
   console.log(`${slug}: ${diffs.length} plan(s) with changes`);
 
   // 5. Create a PR with the changes
-  const branchName = `auto-update/${slug}-${Date.now()}`;
+  const branchName = `auto-update/${slug}`;
   await createBranch(token, owner, repo, branchName, baseSha);
 
   const today = new Date().toISOString().split("T")[0];
@@ -202,6 +203,23 @@ async function checkCompany(
   );
 
   const diffMarkdown = formatDiffMarkdown(slug, diffs);
+  const existingPr = await findOpenPullRequestByHead(
+    token,
+    owner,
+    repo,
+    branchName
+  );
+
+  if (existingPr) {
+    console.log(`${slug}: Reusing existing PR ${existingPr.html_url}`);
+    return {
+      slug,
+      status: "changes-detected",
+      diffs,
+      prUrl: existingPr.html_url,
+    };
+  }
+
   const pr = await createPullRequest(
     token,
     owner,
