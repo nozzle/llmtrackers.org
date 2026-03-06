@@ -11,8 +11,8 @@
   },
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build && tsx scripts/generate-sitemap.ts",
-    "typecheck": "tsc --noEmit",
+    "build": "pnpm --filter @llm-tracker/shared compile && vite build && tsx scripts/generate-sitemap.ts",
+    "typecheck": "pnpm --filter @llm-tracker/shared compile && tsc --noEmit",
     "preview": "vite preview"
   },
   "devDependencies": {
