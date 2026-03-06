@@ -22,11 +22,11 @@ import {
 import {
   parseCompanyYaml,
   prepareUpdatedCompanyYaml,
-  type Company,
 } from "@llm-tracker/shared";
 import { fetchPageText } from "./scraper";
 import { extractWithLlm } from "./extractor";
 import { diffCompany, formatDiffMarkdown, type PlanDiff } from "./differ";
+import { isAuthorizedManualTrigger } from "./auth";
 
 // ---- Types ----
 
@@ -35,6 +35,7 @@ interface Env {
   GITHUB_APP_PRIVATE_KEY: string;
   GITHUB_INSTALLATION_ID: string;
   OPENAI_API_KEY: string;
+  MANUAL_TRIGGER_TOKEN: string;
   GITHUB_REPO_OWNER: string;
   GITHUB_REPO_NAME: string;
 }
@@ -255,6 +256,19 @@ export default {
       return new Response(
         JSON.stringify({ error: "POST to trigger manual check" }),
         { status: 405, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!isAuthorizedManualTrigger(request, env.MANUAL_TRIGGER_TOKEN)) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized manual trigger" }),
+        {
+          status: 401,
+          headers: {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": "Bearer",
+          },
+        }
       );
     }
 

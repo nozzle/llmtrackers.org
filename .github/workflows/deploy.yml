@@ -125,8 +125,10 @@ jobs:
             GITHUB_APP_PRIVATE_KEY
             GITHUB_INSTALLATION_ID
             OPENAI_API_KEY
+            MANUAL_TRIGGER_TOKEN
         env:
           GITHUB_APP_ID: ${{ secrets.GITHUB_APP_ID }}
           GITHUB_APP_PRIVATE_KEY: ${{ secrets.GITHUB_APP_PRIVATE_KEY }}
           GITHUB_INSTALLATION_ID: ${{ secrets.GITHUB_INSTALLATION_ID }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          MANUAL_TRIGGER_TOKEN: ${{ secrets.MANUAL_TRIGGER_TOKEN }}
