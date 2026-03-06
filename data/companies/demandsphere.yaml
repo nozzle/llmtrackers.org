@@ -1,0 +1,45 @@
+slug: demandsphere
+name: Demandsphere
+group: Demandsphere
+website: https://www.demandsphere.com/
+description: "AI + SERP hybrid tracking with localization and BigQuery integration."
+
+plans:
+  - name: Agency
+    slug: agency
+    price:
+      amount: 850
+      currency: USD
+      period: monthly
+      note: null
+    pricePer1000Responses: 2.78
+    aiResponsesMonthly: 306000
+    includedLlmModels: 8
+    schedule: daily
+    locationSupport: global
+    personaSupport: 15
+    contentGeneration: "true"
+    contentOptimization: "true"
+    integrations:
+      - Custom API
+      - CMS
+    llmSupport:
+      aiMode: true
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      grok: false
+      llama: true
+      claude: true
+
+score:
+  total: 38
+  maxTotal: 48
+  summary: "AI + SERP hybrid tracking with localization and BigQuery integration."
+
+reviews: []
+tweets: []
+pricingUrl: https://www.demandsphere.com/pricing
+featuresUrl: https://www.demandsphere.com/features
+lastChecked: "2025-07-29"

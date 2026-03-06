@@ -1,0 +1,44 @@
+slug: ziptie-dev
+name: ZipTie.dev
+group: ZipTie.dev
+website: https://ziptie.dev/
+description: "Great balance of AI + traditional SEO diagnostics. Affordable and transparent."
+
+plans:
+  - name: Basic
+    slug: basic
+    price:
+      amount: 99
+      currency: USD
+      period: monthly
+      note: null
+    pricePer1000Responses: 9.90
+    aiResponsesMonthly: 10000
+    includedLlmModels: 4
+    schedule: weekly
+    locationSupport: 5
+    personaSupport: 3
+    contentGeneration: false
+    contentOptimization: "true"
+    integrations:
+      - Custom API
+    llmSupport:
+      aiMode: true
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      grok: false
+      llama: true
+      claude: true
+
+score:
+  total: 37
+  maxTotal: 48
+  summary: "Great balance of AI + traditional SEO diagnostics. Affordable and transparent."
+
+reviews: []
+tweets: []
+pricingUrl: https://ziptie.dev/pricing
+featuresUrl: https://ziptie.dev/features
+lastChecked: "2025-07-29"

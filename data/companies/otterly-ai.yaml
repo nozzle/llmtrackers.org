@@ -1,0 +1,44 @@
+slug: otterly-ai
+name: Otterly.ai
+group: Otterly.ai
+website: https://otterly.ai/
+description: "Tracks brand sentiment, prompt queries, and citations."
+
+plans:
+  - name: Starter
+    slug: starter
+    price:
+      amount: 150
+      currency: USD
+      period: monthly
+      note: null
+    pricePer1000Responses: 15.00
+    aiResponsesMonthly: 10000
+    includedLlmModels: 4
+    schedule: daily
+    locationSupport: 5
+    personaSupport: 3
+    contentGeneration: false
+    contentOptimization: false
+    integrations:
+      - Custom API
+    llmSupport:
+      aiMode: false
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: false
+      grok: false
+      llama: false
+      claude: false
+
+score:
+  total: 26
+  maxTotal: 48
+  summary: "Tracks brand sentiment, prompt queries, and citations."
+
+reviews: []
+tweets: []
+pricingUrl: https://otterly.ai/pricing
+featuresUrl: https://otterly.ai/features
+lastChecked: "2025-07-29"

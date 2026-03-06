@@ -1,0 +1,44 @@
+slug: rankscale
+name: Rankscale
+group: Rankscale
+website: https://www.rankscale.ai/
+description: "Real-time AI prompt and answer tracking via credit system."
+
+plans:
+  - name: Pro
+    slug: pro
+    price:
+      amount: 350
+      currency: USD
+      period: monthly
+      note: null
+    pricePer1000Responses: 3.50
+    aiResponsesMonthly: 100000
+    includedLlmModels: 6
+    schedule: daily
+    locationSupport: 10
+    personaSupport: 5
+    contentGeneration: false
+    contentOptimization: "true"
+    integrations:
+      - API Only
+    llmSupport:
+      aiMode: true
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      grok: false
+      llama: false
+      claude: true
+
+score:
+  total: 35
+  maxTotal: 48
+  summary: "Real-time AI prompt and answer tracking via credit system."
+
+reviews: []
+tweets: []
+pricingUrl: https://www.rankscale.ai/pricing
+featuresUrl: https://www.rankscale.ai/features
+lastChecked: "2025-07-29"

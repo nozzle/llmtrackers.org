@@ -1,0 +1,44 @@
+slug: getstat
+name: Getstat
+group: Getstat
+website: https://getstat.com/
+description: "Deep coverage tracking for AI + SERP visibility."
+
+plans:
+  - name: Pro
+    slug: pro
+    price:
+      amount: 490
+      currency: USD
+      period: monthly
+      note: null
+    pricePer1000Responses: 66.67
+    aiResponsesMonthly: 7350
+    includedLlmModels: 5
+    schedule: daily
+    locationSupport: 10
+    personaSupport: 5
+    contentGeneration: "true"
+    contentOptimization: "true"
+    integrations:
+      - Full Stack
+    llmSupport:
+      aiMode: true
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: false
+      grok: false
+      llama: false
+      claude: false
+
+score:
+  total: 33
+  maxTotal: 48
+  summary: "Deep coverage tracking for AI + SERP visibility."
+
+reviews: []
+tweets: []
+pricingUrl: https://getstat.com/pricing
+featuresUrl: https://getstat.com/features
+lastChecked: "2025-07-29"

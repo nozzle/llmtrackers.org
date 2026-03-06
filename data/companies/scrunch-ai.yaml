@@ -1,0 +1,71 @@
+slug: scrunch-ai
+name: Scrunch AI
+group: Scrunch AI
+website: https://scrunch.ai/
+description: "Mid-tier prompt benchmarking."
+
+plans:
+  - name: Scrunch AI Growth
+    slug: scrunch-ai-growth
+    price:
+      amount: 500
+      currency: USD
+      period: monthly
+      note: null
+    pricePer1000Responses: 69.44
+    aiResponsesMonthly: 7200
+    includedLlmModels: 6
+    schedule: weekly
+    locationSupport: 10
+    personaSupport: 3
+    contentGeneration: false
+    contentOptimization: false
+    integrations:
+      - Google Analytics
+    llmSupport:
+      aiMode: true
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      grok: false
+      llama: true
+      claude: false
+
+  - name: Scrunch AI Enterprise
+    slug: scrunch-ai-enterprise
+    price:
+      amount: 1500
+      currency: USD
+      period: monthly
+      note: null
+    pricePer1000Responses: 5.0
+    aiResponsesMonthly: 300000
+    includedLlmModels: 10
+    schedule: daily
+    locationSupport: global
+    personaSupport: 10
+    contentGeneration: false
+    contentOptimization: false
+    integrations:
+      - Full Stack
+    llmSupport:
+      aiMode: true
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      grok: true
+      llama: true
+      claude: true
+
+score:
+  total: 35
+  maxTotal: 48
+  summary: "Mid-tier prompt benchmarking."
+
+reviews: []
+tweets: []
+pricingUrl: https://scrunch.ai/pricing
+featuresUrl: https://scrunch.ai/features
+lastChecked: "2025-07-29"

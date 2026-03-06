@@ -1,0 +1,44 @@
+slug: xfunnel
+name: XFunnel
+group: XFunnel
+website: https://www.xfunnel.ai/
+description: "Offers funnel visibility, segmentation, hallucination detection, and experimentation playbooks."
+
+plans:
+  - name: Pro
+    slug: pro
+    price:
+      amount: 750
+      currency: USD
+      period: monthly
+      note: null
+    pricePer1000Responses: 4.87
+    aiResponsesMonthly: 154000
+    includedLlmModels: 7
+    schedule: daily
+    locationSupport: global
+    personaSupport: 8
+    contentGeneration: "true"
+    contentOptimization: "true"
+    integrations:
+      - Full Stack
+    llmSupport:
+      aiMode: true
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      grok: true
+      llama: true
+      claude: true
+
+score:
+  total: 40
+  maxTotal: 48
+  summary: "Offers funnel visibility, segmentation, hallucination detection, and experimentation playbooks."
+
+reviews: []
+tweets: []
+pricingUrl: https://www.xfunnel.ai/pricing
+featuresUrl: https://www.xfunnel.ai/features
+lastChecked: "2025-07-29"

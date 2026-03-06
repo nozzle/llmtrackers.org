@@ -1,0 +1,132 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+# Prevent concurrent deploys
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Build and deploy the static web app to Cloudflare Pages
+  deploy-web:
+    name: Deploy Web App
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy apps/web/dist/client --project-name=llm-tracker
+
+  # Deploy the form submission worker
+  deploy-form-worker:
+    name: Deploy Form Worker
+    runs-on: ubuntu-latest
+    # Only deploy if form-worker files changed
+    # (always deploys on main push for simplicity; can add path filters if needed)
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Deploy Form Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: apps/form-worker
+          command: deploy
+          secrets: |
+            GITHUB_APP_ID
+            GITHUB_APP_PRIVATE_KEY
+            GITHUB_INSTALLATION_ID
+            ALLOWED_ORIGIN
+        env:
+          GITHUB_APP_ID: ${{ secrets.GITHUB_APP_ID }}
+          GITHUB_APP_PRIVATE_KEY: ${{ secrets.GITHUB_APP_PRIVATE_KEY }}
+          GITHUB_INSTALLATION_ID: ${{ secrets.GITHUB_INSTALLATION_ID }}
+          ALLOWED_ORIGIN: ${{ secrets.ALLOWED_ORIGIN }}
+
+  # Deploy the update checker cron worker
+  deploy-update-checker:
+    name: Deploy Update Checker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Deploy Update Checker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: apps/update-checker
+          command: deploy
+          secrets: |
+            GITHUB_APP_ID
+            GITHUB_APP_PRIVATE_KEY
+            GITHUB_INSTALLATION_ID
+            OPENAI_API_KEY
+        env:
+          GITHUB_APP_ID: ${{ secrets.GITHUB_APP_ID }}
+          GITHUB_APP_PRIVATE_KEY: ${{ secrets.GITHUB_APP_PRIVATE_KEY }}
+          GITHUB_INSTALLATION_ID: ${{ secrets.GITHUB_INSTALLATION_ID }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}

@@ -1,0 +1,16 @@
+name = "llm-tracker-update-checker"
+main = "src/index.ts"
+compatibility_date = "2025-03-06"
+
+[triggers]
+crons = ["0 6 * * 1"]  # Every Monday at 6:00 AM UTC
+
+# Secrets (set via `wrangler secret put`):
+#   GITHUB_APP_ID          - The GitHub App's numeric ID
+#   GITHUB_APP_PRIVATE_KEY - The GitHub App's private key (PEM format, PKCS#8)
+#   GITHUB_INSTALLATION_ID - The installation ID for the repo
+#   OPENAI_API_KEY         - OpenAI API key for structured extraction
+
+[vars]
+GITHUB_REPO_OWNER = "nozzle"
+GITHUB_REPO_NAME = "llm-tracker-comparison"

@@ -1,0 +1,15 @@
+{
+  "name": "llm-tracker-comparison",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm compile-data && pnpm --filter web build",
+    "compile-data": "pnpm --filter @llm-tracker/shared compile",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

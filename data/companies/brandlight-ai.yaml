@@ -1,0 +1,72 @@
+slug: brandlight-ai
+name: Brandlight AI
+group: Brandlight AI
+website: https://brandlight.ai/
+description: "Good balance of AI + traditional SEO diagnostics."
+
+plans:
+  - name: Brandlight AI Basic
+    slug: brandlight-ai-basic
+    price:
+      amount: 149
+      currency: USD
+      period: monthly
+      note: null
+    pricePer1000Responses: 186.25
+    aiResponsesMonthly: 800
+    includedLlmModels: 4
+    schedule: weekly
+    locationSupport: 5
+    personaSupport: 1
+    contentGeneration: false
+    contentOptimization: "true"
+    integrations:
+      - Custom
+    llmSupport:
+      aiMode: false
+      aiOverviews: false
+      chatgpt: true
+      gemini: false
+      perplexity: true
+      grok: false
+      llama: false
+      claude: false
+
+  - name: Brandlight AI Pro
+    slug: brandlight-ai-pro
+    price:
+      amount: 499
+      currency: USD
+      period: monthly
+      note: null
+    pricePer1000Responses: 4.16
+    aiResponsesMonthly: 120000
+    includedLlmModels: 8
+    schedule: daily
+    locationSupport: 20
+    personaSupport: 5
+    contentGeneration: "true"
+    contentOptimization: "true"
+    integrations:
+      - HubSpot
+      - Salesforce
+    llmSupport:
+      aiMode: false
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      grok: false
+      llama: true
+      claude: true
+
+score:
+  total: 35
+  maxTotal: 48
+  summary: "Good balance of AI + traditional SEO diagnostics."
+
+reviews: []
+tweets: []
+pricingUrl: https://brandlight.ai/pricing
+featuresUrl: https://brandlight.ai/features
+lastChecked: "2025-07-29"

@@ -1,0 +1,45 @@
+slug: airops
+name: AirOps
+group: AirOps
+website: https://www.airops.com/
+description: "API-powered AI tracking for enterprise teams."
+
+plans:
+  - name: Solo Plan
+    slug: solo-plan
+    price:
+      amount: 199
+      currency: USD
+      period: monthly
+      note: null
+    pricePer1000Responses: 11.11
+    aiResponsesMonthly: 17910
+    includedLlmModels: 30
+    schedule: daily
+    locationSupport: global
+    personaSupport: 3
+    contentGeneration: false
+    contentOptimization: false
+    integrations:
+      - "10+ CMS"
+      - APIs
+    llmSupport:
+      aiMode: true
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: false
+      grok: false
+      llama: true
+      claude: true
+
+score:
+  total: 31
+  maxTotal: 48
+  summary: "API-powered AI tracking for enterprise teams."
+
+reviews: []
+tweets: []
+pricingUrl: https://www.airops.com/pricing
+featuresUrl: https://www.airops.com/features
+lastChecked: "2025-07-29"

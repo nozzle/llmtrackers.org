@@ -1,0 +1,44 @@
+slug: knowatoa
+name: Knowatoa
+group: Knowatoa
+website: https://knowatoa.com/
+description: "Cross-engine prompt tracking plus AI bot accessibility audits make it a great fit for solopreneurs and small agencies."
+
+plans:
+  - name: Agency
+    slug: agency
+    price:
+      amount: 129
+      currency: USD
+      period: monthly
+      note: null
+    pricePer1000Responses: 12.90
+    aiResponsesMonthly: 10000
+    includedLlmModels: 4
+    schedule: weekly
+    locationSupport: 5
+    personaSupport: 3
+    contentGeneration: false
+    contentOptimization: "true"
+    integrations:
+      - Custom API
+    llmSupport:
+      aiMode: true
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      grok: false
+      llama: false
+      claude: true
+
+score:
+  total: 32
+  maxTotal: 48
+  summary: "Cross-engine prompt tracking plus AI bot accessibility audits make it a great fit for solopreneurs and small agencies."
+
+reviews: []
+tweets: []
+pricingUrl: https://knowatoa.com/pricing
+featuresUrl: https://knowatoa.com/features
+lastChecked: "2025-07-29"

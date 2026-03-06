@@ -1,0 +1,44 @@
+slug: conductor
+name: Conductor
+group: Conductor
+website: https://www.conductor.com/
+description: "API-powered tracking across AI platforms like ChatGPT and Gemini enables highly accurate brand visibility insights."
+
+plans:
+  - name: Enterprise
+    slug: enterprise
+    price:
+      amount: 2000
+      currency: USD
+      period: monthly
+      note: "Custom, starts $2k+"
+    pricePer1000Responses: 1.00
+    aiResponsesMonthly: 2000000
+    includedLlmModels: 12
+    schedule: daily
+    locationSupport: "global"
+    personaSupport: "unlimited"
+    contentGeneration: "true"
+    contentOptimization: "true"
+    integrations:
+      - Full Stack
+    llmSupport:
+      aiMode: true
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      grok: false
+      llama: true
+      claude: true
+
+score:
+  total: 35
+  maxTotal: 48
+  summary: "API-powered tracking across AI platforms like ChatGPT and Gemini enables highly accurate brand visibility insights."
+
+reviews: []
+tweets: []
+pricingUrl: https://www.conductor.com/pricing
+featuresUrl: https://www.conductor.com/features
+lastChecked: "2025-07-29"

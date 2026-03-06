@@ -1,0 +1,44 @@
+slug: gumshoe-ai
+name: Gumshoe AI
+group: Gumshoe AI
+website: https://www.gumshoe.ai/
+description: "Unique persona segmentation and share-of-voice reports."
+
+plans:
+  - name: Premium
+    slug: premium
+    price:
+      amount: 399
+      currency: USD
+      period: monthly
+      note: null
+    pricePer1000Responses: 6.65
+    aiResponsesMonthly: 60000
+    includedLlmModels: 6
+    schedule: daily
+    locationSupport: 10
+    personaSupport: 5
+    contentGeneration: "true"
+    contentOptimization: "true"
+    integrations:
+      - Full Stack
+    llmSupport:
+      aiMode: true
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      grok: false
+      llama: true
+      claude: true
+
+score:
+  total: 25
+  maxTotal: 48
+  summary: "Unique persona segmentation and share-of-voice reports."
+
+reviews: []
+tweets: []
+pricingUrl: https://www.gumshoe.ai/pricing
+featuresUrl: https://www.gumshoe.ai/features
+lastChecked: "2025-07-29"

@@ -1,0 +1,45 @@
+slug: athenahq
+name: AthenaHQ
+group: AthenaHQ
+website: https://www.athenahq.ai/
+description: "Built by ex-Googlers, with advanced sentiment analysis, prompt tracking, and enterprise integrations."
+
+plans:
+  - name: Growth
+    slug: growth
+    price:
+      amount: 1200
+      currency: USD
+      period: monthly
+      note: null
+    pricePer1000Responses: 7.50
+    aiResponsesMonthly: 160000
+    includedLlmModels: 5
+    schedule: daily
+    locationSupport: 15
+    personaSupport: 10
+    contentGeneration: "true"
+    contentOptimization: "true"
+    integrations:
+      - BigQuery
+      - APIs
+    llmSupport:
+      aiMode: true
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      grok: false
+      llama: true
+      claude: true
+
+score:
+  total: 38
+  maxTotal: 48
+  summary: "Built by ex-Googlers, with advanced sentiment analysis, prompt tracking, and enterprise integrations."
+
+reviews: []
+tweets: []
+pricingUrl: https://www.athenahq.ai/pricing
+featuresUrl: https://www.athenahq.ai/features
+lastChecked: "2025-07-29"

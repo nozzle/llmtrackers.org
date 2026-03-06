@@ -1,0 +1,44 @@
+slug: xofu
+name: "(X)OFU"
+group: "(X)OFU"
+website: https://xofu.com/
+description: "BOFU tracking is ideal for conversion-focused brands in ChatGPT-style answers."
+
+plans:
+  - name: Pro
+    slug: pro
+    price:
+      amount: 299
+      currency: USD
+      period: monthly
+      note: null
+    pricePer1000Responses: 3.99
+    aiResponsesMonthly: 75000
+    includedLlmModels: 5
+    schedule: daily
+    locationSupport: 15
+    personaSupport: 8
+    contentGeneration: false
+    contentOptimization: false
+    integrations:
+      - Custom API
+    llmSupport:
+      aiMode: true
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      grok: false
+      llama: false
+      claude: false
+
+score:
+  total: 26
+  maxTotal: 48
+  summary: "BOFU tracking is ideal for conversion-focused brands in ChatGPT-style answers."
+
+reviews: []
+tweets: []
+pricingUrl: https://xofu.com/pricing
+featuresUrl: https://xofu.com/features
+lastChecked: "2025-07-29"

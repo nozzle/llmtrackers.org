@@ -1,0 +1,44 @@
+slug: ahrefs-brand-radar
+name: Ahrefs Brand Radar
+group: Ahrefs
+website: https://ahrefs.com/brand-radar
+description: "Seamless if you already use Ahrefs. Strong docs and visibility metrics."
+
+plans:
+  - name: Brand Radar
+    slug: brand-radar
+    price:
+      amount: 159
+      currency: USD
+      period: monthly
+      note: "$499 for full Ahrefs Suite"
+    pricePer1000Responses: 15.90
+    aiResponsesMonthly: 10000
+    includedLlmModels: 3
+    schedule: weekly
+    locationSupport: global
+    personaSupport: 2
+    contentGeneration: false
+    contentOptimization: false
+    integrations:
+      - Ahrefs Suite
+    llmSupport:
+      aiMode: true
+      aiOverviews: false
+      chatgpt: true
+      gemini: true
+      perplexity: false
+      grok: false
+      llama: false
+      claude: false
+
+score:
+  total: 34
+  maxTotal: 48
+  summary: "Seamless if you already use Ahrefs. Strong docs and visibility metrics."
+
+reviews: []
+tweets: []
+pricingUrl: https://ahrefs.com/brand-radar
+featuresUrl: https://ahrefs.com/brand-radar
+lastChecked: "2025-07-29"

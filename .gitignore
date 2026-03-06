@@ -1,0 +1,22 @@
+node_modules/
+dist/
+.output/
+.vinxi/
+.wrangler/
+.dev.vars
+*.local
+
+# Build artifacts
+packages/shared/dist/
+packages/shared/compiled-data.json
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

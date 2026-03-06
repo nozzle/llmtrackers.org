@@ -1,0 +1,44 @@
+slug: writesonic-geo
+name: Writesonic GEO
+group: Writesonic
+website: https://writesonic.com/
+description: "Combines AI visibility with actionable writing + optimization tools. Starts at $16/mo."
+
+plans:
+  - name: Starter
+    slug: starter
+    price:
+      amount: 16
+      currency: USD
+      period: monthly
+      note: null
+    pricePer1000Responses: 1.33
+    aiResponsesMonthly: 12000
+    includedLlmModels: 5
+    schedule: daily
+    locationSupport: 10
+    personaSupport: 5
+    contentGeneration: "true"
+    contentOptimization: "true"
+    integrations:
+      - Writesonic Suite
+    llmSupport:
+      aiMode: true
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      grok: false
+      llama: true
+      claude: true
+
+score:
+  total: 34
+  maxTotal: 48
+  summary: "Combines AI visibility with actionable writing + optimization tools. Starts at $16/mo."
+
+reviews: []
+tweets: []
+pricingUrl: https://writesonic.com/pricing
+featuresUrl: https://writesonic.com/features
+lastChecked: "2025-07-29"

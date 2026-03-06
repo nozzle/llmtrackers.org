@@ -1,0 +1,71 @@
+slug: peec-ai
+name: Peec AI
+group: Peec AI
+website: https://www.peec.ai/
+description: "Straightforward prompt visibility at an accessible price point."
+
+plans:
+  - name: Peec AI Starter
+    slug: peec-ai-starter
+    price:
+      amount: 95
+      currency: USD
+      period: monthly
+      note: "€89 (~$95)"
+    pricePer1000Responses: 10.56
+    aiResponsesMonthly: 9000
+    includedLlmModels: 3
+    schedule: daily
+    locationSupport: 5
+    personaSupport: 2
+    contentGeneration: false
+    contentOptimization: false
+    integrations:
+      - Limited
+    llmSupport:
+      aiMode: false
+      aiOverviews: false
+      chatgpt: true
+      gemini: true
+      perplexity: false
+      grok: false
+      llama: false
+      claude: false
+
+  - name: Peec AI Agency
+    slug: peec-ai-agency
+    price:
+      amount: 320
+      currency: USD
+      period: monthly
+      note: "€299 (~$320)"
+    pricePer1000Responses: 2.13
+    aiResponsesMonthly: 150000
+    includedLlmModels: 5
+    schedule: daily
+    locationSupport: global
+    personaSupport: 10
+    contentGeneration: false
+    contentOptimization: false
+    integrations:
+      - Full SEO Tools
+    llmSupport:
+      aiMode: false
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      grok: false
+      llama: false
+      claude: true
+
+score:
+  total: 27
+  maxTotal: 48
+  summary: "Straightforward prompt visibility at an accessible price point."
+
+reviews: []
+tweets: []
+pricingUrl: https://www.peec.ai/pricing
+featuresUrl: https://www.peec.ai/features
+lastChecked: "2025-07-29"
