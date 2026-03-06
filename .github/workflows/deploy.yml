@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy Workers
 
 on:
   push:
@@ -14,7 +14,6 @@ jobs:
     name: Detect Changed Areas
     runs-on: ubuntu-latest
     outputs:
-      web: ${{ steps.filter.outputs.web }}
       form-worker: ${{ steps.filter.outputs.form-worker }}
       update-checker: ${{ steps.filter.outputs.update-checker }}
 
@@ -27,14 +26,6 @@ jobs:
         uses: dorny/paths-filter@v3
         with:
           filters: |
-            web:
-              - 'apps/web/**'
-              - 'packages/shared/**'
-              - 'data/companies/**'
-              - 'package.json'
-              - 'pnpm-lock.yaml'
-              - 'pnpm-workspace.yaml'
-              - 'tsconfig.json'
             form-worker:
               - 'apps/form-worker/**'
               - 'package.json'
@@ -49,45 +40,6 @@ jobs:
               - 'pnpm-lock.yaml'
               - 'pnpm-workspace.yaml'
               - 'tsconfig.json'
-
-  # Build and deploy the static web app to Cloudflare Pages
-  deploy-web:
-    name: Deploy Web App
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.web == 'true'
-
-    permissions:
-      contents: read
-      deployments: write
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build
-        run: pnpm build
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy apps/web/dist/client --project-name=llm-tracker
 
   # Deploy the form submission worker
   deploy-form-worker:

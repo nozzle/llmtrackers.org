@@ -2,7 +2,7 @@
 
 Static comparison site for AI search visibility / LLM tracking tools, plus two Cloudflare Workers:
 
-- `apps/web` - TanStack Start site deployed to Cloudflare Pages
+- `apps/web` - TanStack Start site deployed to Cloudflare Pages via GitHub integration
 - `apps/form-worker` - accepts suggest-form submissions and creates GitHub issues
 - `apps/update-checker` - cron/manual worker that checks vendor pages, extracts structured changes, and opens PRs
 - `packages/shared` - Zod schemas, shared types, YAML helpers, and the compile script
@@ -142,13 +142,25 @@ pnpm --filter update-checker exec wrangler secret put MANUAL_TRIGGER_TOKEN
 
 ## Deploy
 
-GitHub Actions handles deploys on pushes to `main`.
+### Web App
 
-- Web deploys to Cloudflare Pages
-- Form worker deploys to Cloudflare Workers
-- Update checker deploys to Cloudflare Workers
+`apps/web` is intended to deploy through the Cloudflare Pages GitHub integration, which also handles preview deployments for pull requests.
 
-Required GitHub repository secrets:
+Recommended Cloudflare Pages settings:
+
+- Production branch: `main`
+- Build command: `pnpm build`
+- Build output directory: `apps/web/dist/client`
+- Node.js version: `20`
+
+### Workers
+
+GitHub Actions deploys only the workers on pushes to `main`:
+
+- `apps/form-worker`
+- `apps/update-checker`
+
+Required GitHub repository secrets for worker deploys:
 
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
@@ -158,6 +170,8 @@ Required GitHub repository secrets:
 - `ALLOWED_ORIGIN`
 - `OPENAI_API_KEY`
 - `MANUAL_TRIGGER_TOKEN`
+
+Cloudflare Pages project setup is managed in Cloudflare and does not require the web deploy job in GitHub Actions.
 
 ## Manual Update Checker Trigger
 
