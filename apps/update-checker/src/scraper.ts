@@ -5,33 +5,72 @@
  */
 
 const MAX_CONTENT_LENGTH = 50_000; // chars, to stay within LLM context limits
+const MAX_RESPONSE_BYTES = 1_000_000;
+const FETCH_TIMEOUT_MS = 15_000;
+const MAX_RETRIES = 2;
 
 /**
  * Fetch a page and return its text content (HTML tags stripped).
  * Returns null if the fetch fails.
  */
 export async function fetchPageText(url: string): Promise<string | null> {
-  try {
-    const response = await fetch(url, {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (compatible; LLMTrackerBot/1.0; +https://github.com/nozzle/llm-tracker-comparison)",
-        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-      },
-      redirect: "follow",
-    });
+  for (let attempt = 1; attempt <= MAX_RETRIES + 1; attempt++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
-    if (!response.ok) {
-      console.warn(`Failed to fetch ${url}: ${response.status}`);
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (compatible; LLMTrackerBot/1.0; +https://github.com/nozzle/llm-tracker-comparison)",
+          Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        },
+        redirect: "follow",
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeout);
+
+      if (!response.ok) {
+        console.warn(`Failed to fetch ${url}: ${response.status}`);
+        if (attempt <= MAX_RETRIES && shouldRetryStatus(response.status)) {
+          await sleep(backoffMs(attempt));
+          continue;
+        }
+        return null;
+      }
+
+      const contentType = response.headers.get("content-type") ?? "";
+      if (!isTextLikeContentType(contentType)) {
+        console.warn(`Skipping ${url}: unsupported content type ${contentType}`);
+        return null;
+      }
+
+      const contentLength = response.headers.get("content-length");
+      if (contentLength && Number(contentLength) > MAX_RESPONSE_BYTES) {
+        console.warn(`Skipping ${url}: content-length ${contentLength} exceeds limit`);
+        return null;
+      }
+
+      const html = await response.text();
+      if (html.length > MAX_RESPONSE_BYTES) {
+        console.warn(`Skipping ${url}: response body exceeds limit`);
+        return null;
+      }
+
+      return htmlToText(html).slice(0, MAX_CONTENT_LENGTH);
+    } catch (err) {
+      clearTimeout(timeout);
+      console.warn(`Error fetching ${url} (attempt ${attempt}):`, err);
+      if (attempt <= MAX_RETRIES) {
+        await sleep(backoffMs(attempt));
+        continue;
+      }
       return null;
     }
-
-    const html = await response.text();
-    return htmlToText(html).slice(0, MAX_CONTENT_LENGTH);
-  } catch (err) {
-    console.warn(`Error fetching ${url}:`, err);
-    return null;
   }
+
+  return null;
 }
 
 /**
@@ -65,4 +104,22 @@ function htmlToText(html: string): string {
       .replace(/\n{3,}/g, "\n\n")
       .trim()
   );
+}
+
+function shouldRetryStatus(status: number): boolean {
+  return status === 408 || status === 429 || status >= 500;
+}
+
+function isTextLikeContentType(contentType: string): boolean {
+  return ["text/html", "text/plain", "application/xhtml+xml"].some((value) =>
+    contentType.includes(value)
+  );
+}
+
+function backoffMs(attempt: number): number {
+  return attempt * 500;
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
