@@ -1,5 +1,5 @@
 import compiledData from "../../../packages/shared/compiled-data.json";
-import type { Company, CompiledData, Plan, PlanWithCompany } from "@llm-tracker/shared";
+import type { Company, CompiledData, PlanWithCompany } from "@llm-tracker/shared";
 
 const data = compiledData as CompiledData;
 

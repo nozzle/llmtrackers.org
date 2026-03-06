@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { getCompanyBySlug, getAllCompanies } from "~/data";
+import { getCompanyBySlug } from "~/data";
 import { LLM_MODEL_LABELS } from "@llm-tracker/shared";
 import type { LlmModelKey } from "@llm-tracker/shared";
 

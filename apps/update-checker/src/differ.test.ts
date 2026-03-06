@@ -15,8 +15,8 @@ const company = {
       schedule: "daily",
       locationSupport: 5,
       personaSupport: 1,
-      contentGeneration: false as false,
-      contentOptimization: false as false,
+      contentGeneration: false,
+      contentOptimization: false,
       integrations: ["GA4"],
       llmSupport: {
         chatgpt: true,
@@ -35,7 +35,7 @@ const company = {
       price: { amount: null, currency: "USD", period: "monthly", note: null },
       aiResponsesMonthly: null,
       includedLlmModels: null,
-      schedule: "weekly" as const,
+      schedule: "weekly",
       locationSupport: "global",
       personaSupport: "unlimited",
       contentGeneration: "Custom",
@@ -53,7 +53,7 @@ const company = {
       },
     },
   ],
-};
+} satisfies Parameters<typeof diffCompany>[0];
 
 describe("diffCompany", () => {
   it("detects updated, new, and removed plans", () => {

@@ -38,11 +38,6 @@ function formatLocation(loc: string | number): string {
   return `${loc} regions`;
 }
 
-function formatPersonas(p: string | number): string {
-  if (p === "unlimited") return "Unlimited";
-  return String(p);
-}
-
 const LLM_KEYS: LlmModelKey[] = [
   "chatgpt",
   "gemini",
