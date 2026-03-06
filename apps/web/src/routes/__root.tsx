@@ -6,9 +6,11 @@ import {
   HeadContent,
   Scripts,
   Link,
+  useRouterState,
 } from "@tanstack/react-router";
 import "~/styles/app.css";
 import { getGeneratedAt } from "~/data";
+import { buildAbsoluteUrl } from "~/site";
 
 const SITE_TITLE = "LLM Tracker Comparison - Compare AI Search Visibility Tools";
 const SITE_DESCRIPTION =
@@ -33,7 +35,6 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
-      { rel: "canonical", href: "https://llm-tracker.pages.dev" },
     ],
   }),
   component: RootComponent,
@@ -48,10 +49,15 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const canonicalUrl = buildAbsoluteUrl(pathname);
+
   return (
     <html lang="en">
       <head>
         <HeadContent />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:url" content={canonicalUrl} />
       </head>
       <body className="min-h-screen bg-gray-50 text-gray-900 antialiased">
         <Header />

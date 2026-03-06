@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://llm-tracker.pages.dev/sitemap.xml

@@ -1,12 +1,15 @@
 /**
- * Post-build script: generates sitemap.xml from prerendered HTML pages.
- * Run after `vite build` to produce dist/client/sitemap.xml.
+ * Post-build script: generates sitemap.xml and robots.txt from prerendered HTML pages.
+ * Run after `vite build` to produce dist/client metadata files.
  */
 
 import { readdirSync, statSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 
-const SITE_URL = "https://llm-tracker.pages.dev";
+const DEFAULT_SITE_URL = "https://llm-tracker.pages.dev";
+const SITE_URL = normalizeSiteUrl(
+  process.env.VITE_SITE_URL ?? process.env.SITE_URL ?? process.env.CF_PAGES_URL ?? DEFAULT_SITE_URL
+);
 const DIST_DIR = join(import.meta.dirname, "../dist/client");
 
 function findHtmlFiles(dir: string, files: string[] = []): string[] {
@@ -53,5 +56,17 @@ ${urls.join("\n")}
 </urlset>
 `;
 
+const robots = `User-agent: *
+Allow: /
+
+Sitemap: ${SITE_URL}/sitemap.xml
+`;
+
 writeFileSync(join(DIST_DIR, "sitemap.xml"), sitemap);
+writeFileSync(join(DIST_DIR, "robots.txt"), robots);
 console.log(`Generated sitemap.xml with ${urls.length} URLs`);
+
+function normalizeSiteUrl(value: string): string {
+  const normalized = value.startsWith("http") ? value : `https://${value}`;
+  return normalized.replace(/\/+$/, "");
+}

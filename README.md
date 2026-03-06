@@ -89,6 +89,7 @@ pnpm typecheck
 Optional local env used by the suggest form:
 
 - `VITE_FORM_WORKER_URL`
+- `VITE_SITE_URL`
 
 ### Form Worker
 
@@ -149,7 +150,7 @@ pnpm --filter update-checker exec wrangler secret put MANUAL_TRIGGER_TOKEN
 Recommended Cloudflare Pages settings:
 
 - Production branch: `main`
-- Build command: `pnpm build`
+- Build command: `VITE_SITE_URL=$CF_PAGES_URL pnpm build`
 - Build output directory: `apps/web/dist/client`
 - Node.js version: `24`
 
