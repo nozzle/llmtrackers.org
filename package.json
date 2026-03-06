@@ -7,7 +7,11 @@
     "build": "pnpm compile-data && pnpm --filter web build",
     "compile-data": "pnpm --filter @llm-tracker/shared compile",
     "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=20"

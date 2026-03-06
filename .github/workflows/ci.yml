@@ -30,6 +30,9 @@ jobs:
       - name: Validate data (compile YAML → JSON)
         run: pnpm compile-data
 
+      - name: Test
+        run: pnpm test
+
       - name: Typecheck
         run: pnpm typecheck
 

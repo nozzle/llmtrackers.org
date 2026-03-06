@@ -64,22 +64,31 @@ export function mergeCompanyWithExtractedPlans(
   checkedAt: string
 ): CompanyYamlValue {
   const planByName = new Map(company.plans.map((plan) => [normalize(plan.name), plan]));
+  const extractedByName = new Map(
+    extractedPlans.map((plan) => [normalize(plan.name), plan])
+  );
 
-  const mergedPlans = extractedPlans.map((extractedPlan) => {
+  const mergedPlans: Plan[] = [];
+
+  for (const existingPlan of company.plans) {
+    const extractedPlan = extractedByName.get(normalize(existingPlan.name));
+    if (!extractedPlan) {
+      mergedPlans.push(existingPlan);
+      continue;
+    }
+    mergedPlans.push(mergePlan(existingPlan, extractedPlan));
+  }
+
+  for (const extractedPlan of extractedPlans) {
     const existingPlan = planByName.get(normalize(extractedPlan.name));
     if (!existingPlan) {
-      return createPlanFromExtraction(extractedPlan);
+      mergedPlans.push(createPlanFromExtraction(extractedPlan));
     }
-    return mergePlan(existingPlan, extractedPlan);
-  });
-
-  const remainingPlans = company.plans.filter(
-    (plan) => !extractedPlans.some((extractedPlan) => normalize(extractedPlan.name) === normalize(plan.name))
-  );
+  }
 
   return {
     ...company,
-    plans: [...mergedPlans, ...remainingPlans],
+    plans: mergedPlans,
     lastChecked: checkedAt,
   };
 }

@@ -47,6 +47,7 @@ export function diffCompany(
   extracted: ExtractedPlan[]
 ): PlanDiff[] {
   const diffs: PlanDiff[] = [];
+  const matchedExistingPlanNames = new Set<string>();
 
   for (const extractedPlan of extracted) {
     // Try to match by name (fuzzy: case-insensitive, trim)
@@ -68,6 +69,8 @@ export function diffCompany(
       });
       continue;
     }
+
+    matchedExistingPlanNames.add(normalize(existingPlan.name));
 
     const changes: FieldChange[] = [];
 
@@ -173,6 +176,23 @@ export function diffCompany(
     if (changes.length > 0) {
       diffs.push({ planName: existingPlan.name, changes });
     }
+  }
+
+  for (const existingPlan of existing.plans) {
+    if (matchedExistingPlanNames.has(normalize(existingPlan.name))) {
+      continue;
+    }
+
+    diffs.push({
+      planName: existingPlan.name,
+      changes: [
+        {
+          field: "(removed plan)",
+          oldValue: `${existingPlan.name} - $${existingPlan.price.amount ?? "Custom"}/${existingPlan.price.period}`,
+          newValue: "not present",
+        },
+      ],
+    });
   }
 
   return diffs;
