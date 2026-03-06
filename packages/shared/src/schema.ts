@@ -82,3 +82,28 @@ export const CompiledDataSchema = z.object({
   companies: z.array(CompanySchema),
   generatedAt: z.string(),
 });
+
+// --- Extraction ---
+export const ExtractedPlanSchema = z.object({
+  name: z.string().min(1),
+  price: z.object({
+    amount: z.number().nullable(),
+    currency: z.string().default("USD"),
+    period: z.enum(["monthly", "yearly", "one-time"]),
+    note: z.string().nullable(),
+  }),
+  aiResponsesMonthly: z.number().nullable(),
+  includedLlmModels: z.number().nullable(),
+  schedule: z.enum(["daily", "weekly", "monthly"]).nullable(),
+  locationSupport: z.union([z.literal("global"), z.number()]).nullable(),
+  personaSupport: z.union([z.literal("unlimited"), z.number()]).nullable(),
+  contentGeneration: z.union([z.string(), z.literal(false)]).nullable(),
+  contentOptimization: z.union([z.string(), z.literal(false)]).nullable(),
+  integrations: z.array(z.string()).default([]),
+  llmSupport: LlmSupportSchema,
+});
+
+export const ExtractionResultSchema = z.object({
+  companyName: z.string().min(1).default("Unknown Company"),
+  plans: z.array(ExtractedPlanSchema).default([]),
+});

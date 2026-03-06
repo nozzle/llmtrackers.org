@@ -3,7 +3,10 @@
  * Uses OpenAI's API with structured output (JSON mode).
  */
 
-import type { ExtractedPlanLike } from "@llm-tracker/shared";
+import {
+  ExtractionResultSchema,
+  type ExtractedPlanLike,
+} from "@llm-tracker/shared";
 
 /**
  * Extracted plan data from a pricing page. Matches our YAML schema shape.
@@ -80,13 +83,21 @@ export async function extractWithLlm(
   const rawResponse = data.choices[0]?.message?.content ?? "{}";
 
   try {
-    const parsed = JSON.parse(rawResponse) as {
-      companyName: string;
-      plans: ExtractedPlan[];
-    };
+    const parsedJson = JSON.parse(rawResponse) as unknown;
+    const parsed = ExtractionResultSchema.safeParse(parsedJson);
+
+    if (!parsed.success) {
+      console.error("Invalid LLM extraction payload:", parsed.error.flatten());
+      return {
+        companyName: companySlug,
+        plans: [],
+        rawResponse,
+      };
+    }
+
     return {
-      companyName: parsed.companyName ?? companySlug,
-      plans: parsed.plans ?? [],
+      companyName: parsed.data.companyName || companySlug,
+      plans: parsed.data.plans,
       rawResponse,
     };
   } catch {
