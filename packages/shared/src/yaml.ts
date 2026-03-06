@@ -1,0 +1,231 @@
+import { Document, parseDocument } from "yaml";
+import { CompanySchema } from "./schema.js";
+import type { Company, CompanyYamlValue, LlmModelKey, Plan } from "./types.js";
+
+export interface ExtractedPlanLike {
+  name: string;
+  price: {
+    amount: number | null;
+    currency: string;
+    period: "monthly" | "yearly" | "one-time";
+    note: string | null;
+  };
+  aiResponsesMonthly: number | null;
+  includedLlmModels: number | null;
+  schedule: "daily" | "weekly" | "monthly" | null;
+  locationSupport: "global" | number | null;
+  personaSupport: "unlimited" | number | null;
+  contentGeneration: string | false | null;
+  contentOptimization: string | false | null;
+  integrations: string[];
+  llmSupport: Record<LlmModelKey, boolean>;
+}
+
+export interface PreparedCompanyYaml {
+  company: CompanyYamlValue;
+  document: Document.Parsed;
+  yamlText: string;
+}
+
+const LLM_KEYS: LlmModelKey[] = [
+  "chatgpt",
+  "gemini",
+  "perplexity",
+  "claude",
+  "llama",
+  "grok",
+  "aiOverviews",
+  "aiMode",
+];
+
+export function parseCompanyYaml(yamlText: string): {
+  company: CompanyYamlValue;
+  document: Document.Parsed;
+} {
+  const document = parseDocument(yamlText);
+  if (document.errors.length > 0) {
+    throw new Error(document.errors.map((error) => error.message).join("; "));
+  }
+
+  const parsed = document.toJS({ maxAliasCount: -1 }) as unknown;
+  const company = CompanySchema.parse(parsed) as CompanyYamlValue;
+  return { company, document };
+}
+
+export function stringifyCompanyYaml(company: CompanyYamlValue): string {
+  const validated = CompanySchema.parse(company);
+  const document = new Document(sortCompanyKeys(validated));
+  return document.toString({ indent: 2, lineWidth: 0 });
+}
+
+export function mergeCompanyWithExtractedPlans(
+  company: Company,
+  extractedPlans: ExtractedPlanLike[],
+  checkedAt: string
+): CompanyYamlValue {
+  const planByName = new Map(company.plans.map((plan) => [normalize(plan.name), plan]));
+
+  const mergedPlans = extractedPlans.map((extractedPlan) => {
+    const existingPlan = planByName.get(normalize(extractedPlan.name));
+    if (!existingPlan) {
+      return createPlanFromExtraction(extractedPlan);
+    }
+    return mergePlan(existingPlan, extractedPlan);
+  });
+
+  const remainingPlans = company.plans.filter(
+    (plan) => !extractedPlans.some((extractedPlan) => normalize(extractedPlan.name) === normalize(plan.name))
+  );
+
+  return {
+    ...company,
+    plans: [...mergedPlans, ...remainingPlans],
+    lastChecked: checkedAt,
+  };
+}
+
+export function prepareUpdatedCompanyYaml(
+  yamlText: string,
+  extractedPlans: ExtractedPlanLike[],
+  checkedAt: string
+): PreparedCompanyYaml {
+  const { company } = parseCompanyYaml(yamlText);
+  const updatedCompany = mergeCompanyWithExtractedPlans(company, extractedPlans, checkedAt);
+  const nextYaml = stringifyCompanyYaml(updatedCompany);
+  const reparsed = parseCompanyYaml(nextYaml);
+
+  return {
+    company: reparsed.company,
+    document: reparsed.document,
+    yamlText: nextYaml,
+  };
+}
+
+function mergePlan(existingPlan: Plan, extractedPlan: ExtractedPlanLike): Plan {
+  const nextPriceAmount = chooseNullable(extractedPlan.price.amount, existingPlan.price.amount);
+  const nextAiResponses = chooseNullable(
+    extractedPlan.aiResponsesMonthly,
+    existingPlan.aiResponsesMonthly ?? null
+  );
+  const nextPricePer1000Responses =
+    nextPriceAmount !== null && nextAiResponses !== null && nextAiResponses > 0
+      ? Number(((nextPriceAmount / nextAiResponses) * 1000).toFixed(2))
+      : existingPlan.pricePer1000Responses ?? null;
+
+  return {
+    ...existingPlan,
+    price: {
+      amount: nextPriceAmount,
+      currency: extractedPlan.price.currency || existingPlan.price.currency,
+      period: extractedPlan.price.period,
+      note: chooseNullable(extractedPlan.price.note, existingPlan.price.note ?? null),
+    },
+    pricePer1000Responses: nextPricePer1000Responses,
+    aiResponsesMonthly: nextAiResponses,
+    includedLlmModels: chooseNullable(
+      extractedPlan.includedLlmModels,
+      existingPlan.includedLlmModels ?? null
+    ),
+    schedule: extractedPlan.schedule ?? existingPlan.schedule,
+    locationSupport: extractedPlan.locationSupport ?? existingPlan.locationSupport,
+    personaSupport: extractedPlan.personaSupport ?? existingPlan.personaSupport,
+    contentGeneration: extractedPlan.contentGeneration ?? existingPlan.contentGeneration,
+    contentOptimization: extractedPlan.contentOptimization ?? existingPlan.contentOptimization,
+    integrations: extractedPlan.integrations.length > 0 ? extractedPlan.integrations : existingPlan.integrations,
+    llmSupport: {
+      ...existingPlan.llmSupport,
+      ...extractedPlan.llmSupport,
+    },
+  };
+}
+
+function createPlanFromExtraction(extractedPlan: ExtractedPlanLike): Plan {
+  return {
+    name: extractedPlan.name,
+    slug: slugify(extractedPlan.name),
+    price: {
+      amount: extractedPlan.price.amount,
+      currency: extractedPlan.price.currency,
+      period: extractedPlan.price.period,
+      note: extractedPlan.price.note,
+    },
+    pricePer1000Responses:
+      extractedPlan.price.amount !== null &&
+      extractedPlan.aiResponsesMonthly !== null &&
+      extractedPlan.aiResponsesMonthly > 0
+        ? Number(((extractedPlan.price.amount / extractedPlan.aiResponsesMonthly) * 1000).toFixed(2))
+        : null,
+    aiResponsesMonthly: extractedPlan.aiResponsesMonthly,
+    includedLlmModels: extractedPlan.includedLlmModels,
+    schedule: extractedPlan.schedule ?? "daily",
+    locationSupport: extractedPlan.locationSupport ?? 5,
+    personaSupport: extractedPlan.personaSupport ?? 1,
+    contentGeneration: extractedPlan.contentGeneration ?? false,
+    contentOptimization: extractedPlan.contentOptimization ?? false,
+    integrations: extractedPlan.integrations,
+    llmSupport: normalizeLlmSupport(extractedPlan.llmSupport),
+  };
+}
+
+function normalizeLlmSupport(llmSupport: Partial<Record<LlmModelKey, boolean>>): Record<LlmModelKey, boolean> {
+  return Object.fromEntries(LLM_KEYS.map((key) => [key, llmSupport[key] ?? false])) as Record<
+    LlmModelKey,
+    boolean
+  >;
+}
+
+function sortCompanyKeys(company: CompanyYamlValue): CompanyYamlValue {
+  return {
+    slug: company.slug,
+    name: company.name,
+    ...(company.group ? { group: company.group } : {}),
+    website: company.website,
+    description: company.description,
+    plans: company.plans.map(sortPlanKeys),
+    ...(company.score ? { score: company.score } : {}),
+    reviews: company.reviews,
+    tweets: company.tweets,
+    ...(company.pricingUrl !== undefined ? { pricingUrl: company.pricingUrl } : {}),
+    ...(company.featuresUrl !== undefined ? { featuresUrl: company.featuresUrl } : {}),
+    ...(company.lastChecked !== undefined ? { lastChecked: company.lastChecked } : {}),
+  };
+}
+
+function sortPlanKeys(plan: Plan): Plan {
+  return {
+    name: plan.name,
+    slug: plan.slug,
+    price: {
+      amount: plan.price.amount,
+      currency: plan.price.currency,
+      period: plan.price.period,
+      note: plan.price.note ?? null,
+    },
+    pricePer1000Responses: plan.pricePer1000Responses ?? null,
+    aiResponsesMonthly: plan.aiResponsesMonthly ?? null,
+    includedLlmModels: plan.includedLlmModels ?? null,
+    schedule: plan.schedule,
+    locationSupport: plan.locationSupport,
+    personaSupport: plan.personaSupport,
+    contentGeneration: plan.contentGeneration,
+    contentOptimization: plan.contentOptimization,
+    integrations: plan.integrations,
+    llmSupport: normalizeLlmSupport(plan.llmSupport),
+  };
+}
+
+function normalize(value: string): string {
+  return value.trim().toLowerCase();
+}
+
+function chooseNullable<T>(nextValue: T | null, fallbackValue: T | null): T | null {
+  return nextValue === null ? fallbackValue : nextValue;
+}
+
+function slugify(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}

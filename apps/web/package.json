@@ -2,17 +2,18 @@
   "name": "web",
   "private": true,
   "type": "module",
+  "dependencies": {
+    "@llm-tracker/shared": "workspace:*",
+    "@tanstack/react-router": "^1.114.0",
+    "@tanstack/react-start": "^1.166.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && tsx scripts/generate-sitemap.ts",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview"
-  },
-  "dependencies": {
-    "@tanstack/react-router": "^1.114.0",
-    "@tanstack/react-start": "^1.166.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.0",

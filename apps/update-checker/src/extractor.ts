@@ -3,36 +3,12 @@
  * Uses OpenAI's API with structured output (JSON mode).
  */
 
+import type { ExtractedPlanLike } from "@llm-tracker/shared";
+
 /**
  * Extracted plan data from a pricing page. Matches our YAML schema shape.
  */
-export interface ExtractedPlan {
-  name: string;
-  price: {
-    amount: number | null;
-    currency: string;
-    period: "monthly" | "yearly" | "one-time";
-    note: string | null;
-  };
-  aiResponsesMonthly: number | null;
-  includedLlmModels: number | null;
-  schedule: "daily" | "weekly" | "monthly" | null;
-  locationSupport: "global" | number | null;
-  personaSupport: "unlimited" | number | null;
-  contentGeneration: string | false | null;
-  contentOptimization: string | false | null;
-  integrations: string[];
-  llmSupport: {
-    chatgpt: boolean;
-    gemini: boolean;
-    perplexity: boolean;
-    claude: boolean;
-    llama: boolean;
-    grok: boolean;
-    aiOverviews: boolean;
-    aiMode: boolean;
-  };
-}
+export type ExtractedPlan = ExtractedPlanLike;
 
 export interface ExtractionResult {
   companyName: string;

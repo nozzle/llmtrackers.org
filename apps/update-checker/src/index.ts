@@ -19,6 +19,11 @@ import {
   upsertFile,
   createPullRequest,
 } from "./github";
+import {
+  parseCompanyYaml,
+  prepareUpdatedCompanyYaml,
+  type Company,
+} from "@llm-tracker/shared";
 import { fetchPageText } from "./scraper";
 import { extractWithLlm } from "./extractor";
 import { diffCompany, formatDiffMarkdown, type PlanDiff } from "./differ";
@@ -32,28 +37,6 @@ interface Env {
   OPENAI_API_KEY: string;
   GITHUB_REPO_OWNER: string;
   GITHUB_REPO_NAME: string;
-}
-
-interface CompanyYaml {
-  slug: string;
-  name: string;
-  pricingUrl?: string | null;
-  featuresUrl?: string | null;
-  plans: Array<{
-    name: string;
-    slug: string;
-    price: { amount: number | null; currency: string; period: string; note?: string | null };
-    aiResponsesMonthly?: number | null;
-    includedLlmModels?: number | null;
-    schedule?: string;
-    locationSupport?: string | number;
-    personaSupport?: string | number;
-    contentGeneration?: string | false;
-    contentOptimization?: string | false;
-    integrations?: string[];
-    llmSupport?: Record<string, boolean>;
-  }>;
-  [key: string]: unknown;
 }
 
 interface CheckResult {
@@ -153,7 +136,7 @@ async function checkCompany(
   }
 
   const yamlText = atob(fileContent.content);
-  const company = parseYamlSimple(yamlText);
+  const { company } = parseCompanyYaml(yamlText);
 
   if (!company || !company.pricingUrl) {
     console.log(`${slug}: No pricing URL, skipping`);
@@ -186,7 +169,7 @@ async function checkCompany(
   }
 
   // 4. Diff against existing data
-  const diffs = diffCompany(company as CompanyYaml, extraction.plans);
+  const diffs = diffCompany(company, extraction.plans);
 
   if (diffs.length === 0) {
     console.log(`${slug}: No changes detected`);
@@ -199,11 +182,11 @@ async function checkCompany(
   const branchName = `auto-update/${slug}-${Date.now()}`;
   await createBranch(token, owner, repo, branchName, baseSha);
 
-  // Update the lastChecked field in the YAML
   const today = new Date().toISOString().split("T")[0];
-  const updatedYaml = yamlText.replace(
-    /lastChecked:.*$/m,
-    `lastChecked: "${today}"`
+  const prepared = prepareUpdatedCompanyYaml(
+    yamlText,
+    extraction.plans,
+    today
   );
 
   await upsertFile(
@@ -211,8 +194,8 @@ async function checkCompany(
     owner,
     repo,
     filePath,
-    updatedYaml,
-    `chore: update lastChecked for ${slug}`,
+    prepared.yamlText,
+    `chore: update ${slug} pricing and feature data`,
     branchName,
     fileContent.sha
   );
@@ -238,141 +221,6 @@ async function checkCompany(
     diffs,
     prUrl: pr.html_url,
   };
-}
-
-/**
- * Very simple YAML parser that extracts top-level fields.
- * For the update checker we only need slug, name, pricingUrl, featuresUrl,
- * and the plans array structure. Real YAML parsing happens in the shared
- * compile script - here we just need enough to diff against.
- *
- * We parse YAML by reading the base64-decoded file content.
- * Since Cloudflare Workers don't have a YAML parser, we use a minimal
- * approach: extract the fields we need with regex.
- */
-function parseYamlSimple(yaml: string): CompanyYaml | null {
-  try {
-    const slug = extractField(yaml, "slug");
-    const name = extractField(yaml, "name");
-    const pricingUrl = extractField(yaml, "pricingUrl");
-    const featuresUrl = extractField(yaml, "featuresUrl");
-
-    if (!slug || !name) return null;
-
-    // Extract plans - this is simplified; we parse enough for diffing
-    const plans = parsePlans(yaml);
-
-    return {
-      slug,
-      name,
-      pricingUrl: pricingUrl === "null" ? null : pricingUrl,
-      featuresUrl: featuresUrl === "null" ? null : featuresUrl,
-      plans,
-    };
-  } catch (err) {
-    console.error("Failed to parse YAML:", err);
-    return null;
-  }
-}
-
-function extractField(yaml: string, field: string): string | null {
-  const match = yaml.match(new RegExp(`^${field}:\\s*(.+)$`, "m"));
-  if (!match) return null;
-  return match[1].trim().replace(/^["']|["']$/g, "");
-}
-
-interface SimplePlan {
-  name: string;
-  slug: string;
-  price: { amount: number | null; currency: string; period: string; note?: string | null };
-  aiResponsesMonthly?: number | null;
-  includedLlmModels?: number | null;
-  schedule?: string;
-  locationSupport?: string | number;
-  personaSupport?: string | number;
-  contentGeneration?: string | false;
-  contentOptimization?: string | false;
-  integrations?: string[];
-  llmSupport?: Record<string, boolean>;
-}
-
-/**
- * Parse plans from YAML text. Splits on "  - name:" pattern.
- */
-function parsePlans(yaml: string): SimplePlan[] {
-  const plansSection = yaml.match(/^plans:\s*\n([\s\S]*?)(?=^\w|\Z)/m);
-  if (!plansSection) return [];
-
-  const planBlocks = plansSection[1].split(/\n\s{2}- name:\s*/);
-  const plans: SimplePlan[] = [];
-
-  for (const block of planBlocks) {
-    if (!block.trim()) continue;
-
-    const nameMatch = block.match(/^(.+)/);
-    const name = nameMatch ? nameMatch[1].trim().replace(/^["']|["']$/g, "") : "";
-
-    const slugVal = extractField(block, "\\s+slug") ?? "";
-    const scheduleVal = extractField(block, "\\s+schedule");
-    const amountMatch = block.match(/amount:\s*([\d.]+|null)/);
-    const amount = amountMatch
-      ? amountMatch[1] === "null"
-        ? null
-        : parseFloat(amountMatch[1])
-      : null;
-
-    const currencyMatch = block.match(/currency:\s*(\w+)/);
-    const periodMatch = block.match(/period:\s*(\w+)/);
-    const responsesMatch = block.match(/aiResponsesMonthly:\s*([\d]+|null)/);
-    const modelsMatch = block.match(/includedLlmModels:\s*([\d]+|null)/);
-
-    // Parse llmSupport
-    const llmSupport: Record<string, boolean> = {};
-    const llmKeys = [
-      "chatgpt", "gemini", "perplexity", "claude",
-      "llama", "grok", "aiOverviews", "aiMode",
-    ];
-    for (const key of llmKeys) {
-      const m = block.match(new RegExp(`${key}:\\s*(true|false)`));
-      llmSupport[key] = m ? m[1] === "true" : false;
-    }
-
-    // Parse integrations
-    const integrationsMatch = block.match(
-      /integrations:\s*\n((?:\s+-\s+.+\n)*)/
-    );
-    const integrations = integrationsMatch
-      ? integrationsMatch[1]
-          .split("\n")
-          .map((l) => l.replace(/^\s+-\s+/, "").trim())
-          .filter(Boolean)
-      : [];
-
-    plans.push({
-      name,
-      slug: slugVal,
-      price: {
-        amount,
-        currency: currencyMatch?.[1] ?? "USD",
-        period: periodMatch?.[1] ?? "monthly",
-      },
-      aiResponsesMonthly: responsesMatch
-        ? responsesMatch[1] === "null"
-          ? null
-          : parseInt(responsesMatch[1])
-        : null,
-      includedLlmModels: modelsMatch
-        ? modelsMatch[1] === "null"
-          ? null
-          : parseInt(modelsMatch[1])
-        : null,
-      schedule: scheduleVal ?? undefined,
-      integrations,
-      llmSupport,
-    });
-  }
-
-  return plans;
 }
 
 // ---- Helpers ----

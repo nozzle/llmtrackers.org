@@ -26,6 +26,10 @@ export type PlanWithCompany = Plan & {
   companyWebsite: string;
 };
 
+export type CompanyYamlValue = Company & {
+  [key: string]: unknown;
+};
+
 /** All LLM model keys */
 export type LlmModelKey = keyof LlmSupport;
 

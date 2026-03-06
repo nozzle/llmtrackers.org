@@ -2,6 +2,9 @@
   "name": "update-checker",
   "private": true,
   "type": "module",
+  "dependencies": {
+    "@llm-tracker/shared": "workspace:*"
+  },
   "scripts": {
     "dev": "wrangler dev",
     "build": "wrangler deploy --dry-run --outdir=dist",
