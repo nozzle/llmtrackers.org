@@ -19,11 +19,22 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
+    "lint-staged": "lint-staged",
     "preview": "vite preview",
     "check": "pnpm format:check && pnpm lint && pnpm test && pnpm typecheck && pnpm build",
     "pretypecheck": "pnpm compile-data",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit && pnpm --filter @llm-tracker/shared typecheck && pnpm --filter @llm-tracker/github typecheck"
+    "typecheck": "tsc --noEmit && pnpm --filter @llm-tracker/shared typecheck && pnpm --filter @llm-tracker/github typecheck",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@llm-tracker/github": "workspace:*",
@@ -45,6 +56,8 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^7.0.1",
     "globals": "^17.4.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.3.2",
     "prettier": "^3.8.1",
     "tailwindcss": "^4.1.0",
     "tsx": "^4.19.0",
