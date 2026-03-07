@@ -2,9 +2,12 @@
  * Form submission worker for LLM Trackers.
  *
  * Routes:
- *   POST /api/suggest     — Create a GitHub Issue from the suggestion form
- *   POST /api/suggest-pr  — Create a GitHub PR with specific plan field changes
- *   POST /                — Legacy alias for /api/suggest
+ *   POST /api/suggest              — Create a GitHub Issue from the suggestion form
+ *   POST /api/suggest-pr           — Create a GitHub PR with specific plan field changes
+ *   POST /api/suggest-company-edit — Create a GitHub PR with company info changes
+ *   POST /api/suggest-add-plan     — Create a GitHub PR adding a new plan to a company
+ *   POST /api/suggest-add-company  — Create a GitHub PR adding a new company
+ *   POST /                         — Legacy alias for /api/suggest
  */
 
 import {
@@ -14,6 +17,9 @@ import {
 } from "@llm-tracker/github";
 import { validateSubmission, type FormSubmission } from "./validation";
 import { validateEditPayload, handleEditSuggestion } from "./edit-handler";
+import { validateCompanyEditPayload, handleCompanyEdit } from "./company-edit-handler";
+import { validateAddPlanPayload, handleAddPlan } from "./add-plan-handler";
+import { validateAddCompanyPayload, handleAddCompany } from "./add-company-handler";
 import { turnstileEnabled, verifyTurnstileToken } from "./turnstile";
 
 // ---- Types ----
@@ -226,6 +232,18 @@ export default {
       return handleSuggestPr(body, request, env, cors);
     }
 
+    if (path === "/api/suggest-company-edit") {
+      return handleSuggestCompanyEdit(body, request, env, cors);
+    }
+
+    if (path === "/api/suggest-add-plan") {
+      return handleSuggestAddPlan(body, request, env, cors);
+    }
+
+    if (path === "/api/suggest-add-company") {
+      return handleSuggestAddCompany(body, request, env, cors);
+    }
+
     // Default: issue-based suggestion (POST / or POST /api/suggest)
     return handleSuggestIssue(body, request, env, cors);
   },
@@ -292,7 +310,7 @@ async function handleSuggestIssue(
   }
 }
 
-// ---- Route: POST /api/suggest-pr (PR-based) ----
+// ---- Route: POST /api/suggest-pr (PR-based plan edit) ----
 
 async function handleSuggestPr(
   body: unknown,
@@ -335,6 +353,159 @@ async function handleSuggestPr(
     );
   } catch (err) {
     console.error("GitHub API error (suggest-pr):", err);
+    return jsonResponse(
+      { error: "Failed to create GitHub PR. Please try again later." },
+      502,
+      cors
+    );
+  }
+}
+
+// ---- Route: POST /api/suggest-company-edit (PR-based company edit) ----
+
+async function handleSuggestCompanyEdit(
+  body: unknown,
+  request: Request,
+  env: Env,
+  cors: HeadersInit
+): Promise<Response> {
+  const validation = validateCompanyEditPayload(body);
+  if (!validation.ok) {
+    return jsonResponse({ error: validation.error }, 400, cors);
+  }
+
+  const payload = validation.value;
+
+  if (turnstileEnabled(env.TURNSTILE_SITE_KEY, env.TURNSTILE_SECRET_KEY)) {
+    const verification = await verifyTurnstileToken(
+      payload.turnstileToken ?? "",
+      env.TURNSTILE_SECRET_KEY as string,
+      getClientIdentifier(request)
+    );
+    if (!verification.ok) {
+      return jsonResponse({ error: verification.error }, 403, cors);
+    }
+  }
+
+  try {
+    const result = await handleCompanyEdit(payload, env);
+    if (!result.success) {
+      return jsonResponse({ error: result.error }, result.status, cors);
+    }
+
+    return jsonResponse(
+      {
+        success: true,
+        prUrl: result.prUrl,
+        prNumber: result.prNumber,
+      },
+      201,
+      cors
+    );
+  } catch (err) {
+    console.error("GitHub API error (company-edit):", err);
+    return jsonResponse(
+      { error: "Failed to create GitHub PR. Please try again later." },
+      502,
+      cors
+    );
+  }
+}
+
+// ---- Route: POST /api/suggest-add-plan (PR-based add plan) ----
+
+async function handleSuggestAddPlan(
+  body: unknown,
+  request: Request,
+  env: Env,
+  cors: HeadersInit
+): Promise<Response> {
+  const validation = validateAddPlanPayload(body);
+  if (!validation.ok) {
+    return jsonResponse({ error: validation.error }, 400, cors);
+  }
+
+  const payload = validation.value;
+
+  if (turnstileEnabled(env.TURNSTILE_SITE_KEY, env.TURNSTILE_SECRET_KEY)) {
+    const verification = await verifyTurnstileToken(
+      payload.turnstileToken ?? "",
+      env.TURNSTILE_SECRET_KEY as string,
+      getClientIdentifier(request)
+    );
+    if (!verification.ok) {
+      return jsonResponse({ error: verification.error }, 403, cors);
+    }
+  }
+
+  try {
+    const result = await handleAddPlan(payload, env);
+    if (!result.success) {
+      return jsonResponse({ error: result.error }, result.status, cors);
+    }
+
+    return jsonResponse(
+      {
+        success: true,
+        prUrl: result.prUrl,
+        prNumber: result.prNumber,
+      },
+      201,
+      cors
+    );
+  } catch (err) {
+    console.error("GitHub API error (add-plan):", err);
+    return jsonResponse(
+      { error: "Failed to create GitHub PR. Please try again later." },
+      502,
+      cors
+    );
+  }
+}
+
+// ---- Route: POST /api/suggest-add-company (PR-based add company) ----
+
+async function handleSuggestAddCompany(
+  body: unknown,
+  request: Request,
+  env: Env,
+  cors: HeadersInit
+): Promise<Response> {
+  const validation = validateAddCompanyPayload(body);
+  if (!validation.ok) {
+    return jsonResponse({ error: validation.error }, 400, cors);
+  }
+
+  const payload = validation.value;
+
+  if (turnstileEnabled(env.TURNSTILE_SITE_KEY, env.TURNSTILE_SECRET_KEY)) {
+    const verification = await verifyTurnstileToken(
+      payload.turnstileToken ?? "",
+      env.TURNSTILE_SECRET_KEY as string,
+      getClientIdentifier(request)
+    );
+    if (!verification.ok) {
+      return jsonResponse({ error: verification.error }, 403, cors);
+    }
+  }
+
+  try {
+    const result = await handleAddCompany(payload, env);
+    if (!result.success) {
+      return jsonResponse({ error: result.error }, result.status, cors);
+    }
+
+    return jsonResponse(
+      {
+        success: true,
+        prUrl: result.prUrl,
+        prNumber: result.prNumber,
+      },
+      201,
+      cors
+    );
+  } catch (err) {
+    console.error("GitHub API error (add-company):", err);
     return jsonResponse(
       { error: "Failed to create GitHub PR. Please try again later." },
       502,

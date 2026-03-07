@@ -3,6 +3,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { getCompanyBySlug } from "~/data";
 import { CompanyMark } from "~/components/company-mark";
 import { EditPlanModal } from "~/components/edit-plan-modal";
+import { EditCompanyModal } from "~/components/edit-company-modal";
+import { AddPlanModal } from "~/components/add-plan-modal";
 import { ReviewSiteLabel, ReviewSiteMark, ReviewSiteScoreBadge } from "~/components/review-site-badge";
 import { getReviewSiteBranding } from "~/review-site-branding";
 import { LLM_MODEL_LABELS, REVIEW_SITE_LABELS, REVIEW_SITE_PLATFORMS } from "@llm-tracker/shared";
@@ -88,6 +90,8 @@ function CompanyPage() {
   const { slug } = Route.useParams();
   const company = getCompanyBySlug(slug);
   const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
+  const [editingCompany, setEditingCompany] = useState(false);
+  const [addingPlan, setAddingPlan] = useState(false);
 
   if (!company) {
     return (
@@ -114,7 +118,29 @@ function CompanyPage() {
           <div className="flex items-start gap-4">
             <CompanyMark slug={company.slug} name={company.name} size="lg" />
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">{company.name}</h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-3xl font-bold text-gray-900">{company.name}</h1>
+                <button
+                  type="button"
+                  onClick={() => setEditingCompany(true)}
+                  className="cursor-pointer rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                  title="Suggest company info edit"
+                >
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                    />
+                  </svg>
+                </button>
+              </div>
             <p className="mt-1 text-lg text-gray-600">{company.description}</p>
             <a
               href={company.website}
@@ -147,7 +173,29 @@ function CompanyPage() {
 
       {/* Plans */}
       <section className="mb-12">
-        <h2 className="mb-4 text-xl font-semibold text-gray-900">Plans</h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-gray-900">Plans</h2>
+          <button
+            type="button"
+            onClick={() => setAddingPlan(true)}
+            className="flex cursor-pointer items-center gap-1.5 rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          >
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+            Add Plan
+          </button>
+        </div>
         <div className="grid gap-6 md:grid-cols-2">
           {company.plans.map((plan) => (
             <div
@@ -543,6 +591,21 @@ function CompanyPage() {
           planName={editingPlan.name}
           plan={editingPlan}
           onClose={() => setEditingPlan(null)}
+        />
+      )}
+
+      {editingCompany && company && (
+        <EditCompanyModal
+          company={company}
+          onClose={() => setEditingCompany(false)}
+        />
+      )}
+
+      {addingPlan && company && (
+        <AddPlanModal
+          companySlug={company.slug}
+          companyName={company.name}
+          onClose={() => setAddingPlan(false)}
         />
       )}
     </div>

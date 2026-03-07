@@ -5,6 +5,7 @@ import { CompanyMark } from "~/components/company-mark";
 import { LlmIcon } from "~/components/llm-icon";
 import { ReviewSiteMark, ReviewSiteScoreBadge } from "~/components/review-site-badge";
 import { EditPlanModal } from "~/components/edit-plan-modal";
+import { AddCompanyModal } from "~/components/add-company-modal";
 import { LLM_MODEL_LABELS, REVIEW_SITE_LABELS } from "@llm-tracker/shared";
 import type { LlmModelKey, PlanWithCompany, ReviewSitePlatform } from "@llm-tracker/shared";
 import { z } from "zod";
@@ -877,6 +878,7 @@ function HomePage() {
 
   const [selectedPlans, setSelectedPlans] = useState<Set<string>>(new Set());
   const [editingPlan, setEditingPlan] = useState<PlanWithCompany | null>(null);
+  const [addingCompany, setAddingCompany] = useState(false);
 
   // ---- Derived search state with defaults ----
 
@@ -1276,9 +1278,32 @@ function HomePage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">
-          AI Search Visibility Tool Comparison
-        </h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-3xl font-bold text-gray-900">
+            AI Search Visibility Tool Comparison
+          </h1>
+          <button
+            type="button"
+            onClick={() => setAddingCompany(true)}
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 transition-colors"
+            title="Add a new company"
+          >
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Add Company
+          </button>
+        </div>
         <p className="mt-2 text-gray-600">
           Compare {companies.length} LLM tracking tools across{" "}
           {allPlans.length} plans. Select plans to compare side-by-side.
@@ -1793,6 +1818,10 @@ function HomePage() {
           plan={editingPlan}
           onClose={() => setEditingPlan(null)}
         />
+      )}
+
+      {addingCompany && (
+        <AddCompanyModal onClose={() => setAddingCompany(false)} />
       )}
     </div>
   );
