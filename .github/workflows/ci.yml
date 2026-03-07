@@ -1,13 +1,24 @@
 name: CI
 
 on:
+  workflow_dispatch:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   validate:
     name: Validate
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: Checkout

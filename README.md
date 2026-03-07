@@ -226,6 +226,8 @@ pnpm test
 
 ## Deploy
 
+Cloudflare Git integration handles production deploys from the repository.
+
 Check the deploy bundle locally with:
 
 ```bash
@@ -240,16 +242,35 @@ pnpm release
 
 CI/CD is configured in `.github/workflows/`.
 
-Required GitHub repository secrets include:
+GitHub Actions are used for CI only.
 
-- `CLOUDFLARE_API_TOKEN`
-- `CLOUDFLARE_ACCOUNT_ID`
+Required Cloudflare Worker secrets include:
+
 - `GITHUB_APP_ID`
 - `GITHUB_APP_PRIVATE_KEY`
 - `GITHUB_INSTALLATION_ID`
 - `OPENAI_API_KEY`
 - `MANUAL_TRIGGER_TOKEN`
 - `TURNSTILE_SECRET_KEY`
+
+If you manage Worker settings with Wrangler, set them with:
+
+```bash
+wrangler secret put GITHUB_APP_ID
+wrangler secret put GITHUB_APP_PRIVATE_KEY
+wrangler secret put GITHUB_INSTALLATION_ID
+wrangler secret put OPENAI_API_KEY
+wrangler secret put MANUAL_TRIGGER_TOKEN
+wrangler secret put TURNSTILE_SECRET_KEY
+```
+
+Migration checklist from GitHub Actions deploys to Cloudflare Git deploys:
+
+- move Worker secrets into Cloudflare before removing any GitHub deploy workflow
+- confirm Cloudflare Git integration is connected to the correct production branch
+- mirror any required environment variables from `wrangler.toml` in Cloudflare environments
+- verify queues, cron triggers, and bindings exist in the target Cloudflare account
+- keep `pnpm deploy:check` and `pnpm release` for manual deploy validation when needed
 
 ## Notes
 
