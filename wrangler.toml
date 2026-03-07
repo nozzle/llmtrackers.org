@@ -10,8 +10,8 @@ crons = ["0 6 * * 1"]
 [vars]
 GITHUB_REPO_OWNER = "nozzle"
 GITHUB_REPO_NAME = "llmtrackers.org"
-# VITE_SITE_URL = "https://llmtrackers.org"
-# TURNSTILE_SITE_KEY = "<optional-public-site-key>"
+VITE_SITE_URL = "https://llmtrackers.org"
+TURNSTILE_SITE_KEY = "0x4AAAAAACnw5hLwb6J55OEk"
 
 [[queues.producers]]
 binding = "UPDATE_QUEUE"
