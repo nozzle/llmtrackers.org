@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { fetchPageText } from "./scraper";
+import { fetchPageHtml, fetchPageText } from "./scraper";
 
 describe("fetchPageText", () => {
   afterEach(() => {
@@ -71,5 +71,20 @@ describe("fetchPageText", () => {
     const text = await pending;
 
     expect(text).toContain("Recovered");
+  });
+
+  it("returns raw HTML with fetchPageHtml", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        headers: new Headers({ "content-type": "text/html" }),
+        text: async () => "<html><body><h1>Raw</h1></body></html>",
+      })
+    );
+
+    const html = await fetchPageHtml("https://example.com/raw");
+
+    expect(html).toContain("<h1>Raw</h1>");
   });
 });

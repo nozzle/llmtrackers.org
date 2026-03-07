@@ -1,6 +1,14 @@
 import { Document, parseDocument } from "yaml";
 import { CompanySchema } from "./schema.js";
-import type { Company, CompanyYamlValue, LlmModelKey, Plan } from "./types.js";
+import type {
+  Company,
+  CompanyYamlValue,
+  LlmModelKey,
+  Plan,
+  ReviewSiteData,
+  ReviewSitePlatform,
+  ReviewSites,
+} from "./types.js";
 
 export interface ExtractedPlanLike {
   name: string;
@@ -36,6 +44,13 @@ const LLM_KEYS: LlmModelKey[] = [
   "grok",
   "aiOverviews",
   "aiMode",
+];
+
+const REVIEW_SITE_PLATFORMS: ReviewSitePlatform[] = [
+  "g2",
+  "trustpilot",
+  "trustradius",
+  "capterra",
 ];
 
 export function parseCompanyYaml(yamlText: string): {
@@ -100,6 +115,46 @@ export function prepareUpdatedCompanyYaml(
 ): PreparedCompanyYaml {
   const { company } = parseCompanyYaml(yamlText);
   const updatedCompany = mergeCompanyWithExtractedPlans(company, extractedPlans, checkedAt);
+  const nextYaml = stringifyCompanyYaml(updatedCompany);
+  const reparsed = parseCompanyYaml(nextYaml);
+
+  return {
+    company: reparsed.company,
+    document: reparsed.document,
+    yamlText: nextYaml,
+  };
+}
+
+export function mergeCompanyWithReviewSites(
+  company: Company,
+  extractedReviewSites: Partial<ReviewSites>
+): CompanyYamlValue {
+  const mergedReviewSites: ReviewSites = {
+    ...(company.reviewSites ?? {}),
+  };
+
+  for (const platform of REVIEW_SITE_PLATFORMS) {
+    const nextSite = extractedReviewSites[platform];
+    if (!nextSite) continue;
+
+    mergedReviewSites[platform] = mergeReviewSiteData(
+      company.reviewSites?.[platform],
+      nextSite
+    );
+  }
+
+  return {
+    ...company,
+    reviewSites: mergedReviewSites,
+  };
+}
+
+export function prepareUpdatedCompanyReviewSitesYaml(
+  yamlText: string,
+  extractedReviewSites: Partial<ReviewSites>
+): PreparedCompanyYaml {
+  const { company } = parseCompanyYaml(yamlText);
+  const updatedCompany = mergeCompanyWithReviewSites(company, extractedReviewSites);
   const nextYaml = stringifyCompanyYaml(updatedCompany);
   const reparsed = parseCompanyYaml(nextYaml);
 
@@ -183,7 +238,26 @@ function normalizeLlmSupport(llmSupport: Partial<Record<LlmModelKey, boolean>>):
   >;
 }
 
+function mergeReviewSiteData(
+  existing: ReviewSiteData | undefined,
+  next: ReviewSiteData
+): ReviewSiteData {
+  return {
+    url: next.url || existing?.url || "",
+    score: next.score ?? existing?.score ?? null,
+    maxScore: next.maxScore ?? existing?.maxScore ?? 5,
+    reviewCount: next.reviewCount ?? existing?.reviewCount ?? null,
+    ratingDistribution:
+      next.ratingDistribution.length > 0
+        ? next.ratingDistribution
+        : existing?.ratingDistribution ?? [],
+    reviews: next.reviews.length > 0 ? next.reviews : existing?.reviews ?? [],
+  };
+}
+
 function sortCompanyKeys(company: CompanyYamlValue): CompanyYamlValue {
+  const hasReviewSites = Object.keys(company.reviewSites ?? {}).length > 0;
+
   return {
     slug: company.slug,
     name: company.name,
@@ -192,12 +266,13 @@ function sortCompanyKeys(company: CompanyYamlValue): CompanyYamlValue {
     description: company.description,
     plans: company.plans.map(sortPlanKeys),
     ...(company.score ? { score: company.score } : {}),
+    ...(hasReviewSites ? { reviewSites: company.reviewSites } : {}),
     reviews: company.reviews,
     tweets: company.tweets,
     ...(company.pricingUrl !== undefined ? { pricingUrl: company.pricingUrl } : {}),
     ...(company.featuresUrl !== undefined ? { featuresUrl: company.featuresUrl } : {}),
     ...(company.lastChecked !== undefined ? { lastChecked: company.lastChecked } : {}),
-  };
+  } as CompanyYamlValue;
 }
 
 function sortPlanKeys(plan: Plan): Plan {

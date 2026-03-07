@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { getPlanByKey, getAllCompanies } from "~/data";
+import type { ComparisonPlan } from "~/data";
 import { CompanyMark } from "~/components/company-mark";
 import { LLM_MODEL_LABELS } from "@llm-tracker/shared";
-import type { LlmModelKey, PlanWithCompany } from "@llm-tracker/shared";
+import type { LlmModelKey } from "@llm-tracker/shared";
 import { z } from "zod";
 
 const compareSearchSchema = z.object({
@@ -43,7 +44,7 @@ const LLM_KEYS: LlmModelKey[] = [
 
 interface ComparisonRow {
   label: string;
-  values: (plan: PlanWithCompany) => string | boolean;
+  values: (plan: ComparisonPlan) => string | boolean;
   type?: "boolean" | "text";
 }
 
@@ -120,7 +121,7 @@ function ComparePage() {
   const planKeys = plansParam ? plansParam.split(",") : [];
   const plans = planKeys
     .map((k) => getPlanByKey(k))
-    .filter((p): p is PlanWithCompany => p !== undefined);
+    .filter((p): p is ComparisonPlan => p !== undefined);
 
   if (plans.length < 2) {
     return (

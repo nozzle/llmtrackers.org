@@ -37,6 +37,10 @@ score:
   maxTotal: 48
   summary: "Seamless if you already use Ahrefs. Strong docs and visibility metrics."
 
+reviewSites:
+  trustpilot:
+    url: https://www.trustpilot.com/review/ahrefs.com
+
 reviews: []
 tweets: []
 pricingUrl: https://ahrefs.com/brand-radar

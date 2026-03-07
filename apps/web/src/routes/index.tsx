@@ -3,8 +3,9 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { getAllCompanies, getAllPlansWithCompany } from "~/data";
 import { CompanyMark } from "~/components/company-mark";
 import { LlmIcon } from "~/components/llm-icon";
+import { ReviewSiteMiniList, ReviewSiteScoreBadge } from "~/components/review-site-badge";
 import { LLM_MODEL_LABELS } from "@llm-tracker/shared";
-import type { LlmModelKey, PlanWithCompany } from "@llm-tracker/shared";
+import type { LlmModelKey, PlanWithCompany, ReviewSitePlatform } from "@llm-tracker/shared";
 import { z } from "zod";
 
 // ---------------------------------------------------------------------------
@@ -19,7 +20,17 @@ const homeSearchSchema = z.object({
 
   // sort
   sort: z
-    .enum(["name", "score", "price", "costEfficiency", "responses"])
+    .enum([
+      "name",
+      "score",
+      "g2",
+      "trustpilot",
+      "trustradius",
+      "capterra",
+      "price",
+      "costEfficiency",
+      "responses",
+    ])
     .optional()
     .catch(undefined),
   dir: z.enum(["asc", "desc"]).optional().catch(undefined),
@@ -35,6 +46,14 @@ const homeSearchSchema = z.object({
   costMax: optionalNumber,
   responsesMin: optionalNumber,
   responsesMax: optionalNumber,
+  g2Min: optionalNumber,
+  g2Max: optionalNumber,
+  trustpilotMin: optionalNumber,
+  trustpilotMax: optionalNumber,
+  trustradiusMin: optionalNumber,
+  trustradiusMax: optionalNumber,
+  capterraMin: optionalNumber,
+  capterraMax: optionalNumber,
   locationType: z
     .enum(["all", "global", "regional"])
     .optional()
@@ -97,6 +116,15 @@ function formatLocation(loc: string | number): string {
   return `${loc} regions`;
 }
 
+function getReviewSiteScore(
+  plan: PlanWithCompany & {
+    companyReviewSites?: Partial<Record<ReviewSitePlatform, { score?: number | null }>>;
+  },
+  platform: ReviewSitePlatform
+): number | null {
+  return plan.companyReviewSites?.[platform]?.score ?? null;
+}
+
 const LLM_KEYS: LlmModelKey[] = [
   "chatgpt",
   "gemini",
@@ -112,6 +140,10 @@ const LLM_KEYS: LlmModelKey[] = [
 const ALL_COLUMN_IDS = [
   "name",
   "score",
+  "g2",
+  "trustpilot",
+  "trustradius",
+  "capterra",
   "price",
   "costEfficiency",
   "responses",
@@ -125,6 +157,10 @@ type ColumnId = (typeof ALL_COLUMN_IDS)[number];
 const COLUMN_LABELS: Record<ColumnId, string> = {
   name: "Company / Plan",
   score: "Score",
+  g2: "G2",
+  trustpilot: "Trustpilot",
+  trustradius: "TrustRadius",
+  capterra: "Capterra",
   price: "Price/mo",
   costEfficiency: "$/1K Resp.",
   responses: "AI Resp./mo",
@@ -372,6 +408,14 @@ function HomePage() {
   const costMax = search.costMax;
   const responsesMin = search.responsesMin;
   const responsesMax = search.responsesMax;
+  const g2Min = search.g2Min;
+  const g2Max = search.g2Max;
+  const trustpilotMin = search.trustpilotMin;
+  const trustpilotMax = search.trustpilotMax;
+  const trustradiusMin = search.trustradiusMin;
+  const trustradiusMax = search.trustradiusMax;
+  const capterraMin = search.capterraMin;
+  const capterraMax = search.capterraMax;
   const locationType = search.locationType ?? "all";
   const visibleColumns: ColumnId[] =
     (parseCommaSeparated(search.cols) as ColumnId[] | undefined) ?? [
@@ -426,6 +470,14 @@ function HomePage() {
           cleaned.responsesMin = next.responsesMin;
         if (next.responsesMax != null)
           cleaned.responsesMax = next.responsesMax;
+        if (next.g2Min != null) cleaned.g2Min = next.g2Min;
+        if (next.g2Max != null) cleaned.g2Max = next.g2Max;
+        if (next.trustpilotMin != null) cleaned.trustpilotMin = next.trustpilotMin;
+        if (next.trustpilotMax != null) cleaned.trustpilotMax = next.trustpilotMax;
+        if (next.trustradiusMin != null) cleaned.trustradiusMin = next.trustradiusMin;
+        if (next.trustradiusMax != null) cleaned.trustradiusMax = next.trustradiusMax;
+        if (next.capterraMin != null) cleaned.capterraMin = next.capterraMin;
+        if (next.capterraMax != null) cleaned.capterraMax = next.capterraMax;
         if (next.locationType && next.locationType !== "all")
           cleaned.locationType = next.locationType;
 
@@ -525,6 +577,29 @@ function HomePage() {
       });
     }
 
+    const reviewSiteRanges: Array<{
+      platform: ReviewSitePlatform;
+      min: number | undefined;
+      max: number | undefined;
+    }> = [
+      { platform: "g2", min: g2Min, max: g2Max },
+      { platform: "trustpilot", min: trustpilotMin, max: trustpilotMax },
+      { platform: "trustradius", min: trustradiusMin, max: trustradiusMax },
+      { platform: "capterra", min: capterraMin, max: capterraMax },
+    ];
+
+    for (const range of reviewSiteRanges) {
+      if (range.min == null && range.max == null) continue;
+
+      result = result.filter((p) => {
+        const score = getReviewSiteScore(p, range.platform);
+        if (score == null) return false;
+        if (range.min != null && score < range.min) return false;
+        if (range.max != null && score > range.max) return false;
+        return true;
+      });
+    }
+
     // Locations
     if (locationType === "global") {
       result = result.filter((p) => p.locationSupport === "global");
@@ -547,6 +622,14 @@ function HomePage() {
           cmp =
             (companyScores.get(a.companySlug)?.total ?? 0) -
             (companyScores.get(b.companySlug)?.total ?? 0);
+          break;
+        case "g2":
+        case "trustpilot":
+        case "trustradius":
+        case "capterra":
+          cmp =
+            (getReviewSiteScore(a, sortBy) ?? -1) -
+            (getReviewSiteScore(b, sortBy) ?? -1);
           break;
         case "name":
           cmp = a.companyName.localeCompare(b.companyName);
@@ -579,6 +662,14 @@ function HomePage() {
     costMax,
     responsesMin,
     responsesMax,
+    g2Min,
+    g2Max,
+    trustpilotMin,
+    trustpilotMax,
+    trustradiusMin,
+    trustradiusMax,
+    capterraMin,
+    capterraMax,
     locationType,
   ]);
 
@@ -631,6 +722,14 @@ function HomePage() {
     costMax,
     responsesMin,
     responsesMax,
+    g2Min,
+    g2Max,
+    trustpilotMin,
+    trustpilotMax,
+    trustradiusMin,
+    trustradiusMax,
+    capterraMin,
+    capterraMax,
     locationType !== "all" ? locationType : undefined,
   ].filter((v) => v != null && v !== "").length;
 
@@ -682,6 +781,14 @@ function HomePage() {
                   costMax: undefined,
                   responsesMin: undefined,
                   responsesMax: undefined,
+                  g2Min: undefined,
+                  g2Max: undefined,
+                  trustpilotMin: undefined,
+                  trustpilotMax: undefined,
+                  trustradiusMin: undefined,
+                  trustradiusMax: undefined,
+                  capterraMin: undefined,
+                  capterraMax: undefined,
                   locationType: undefined,
                 })
               }
@@ -721,6 +828,38 @@ function HomePage() {
                   onClick={() => toggleSort("score")}
                 >
                   Score{sortIndicator("score")}
+                </th>
+              )}
+              {isColumnVisible("g2") && (
+                <th
+                  className="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700"
+                  onClick={() => toggleSort("g2")}
+                >
+                  G2{sortIndicator("g2")}
+                </th>
+              )}
+              {isColumnVisible("trustpilot") && (
+                <th
+                  className="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700"
+                  onClick={() => toggleSort("trustpilot")}
+                >
+                  Trustpilot{sortIndicator("trustpilot")}
+                </th>
+              )}
+              {isColumnVisible("trustradius") && (
+                <th
+                  className="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700"
+                  onClick={() => toggleSort("trustradius")}
+                >
+                  TrustRadius{sortIndicator("trustradius")}
+                </th>
+              )}
+              {isColumnVisible("capterra") && (
+                <th
+                  className="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700"
+                  onClick={() => toggleSort("capterra")}
+                >
+                  Capterra{sortIndicator("capterra")}
                 </th>
               )}
               {isColumnVisible("price") && (
@@ -792,6 +931,46 @@ function HomePage() {
                     maxValue={scoreMax}
                     onMinChange={(v) => updateSearch({ scoreMin: v })}
                     onMaxChange={(v) => updateSearch({ scoreMax: v })}
+                  />
+                </th>
+              )}
+              {isColumnVisible("g2") && (
+                <th className="px-4 py-2">
+                  <NumberRangeFilter
+                    minValue={g2Min}
+                    maxValue={g2Max}
+                    onMinChange={(v) => updateSearch({ g2Min: v })}
+                    onMaxChange={(v) => updateSearch({ g2Max: v })}
+                  />
+                </th>
+              )}
+              {isColumnVisible("trustpilot") && (
+                <th className="px-4 py-2">
+                  <NumberRangeFilter
+                    minValue={trustpilotMin}
+                    maxValue={trustpilotMax}
+                    onMinChange={(v) => updateSearch({ trustpilotMin: v })}
+                    onMaxChange={(v) => updateSearch({ trustpilotMax: v })}
+                  />
+                </th>
+              )}
+              {isColumnVisible("trustradius") && (
+                <th className="px-4 py-2">
+                  <NumberRangeFilter
+                    minValue={trustradiusMin}
+                    maxValue={trustradiusMax}
+                    onMinChange={(v) => updateSearch({ trustradiusMin: v })}
+                    onMaxChange={(v) => updateSearch({ trustradiusMax: v })}
+                  />
+                </th>
+              )}
+              {isColumnVisible("capterra") && (
+                <th className="px-4 py-2">
+                  <NumberRangeFilter
+                    minValue={capterraMin}
+                    maxValue={capterraMax}
+                    onMinChange={(v) => updateSearch({ capterraMin: v })}
+                    onMaxChange={(v) => updateSearch({ capterraMax: v })}
                   />
                 </th>
               )}
@@ -946,7 +1125,47 @@ function HomePage() {
                         </span>
                       ) : (
                         <span className="text-sm text-gray-400">-</span>
-                      )}
+                        )}
+                    </td>
+                  )}
+                  {isColumnVisible("g2") && (
+                    <td className="px-4 py-3">
+                      <ReviewSiteScoreBadge
+                        platform="g2"
+                        score={getReviewSiteScore(plan, "g2")}
+                        maxScore={plan.companyReviewSites?.g2?.maxScore ?? 5}
+                        compact
+                      />
+                    </td>
+                  )}
+                  {isColumnVisible("trustpilot") && (
+                    <td className="px-4 py-3">
+                      <ReviewSiteScoreBadge
+                        platform="trustpilot"
+                        score={getReviewSiteScore(plan, "trustpilot")}
+                        maxScore={plan.companyReviewSites?.trustpilot?.maxScore ?? 5}
+                        compact
+                      />
+                    </td>
+                  )}
+                  {isColumnVisible("trustradius") && (
+                    <td className="px-4 py-3">
+                      <ReviewSiteScoreBadge
+                        platform="trustradius"
+                        score={getReviewSiteScore(plan, "trustradius")}
+                        maxScore={plan.companyReviewSites?.trustradius?.maxScore ?? 10}
+                        compact
+                      />
+                    </td>
+                  )}
+                  {isColumnVisible("capterra") && (
+                    <td className="px-4 py-3">
+                      <ReviewSiteScoreBadge
+                        platform="capterra"
+                        score={getReviewSiteScore(plan, "capterra")}
+                        maxScore={plan.companyReviewSites?.capterra?.maxScore ?? 5}
+                        compact
+                      />
                     </td>
                   )}
                   {isColumnVisible("price") && (
@@ -994,6 +1213,9 @@ function HomePage() {
                             <LlmIcon key={k} model={k} size={18} />
                           )
                         )}
+                      </div>
+                      <div className="mt-2">
+                        <ReviewSiteMiniList reviewSites={plan.companyReviewSites ?? {}} />
                       </div>
                     </td>
                   )}

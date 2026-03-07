@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
   mergeCompanyWithExtractedPlans,
+  mergeCompanyWithReviewSites,
   parseCompanyYaml,
   prepareUpdatedCompanyYaml,
+  prepareUpdatedCompanyReviewSitesYaml,
   type ExtractedPlanLike,
 } from "./yaml.js";
 
@@ -143,5 +145,57 @@ describe("yaml helpers", () => {
       "Enterprise",
     ]);
     expect(prepared.company.plans[1]?.slug).toBe("enterprise");
+  });
+
+  it("mergeCompanyWithReviewSites preserves existing data when incoming review-site data is partial", () => {
+    const withReviewSitesYaml = `${baseYaml}\nreviewSites:\n  trustpilot:\n    url: https://www.trustpilot.com/review/example.com\n    score: 4.2\n    maxScore: 5\n    reviewCount: 40\n    ratingDistribution:\n      - label: "1"\n        value: 1\n        count: 2\n    reviews:\n      - author: Jane\n        title: Great\n        rating: 5\n        date: 2026-03-01\n        excerpt: Helpful tool\n        url: https://www.trustpilot.com/reviews/1\n`;
+    const { company } = parseCompanyYaml(withReviewSitesYaml);
+
+    const merged = mergeCompanyWithReviewSites(company, {
+      trustpilot: {
+        url: "https://www.trustpilot.com/review/example.com",
+        score: 4.4,
+        maxScore: 5,
+        reviewCount: null,
+        ratingDistribution: [],
+        reviews: [],
+      },
+    });
+
+    expect(merged.reviewSites.trustpilot?.score).toBe(4.4);
+    expect(merged.reviewSites.trustpilot?.reviewCount).toBe(40);
+    expect(merged.reviewSites.trustpilot?.ratingDistribution).toHaveLength(1);
+    expect(merged.reviewSites.trustpilot?.reviews).toHaveLength(1);
+  });
+
+  it("prepareUpdatedCompanyReviewSitesYaml produces parseable YAML with reviewSites preserved", () => {
+    const prepared = prepareUpdatedCompanyReviewSitesYaml(baseYaml, {
+      trustpilot: {
+        url: "https://www.trustpilot.com/review/example.com",
+        score: 4.2,
+        maxScore: 5,
+        reviewCount: 42,
+        ratingDistribution: [
+          { label: "1", value: 1, count: 1 },
+          { label: "5", value: 5, count: 41 },
+        ],
+        reviews: [
+          {
+            author: "Jane",
+            title: "Great",
+            rating: 5,
+            date: "2026-03-01",
+            excerpt: "Helpful tool",
+            url: "https://www.trustpilot.com/reviews/1",
+          },
+        ],
+      },
+    });
+
+    expect(prepared.yamlText).toMatch(/reviewSites:/);
+    expect(prepared.company.reviewSites.trustpilot?.reviewCount).toBe(42);
+    expect(prepared.company.reviewSites.trustpilot?.reviews[0]?.excerpt).toBe(
+      "Helpful tool"
+    );
   });
 });

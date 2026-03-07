@@ -9,11 +9,29 @@ const MAX_RESPONSE_BYTES = 1_000_000;
 const FETCH_TIMEOUT_MS = 15_000;
 const MAX_RETRIES = 2;
 
+interface FetchPageOptions {
+  maxLength?: number;
+}
+
 /**
  * Fetch a page and return its text content (HTML tags stripped).
  * Returns null if the fetch fails.
  */
 export async function fetchPageText(url: string): Promise<string | null> {
+  const html = await fetchPageHtml(url, { maxLength: MAX_RESPONSE_BYTES });
+  return html ? htmlToText(html).slice(0, MAX_CONTENT_LENGTH) : null;
+}
+
+/**
+ * Fetch a page and return raw HTML.
+ * Returns null if the fetch fails or the content is not HTML/text.
+ */
+export async function fetchPageHtml(
+  url: string,
+  options: FetchPageOptions = {}
+): Promise<string | null> {
+  const maxLength = options.maxLength ?? MAX_RESPONSE_BYTES;
+
   for (let attempt = 1; attempt <= MAX_RETRIES + 1; attempt++) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
@@ -53,12 +71,12 @@ export async function fetchPageText(url: string): Promise<string | null> {
       }
 
       const html = await response.text();
-      if (html.length > MAX_RESPONSE_BYTES) {
+      if (html.length > maxLength) {
         console.warn(`Skipping ${url}: response body exceeds limit`);
         return null;
       }
 
-      return htmlToText(html).slice(0, MAX_CONTENT_LENGTH);
+      return html;
     } catch (err) {
       clearTimeout(timeout);
       console.warn(`Error fetching ${url} (attempt ${attempt}):`, err);
@@ -69,7 +87,6 @@ export async function fetchPageText(url: string): Promise<string | null> {
       return null;
     }
   }
-
   return null;
 }
 

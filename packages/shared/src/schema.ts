@@ -45,6 +45,44 @@ export const ReviewSchema = z.object({
   maxScore: z.number().default(5),
 });
 
+export const ReviewSitePlatformSchema = z.enum([
+  "g2",
+  "trustpilot",
+  "trustradius",
+  "capterra",
+]);
+
+export const ReviewSiteBucketSchema = z.object({
+  label: z.string(),
+  value: z.number(),
+  count: z.number().int().nonnegative(),
+});
+
+export const ReviewSiteSnippetSchema = z.object({
+  author: z.string().nullable().optional(),
+  title: z.string().nullable().optional(),
+  rating: z.number().nullable().optional(),
+  date: z.string().nullable().optional(),
+  excerpt: z.string(),
+  url: z.string().url().nullable().optional(),
+});
+
+export const ReviewSiteDataSchema = z.object({
+  url: z.string().url(),
+  score: z.number().nullable().optional(),
+  maxScore: z.number().positive().default(5),
+  reviewCount: z.number().int().nonnegative().nullable().optional(),
+  ratingDistribution: z.array(ReviewSiteBucketSchema).default([]),
+  reviews: z.array(ReviewSiteSnippetSchema).default([]),
+});
+
+export const ReviewSitesSchema = z.object({
+  g2: ReviewSiteDataSchema.optional(),
+  trustpilot: ReviewSiteDataSchema.optional(),
+  trustradius: ReviewSiteDataSchema.optional(),
+  capterra: ReviewSiteDataSchema.optional(),
+});
+
 // --- Tweet ---
 export const TweetSchema = z.object({
   author: z.string(),
@@ -70,6 +108,7 @@ export const CompanySchema = z.object({
   description: z.string(),
   plans: z.array(PlanSchema).min(1),
   score: ScoreSchema.optional(),
+  reviewSites: ReviewSitesSchema.default({}),
   reviews: z.array(ReviewSchema).default([]),
   tweets: z.array(TweetSchema).default([]),
   pricingUrl: z.string().url().nullable().optional(),

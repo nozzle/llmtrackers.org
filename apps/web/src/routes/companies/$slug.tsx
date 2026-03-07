@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { getCompanyBySlug } from "~/data";
 import { CompanyMark } from "~/components/company-mark";
-import { LLM_MODEL_LABELS } from "@llm-tracker/shared";
-import type { LlmModelKey } from "@llm-tracker/shared";
+import { ReviewSiteScoreBadge } from "~/components/review-site-badge";
+import { LLM_MODEL_LABELS, REVIEW_SITE_LABELS, REVIEW_SITE_PLATFORMS } from "@llm-tracker/shared";
+import type { LlmModelKey, ReviewSitePlatform } from "@llm-tracker/shared";
 
 export const Route = createFileRoute("/companies/$slug")({
   component: CompanyPage,
@@ -61,6 +62,11 @@ const LLM_KEYS: LlmModelKey[] = [
   "aiOverviews",
   "aiMode",
 ];
+
+function formatBucketLabel(platform: ReviewSitePlatform, label: string): string {
+  if (platform === "trustradius") return `${label}/5`;
+  return label;
+}
 
 function CompanyPage() {
   const { slug } = Route.useParams();
@@ -252,6 +258,136 @@ function CompanyPage() {
           ))}
         </div>
       </section>
+
+      {REVIEW_SITE_PLATFORMS.some((platform) => company.reviewSites[platform]) && (
+        <section className="mb-12">
+          <div className="mb-4 flex items-end justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900">Ratings & Reviews</h2>
+              <p className="mt-1 text-sm text-gray-600">
+                Official review-platform scores, rating distributions, and recent snippets.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-2">
+            {REVIEW_SITE_PLATFORMS.map((platform) => {
+              const site = company.reviewSites[platform];
+              if (!site) return null;
+
+              return (
+                <section
+                  key={platform}
+                  className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {REVIEW_SITE_LABELS[platform]}
+                      </h3>
+                      <a
+                        href={site.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-1 inline-flex text-sm text-blue-600 hover:underline"
+                      >
+                        View official page
+                      </a>
+                    </div>
+                    <div className="text-right">
+                      <ReviewSiteScoreBadge
+                        platform={platform}
+                        score={site.score}
+                        maxScore={site.maxScore}
+                      />
+                      {site.reviewCount != null && (
+                        <div className="mt-2 text-sm text-gray-500">
+                          {site.reviewCount.toLocaleString()} reviews
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {site.ratingDistribution.length > 0 && (
+                    <div className="mt-5 space-y-2">
+                      <h4 className="text-xs font-medium uppercase tracking-wide text-gray-500">
+                        Rating Distribution
+                      </h4>
+                      {site.ratingDistribution.map((bucket) => {
+                        const maxCount = Math.max(
+                          ...site.ratingDistribution.map((entry) => entry.count),
+                          1
+                        );
+
+                        return (
+                          <div key={`${platform}-${bucket.label}`} className="flex items-center gap-3">
+                            <div className="w-12 text-sm text-gray-600">
+                              {formatBucketLabel(platform, bucket.label)}
+                            </div>
+                            <div className="h-2 flex-1 overflow-hidden rounded-full bg-gray-100">
+                              <div
+                                className="h-full rounded-full bg-blue-500"
+                                style={{ width: `${(bucket.count / maxCount) * 100}%` }}
+                              />
+                            </div>
+                            <div className="w-12 text-right text-sm text-gray-500">
+                              {bucket.count}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {site.reviews.length > 0 && (
+                    <div className="mt-5 space-y-3">
+                      <h4 className="text-xs font-medium uppercase tracking-wide text-gray-500">
+                        Review Snippets
+                      </h4>
+                      {site.reviews.map((review, index) => (
+                        <div
+                          key={`${platform}-${review.author ?? "anon"}-${index}`}
+                          className="rounded-lg border border-gray-100 bg-gray-50 p-4"
+                        >
+                          <div className="mb-2 flex flex-wrap items-center gap-x-2 gap-y-1">
+                            <span className="font-medium text-gray-900">
+                              {review.author ?? "Anonymous"}
+                            </span>
+                            {review.title && (
+                              <span className="text-sm text-gray-600">
+                                {review.title}
+                              </span>
+                            )}
+                            {review.rating != null && (
+                              <span className="text-xs font-medium text-gray-500">
+                                {review.rating}/{site.maxScore}
+                              </span>
+                            )}
+                            {review.date && (
+                              <span className="text-xs text-gray-400">{review.date}</span>
+                            )}
+                          </div>
+                          <p className="text-sm leading-6 text-gray-700">{review.excerpt}</p>
+                          {review.url && (
+                            <a
+                              href={review.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="mt-2 inline-flex text-sm text-blue-600 hover:underline"
+                            >
+                              Read source review
+                            </a>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </section>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* Reviews */}
       {company.reviews.length > 0 && (

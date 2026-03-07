@@ -23,11 +23,18 @@ import {
 import {
   parseCompanyYaml,
   prepareUpdatedCompanyYaml,
+  prepareUpdatedCompanyReviewSitesYaml,
 } from "@llm-tracker/shared";
 import { fetchPageText } from "./scraper";
 import { extractWithLlm } from "./extractor";
 import { diffCompany, formatDiffMarkdown, type PlanDiff } from "./differ";
 import { isAuthorizedManualTrigger } from "./auth";
+import {
+  collectReviewSites,
+  diffReviewSites,
+  formatReviewSiteDiffMarkdown,
+  type ReviewSiteDiff,
+} from "./review-sites";
 
 // ---- Types ----
 
@@ -45,8 +52,15 @@ interface CheckResult {
   slug: string;
   status: "skipped" | "no-changes" | "changes-detected" | "error";
   diffs?: PlanDiff[];
+  reviewSiteDiffs?: ReviewSiteDiff[];
   prUrl?: string;
   error?: string;
+}
+
+interface PlanExtractionResult {
+  diffs: PlanDiff[];
+  preparedYamlText: string;
+  rawResponse: string;
 }
 
 // ---- Main logic ----
@@ -140,56 +154,39 @@ async function checkCompany(
   const yamlText = atob(fileContent.content);
   const { company } = parseCompanyYaml(yamlText);
 
-  if (!company || !company.pricingUrl) {
-    console.log(`${slug}: No pricing URL, skipping`);
-    return { slug, status: "skipped" };
+  if (!company) {
+    return { slug, status: "error", error: "Failed to parse company YAML" };
   }
 
-  // 2. Fetch the pricing page
-  console.log(`${slug}: Fetching ${company.pricingUrl}`);
-  let pageText = await fetchPageText(company.pricingUrl);
+  const planResult = await collectPlanChanges(openaiKey, slug, company, yamlText);
+  const diffs = planResult?.diffs ?? [];
 
-  // Also fetch features page if available
-  if (company.featuresUrl) {
-    const featuresText = await fetchPageText(company.featuresUrl);
-    if (featuresText) {
-      pageText = (pageText ?? "") + "\n\n--- FEATURES PAGE ---\n\n" + featuresText;
+  const extractedReviewSites = await collectReviewSites(company.reviewSites);
+  const reviewSiteDiffs = diffReviewSites(company.reviewSites, extractedReviewSites);
+
+  if (diffs.length === 0 && reviewSiteDiffs.length === 0) {
+    if (!company.pricingUrl && Object.keys(company.reviewSites).length === 0) {
+      console.log(`${slug}: No pricing URL or review-site URLs, skipping`);
+      return { slug, status: "skipped" };
     }
-  }
 
-  if (!pageText) {
-    return { slug, status: "error", error: "Failed to fetch pricing page" };
-  }
-
-  // 3. Extract structured data with LLM
-  console.log(`${slug}: Extracting with LLM`);
-  const extraction = await extractWithLlm(openaiKey, slug, pageText);
-
-  if (extraction.plans.length === 0) {
-    console.log(`${slug}: No plans extracted`);
-    return { slug, status: "no-changes" };
-  }
-
-  // 4. Diff against existing data
-  const diffs = diffCompany(company, extraction.plans);
-
-  if (diffs.length === 0) {
     console.log(`${slug}: No changes detected`);
     return { slug, status: "no-changes" };
   }
 
-  console.log(`${slug}: ${diffs.length} plan(s) with changes`);
+  console.log(
+    `${slug}: ${diffs.length} plan(s) with changes, ${reviewSiteDiffs.length} review site(s) with changes`
+  );
 
   // 5. Create a PR with the changes
   const branchName = `auto-update/${slug}`;
   await createBranch(token, owner, repo, branchName, baseSha);
 
-  const today = new Date().toISOString().split("T")[0];
-  const prepared = prepareUpdatedCompanyYaml(
-    yamlText,
-    extraction.plans,
-    today
-  );
+  const preparedPlans = planResult?.preparedYamlText ?? yamlText;
+  const prepared =
+    reviewSiteDiffs.length > 0
+      ? prepareUpdatedCompanyReviewSitesYaml(preparedPlans, extractedReviewSites)
+      : { yamlText: preparedPlans };
 
   await upsertFile(
     token,
@@ -197,12 +194,17 @@ async function checkCompany(
     repo,
     filePath,
     prepared.yamlText,
-    `chore: update ${slug} pricing and feature data`,
+    `chore: update ${slug} pricing, feature, and review-site data`,
     branchName,
     fileContent.sha
   );
 
-  const diffMarkdown = formatDiffMarkdown(slug, diffs);
+  const markdownSections = [];
+  if (diffs.length > 0) markdownSections.push(formatDiffMarkdown(slug, diffs));
+  if (reviewSiteDiffs.length > 0) {
+    markdownSections.push(formatReviewSiteDiffMarkdown(reviewSiteDiffs));
+  }
+  const diffMarkdown = markdownSections.join("\n\n");
   const existingPr = await findOpenPullRequestByHead(
     token,
     owner,
@@ -212,22 +214,23 @@ async function checkCompany(
 
   if (existingPr) {
     console.log(`${slug}: Reusing existing PR ${existingPr.html_url}`);
-    return {
-      slug,
-      status: "changes-detected",
-      diffs,
-      prUrl: existingPr.html_url,
-    };
+      return {
+        slug,
+        status: "changes-detected",
+        diffs,
+        reviewSiteDiffs,
+        prUrl: existingPr.html_url,
+      };
   }
 
   const pr = await createPullRequest(
     token,
     owner,
     repo,
-    `[Auto] Detected pricing/feature changes: ${company.name ?? slug}`,
+    `[Auto] Detected data changes: ${company.name ?? slug}`,
     diffMarkdown +
       "\n\n<details><summary>Raw LLM extraction</summary>\n\n```json\n" +
-      extraction.rawResponse +
+      (planResult?.rawResponse ?? "{}") +
       "\n```\n\n</details>",
     branchName,
     defaultBranch
@@ -238,7 +241,52 @@ async function checkCompany(
     slug,
     status: "changes-detected",
     diffs,
+    reviewSiteDiffs,
     prUrl: pr.html_url,
+  };
+}
+
+async function collectPlanChanges(
+  openaiKey: string,
+  slug: string,
+  company: ReturnType<typeof parseCompanyYaml>["company"],
+  yamlText: string
+): Promise<PlanExtractionResult | null> {
+  if (!company.pricingUrl) {
+    console.log(`${slug}: No pricing URL, skipping plan extraction`);
+    return null;
+  }
+
+  console.log(`${slug}: Fetching ${company.pricingUrl}`);
+  let pageText = await fetchPageText(company.pricingUrl);
+
+  if (company.featuresUrl) {
+    const featuresText = await fetchPageText(company.featuresUrl);
+    if (featuresText) {
+      pageText = (pageText ?? "") + "\n\n--- FEATURES PAGE ---\n\n" + featuresText;
+    }
+  }
+
+  if (!pageText) {
+    console.log(`${slug}: Failed to fetch pricing/features page`);
+    return null;
+  }
+
+  console.log(`${slug}: Extracting with LLM`);
+  const extraction = await extractWithLlm(openaiKey, slug, pageText);
+  if (extraction.plans.length === 0) {
+    console.log(`${slug}: No plans extracted`);
+    return null;
+  }
+
+  const diffs = diffCompany(company, extraction.plans);
+  const today = new Date().toISOString().split("T")[0];
+  const preparedPlans = prepareUpdatedCompanyYaml(yamlText, extraction.plans, today);
+
+  return {
+    diffs,
+    preparedYamlText: preparedPlans.yamlText,
+    rawResponse: extraction.rawResponse,
   };
 }
 
