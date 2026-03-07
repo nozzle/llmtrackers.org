@@ -1,8 +1,8 @@
 import { handleFormRequest } from "./form/routes";
 import {
+  handleUpdateQueueBatch,
   handleScheduledUpdate,
   handleUpdateAdminRequest,
-  processCompanyUpdate,
 } from "./update/runtime";
 import type { AppEnv, UpdateQueueMessage } from "./types";
 
@@ -50,14 +50,6 @@ export default {
     batch: MessageBatch<UpdateQueueMessage>,
     env: AppEnv
   ): Promise<void> {
-    for (const message of batch.messages) {
-      try {
-        await processCompanyUpdate(env, message.body);
-        message.ack();
-      } catch (error) {
-        console.error("Failed to process update queue message", message.body, error);
-        message.retry();
-      }
-    }
+    await handleUpdateQueueBatch(batch, env);
   },
 } satisfies ExportedHandler<AppEnv, UpdateQueueMessage>;
