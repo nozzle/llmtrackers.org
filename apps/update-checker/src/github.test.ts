@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { findOpenPullRequestByHead } from "./github";
+import { findOpenPullRequestByHead } from "@llm-tracker/github";
 
 describe("findOpenPullRequestByHead", () => {
   afterEach(() => {

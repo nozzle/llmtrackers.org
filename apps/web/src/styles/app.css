@@ -7,13 +7,13 @@
   -webkit-appearance: none;
   appearance: none;
   background: transparent;
-  height: 0;
+  height: 24px;
 }
 
 .range-thumb::-moz-range-track {
   appearance: none;
   background: transparent;
-  height: 0;
+  height: 24px;
 }
 
 /* Style the thumb */
@@ -30,6 +30,7 @@
   cursor: pointer;
   position: relative;
   z-index: 1;
+  margin-top: 3px; /* (24px track - 18px thumb) / 2 = center vertically */
 }
 
 .range-thumb::-moz-range-thumb {

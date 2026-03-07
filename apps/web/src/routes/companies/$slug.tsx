@@ -1,10 +1,12 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { getCompanyBySlug } from "~/data";
 import { CompanyMark } from "~/components/company-mark";
+import { EditPlanModal } from "~/components/edit-plan-modal";
 import { ReviewSiteLabel, ReviewSiteMark, ReviewSiteScoreBadge } from "~/components/review-site-badge";
 import { getReviewSiteBranding } from "~/review-site-branding";
 import { LLM_MODEL_LABELS, REVIEW_SITE_LABELS, REVIEW_SITE_PLATFORMS } from "@llm-tracker/shared";
-import type { LlmModelKey, ReviewSitePlatform } from "@llm-tracker/shared";
+import type { LlmModelKey, Plan, ReviewSitePlatform } from "@llm-tracker/shared";
 
 export const Route = createFileRoute("/companies/$slug")({
   component: CompanyPage,
@@ -85,6 +87,7 @@ function getReviewPlatformMatch(platform: string): ReviewSitePlatform | null {
 function CompanyPage() {
   const { slug } = Route.useParams();
   const company = getCompanyBySlug(slug);
+  const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
 
   if (!company) {
     return (
@@ -149,8 +152,28 @@ function CompanyPage() {
           {company.plans.map((plan) => (
             <div
               key={plan.slug}
-              className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
+              className="group relative rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
             >
+              <button
+                type="button"
+                onClick={() => setEditingPlan(plan)}
+                className="absolute right-2 top-2 cursor-pointer rounded p-1 text-gray-400 opacity-0 transition-opacity hover:bg-gray-100 hover:text-gray-600 group-hover:opacity-100"
+                title="Suggest an edit"
+              >
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                  />
+                </svg>
+              </button>
               <div className="mb-4 flex items-start justify-between">
                 <h3 className="text-lg font-semibold text-gray-900">
                   {plan.name}
@@ -511,6 +534,17 @@ function CompanyPage() {
           Suggest Correction
         </Link>
       </section>
+
+      {editingPlan && company && (
+        <EditPlanModal
+          companySlug={company.slug}
+          companyName={company.name}
+          planSlug={editingPlan.slug}
+          planName={editingPlan.name}
+          plan={editingPlan}
+          onClose={() => setEditingPlan(null)}
+        />
+      )}
     </div>
   );
 }

@@ -2,6 +2,10 @@
   "name": "form-worker",
   "private": true,
   "type": "module",
+  "dependencies": {
+    "@llm-tracker/github": "workspace:*",
+    "@llm-tracker/shared": "workspace:*"
+  },
   "scripts": {
     "dev": "wrangler dev",
     "build": "wrangler deploy --dry-run --outdir=dist",

@@ -1,16 +1,19 @@
 /**
  * Form submission worker for LLM Tracker Comparison.
  *
- * Accepts POST requests from the "Suggest Edit" form on the website,
- * validates the data, and creates a GitHub Issue via the GitHub App API.
+ * Routes:
+ *   POST /api/suggest     — Create a GitHub Issue from the suggestion form
+ *   POST /api/suggest-pr  — Create a GitHub PR with specific plan field changes
+ *   POST /                — Legacy alias for /api/suggest
  */
 
 import {
   createAppJwt,
   getInstallationToken,
   createGitHubIssue,
-} from "./github";
+} from "@llm-tracker/github";
 import { validateSubmission, type FormSubmission } from "./validation";
+import { validateEditPayload, handleEditSuggestion } from "./edit-handler";
 import { turnstileEnabled, verifyTurnstileToken } from "./turnstile";
 
 // ---- Types ----
@@ -215,66 +218,130 @@ export default {
       );
     }
 
-    // Validate
-    const validation = validateSubmission(body);
-    if (!validation.ok) {
-      return jsonResponse(
-        { error: validation.error },
-        400,
-        cors
-      );
+    // Route by pathname
+    const url = new URL(request.url);
+    const path = url.pathname;
+
+    if (path === "/api/suggest-pr") {
+      return handleSuggestPr(body, request, env, cors);
     }
 
-    const form = validation.value;
-
-    if (turnstileEnabled(env.TURNSTILE_SITE_KEY, env.TURNSTILE_SECRET_KEY)) {
-      const verification = await verifyTurnstileToken(
-        form.turnstileToken ?? "",
-        env.TURNSTILE_SECRET_KEY as string,
-        getClientIdentifier(request)
-      );
-
-      if (!verification.ok) {
-        return jsonResponse({ error: verification.error }, 403, cors);
-      }
-    }
-
-    // Create GitHub issue
-    try {
-      const jwt = await createAppJwt(
-        env.GITHUB_APP_ID,
-        env.GITHUB_APP_PRIVATE_KEY
-      );
-      const token = await getInstallationToken(jwt, env.GITHUB_INSTALLATION_ID);
-
-      const issue = await createGitHubIssue(
-        token,
-        env.GITHUB_REPO_OWNER,
-        env.GITHUB_REPO_NAME,
-        formatIssueTitle(form),
-        formatIssueBody(form),
-        issueLabels(form.field)
-      );
-
-      return jsonResponse(
-        {
-          success: true,
-          issueUrl: issue.html_url,
-          issueNumber: issue.number,
-        },
-        201,
-        cors
-      );
-    } catch (err) {
-      console.error("GitHub API error:", err);
-      return jsonResponse(
-        { error: "Failed to create GitHub issue. Please try again later." },
-        502,
-        cors
-      );
-    }
+    // Default: issue-based suggestion (POST / or POST /api/suggest)
+    return handleSuggestIssue(body, request, env, cors);
   },
 } satisfies ExportedHandler<Env>;
+
+// ---- Route: POST /api/suggest (issue-based) ----
+
+async function handleSuggestIssue(
+  body: unknown,
+  request: Request,
+  env: Env,
+  cors: HeadersInit
+): Promise<Response> {
+  const validation = validateSubmission(body);
+  if (!validation.ok) {
+    return jsonResponse({ error: validation.error }, 400, cors);
+  }
+
+  const form = validation.value;
+
+  if (turnstileEnabled(env.TURNSTILE_SITE_KEY, env.TURNSTILE_SECRET_KEY)) {
+    const verification = await verifyTurnstileToken(
+      form.turnstileToken ?? "",
+      env.TURNSTILE_SECRET_KEY as string,
+      getClientIdentifier(request)
+    );
+    if (!verification.ok) {
+      return jsonResponse({ error: verification.error }, 403, cors);
+    }
+  }
+
+  try {
+    const jwt = await createAppJwt(
+      env.GITHUB_APP_ID,
+      env.GITHUB_APP_PRIVATE_KEY
+    );
+    const token = await getInstallationToken(jwt, env.GITHUB_INSTALLATION_ID);
+
+    const issue = await createGitHubIssue(
+      token,
+      env.GITHUB_REPO_OWNER,
+      env.GITHUB_REPO_NAME,
+      formatIssueTitle(form),
+      formatIssueBody(form),
+      issueLabels(form.field)
+    );
+
+    return jsonResponse(
+      {
+        success: true,
+        issueUrl: issue.html_url,
+        issueNumber: issue.number,
+      },
+      201,
+      cors
+    );
+  } catch (err) {
+    console.error("GitHub API error:", err);
+    return jsonResponse(
+      { error: "Failed to create GitHub issue. Please try again later." },
+      502,
+      cors
+    );
+  }
+}
+
+// ---- Route: POST /api/suggest-pr (PR-based) ----
+
+async function handleSuggestPr(
+  body: unknown,
+  request: Request,
+  env: Env,
+  cors: HeadersInit
+): Promise<Response> {
+  const validation = validateEditPayload(body);
+  if (!validation.ok) {
+    return jsonResponse({ error: validation.error }, 400, cors);
+  }
+
+  const payload = validation.value;
+
+  if (turnstileEnabled(env.TURNSTILE_SITE_KEY, env.TURNSTILE_SECRET_KEY)) {
+    const verification = await verifyTurnstileToken(
+      payload.turnstileToken ?? "",
+      env.TURNSTILE_SECRET_KEY as string,
+      getClientIdentifier(request)
+    );
+    if (!verification.ok) {
+      return jsonResponse({ error: verification.error }, 403, cors);
+    }
+  }
+
+  try {
+    const result = await handleEditSuggestion(payload, env);
+    if (!result.success) {
+      return jsonResponse({ error: result.error }, result.status, cors);
+    }
+
+    return jsonResponse(
+      {
+        success: true,
+        prUrl: result.prUrl,
+        prNumber: result.prNumber,
+      },
+      201,
+      cors
+    );
+  } catch (err) {
+    console.error("GitHub API error (suggest-pr):", err);
+    return jsonResponse(
+      { error: "Failed to create GitHub PR. Please try again later." },
+      502,
+      cors
+    );
+  }
+}
 
 function jsonResponse(
   data: unknown,

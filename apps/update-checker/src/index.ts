@@ -19,7 +19,7 @@ import {
   upsertFile,
   createPullRequest,
   findOpenPullRequestByHead,
-} from "./github";
+} from "@llm-tracker/github";
 import {
   parseCompanyYaml,
   prepareUpdatedCompanyYaml,

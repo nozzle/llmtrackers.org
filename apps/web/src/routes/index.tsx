@@ -4,6 +4,7 @@ import { getAllCompanies, getAllPlansWithCompany } from "~/data";
 import { CompanyMark } from "~/components/company-mark";
 import { LlmIcon } from "~/components/llm-icon";
 import { ReviewSiteMark, ReviewSiteScoreBadge } from "~/components/review-site-badge";
+import { EditPlanModal } from "~/components/edit-plan-modal";
 import { LLM_MODEL_LABELS, REVIEW_SITE_LABELS } from "@llm-tracker/shared";
 import type { LlmModelKey, PlanWithCompany, ReviewSitePlatform } from "@llm-tracker/shared";
 import { z } from "zod";
@@ -875,6 +876,7 @@ function HomePage() {
   const navigate = useNavigate();
 
   const [selectedPlans, setSelectedPlans] = useState<Set<string>>(new Set());
+  const [editingPlan, setEditingPlan] = useState<PlanWithCompany | null>(null);
 
   // ---- Derived search state with defaults ----
 
@@ -1010,10 +1012,10 @@ function HomePage() {
       result = result.filter((p) => p.schedule === scheduleFilter);
     }
 
-    // LLM multi-select (match ANY)
+    // LLM multi-select (match ALL)
     if (llmFilter.length > 0) {
       result = result.filter((p) =>
-        llmFilter.some((k) => p.llmSupport[k])
+        llmFilter.every((k) => p.llmSupport[k])
       );
     }
 
@@ -1608,7 +1610,7 @@ function HomePage() {
               return (
                 <tr
                   key={key}
-                  className={`${isSelected ? "bg-blue-50" : "hover:bg-gray-50"} transition-colors`}
+                  className={`group ${isSelected ? "bg-blue-50" : "hover:bg-gray-50"} transition-colors`}
                 >
                   <td
                     className={`sticky left-0 z-10 px-3 py-3 ${isSelected ? "bg-blue-50" : "bg-white"}`}
@@ -1637,6 +1639,26 @@ function HomePage() {
                         >
                           {plan.companyName}
                         </Link>
+                        <button
+                          type="button"
+                          onClick={() => setEditingPlan(plan)}
+                          className="cursor-pointer rounded p-0.5 text-gray-400 opacity-0 transition-opacity hover:bg-gray-100 hover:text-gray-600 group-hover:opacity-100"
+                          title="Suggest an edit"
+                        >
+                          <svg
+                            className="h-3.5 w-3.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                            />
+                          </svg>
+                        </button>
                       </div>
                     </td>
                   )}
@@ -1760,6 +1782,17 @@ function HomePage() {
         <div className="mt-8 text-center text-gray-500">
           No plans match your filters. Try adjusting your search criteria.
         </div>
+      )}
+
+      {editingPlan && (
+        <EditPlanModal
+          companySlug={editingPlan.companySlug}
+          companyName={editingPlan.companyName}
+          planSlug={editingPlan.slug}
+          planName={editingPlan.name}
+          plan={editingPlan}
+          onClose={() => setEditingPlan(null)}
+        />
       )}
     </div>
   );
