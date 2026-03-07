@@ -4,7 +4,7 @@
   "type": "module",
   "packageManager": "pnpm@10.30.3",
   "scripts": {
-    "dev": "pnpm exec vite dev",
+    "dev": "NODE_OPTIONS=\"${NODE_OPTIONS:+$NODE_OPTIONS }--inspect-port=0\" pnpm exec vite dev",
     "dev:worker": "pnpm exec wrangler dev",
     "build": "pnpm build:web",
     "build:web": "pnpm compile-data && pnpm exec vite build && tsx scripts/generate-sitemap.ts",
