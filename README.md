@@ -65,6 +65,7 @@ pnpm --filter form-worker build
 pnpm --filter update-checker dev
 pnpm --filter update-checker test
 pnpm --filter update-checker build
+pnpm backfill-review-sites
 ```
 
 ## Data Model
@@ -194,6 +195,28 @@ curl -X POST "https://<update-checker-url>" \
 ```
 
 If the token is missing or invalid, the worker returns `401 Unauthorized`.
+
+## Review Site Backfill
+
+Seed official review-site URLs in `data/companies/*.yaml` under `reviewSites`, then run:
+
+```bash
+pnpm backfill-review-sites
+```
+
+This runs a dry run by default. To persist updates:
+
+```bash
+pnpm backfill-review-sites -- --write
+```
+
+To target a single company slug:
+
+```bash
+pnpm backfill-review-sites -- ahrefs-brand-radar --write
+```
+
+The same review-site backfill core is used by the local CLI and the Cloudflare update-checker worker, so local results match the automated path.
 
 ## Testing
 

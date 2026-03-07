@@ -23,18 +23,16 @@ import {
 import {
   parseCompanyYaml,
   prepareUpdatedCompanyYaml,
-  prepareUpdatedCompanyReviewSitesYaml,
 } from "@llm-tracker/shared";
 import { fetchPageText } from "./scraper";
 import { extractWithLlm } from "./extractor";
 import { diffCompany, formatDiffMarkdown, type PlanDiff } from "./differ";
 import { isAuthorizedManualTrigger } from "./auth";
 import {
-  collectReviewSites,
-  diffReviewSites,
   formatReviewSiteDiffMarkdown,
   type ReviewSiteDiff,
 } from "./review-sites";
+import { backfillCompanyReviewSites } from "./review-site-backfill";
 
 // ---- Types ----
 
@@ -161,8 +159,8 @@ async function checkCompany(
   const planResult = await collectPlanChanges(openaiKey, slug, company, yamlText);
   const diffs = planResult?.diffs ?? [];
 
-  const extractedReviewSites = await collectReviewSites(company.reviewSites);
-  const reviewSiteDiffs = diffReviewSites(company.reviewSites, extractedReviewSites);
+  const reviewSiteResult = await backfillCompanyReviewSites(yamlText);
+  const reviewSiteDiffs = reviewSiteResult.diffs;
 
   if (diffs.length === 0 && reviewSiteDiffs.length === 0) {
     if (!company.pricingUrl && Object.keys(company.reviewSites).length === 0) {
@@ -185,15 +183,18 @@ async function checkCompany(
   const preparedPlans = planResult?.preparedYamlText ?? yamlText;
   const prepared =
     reviewSiteDiffs.length > 0
-      ? prepareUpdatedCompanyReviewSitesYaml(preparedPlans, extractedReviewSites)
-      : { yamlText: preparedPlans };
+      ? await backfillCompanyReviewSites(
+          preparedPlans,
+          reviewSiteResult.extractedReviewSites
+        )
+      : { updatedYamlText: preparedPlans };
 
   await upsertFile(
     token,
     owner,
     repo,
     filePath,
-    prepared.yamlText,
+    prepared.updatedYamlText,
     `chore: update ${slug} pricing, feature, and review-site data`,
     branchName,
     fileContent.sha

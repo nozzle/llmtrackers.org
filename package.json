@@ -6,6 +6,7 @@
     "dev": "pnpm --filter web dev",
     "build": "pnpm compile-data && pnpm --filter web build",
     "compile-data": "pnpm --filter @llm-tracker/shared compile",
+    "backfill-review-sites": "pnpm --filter update-checker backfill-review-sites",
     "lint": "eslint .",
     "test": "pnpm -r test",
     "typecheck": "pnpm compile-data && pnpm -r typecheck"
