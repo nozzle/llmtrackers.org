@@ -1,0 +1,98 @@
+{
+  "ahrefs-brand-radar": {
+    "logo": "ahrefs-brand-radar-logo.svg",
+    "favicon": "ahrefs-brand-radar-favicon.ico",
+    "website": "https://ahrefs.com/brand-radar"
+  },
+  "airops": {
+    "logo": "airops-logo.svg",
+    "favicon": null,
+    "website": "https://www.airops.com/"
+  },
+  "athenahq": {
+    "logo": "athenahq-logo.svg",
+    "favicon": "athenahq-favicon.svg",
+    "website": "https://www.athenahq.ai/"
+  },
+  "brandlight-ai": {
+    "logo": "brandlight-ai-logo.webp",
+    "favicon": null,
+    "website": "https://brandlight.ai/"
+  },
+  "conductor": {
+    "logo": "conductor-logo.svg",
+    "favicon": "conductor-favicon.ico",
+    "website": "https://www.conductor.com/"
+  },
+  "demandsphere": {
+    "logo": "demandsphere-logo.png",
+    "favicon": null,
+    "website": "https://www.demandsphere.com/"
+  },
+  "getstat": {
+    "logo": "getstat-logo.svg",
+    "favicon": null,
+    "website": "https://getstat.com/"
+  },
+  "gumshoe-ai": {
+    "logo": "gumshoe-ai-logo.png",
+    "favicon": "gumshoe-ai-favicon.png",
+    "website": "https://www.gumshoe.ai/"
+  },
+  "knowatoa": {
+    "logo": "knowatoa-logo.svg",
+    "favicon": null,
+    "website": "https://knowatoa.com/"
+  },
+  "otterly-ai": {
+    "logo": "otterly-ai-logo.png",
+    "favicon": null,
+    "website": "https://otterly.ai/"
+  },
+  "peec-ai": {
+    "logo": "peec-ai-logo.png",
+    "favicon": "peec-ai-favicon.png",
+    "website": "https://www.peec.ai/"
+  },
+  "profound": {
+    "logo": null,
+    "favicon": "profound-favicon.ico",
+    "website": "https://www.tryprofound.com/"
+  },
+  "rankscale": {
+    "logo": "rankscale-logo.png",
+    "favicon": "rankscale-favicon.png",
+    "website": "https://www.rankscale.ai/"
+  },
+  "scrunch-ai": {
+    "logo": null,
+    "favicon": "scrunch-ai-favicon.ico",
+    "website": "https://scrunch.ai/",
+    "error": "TypeError: fetch failed"
+  },
+  "waikay": {
+    "logo": "waikay-logo.png",
+    "favicon": null,
+    "website": "https://waikay.io/"
+  },
+  "writesonic-geo": {
+    "logo": "writesonic-geo-logo.svg",
+    "favicon": null,
+    "website": "https://writesonic.com/"
+  },
+  "xfunnel": {
+    "logo": null,
+    "favicon": null,
+    "website": "https://www.xfunnel.ai/"
+  },
+  "xofu": {
+    "logo": null,
+    "favicon": null,
+    "website": "https://xofu.com/"
+  },
+  "ziptie-dev": {
+    "logo": "ziptie-dev-logo.png",
+    "favicon": "ziptie-dev-favicon.png",
+    "website": "https://ziptie.dev/"
+  }
+}

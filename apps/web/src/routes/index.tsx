@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { getAllCompanies, getAllPlansWithCompany } from "~/data";
+import { CompanyMark } from "~/components/company-mark";
 import { LLM_MODEL_LABELS } from "@llm-tracker/shared";
 import type { LlmModelKey, PlanWithCompany } from "@llm-tracker/shared";
 
@@ -287,17 +288,20 @@ function HomePage() {
                     />
                   </td>
                   <td className={`sticky left-10 z-10 px-4 py-3 ${isSelected ? "bg-blue-50" : "bg-white"}`}>
-                    <div>
-                      <Link
-                        to="/companies/$slug"
-                        params={{ slug: plan.companySlug }}
-                        className="font-medium text-blue-600 hover:text-blue-800"
-                      >
-                        {plan.companyName}
-                      </Link>
-                      <span className="ml-2 text-sm text-gray-500">
-                        {plan.name}
-                      </span>
+                    <div className="flex items-center gap-3">
+                      <CompanyMark slug={plan.companySlug} name={plan.companyName} size="sm" />
+                      <div>
+                        <Link
+                          to="/companies/$slug"
+                          params={{ slug: plan.companySlug }}
+                          className="font-medium text-blue-600 hover:text-blue-800"
+                        >
+                          {plan.companyName}
+                        </Link>
+                        <span className="ml-2 text-sm text-gray-500">
+                          {plan.name}
+                        </span>
+                      </div>
                     </div>
                   </td>
                   <td className="px-4 py-3">

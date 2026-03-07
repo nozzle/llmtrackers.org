@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { getCompanyBySlug } from "~/data";
+import { CompanyMark } from "~/components/company-mark";
 import { LLM_MODEL_LABELS } from "@llm-tracker/shared";
 import type { LlmModelKey } from "@llm-tracker/shared";
 
@@ -87,17 +88,21 @@ function CompanyPage() {
           &larr; Back to comparison
         </Link>
         <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">{company.name}</h1>
+          <div className="flex items-start gap-4">
+            <CompanyMark slug={company.slug} name={company.name} size="lg" />
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">{company.name}</h1>
             <p className="mt-1 text-lg text-gray-600">{company.description}</p>
             <a
               href={company.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2 inline-block break-all text-sm text-blue-600 hover:underline"
+              className="mt-2 inline-flex items-center gap-2 break-all text-sm text-blue-600 hover:underline"
             >
+              <CompanyMark slug={company.slug} name={company.name} size="sm" mode="favicon" />
               {company.website}
             </a>
+            </div>
           </div>
           {company.score && (
             <div className="flex-shrink-0 rounded-lg bg-green-50 px-6 py-4 text-center">

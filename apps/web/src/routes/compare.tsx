@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { getPlanByKey, getAllCompanies } from "~/data";
+import { CompanyMark } from "~/components/company-mark";
 import { LLM_MODEL_LABELS } from "@llm-tracker/shared";
 import type { LlmModelKey, PlanWithCompany } from "@llm-tracker/shared";
 import { z } from "zod";
@@ -163,15 +164,20 @@ function ComparePage() {
                     key={`${plan.companySlug}/${plan.slug}`}
                     className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                   >
-                    <Link
-                      to="/companies/$slug"
-                      params={{ slug: plan.companySlug }}
-                      className="text-blue-600 hover:underline"
-                    >
-                      {plan.companyName}
-                    </Link>
-                    <div className="font-normal normal-case text-gray-400">
-                      {plan.name}
+                    <div className="flex items-center gap-3">
+                      <CompanyMark slug={plan.companySlug} name={plan.companyName} size="sm" />
+                      <div>
+                        <Link
+                          to="/companies/$slug"
+                          params={{ slug: plan.companySlug }}
+                          className="text-blue-600 hover:underline"
+                        >
+                          {plan.companyName}
+                        </Link>
+                        <div className="font-normal normal-case text-gray-400">
+                          {plan.name}
+                        </div>
+                      </div>
                     </div>
                     {company?.score && (
                       <span className="mt-1 inline-block rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
