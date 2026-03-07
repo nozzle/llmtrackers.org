@@ -14,11 +14,11 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
-    "types": ["vite/client", "@cloudflare/workers-types"],
+    "types": ["vite/client"],
     "paths": {
       "~/*": ["./src/*"]
     }
   },
-  "include": ["src", "worker", "scripts", "vite.config.ts"],
+  "include": ["src", "worker", "scripts", "vite.config.ts", "worker-configuration.d.ts"],
   "exclude": ["node_modules", "dist", "apps"]
 }

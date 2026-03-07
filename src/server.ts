@@ -1,10 +1,11 @@
-import { handleFormRequest } from "./form/routes";
+import startHandler from "@tanstack/react-start/server-entry";
+import { handleFormRequest } from "./server/form/routes";
 import {
+  handleUpdateAdminRequest,
   handleUpdateQueueBatch,
   handleScheduledUpdate,
-  handleUpdateAdminRequest,
-} from "./update/runtime";
-import type { AppEnv, UpdateQueueMessage } from "./types";
+} from "./server/update/runtime";
+import type { AppEnv, UpdateQueueMessage } from "./server/types";
 
 function isFormRoute(pathname: string): boolean {
   return [
@@ -24,7 +25,7 @@ function isAdminUpdateRoute(pathname: string): boolean {
 }
 
 export default {
-  async fetch(request: Request, env: AppEnv): Promise<Response> {
+  async fetch(request: Request, env: AppEnv, ctx: ExecutionContext): Promise<Response> {
     const pathname = new URL(request.url).pathname;
 
     if (isAdminUpdateRoute(pathname)) {
@@ -35,7 +36,7 @@ export default {
       return handleFormRequest(request, env);
     }
 
-    return env.ASSETS.fetch(request);
+    return startHandler.fetch(request, { context: { cloudflare: { env, ctx } } });
   },
 
   async scheduled(

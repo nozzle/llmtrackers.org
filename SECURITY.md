@@ -23,9 +23,9 @@ We will acknowledge valid reports as quickly as possible and work on a fix befor
 
 Security-sensitive areas in this repo include:
 
-- Cloudflare Worker request handling in `worker/`
-- GitHub App authentication flows in `worker/form/` and `worker/update/`
-- manual trigger auth in `worker/update/`
+- Cloudflare Worker request handling in `src/server/`
+- GitHub App authentication flows in `src/server/form/` and `src/server/update/`
+- manual trigger auth in `src/server/update/`
 - CI/CD workflows and repository secrets
 
 Please avoid including secrets, private keys, tokens, or personal data in bug reports.

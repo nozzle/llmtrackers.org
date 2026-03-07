@@ -1,10 +1,8 @@
+"$schema" = "node_modules/wrangler/config-schema.json"
 name = "llm-tracker-comparison"
-main = "worker/index.ts"
-compatibility_date = "2025-03-06"
-
-[assets]
-directory = "./dist/client"
-binding = "ASSETS"
+main = "src/server.ts"
+compatibility_date = "2026-03-01"
+compatibility_flags = ["nodejs_compat"]
 
 [triggers]
 crons = ["0 6 * * 1"]
@@ -23,3 +21,6 @@ queue = "llm-tracker-update-jobs"
 queue = "llm-tracker-update-jobs"
 max_batch_size = 5
 max_batch_timeout = 5
+
+[observability]
+enabled = true
