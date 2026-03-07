@@ -65,6 +65,10 @@ score:
   maxTotal: 48
   summary: "Good balance of AI + traditional SEO diagnostics."
 
+reviewSites:
+  g2:
+    url: https://www.g2.com/products/brandlight-ai/reviews
+
 reviews: []
 tweets: []
 pricingUrl: https://brandlight.ai/pricing

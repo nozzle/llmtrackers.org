@@ -38,6 +38,10 @@ score:
   maxTotal: 48
   summary: "Built by ex-Googlers, with advanced sentiment analysis, prompt tracking, and enterprise integrations."
 
+reviewSites:
+  g2:
+    url: https://www.g2.com/products/athenahq/reviews
+
 reviews: []
 tweets: []
 pricingUrl: https://www.athenahq.ai/pricing

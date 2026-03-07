@@ -37,6 +37,12 @@ score:
   maxTotal: 48
   summary: "Tracks brand sentiment, prompt queries, and citations."
 
+reviewSites:
+  g2:
+    url: https://www.g2.com/products/otterly-ai/reviews
+  trustradius:
+    url: https://www.trustradius.com/products/otterly/reviews
+
 reviews: []
 tweets: []
 pricingUrl: https://otterly.ai/pricing
