@@ -10,7 +10,7 @@ import {
 } from "@tanstack/react-router";
 import "~/styles/app.css";
 import { getGeneratedAt } from "~/data";
-import { buildAbsoluteUrl } from "~/site";
+import { buildAbsoluteUrl, buildCanonicalUrl } from "~/site";
 
 const SITE_TITLE = "LLM Tracker Comparison - Compare AI Search Visibility Tools";
 const SITE_DESCRIPTION =
@@ -50,14 +50,15 @@ function RootComponent() {
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
-  const canonicalUrl = buildAbsoluteUrl(pathname);
+  const canonicalUrl = buildCanonicalUrl(pathname);
+  const shareUrl = buildAbsoluteUrl(pathname);
 
   return (
     <html lang="en">
       <head>
         <HeadContent />
         <link rel="canonical" href={canonicalUrl} />
-        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:url" content={shareUrl} />
       </head>
       <body className="min-h-screen bg-gray-50 text-gray-900 antialiased">
         <Header />

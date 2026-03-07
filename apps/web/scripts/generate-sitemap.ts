@@ -7,8 +7,11 @@ import { readdirSync, statSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const DEFAULT_SITE_URL = "https://llm-tracker.pages.dev";
-const SITE_URL = normalizeSiteUrl(
-  process.env.VITE_SITE_URL ?? process.env.SITE_URL ?? process.env.CF_PAGES_URL ?? DEFAULT_SITE_URL
+const RUNTIME_SITE_URL = normalizeSiteUrl(
+  process.env.CF_PAGES_URL ?? process.env.VITE_SITE_URL ?? process.env.SITE_URL ?? DEFAULT_SITE_URL
+);
+const CANONICAL_SITE_URL = normalizeSiteUrl(
+  process.env.VITE_SITE_URL ?? process.env.CF_PAGES_URL ?? process.env.SITE_URL ?? DEFAULT_SITE_URL
 );
 const DIST_DIR = join(import.meta.dirname, "../dist/client");
 
@@ -43,7 +46,7 @@ const urls = htmlFiles.map((file) => {
   }
 
   return `  <url>
-    <loc>${SITE_URL}${path}</loc>
+    <loc>${CANONICAL_SITE_URL}${path}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
@@ -59,7 +62,7 @@ ${urls.join("\n")}
 const robots = `User-agent: *
 Allow: /
 
-Sitemap: ${SITE_URL}/sitemap.xml
+Sitemap: ${CANONICAL_SITE_URL}/sitemap.xml
 `;
 
 writeFileSync(join(DIST_DIR, "sitemap.xml"), sitemap);

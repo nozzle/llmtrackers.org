@@ -154,9 +154,15 @@ pnpm --filter update-checker exec wrangler secret put MANUAL_TRIGGER_TOKEN
 Recommended Cloudflare Pages settings:
 
 - Production branch: `main`
-- Build command: `VITE_SITE_URL=$CF_PAGES_URL pnpm build`
+- Build command: `pnpm build`
 - Build output directory: `apps/web/dist/client`
 - Node.js version: `24`
+
+For URL handling:
+
+- Set `VITE_SITE_URL` to your canonical production URL when you have one
+- Leave previews to use `CF_PAGES_URL` automatically
+- `og:url` will use the preview/runtime URL, while canonical and sitemap URLs prefer `VITE_SITE_URL`
 
 ### Workers
 
