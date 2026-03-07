@@ -223,7 +223,7 @@ export function formatDiffMarkdown(
 
   lines.push("---");
   lines.push(
-    "*Auto-detected by the LLM Tracker update checker. Please review before merging.*"
+    "*Auto-detected by the LLM Trackers update checker. Please review before merging.*"
   );
 
   return lines.join("\n");

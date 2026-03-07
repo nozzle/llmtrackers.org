@@ -1,5 +1,5 @@
 /**
- * Update checker worker for LLM Tracker Comparison.
+ * Update checker worker for LLM Trackers.
  *
  * Runs on a cron schedule (weekly). For each company with a pricingUrl:
  * 1. Fetches the pricing page text

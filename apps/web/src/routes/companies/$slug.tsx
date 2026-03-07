@@ -13,7 +13,7 @@ export const Route = createFileRoute("/companies/$slug")({
   head: ({ params }) => {
     const company = getCompanyBySlug(params.slug);
     const title = company
-      ? `${company.name} - LLM Tracker Comparison`
+      ? `${company.name} - LLM Trackers`
       : "Company Not Found";
     const description = company?.description ?? "";
     const planSummary = company

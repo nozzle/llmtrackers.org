@@ -85,7 +85,7 @@ export const Route = createFileRoute("/")({
     meta: [
       {
         title:
-          "LLM Tracker Comparison - Compare AI Search Visibility Tools",
+          "LLM Trackers - Compare AI Search Visibility Tools",
       },
       {
         name: "description",

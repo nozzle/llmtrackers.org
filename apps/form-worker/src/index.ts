@@ -1,5 +1,5 @@
 /**
- * Form submission worker for LLM Tracker Comparison.
+ * Form submission worker for LLM Trackers.
  *
  * Routes:
  *   POST /api/suggest     — Create a GitHub Issue from the suggestion form
@@ -79,7 +79,7 @@ function formatIssueBody(form: FormSubmission): string {
     lines.push("", "### Notes", "", form.notes);
   }
 
-  lines.push("", "---", "*Submitted via the LLM Tracker Comparison website.*");
+  lines.push("", "---", "*Submitted via the LLM Trackers website.*");
 
   return lines.join("\n");
 }

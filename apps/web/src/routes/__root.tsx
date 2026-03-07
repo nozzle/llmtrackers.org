@@ -12,7 +12,7 @@ import "~/styles/app.css";
 import { getGeneratedAt } from "~/data";
 import { buildAbsoluteUrl, buildCanonicalUrl } from "~/site";
 
-const SITE_TITLE = "LLM Tracker Comparison - Compare AI Search Visibility Tools";
+const SITE_TITLE = "LLM Trackers - Compare AI Search Visibility Tools";
 const SITE_DESCRIPTION =
   "Compare LLM tracking and AI search visibility tools side-by-side. Pricing, features, LLM support, and more for 19 tools and 23 plans.";
 
@@ -27,7 +27,7 @@ export const Route = createRootRoute({
       { property: "og:type", content: "website" },
       { property: "og:title", content: SITE_TITLE },
       { property: "og:description", content: SITE_DESCRIPTION },
-      { property: "og:site_name", content: "LLM Tracker Comparison" },
+      { property: "og:site_name", content: "LLM Trackers" },
       // Twitter Card
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: SITE_TITLE },
@@ -75,10 +75,13 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 function Header() {
   return (
     <header className="border-b border-gray-200 bg-white">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link to="/" className="text-base font-bold text-gray-900 sm:text-xl">
-          LLM Tracker
-          <span className="hidden sm:inline"> Comparison</span>
+      <div className="mx-auto flex max-w-[1600px] items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+        <Link to="/" className="flex items-center">
+          <img
+            src="/llmtrackers-logo.png"
+            alt="LLM Trackers"
+            className="h-8 w-auto sm:h-10"
+          />
         </Link>
         <nav className="flex items-center gap-3 sm:gap-6">
           <Link
@@ -102,12 +105,12 @@ function Header() {
 function Footer() {
   return (
     <footer className="mt-16 border-t border-gray-200 bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="text-sm text-gray-500">
-            LLM Tracker Comparison - Open source comparison data.{" "}
+            LLM Trackers - Open source comparison data.{" "}
             <a
-              href="https://github.com/nozzle/llm-tracker-comparison"
+              href="https://github.com/nozzle/llmtrackers.org"
               className="text-blue-600 hover:underline"
               target="_blank"
               rel="noopener noreferrer"

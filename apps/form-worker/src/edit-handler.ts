@@ -1,5 +1,5 @@
 /**
- * Edit suggestion handler for LLM Tracker Comparison.
+ * Edit suggestion handler for LLM Trackers.
  *
  * Accepts a partial plan change payload, fetches the current YAML from GitHub,
  * applies the changes, and creates a PR with a markdown diff table.
@@ -477,7 +477,7 @@ function buildPrBody(
 
   lines.push(
     "---",
-    "*Submitted via the LLM Tracker Comparison website edit mode.*"
+    "*Submitted via the LLM Trackers website edit mode.*"
   );
 
   return lines.join("\n");

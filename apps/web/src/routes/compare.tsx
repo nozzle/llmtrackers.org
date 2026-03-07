@@ -15,13 +15,13 @@ export const Route = createFileRoute("/compare")({
   validateSearch: compareSearchSchema,
   head: () => ({
     meta: [
-      { title: "Compare Plans - LLM Tracker Comparison" },
+      { title: "Compare Plans - LLM Trackers" },
       {
         name: "description",
         content:
           "Compare AI search visibility tool plans side-by-side. See pricing, LLM support, features, and integrations at a glance.",
       },
-      { property: "og:title", content: "Compare Plans - LLM Tracker" },
+      { property: "og:title", content: "Compare Plans - LLM Trackers" },
       {
         property: "og:description",
         content:

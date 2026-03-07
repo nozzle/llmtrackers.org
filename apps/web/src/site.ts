@@ -1,4 +1,4 @@
-const DEFAULT_SITE_URL = "https://llm-tracker.pages.dev";
+const DEFAULT_SITE_URL = "https://llmtrackers.org";
 
 export function getSiteUrl(): string {
   const previewUrl = import.meta.env.CF_PAGES_URL?.trim();

@@ -6,13 +6,13 @@ export const Route = createFileRoute("/suggest")({
   component: SuggestPage,
   head: () => ({
     meta: [
-      { title: "Suggest an Edit - LLM Tracker Comparison" },
+      { title: "Suggest an Edit - LLM Trackers" },
       {
         name: "description",
         content:
           "Found outdated or incorrect data? Submit a correction for any AI search visibility tool in our comparison.",
       },
-      { property: "og:title", content: "Suggest an Edit - LLM Tracker" },
+      { property: "og:title", content: "Suggest an Edit - LLM Trackers" },
       {
         property: "og:description",
         content:
@@ -154,7 +154,7 @@ function SuggestPage() {
         <p className="mt-2 text-sm text-gray-500">
           Alternatively, you can{" "}
           <a
-            href="https://github.com/nozzle/llm-tracker-comparison"
+            href="https://github.com/nozzle/llmtrackers.org"
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 hover:underline"
