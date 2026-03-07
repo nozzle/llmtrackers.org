@@ -41,7 +41,7 @@ reviewSites:
   g2:
     url: https://www.g2.com/products/otterly-ai/reviews
   trustradius:
-    url: https://www.trustradius.com/products/otterly/reviews
+    url: https://www.trustradius.com/products/otterly-ai/reviews
 
 reviews: []
 tweets: []

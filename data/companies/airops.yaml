@@ -38,6 +38,11 @@ score:
 reviewSites:
   trustradius:
     url: https://www.trustradius.com/products/airops/reviews
+    score: null
+    maxScore: 10
+    reviewCount: 0
+    ratingDistribution: []
+    reviews: []
 reviews: []
 tweets: []
 pricingUrl: https://www.airops.com/pricing

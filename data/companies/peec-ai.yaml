@@ -67,6 +67,11 @@ score:
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/peec.ai
+    score: null
+    maxScore: 5
+    reviewCount: 0
+    ratingDistribution: []
+    reviews: []
 
 reviews: []
 tweets: []

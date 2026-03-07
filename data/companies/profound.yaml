@@ -69,8 +69,18 @@ score:
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/tryprofound.com
+    score: null
+    maxScore: 5
+    reviewCount: 0
+    ratingDistribution: []
+    reviews: []
   trustradius:
     url: https://www.trustradius.com/products/profound/reviews
+    score: null
+    maxScore: 10
+    reviewCount: 0
+    ratingDistribution: []
+    reviews: []
 reviews: []
 tweets: []
 pricingUrl: https://www.tryprofound.com/pricing
