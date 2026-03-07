@@ -1,1 +1,69 @@
 @import "tailwindcss";
+
+/* Dual-range slider thumb styles */
+
+/* Hide the default track so only our custom track + fill shows */
+.range-thumb::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  height: 0;
+}
+
+.range-thumb::-moz-range-track {
+  appearance: none;
+  background: transparent;
+  height: 0;
+}
+
+/* Style the thumb */
+.range-thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: white;
+  border: 2px solid #3b82f6;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.range-thumb::-moz-range-thumb {
+  appearance: none;
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: white;
+  border: 2px solid #3b82f6;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.range-thumb::-webkit-slider-thumb:hover {
+  background: #eff6ff;
+  border-color: #2563eb;
+}
+
+.range-thumb::-moz-range-thumb:hover {
+  background: #eff6ff;
+  border-color: #2563eb;
+}
+
+.range-thumb::-webkit-slider-thumb:active {
+  background: #dbeafe;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.range-thumb::-moz-range-thumb:active {
+  background: #dbeafe;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
