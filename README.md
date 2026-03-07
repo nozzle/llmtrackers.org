@@ -205,3 +205,9 @@ pnpm test
 - YAML is the source of truth
 - The update checker now parses and rewrites YAML via shared helpers instead of regex parsing
 - Manual update-trigger requests are authenticated, but cron runs are unaffected
+
+## Security and Maintenance
+
+- Security reporting guidance is in `SECURITY.md`
+- Dependabot is configured for npm dependencies and GitHub Actions in `.github/dependabot.yml`
+- GitHub Actions are pinned to commit SHAs for better supply-chain safety
