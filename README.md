@@ -47,12 +47,13 @@ pnpm install
 ```bash
 pnpm dev
 pnpm preview
-pnpm dev:worker
+pnpm dev:server
 pnpm compile-data
 pnpm cf-typegen
 pnpm test
 pnpm typecheck
 pnpm build
+pnpm deploy:check
 pnpm deploy
 pnpm backfill-review-sites
 ```
@@ -66,9 +67,9 @@ pnpm backfill-review-sites
 - `pnpm preview`
   - previews the built app locally after `pnpm build`
 
-- `pnpm dev:worker`
-  - runs the custom Worker entry with Wrangler
-  - useful when focusing on queue, cron, or Worker-specific behavior
+- `pnpm dev:server`
+  - runs the Cloudflare server entry with Wrangler
+  - useful when focusing on queue, cron, or server-runtime behavior
 
 ## Static Prerendering
 
@@ -154,9 +155,9 @@ pnpm exec wrangler secret put TURNSTILE_SECRET_KEY
 
 For local environment overrides, use `.env.local` and do not commit it.
 
-## Worker Features
+## Server Features
 
-The custom Worker entry handles:
+The custom Cloudflare server entry handles:
 
 - TanStack Start app requests
 - public suggestion APIs under `/api/*`
@@ -224,6 +225,12 @@ pnpm test
 ```
 
 ## Deploy
+
+Check the deploy bundle locally with:
+
+```bash
+pnpm deploy:check
+```
 
 Deploy with:
 
