@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { getAllCompanies } from "~/data";
 
@@ -30,6 +30,22 @@ interface FormData {
   sourceUrl: string;
   notes: string;
   website: string;
+  turnstileToken: string;
+}
+
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (
+        container: string | HTMLElement,
+        options: {
+          sitekey: string;
+          callback: (token: string) => void;
+          "expired-callback"?: () => void;
+        }
+      ) => string;
+    };
+  }
 }
 
 function SuggestPage() {
@@ -37,14 +53,16 @@ function SuggestPage() {
   const [formData, setFormData] = useState<FormData>({
     companySlug: "",
     field: "",
-      currentValue: "",
-      suggestedValue: "",
-      sourceUrl: "",
-      notes: "",
-      website: "",
-    });
+    currentValue: "",
+    suggestedValue: "",
+    sourceUrl: "",
+    notes: "",
+    website: "",
+    turnstileToken: "",
+  });
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 
   function updateField(field: keyof FormData, value: string) {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -78,6 +96,7 @@ function SuggestPage() {
         sourceUrl: "",
         notes: "",
         website: "",
+        turnstileToken: "",
       });
     } catch (err) {
       setStatus("error");
@@ -283,9 +302,21 @@ function SuggestPage() {
           className="hidden"
         />
 
+        {turnstileSiteKey ? (
+          <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
+            <p className="mb-3 text-sm text-gray-600">
+              Complete the spam check before submitting.
+            </p>
+            <TurnstileWidget
+              siteKey={turnstileSiteKey}
+              onTokenChange={(token) => updateField("turnstileToken", token)}
+            />
+          </div>
+        ) : null}
+
         <button
           type="submit"
-          disabled={status === "submitting"}
+          disabled={status === "submitting" || Boolean(turnstileSiteKey && !formData.turnstileToken)}
           className="w-full rounded-md bg-blue-600 px-4 py-3 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
         >
           {status === "submitting" ? "Submitting..." : "Submit Suggestion"}
@@ -293,4 +324,50 @@ function SuggestPage() {
       </form>
     </div>
   );
+}
+
+function TurnstileWidget({
+  siteKey,
+  onTokenChange,
+}: Readonly<{
+  siteKey: string;
+  onTokenChange: (token: string) => void;
+}>) {
+  const containerId = useId().replace(/:/g, "");
+
+  useEffect(() => {
+    if (typeof document === "undefined") {
+      return;
+    }
+
+    const renderWidget = () => {
+      if (!window.turnstile) {
+        return;
+      }
+
+      window.turnstile.render(`#${containerId}`, {
+        sitekey: siteKey,
+        callback: onTokenChange,
+        "expired-callback": () => onTokenChange(""),
+      });
+    };
+
+    const existingScript = document.querySelector<HTMLScriptElement>(
+      'script[src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"]'
+    );
+
+    if (existingScript) {
+      renderWidget();
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.async = true;
+    script.defer = true;
+    script.onload = renderWidget;
+    document.head.appendChild(script);
+  }, [containerId, onTokenChange, siteKey]);
+
+  return <div id={containerId} />;
 }

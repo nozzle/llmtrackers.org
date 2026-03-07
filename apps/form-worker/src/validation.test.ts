@@ -10,6 +10,7 @@ describe("validateSubmission", () => {
       sourceUrl: "https://example.com/pricing",
       notes: "Public note",
       website: "",
+      turnstileToken: "token",
     });
 
     expect(result.ok).toBe(true);
@@ -41,6 +42,21 @@ describe("validateSubmission", () => {
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.error).toBe("sourceUrl must be a valid URL");
+    }
+  });
+
+  it("rejects non-string turnstile tokens", () => {
+    const result = validateSubmission({
+      companySlug: "test-company",
+      field: "pricing",
+      suggestedValue: "$99/month",
+      website: "",
+      turnstileToken: 123,
+    });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.error).toBe("turnstileToken must be a string");
     }
   });
 });

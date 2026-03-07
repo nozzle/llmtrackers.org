@@ -11,6 +11,7 @@ import {
   createGitHubIssue,
 } from "./github";
 import { validateSubmission, type FormSubmission } from "./validation";
+import { turnstileEnabled, verifyTurnstileToken } from "./turnstile";
 
 // ---- Types ----
 
@@ -20,10 +21,12 @@ interface Env {
   GITHUB_APP_PRIVATE_KEY: string;
   GITHUB_INSTALLATION_ID: string;
   ALLOWED_ORIGIN: string;
+  TURNSTILE_SECRET_KEY?: string;
 
   // Vars (set in wrangler.toml)
   GITHUB_REPO_OWNER: string;
   GITHUB_REPO_NAME: string;
+  TURNSTILE_SITE_KEY?: string;
 }
 
 const MAX_BODY_BYTES = 16 * 1024;
@@ -223,6 +226,18 @@ export default {
     }
 
     const form = validation.value;
+
+    if (turnstileEnabled(env.TURNSTILE_SITE_KEY, env.TURNSTILE_SECRET_KEY)) {
+      const verification = await verifyTurnstileToken(
+        form.turnstileToken ?? "",
+        env.TURNSTILE_SECRET_KEY as string,
+        getClientIdentifier(request)
+      );
+
+      if (!verification.ok) {
+        return jsonResponse({ error: verification.error }, 403, cors);
+      }
+    }
 
     // Create GitHub issue
     try {

@@ -90,6 +90,7 @@ Optional local env used by the suggest form:
 
 - `VITE_FORM_WORKER_URL`
 - `VITE_SITE_URL`
+- `VITE_TURNSTILE_SITE_KEY`
 
 ### Form Worker
 
@@ -101,11 +102,13 @@ Secrets:
 - `GITHUB_APP_PRIVATE_KEY`
 - `GITHUB_INSTALLATION_ID`
 - `ALLOWED_ORIGIN`
+- `TURNSTILE_SECRET_KEY` (optional)
 
 Vars:
 
 - `GITHUB_REPO_OWNER`
 - `GITHUB_REPO_NAME`
+- `TURNSTILE_SITE_KEY` (optional public key)
 
 ### Update Checker
 
@@ -133,6 +136,7 @@ pnpm --filter form-worker exec wrangler secret put GITHUB_APP_ID
 pnpm --filter form-worker exec wrangler secret put GITHUB_APP_PRIVATE_KEY
 pnpm --filter form-worker exec wrangler secret put GITHUB_INSTALLATION_ID
 pnpm --filter form-worker exec wrangler secret put ALLOWED_ORIGIN
+pnpm --filter form-worker exec wrangler secret put TURNSTILE_SECRET_KEY
 
 pnpm --filter update-checker exec wrangler secret put GITHUB_APP_ID
 pnpm --filter update-checker exec wrangler secret put GITHUB_APP_PRIVATE_KEY

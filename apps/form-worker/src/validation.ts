@@ -6,6 +6,7 @@ interface FormSubmission {
   sourceUrl?: string;
   notes?: string;
   website?: string;
+  turnstileToken?: string;
 }
 
 const VALID_FIELDS = [
@@ -58,6 +59,9 @@ export function validateSubmission(data: unknown): {
   if (d.website !== undefined && typeof d.website !== "string") {
     return { ok: false, error: "website must be a string" };
   }
+  if (d.turnstileToken !== undefined && typeof d.turnstileToken !== "string") {
+    return { ok: false, error: "turnstileToken must be a string" };
+  }
 
   if (typeof d.suggestedValue === "string" && d.suggestedValue.trim().length > 2000) {
     return { ok: false, error: "suggestedValue is too long" };
@@ -86,6 +90,8 @@ export function validateSubmission(data: unknown): {
       sourceUrl: typeof d.sourceUrl === "string" ? d.sourceUrl : undefined,
       notes: typeof d.notes === "string" ? d.notes : undefined,
       website: typeof d.website === "string" ? d.website : undefined,
+      turnstileToken:
+        typeof d.turnstileToken === "string" ? d.turnstileToken : undefined,
     },
   };
 }

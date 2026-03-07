@@ -78,11 +78,13 @@ jobs:
             GITHUB_APP_PRIVATE_KEY
             GITHUB_INSTALLATION_ID
             ALLOWED_ORIGIN
+            TURNSTILE_SECRET_KEY
         env:
           GITHUB_APP_ID: ${{ secrets.GITHUB_APP_ID }}
           GITHUB_APP_PRIVATE_KEY: ${{ secrets.GITHUB_APP_PRIVATE_KEY }}
           GITHUB_INSTALLATION_ID: ${{ secrets.GITHUB_INSTALLATION_ID }}
           ALLOWED_ORIGIN: ${{ secrets.ALLOWED_ORIGIN }}
+          TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
 
   # Deploy the update checker cron worker
   deploy-update-checker:

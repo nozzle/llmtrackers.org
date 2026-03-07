@@ -7,7 +7,9 @@ compatibility_date = "2025-03-06"
 #   GITHUB_APP_PRIVATE_KEY - The GitHub App's private key (PEM format)
 #   GITHUB_INSTALLATION_ID - The installation ID for the nozzle/llm-tracker-comparison repo
 #   ALLOWED_ORIGIN         - The exact origin allowed to make requests (e.g. https://llm-tracker.pages.dev)
+#   TURNSTILE_SECRET_KEY   - Optional Cloudflare Turnstile secret key for bot protection
 
 [vars]
 GITHUB_REPO_OWNER = "nozzle"
 GITHUB_REPO_NAME = "llm-tracker-comparison"
+# TURNSTILE_SITE_KEY = "<optional-public-site-key>"
