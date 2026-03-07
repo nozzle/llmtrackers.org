@@ -4,8 +4,8 @@ group: Profound
 website: https://www.tryprofound.com/
 description: Unmatched breadth- tracks brand mentions, citations, AI crawler logs, shopping visibility, and prompt trends. Best for agencies and enterprise teams.
 plans:
-  - name: Profound Growth
-    slug: profound-growth
+  - name: Growth
+    slug: growth
     price:
       amount: 399
       currency: USD
@@ -36,8 +36,8 @@ plans:
       grok: false
       aiOverviews: true
       aiMode: false
-  - name: Profound Enterprise
-    slug: profound-enterprise
+  - name: Enterprise
+    slug: enterprise
     price:
       amount: 999
       currency: USD

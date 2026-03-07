@@ -4,8 +4,8 @@ group: Scrunch AI
 website: https://scrunch.ai/
 description: Mid-tier prompt benchmarking.
 plans:
-  - name: Scrunch AI Growth
-    slug: scrunch-ai-growth
+  - name: Growth
+    slug: growth
     price:
       amount: 500
       currency: USD
@@ -30,8 +30,8 @@ plans:
       grok: false
       aiOverviews: true
       aiMode: true
-  - name: Scrunch AI Enterprise
-    slug: scrunch-ai-enterprise
+  - name: Enterprise
+    slug: enterprise
     price:
       amount: 1500
       currency: USD

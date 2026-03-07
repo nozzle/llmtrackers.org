@@ -5,8 +5,8 @@ website: https://brandlight.ai/
 description: "Good balance of AI + traditional SEO diagnostics."
 
 plans:
-  - name: Brandlight AI Basic
-    slug: brandlight-ai-basic
+  - name: Basic
+    slug: basic
     price:
       amount: 149
       currency: USD
@@ -32,8 +32,8 @@ plans:
       llama: false
       claude: false
 
-  - name: Brandlight AI Pro
-    slug: brandlight-ai-pro
+  - name: Pro
+    slug: pro
     price:
       amount: 499
       currency: USD

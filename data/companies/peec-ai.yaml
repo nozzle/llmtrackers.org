@@ -5,8 +5,8 @@ website: https://www.peec.ai/
 description: "Straightforward prompt visibility at an accessible price point."
 
 plans:
-  - name: Peec AI Starter
-    slug: peec-ai-starter
+  - name: Starter
+    slug: starter
     price:
       amount: 95
       currency: USD
@@ -32,8 +32,8 @@ plans:
       llama: false
       claude: false
 
-  - name: Peec AI Agency
-    slug: peec-ai-agency
+  - name: Agency
+    slug: agency
     price:
       amount: 320
       currency: USD
