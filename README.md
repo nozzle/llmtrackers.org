@@ -145,12 +145,12 @@ Vars:
 Set local secrets with Wrangler:
 
 ```bash
-pnpm exec wrangler secret put GITHUB_APP_ID
-pnpm exec wrangler secret put GITHUB_APP_PRIVATE_KEY
-pnpm exec wrangler secret put GITHUB_INSTALLATION_ID
-pnpm exec wrangler secret put OPENAI_API_KEY
-pnpm exec wrangler secret put MANUAL_TRIGGER_TOKEN
-pnpm exec wrangler secret put TURNSTILE_SECRET_KEY
+wrangler secret put GITHUB_APP_ID
+wrangler secret put GITHUB_APP_PRIVATE_KEY
+wrangler secret put GITHUB_INSTALLATION_ID
+wrangler secret put OPENAI_API_KEY
+wrangler secret put MANUAL_TRIGGER_TOKEN
+wrangler secret put TURNSTILE_SECRET_KEY
 ```
 
 For local environment overrides, use `.env.local` and do not commit it.
