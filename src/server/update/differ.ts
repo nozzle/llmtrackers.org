@@ -42,17 +42,14 @@ interface ExistingCompany {
  * Compare extracted plans against existing company data.
  * Returns an array of plan diffs. Empty array = no changes.
  */
-export function diffCompany(
-  existing: ExistingCompany,
-  extracted: ExtractedPlan[]
-): PlanDiff[] {
+export function diffCompany(existing: ExistingCompany, extracted: ExtractedPlan[]): PlanDiff[] {
   const diffs: PlanDiff[] = [];
   const matchedExistingPlanNames = new Set<string>();
 
   for (const extractedPlan of extracted) {
     // Try to match by name (fuzzy: case-insensitive, trim)
     const existingPlan = existing.plans.find(
-      (p) => normalize(p.name) === normalize(extractedPlan.name)
+      (p) => normalize(p.name) === normalize(extractedPlan.name),
     );
 
     if (!existingPlan) {
@@ -112,15 +109,21 @@ export function diffCompany(
     }
 
     // LLM Support
-    if (extractedPlan.llmSupport && existingPlan.llmSupport) {
+    if (existingPlan.llmSupport) {
       const llmKeys = [
-        "chatgpt", "gemini", "perplexity", "claude",
-        "llama", "grok", "aiOverviews", "aiMode",
+        "chatgpt",
+        "gemini",
+        "perplexity",
+        "claude",
+        "llama",
+        "grok",
+        "aiOverviews",
+        "aiMode",
       ] as const;
 
       for (const key of llmKeys) {
-        const oldVal = existingPlan.llmSupport[key] ?? false;
-        const newVal = extractedPlan.llmSupport[key] ?? false;
+        const oldVal = existingPlan.llmSupport[key];
+        const newVal = extractedPlan.llmSupport[key];
         if (oldVal !== newVal) {
           changes.push({
             field: `llmSupport.${key}`,
@@ -136,12 +139,8 @@ export function diffCompany(
       const oldSet = new Set(existingPlan.integrations.map(normalize));
       const newSet = new Set(extractedPlan.integrations.map(normalize));
 
-      const added = extractedPlan.integrations.filter(
-        (i) => !oldSet.has(normalize(i))
-      );
-      const removed = existingPlan.integrations.filter(
-        (i) => !newSet.has(normalize(i))
-      );
+      const added = extractedPlan.integrations.filter((i) => !oldSet.has(normalize(i)));
+      const removed = existingPlan.integrations.filter((i) => !newSet.has(normalize(i)));
 
       if (added.length > 0) {
         changes.push({
@@ -160,10 +159,7 @@ export function diffCompany(
     }
 
     // Included LLM Models count
-    if (
-      extractedPlan.includedLlmModels !== null &&
-      existingPlan.includedLlmModels != null
-    ) {
+    if (extractedPlan.includedLlmModels !== null && existingPlan.includedLlmModels != null) {
       if (extractedPlan.includedLlmModels !== existingPlan.includedLlmModels) {
         changes.push({
           field: "includedLlmModels",
@@ -201,14 +197,8 @@ export function diffCompany(
 /**
  * Format diffs into a markdown summary for a PR body.
  */
-export function formatDiffMarkdown(
-  companySlug: string,
-  diffs: PlanDiff[]
-): string {
-  const lines: string[] = [
-    `## Detected Changes for \`${companySlug}\``,
-    "",
-  ];
+export function formatDiffMarkdown(companySlug: string, diffs: PlanDiff[]): string {
+  const lines: string[] = [`## Detected Changes for \`${companySlug}\``, ""];
 
   for (const diff of diffs) {
     lines.push(`### ${diff.planName}`);
@@ -222,9 +212,7 @@ export function formatDiffMarkdown(
   }
 
   lines.push("---");
-  lines.push(
-    "*Auto-detected by the LLM Trackers update checker. Please review before merging.*"
-  );
+  lines.push("*Auto-detected by the LLM Trackers update checker. Please review before merging.*");
 
   return lines.join("\n");
 }

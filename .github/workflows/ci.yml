@@ -38,17 +38,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Compile YAML data
-        run: pnpm compile-data
-
-      - name: Run lint
-        run: pnpm lint
-
-      - name: Run tests
-        run: pnpm test
-
-      - name: Run typecheck
-        run: pnpm typecheck
-
-      - name: Build app
-        run: pnpm build
+      - name: Run full project checks
+        run: pnpm check

@@ -12,14 +12,14 @@ describe("findOpenPullRequestByHead", () => {
       vi.fn().mockResolvedValue({
         ok: true,
         json: async () => [{ html_url: "https://example.com/pr/1", number: 1 }],
-      })
+      }),
     );
 
     const result = await findOpenPullRequestByHead(
       "token",
       "nozzle",
       "llm-tracker-comparison",
-      "auto-update/test-company"
+      "auto-update/test-company",
     );
 
     expect(result?.number).toBe(1);
@@ -32,14 +32,14 @@ describe("findOpenPullRequestByHead", () => {
       vi.fn().mockResolvedValue({
         ok: true,
         json: async () => [],
-      })
+      }),
     );
 
     const result = await findOpenPullRequestByHead(
       "token",
       "nozzle",
       "llm-tracker-comparison",
-      "auto-update/test-company"
+      "auto-update/test-company",
     );
 
     expect(result).toBeNull();

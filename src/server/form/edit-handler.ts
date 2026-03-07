@@ -13,7 +13,6 @@ import {
   createBranch,
   upsertFile,
   createPullRequest,
-  findOpenPullRequestByHead,
 } from "@llm-tracker/github";
 import {
   parseCompanyYaml,
@@ -72,7 +71,7 @@ interface GitHubEnv {
 // ---- Validation ----
 
 export function validateEditPayload(
-  data: unknown
+  data: unknown,
 ): { ok: true; value: EditSuggestionPayload } | { ok: false; error: string } {
   if (!data || typeof data !== "object") {
     return { ok: false, error: "Request body must be a JSON object" };
@@ -123,21 +122,26 @@ export function validateEditPayload(
     return { ok: false, error: "changes must contain at least one field" };
   }
 
+  const contributor =
+    d.contributor === undefined
+      ? undefined
+      : (d.contributor as EditSuggestionPayload["contributor"]);
+
   return {
     ok: true,
     value: {
-      companySlug: (d.companySlug as string).trim(),
-      planSlug: (d.planSlug as string).trim(),
+      companySlug: d.companySlug.trim(),
+      planSlug: d.planSlug.trim(),
       changes: changes.value,
-      contributor: d.contributor as EditSuggestionPayload["contributor"],
-      turnstileToken: d.turnstileToken as string | undefined,
-      website: d.website as string | undefined,
+      contributor,
+      turnstileToken: typeof d.turnstileToken === "string" ? d.turnstileToken : undefined,
+      website: typeof d.website === "string" ? d.website : undefined,
     },
   };
 }
 
 function validateChanges(
-  raw: Record<string, unknown>
+  raw: Record<string, unknown>,
 ): { ok: true; value: PlanChanges } | { ok: false; error: string } {
   const changes: PlanChanges = {};
 
@@ -152,7 +156,7 @@ function validateChanges(
       if (p.amount !== null && typeof p.amount !== "number") {
         return { ok: false, error: "changes.price.amount must be a number or null" };
       }
-      price.amount = p.amount as number | null;
+      price.amount = p.amount;
     }
     if (p.currency !== undefined) {
       if (typeof p.currency !== "string") {
@@ -170,7 +174,7 @@ function validateChanges(
       if (p.note !== null && typeof p.note !== "string") {
         return { ok: false, error: "changes.price.note must be a string or null" };
       }
-      price.note = p.note as string | null;
+      price.note = p.note;
     }
 
     if (Object.keys(price).length > 0) {
@@ -182,7 +186,7 @@ function validateChanges(
     if (raw.aiResponsesMonthly !== null && typeof raw.aiResponsesMonthly !== "number") {
       return { ok: false, error: "changes.aiResponsesMonthly must be a number or null" };
     }
-    changes.aiResponsesMonthly = raw.aiResponsesMonthly as number | null;
+    changes.aiResponsesMonthly = raw.aiResponsesMonthly;
   }
 
   if (raw.schedule !== undefined) {
@@ -196,35 +200,35 @@ function validateChanges(
     if (raw.locationSupport !== "global" && typeof raw.locationSupport !== "number") {
       return { ok: false, error: 'changes.locationSupport must be "global" or a number' };
     }
-    changes.locationSupport = raw.locationSupport as "global" | number;
+    changes.locationSupport = raw.locationSupport;
   }
 
   if (raw.personaSupport !== undefined) {
     if (raw.personaSupport !== "unlimited" && typeof raw.personaSupport !== "number") {
       return { ok: false, error: 'changes.personaSupport must be "unlimited" or a number' };
     }
-    changes.personaSupport = raw.personaSupport as "unlimited" | number;
+    changes.personaSupport = raw.personaSupport;
   }
 
   if (raw.contentGeneration !== undefined) {
     if (raw.contentGeneration !== false && typeof raw.contentGeneration !== "string") {
       return { ok: false, error: "changes.contentGeneration must be a string or false" };
     }
-    changes.contentGeneration = raw.contentGeneration as string | false;
+    changes.contentGeneration = raw.contentGeneration;
   }
 
   if (raw.contentOptimization !== undefined) {
     if (raw.contentOptimization !== false && typeof raw.contentOptimization !== "string") {
       return { ok: false, error: "changes.contentOptimization must be a string or false" };
     }
-    changes.contentOptimization = raw.contentOptimization as string | false;
+    changes.contentOptimization = raw.contentOptimization;
   }
 
   if (raw.integrations !== undefined) {
     if (!Array.isArray(raw.integrations) || !raw.integrations.every((i) => typeof i === "string")) {
       return { ok: false, error: "changes.integrations must be an array of strings" };
     }
-    changes.integrations = raw.integrations as string[];
+    changes.integrations = raw.integrations;
   }
 
   if (raw.llmSupport !== undefined) {
@@ -233,8 +237,14 @@ function validateChanges(
     }
     const ls = raw.llmSupport as Record<string, unknown>;
     const validKeys: LlmModelKey[] = [
-      "aiMode", "aiOverviews", "chatgpt", "gemini",
-      "perplexity", "grok", "llama", "claude",
+      "aiMode",
+      "aiOverviews",
+      "chatgpt",
+      "gemini",
+      "perplexity",
+      "grok",
+      "llama",
+      "claude",
     ];
     const llmChanges: Partial<Record<LlmModelKey, boolean>> = {};
     for (const [key, val] of Object.entries(ls)) {
@@ -258,10 +268,19 @@ function validateChanges(
 
 export async function handleEditSuggestion(
   payload: EditSuggestionPayload,
-  env: GitHubEnv
-): Promise<{ success: true; prUrl: string; prNumber: number } | { success: false; error: string; status: number }> {
+  env: GitHubEnv,
+): Promise<
+  | { success: true; prUrl: string; prNumber: number }
+  | { success: false; error: string; status: number }
+> {
   const { companySlug, planSlug, changes, contributor } = payload;
-  const { GITHUB_APP_ID, GITHUB_APP_PRIVATE_KEY, GITHUB_INSTALLATION_ID, GITHUB_REPO_OWNER, GITHUB_REPO_NAME } = env;
+  const {
+    GITHUB_APP_ID,
+    GITHUB_APP_PRIVATE_KEY,
+    GITHUB_INSTALLATION_ID,
+    GITHUB_REPO_OWNER,
+    GITHUB_REPO_NAME,
+  } = env;
 
   // 1. Authenticate
   const jwt = await createAppJwt(GITHUB_APP_ID, GITHUB_APP_PRIVATE_KEY);
@@ -289,7 +308,11 @@ export async function handleEditSuggestion(
   const { company } = parsed;
   const planIndex = company.plans.findIndex((p) => p.slug === planSlug);
   if (planIndex === -1) {
-    return { success: false, error: `Plan '${planSlug}' not found in company '${companySlug}'`, status: 404 };
+    return {
+      success: false,
+      error: `Plan '${planSlug}' not found in company '${companySlug}'`,
+      status: 404,
+    };
   }
 
   const originalPlan = company.plans[planIndex];
@@ -321,13 +344,30 @@ export async function handleEditSuggestion(
   await createBranch(token, owner, repo, branchName, baseSha);
 
   const commitMessage = `suggest: update ${companySlug} / ${originalPlan.name}`;
-  await upsertFile(token, owner, repo, filePath, updatedYaml, commitMessage, branchName, fileContent.sha);
+  await upsertFile(
+    token,
+    owner,
+    repo,
+    filePath,
+    updatedYaml,
+    commitMessage,
+    branchName,
+    fileContent.sha,
+  );
 
   const diffTable = buildDiffTable(originalPlan, validation.data, changes);
   const prTitle = `[Suggestion] Update ${company.name} — ${originalPlan.name}`;
   const prBody = buildPrBody(company.name, originalPlan.name, diffTable, contributor);
 
-  const pr = await createPullRequest(token, owner, repo, prTitle, prBody, branchName, defaultBranch);
+  const pr = await createPullRequest(
+    token,
+    owner,
+    repo,
+    prTitle,
+    prBody,
+    branchName,
+    defaultBranch,
+  );
 
   return { success: true, prUrl: pr.html_url, prNumber: pr.number };
 }
@@ -348,7 +388,12 @@ function applyChanges(plan: Plan, changes: PlanChanges): Plan {
   // Recalculate pricePer1000Responses
   const priceAmount = updated.price.amount;
   const aiResponses = updated.aiResponsesMonthly;
-  if (priceAmount !== null && aiResponses !== null && aiResponses !== undefined && aiResponses > 0) {
+  if (
+    priceAmount !== null &&
+    aiResponses !== null &&
+    aiResponses !== undefined &&
+    aiResponses > 0
+  ) {
     updated.pricePer1000Responses = Number(((priceAmount / aiResponses) * 1000).toFixed(2));
   } else {
     updated.pricePer1000Responses = null;
@@ -357,8 +402,10 @@ function applyChanges(plan: Plan, changes: PlanChanges): Plan {
   if (changes.schedule !== undefined) updated.schedule = changes.schedule;
   if (changes.locationSupport !== undefined) updated.locationSupport = changes.locationSupport;
   if (changes.personaSupport !== undefined) updated.personaSupport = changes.personaSupport;
-  if (changes.contentGeneration !== undefined) updated.contentGeneration = changes.contentGeneration;
-  if (changes.contentOptimization !== undefined) updated.contentOptimization = changes.contentOptimization;
+  if (changes.contentGeneration !== undefined)
+    updated.contentGeneration = changes.contentGeneration;
+  if (changes.contentOptimization !== undefined)
+    updated.contentOptimization = changes.contentOptimization;
   if (changes.integrations !== undefined) updated.integrations = changes.integrations;
 
   if (changes.llmSupport) {
@@ -373,11 +420,11 @@ function formatValue(value: unknown): string {
   if (value === false) return "No";
   if (value === true) return "Yes";
   if (typeof value === "number") return value.toLocaleString("en-US");
-  return String(value);
+  return typeof value === "string" ? value : JSON.stringify(value);
 }
 
 function buildDiffTable(original: Plan, updated: Plan, changes: PlanChanges): string {
-  const rows: Array<[string, string, string]> = [];
+  const rows: [string, string, string][] = [];
 
   if (changes.price) {
     if (changes.price.amount !== undefined) {
@@ -395,12 +442,20 @@ function buildDiffTable(original: Plan, updated: Plan, changes: PlanChanges): st
   }
 
   if (changes.aiResponsesMonthly !== undefined) {
-    rows.push(["AI Responses/mo", formatValue(original.aiResponsesMonthly), formatValue(updated.aiResponsesMonthly)]);
+    rows.push([
+      "AI Responses/mo",
+      formatValue(original.aiResponsesMonthly),
+      formatValue(updated.aiResponsesMonthly),
+    ]);
   }
 
   // If price or responses changed, show computed cost/1K
   if (changes.price?.amount !== undefined || changes.aiResponsesMonthly !== undefined) {
-    rows.push(["$/1K Responses", formatValue(original.pricePer1000Responses), formatValue(updated.pricePer1000Responses)]);
+    rows.push([
+      "$/1K Responses",
+      formatValue(original.pricePer1000Responses),
+      formatValue(updated.pricePer1000Responses),
+    ]);
   }
 
   if (changes.schedule !== undefined) {
@@ -408,19 +463,35 @@ function buildDiffTable(original: Plan, updated: Plan, changes: PlanChanges): st
   }
 
   if (changes.locationSupport !== undefined) {
-    rows.push(["Location Support", formatValue(original.locationSupport), formatValue(updated.locationSupport)]);
+    rows.push([
+      "Location Support",
+      formatValue(original.locationSupport),
+      formatValue(updated.locationSupport),
+    ]);
   }
 
   if (changes.personaSupport !== undefined) {
-    rows.push(["Persona Support", formatValue(original.personaSupport), formatValue(updated.personaSupport)]);
+    rows.push([
+      "Persona Support",
+      formatValue(original.personaSupport),
+      formatValue(updated.personaSupport),
+    ]);
   }
 
   if (changes.contentGeneration !== undefined) {
-    rows.push(["Content Generation", formatValue(original.contentGeneration), formatValue(updated.contentGeneration)]);
+    rows.push([
+      "Content Generation",
+      formatValue(original.contentGeneration),
+      formatValue(updated.contentGeneration),
+    ]);
   }
 
   if (changes.contentOptimization !== undefined) {
-    rows.push(["Content Optimization", formatValue(original.contentOptimization), formatValue(updated.contentOptimization)]);
+    rows.push([
+      "Content Optimization",
+      formatValue(original.contentOptimization),
+      formatValue(updated.contentOptimization),
+    ]);
   }
 
   if (changes.integrations !== undefined) {
@@ -433,7 +504,7 @@ function buildDiffTable(original: Plan, updated: Plan, changes: PlanChanges): st
 
   if (changes.llmSupport) {
     for (const [key, newVal] of Object.entries(changes.llmSupport)) {
-      const label = LLM_MODEL_LABELS[key as LlmModelKey] ?? key;
+      const label = LLM_MODEL_LABELS[key as LlmModelKey];
       const oldVal = original.llmSupport[key as LlmModelKey];
       if (oldVal !== newVal) {
         rows.push([label, formatValue(oldVal), formatValue(newVal)]);
@@ -458,14 +529,9 @@ function buildPrBody(
   companyName: string,
   planName: string,
   diffTable: string,
-  contributor?: EditSuggestionPayload["contributor"]
+  contributor?: EditSuggestionPayload["contributor"],
 ): string {
-  const lines: string[] = [
-    `## Suggested Edit: ${companyName} — ${planName}`,
-    "",
-    diffTable,
-    "",
-  ];
+  const lines: string[] = [`## Suggested Edit: ${companyName} — ${planName}`, "", diffTable, ""];
 
   if (contributor?.name || contributor?.email || contributor?.company) {
     lines.push("### Contributor");
@@ -475,10 +541,7 @@ function buildPrBody(
     lines.push("");
   }
 
-  lines.push(
-    "---",
-    "*Submitted via the LLM Trackers website edit mode.*"
-  );
+  lines.push("---", "*Submitted via the LLM Trackers website edit mode.*");
 
   return lines.join("\n");
 }

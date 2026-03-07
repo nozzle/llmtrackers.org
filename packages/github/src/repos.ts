@@ -13,11 +13,9 @@ export async function getFileContent(
   owner: string,
   repo: string,
   path: string,
-  ref?: string
+  ref?: string,
 ): Promise<GitHubFileContent | null> {
-  const url = new URL(
-    `https://api.github.com/repos/${owner}/${repo}/contents/${path}`
-  );
+  const url = new URL(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`);
   if (ref) url.searchParams.set("ref", ref);
 
   const res = await ghFetch(url.toString(), {
@@ -26,9 +24,7 @@ export async function getFileContent(
 
   if (res.status === 404) return null;
   if (!res.ok) {
-    throw new Error(
-      `getFileContent failed: ${res.status} ${await res.text()}`
-    );
+    throw new Error(`getFileContent failed: ${res.status} ${await res.text()}`);
   }
 
   return res.json() as Promise<GitHubFileContent>;
@@ -40,12 +36,11 @@ export async function getFileContent(
 export async function getDefaultBranchSha(
   token: string,
   owner: string,
-  repo: string
+  repo: string,
 ): Promise<{ branch: string; sha: string }> {
-  const res = await ghFetch(
-    `https://api.github.com/repos/${owner}/${repo}`,
-    { headers: { Authorization: `token ${token}` } }
-  );
+  const res = await ghFetch(`https://api.github.com/repos/${owner}/${repo}`, {
+    headers: { Authorization: `token ${token}` },
+  });
   if (!res.ok) throw new Error(`getRepo failed: ${res.status}`);
 
   const data = (await res.json()) as { default_branch: string };
@@ -53,7 +48,7 @@ export async function getDefaultBranchSha(
 
   const refRes = await ghFetch(
     `https://api.github.com/repos/${owner}/${repo}/git/ref/heads/${branch}`,
-    { headers: { Authorization: `token ${token}` } }
+    { headers: { Authorization: `token ${token}` } },
   );
   if (!refRes.ok) throw new Error(`getRef failed: ${refRes.status}`);
 
@@ -69,19 +64,16 @@ export async function createBranch(
   owner: string,
   repo: string,
   branchName: string,
-  fromSha: string
+  fromSha: string,
 ): Promise<void> {
-  const res = await ghFetch(
-    `https://api.github.com/repos/${owner}/${repo}/git/refs`,
-    {
-      method: "POST",
-      headers: { Authorization: `token ${token}` },
-      body: JSON.stringify({
-        ref: `refs/heads/${branchName}`,
-        sha: fromSha,
-      }),
-    }
-  );
+  const res = await ghFetch(`https://api.github.com/repos/${owner}/${repo}/git/refs`, {
+    method: "POST",
+    headers: { Authorization: `token ${token}` },
+    body: JSON.stringify({
+      ref: `refs/heads/${branchName}`,
+      sha: fromSha,
+    }),
+  });
   if (!res.ok) {
     const body = await res.text();
     // 422 = branch already exists, that's ok
@@ -102,7 +94,7 @@ export async function upsertFile(
   content: string,
   message: string,
   branch: string,
-  existingSha?: string
+  existingSha?: string,
 ): Promise<void> {
   const body: Record<string, string> = {
     message,
@@ -111,17 +103,12 @@ export async function upsertFile(
   };
   if (existingSha) body.sha = existingSha;
 
-  const res = await ghFetch(
-    `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
-    {
-      method: "PUT",
-      headers: { Authorization: `token ${token}` },
-      body: JSON.stringify(body),
-    }
-  );
+  const res = await ghFetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+    method: "PUT",
+    headers: { Authorization: `token ${token}` },
+    body: JSON.stringify(body),
+  });
   if (!res.ok) {
-    throw new Error(
-      `upsertFile failed: ${res.status} ${await res.text()}`
-    );
+    throw new Error(`upsertFile failed: ${res.status} ${await res.text()}`);
   }
 }

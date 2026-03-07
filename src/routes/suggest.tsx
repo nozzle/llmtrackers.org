@@ -42,10 +42,18 @@ declare global {
           sitekey: string;
           callback: (token: string) => void;
           "expired-callback"?: () => void;
-        }
+        },
       ) => string;
     };
   }
+}
+
+type SuggestStatus = "idle" | "submitting" | "success" | "error";
+
+interface SuggestIssueResponse {
+  success: true;
+  issueUrl: string;
+  issueNumber: number;
 }
 
 function SuggestPage() {
@@ -60,15 +68,15 @@ function SuggestPage() {
     website: "",
     turnstileToken: "",
   });
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [status, setStatus] = useState<SuggestStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
-  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "";
 
   function updateField(field: keyof FormData, value: string) {
     setFormData((prev) => ({ ...prev, [field]: value }));
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: SubmitEvent | React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus("submitting");
     setErrorMessage("");
@@ -84,6 +92,8 @@ function SuggestPage() {
         throw new Error(await response.text());
       }
 
+      const _result: SuggestIssueResponse = await response.json();
+
       setStatus("success");
       setFormData({
         companySlug: "",
@@ -97,9 +107,7 @@ function SuggestPage() {
       });
     } catch (err) {
       setStatus("error");
-      setErrorMessage(
-        err instanceof Error ? err.message : "Something went wrong"
-      );
+      setErrorMessage(err instanceof Error ? err.message : "Something went wrong");
     }
   }
 
@@ -109,8 +117,8 @@ function SuggestPage() {
         <div className="rounded-lg border border-green-200 bg-green-50 p-8">
           <h1 className="text-2xl font-bold text-green-800">Thank You!</h1>
           <p className="mt-2 text-green-700">
-            Your suggestion has been submitted. A GitHub issue has been created
-            and our team will review it shortly.
+            Your suggestion has been submitted. A GitHub issue has been created and our team will
+            review it shortly.
           </p>
           <div className="mt-6 flex justify-center gap-4">
             <Link
@@ -120,7 +128,9 @@ function SuggestPage() {
               Back to Comparison
             </Link>
             <button
-              onClick={() => setStatus("idle")}
+              onClick={() => {
+                setStatus("idle");
+              }}
               className="rounded-md border border-green-300 px-4 py-2 text-sm font-medium text-green-700 hover:bg-green-100"
             >
               Submit Another
@@ -137,16 +147,14 @@ function SuggestPage() {
         <Link to="/" className="text-sm text-blue-600 hover:underline">
           &larr; Back to comparison
         </Link>
-        <h1 className="mt-2 text-2xl font-bold text-gray-900">
-          Suggest an Edit
-        </h1>
+        <h1 className="mt-2 text-2xl font-bold text-gray-900">Suggest an Edit</h1>
         <p className="mt-1 text-gray-600">
-          Found outdated or incorrect data? Submit a suggestion and we&apos;ll review
-          it. Your submission will create a GitHub issue for transparency.
+          Found outdated or incorrect data? Submit a suggestion and we&apos;ll review it. Your
+          submission will create a GitHub issue for transparency.
         </p>
         <p className="mt-2 text-sm text-gray-500">
-          Please do not include personal contact information. Submissions become
-          public GitHub issues.
+          Please do not include personal contact information. Submissions become public GitHub
+          issues.
         </p>
         <p className="mt-2 text-sm text-gray-500">
           Alternatively, you can{" "}
@@ -168,19 +176,23 @@ function SuggestPage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form
+        onSubmit={(e) => {
+          void handleSubmit(e);
+        }}
+        className="space-y-6"
+      >
         <div>
-          <label
-            htmlFor="company"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="company" className="block text-sm font-medium text-gray-700">
             Company *
           </label>
           <select
             id="company"
             required
             value={formData.companySlug}
-            onChange={(e) => updateField("companySlug", e.target.value)}
+            onChange={(e) => {
+              updateField("companySlug", e.target.value);
+            }}
             className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
             <option value="">Select a company...</option>
@@ -193,17 +205,16 @@ function SuggestPage() {
         </div>
 
         <div>
-          <label
-            htmlFor="field"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="field" className="block text-sm font-medium text-gray-700">
             What needs to be updated? *
           </label>
           <select
             id="field"
             required
             value={formData.field}
-            onChange={(e) => updateField("field", e.target.value)}
+            onChange={(e) => {
+              updateField("field", e.target.value);
+            }}
             className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
             <option value="">Select a field...</option>
@@ -220,27 +231,23 @@ function SuggestPage() {
         </div>
 
         <div>
-          <label
-            htmlFor="currentValue"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="currentValue" className="block text-sm font-medium text-gray-700">
             Current Value (what&apos;s shown now)
           </label>
           <input
             id="currentValue"
             type="text"
             value={formData.currentValue}
-            onChange={(e) => updateField("currentValue", e.target.value)}
+            onChange={(e) => {
+              updateField("currentValue", e.target.value);
+            }}
             className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             placeholder="e.g. $399/month"
           />
         </div>
 
         <div>
-          <label
-            htmlFor="suggestedValue"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="suggestedValue" className="block text-sm font-medium text-gray-700">
             Suggested Value *
           </label>
           <input
@@ -248,41 +255,41 @@ function SuggestPage() {
             type="text"
             required
             value={formData.suggestedValue}
-            onChange={(e) => updateField("suggestedValue", e.target.value)}
+            onChange={(e) => {
+              updateField("suggestedValue", e.target.value);
+            }}
             className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             placeholder="e.g. $499/month"
           />
         </div>
 
         <div>
-          <label
-            htmlFor="sourceUrl"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="sourceUrl" className="block text-sm font-medium text-gray-700">
             Source URL (where did you find this info?)
           </label>
           <input
             id="sourceUrl"
             type="url"
             value={formData.sourceUrl}
-            onChange={(e) => updateField("sourceUrl", e.target.value)}
+            onChange={(e) => {
+              updateField("sourceUrl", e.target.value);
+            }}
             className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             placeholder="https://example.com/pricing"
           />
         </div>
 
         <div>
-          <label
-            htmlFor="notes"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="notes" className="block text-sm font-medium text-gray-700">
             Additional Notes
           </label>
           <textarea
             id="notes"
             rows={3}
             value={formData.notes}
-            onChange={(e) => updateField("notes", e.target.value)}
+            onChange={(e) => {
+              updateField("notes", e.target.value);
+            }}
             className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             placeholder="Any additional context..."
           />
@@ -295,25 +302,29 @@ function SuggestPage() {
           type="text"
           name="website"
           value={formData.website}
-          onChange={(e) => updateField("website", e.target.value)}
+          onChange={(e) => {
+            updateField("website", e.target.value);
+          }}
           className="hidden"
         />
 
         {turnstileSiteKey ? (
           <div className="rounded-md border border-gray-200 bg-gray-50 p-4">
-            <p className="mb-3 text-sm text-gray-600">
-              Complete the spam check before submitting.
-            </p>
+            <p className="mb-3 text-sm text-gray-600">Complete the spam check before submitting.</p>
             <TurnstileWidget
               siteKey={turnstileSiteKey}
-              onTokenChange={(token) => updateField("turnstileToken", token)}
+              onTokenChange={(token) => {
+                updateField("turnstileToken", token);
+              }}
             />
           </div>
         ) : null}
 
         <button
           type="submit"
-          disabled={status === "submitting" || Boolean(turnstileSiteKey && !formData.turnstileToken)}
+          disabled={
+            status === "submitting" || Boolean(turnstileSiteKey && !formData.turnstileToken)
+          }
           className="w-full rounded-md bg-blue-600 px-4 py-3 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
         >
           {status === "submitting" ? "Submitting..." : "Submit Suggestion"}
@@ -345,12 +356,14 @@ function TurnstileWidget({
       window.turnstile.render(`#${containerId}`, {
         sitekey: siteKey,
         callback: onTokenChange,
-        "expired-callback": () => onTokenChange(""),
+        "expired-callback": () => {
+          onTokenChange("");
+        },
       });
     };
 
     const existingScript = document.querySelector<HTMLScriptElement>(
-      'script[src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"]'
+      'script[src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"]',
     );
 
     if (existingScript) {

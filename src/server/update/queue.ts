@@ -4,7 +4,7 @@ import { processCompanyUpdate } from "./process";
 
 export async function handleUpdateQueueBatch(
   batch: MessageBatch<UpdateQueueMessage>,
-  env: AppEnv
+  env: AppEnv,
 ): Promise<void> {
   const github = await createGitHubContext(env);
   const seen = new Set<string>();
@@ -21,7 +21,9 @@ export async function handleUpdateQueueBatch(
     try {
       const result = await processCompanyUpdate(env, message.body, github);
       if (result.status === "error") {
-        console.error(`Permanent update error for ${result.slug}: ${result.error}`);
+        console.error(
+          `Permanent update error for ${result.slug}: ${result.error ?? "Unknown error"}`,
+        );
       }
       message.ack();
     } catch (error) {

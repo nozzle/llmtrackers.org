@@ -42,15 +42,12 @@ export default {
   async scheduled(
     _controller: ScheduledController,
     env: AppEnv,
-    ctx: ExecutionContext
+    ctx: ExecutionContext,
   ): Promise<void> {
     await handleScheduledUpdate(env, ctx);
   },
 
-  async queue(
-    batch: MessageBatch<UpdateQueueMessage>,
-    env: AppEnv
-  ): Promise<void> {
+  async queue(batch: MessageBatch<UpdateQueueMessage>, env: AppEnv): Promise<void> {
     await handleUpdateQueueBatch(batch, env);
   },
 } satisfies ExportedHandler<AppEnv, UpdateQueueMessage>;

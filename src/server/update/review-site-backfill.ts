@@ -4,11 +4,7 @@ import {
   type Company,
   type ReviewSites,
 } from "@llm-tracker/shared";
-import {
-  collectReviewSites,
-  diffReviewSites,
-  type ReviewSiteDiff,
-} from "./review-sites";
+import { collectReviewSites, diffReviewSites, type ReviewSiteDiff } from "./review-sites";
 
 export interface ReviewSiteBackfillResult {
   company: Company;
@@ -19,7 +15,7 @@ export interface ReviewSiteBackfillResult {
 
 export async function backfillCompanyReviewSites(
   yamlText: string,
-  extractedReviewSites?: Partial<ReviewSites>
+  extractedReviewSites?: Partial<ReviewSites>,
 ): Promise<ReviewSiteBackfillResult> {
   const { company } = parseCompanyYaml(yamlText);
   const nextReviewSites = extractedReviewSites ?? (await collectReviewSites(company.reviewSites));

@@ -7,10 +7,7 @@ export interface GhFetchOptions extends RequestInit {
   userAgent?: string;
 }
 
-export async function ghFetch(
-  url: string,
-  init: GhFetchOptions = {}
-): Promise<Response> {
+export async function ghFetch(url: string, init: GhFetchOptions = {}): Promise<Response> {
   const { userAgent = "llm-tracker", ...fetchInit } = init;
   const headers = new Headers(fetchInit.headers);
   if (!headers.has("Accept")) {

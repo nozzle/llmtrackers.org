@@ -42,14 +42,7 @@ export function ReviewSiteMark({
           : "h-5 max-w-20";
   const imageClasses = `${sizeClasses} object-contain`;
 
-  return (
-    <img
-      src={src}
-      alt={branding.iconAlt}
-      className={imageClasses}
-      loading="lazy"
-    />
-  );
+  return <img src={src} alt={branding.iconAlt} className={imageClasses} loading="lazy" />;
 }
 
 export function ReviewSiteLabel({
@@ -98,18 +91,16 @@ export function ReviewSiteScoreBadge({
       className={`inline-flex items-center gap-2 rounded-full ${compact ? "px-2 py-0.5 text-xs" : "px-2.5 py-1 text-sm"} font-medium ring-1 ${branding.badge} ${branding.text} ${branding.ring}`}
     >
       {showLogo && <ReviewSiteMark platform={platform} mode="favicon" size="sm" />}
-      <span>{score.toFixed(maxScore <= 5 ? 1 : 0)}/{maxScore}</span>
+      <span>
+        {score.toFixed(maxScore <= 5 ? 1 : 0)}/{maxScore}
+      </span>
     </span>
   );
 }
 
-export function ReviewSiteMiniList({
-  reviewSites,
-}: {
-  reviewSites: ReviewSites;
-}) {
+export function ReviewSiteMiniList({ reviewSites }: { reviewSites: ReviewSites }) {
   const available = REVIEW_SITE_PLATFORMS.filter((platform) =>
-    hasReviewSiteData(reviewSites[platform])
+    hasReviewSiteData(reviewSites[platform]),
   );
 
   if (available.length === 0) {
@@ -133,9 +124,7 @@ export function ReviewSiteMiniList({
           >
             <ReviewSiteMark platform={platform} mode="favicon" size="sm" />
             <span>{REVIEW_SITE_LABELS[platform]}</span>
-            {site.score != null && (
-              <span>{site.score.toFixed(site.maxScore <= 5 ? 1 : 0)}</span>
-            )}
+            {site.score != null && <span>{site.score.toFixed(site.maxScore <= 5 ? 1 : 0)}</span>}
           </a>
         );
       })}

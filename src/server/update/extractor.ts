@@ -3,10 +3,7 @@
  * Uses OpenAI's API with structured output (JSON mode).
  */
 
-import {
-  ExtractionResultSchema,
-  type ExtractedPlanLike,
-} from "@llm-tracker/shared";
+import { ExtractionResultSchema, type ExtractedPlanLike } from "@llm-tracker/shared";
 
 /**
  * Extracted plan data from a pricing page. Matches our YAML schema shape.
@@ -17,6 +14,14 @@ export interface ExtractionResult {
   companyName: string;
   plans: ExtractedPlan[];
   rawResponse: string;
+}
+
+interface OpenAiChatCompletionResponse {
+  choices: {
+    message?: {
+      content?: string | null;
+    };
+  }[];
 }
 
 const SYSTEM_PROMPT = `You are a data extraction assistant. You will be given the text content of a pricing/features page for an AI search visibility or LLM tracking tool company.
@@ -49,7 +54,7 @@ Respond ONLY with valid JSON in this exact format:
 export async function extractWithLlm(
   apiKey: string,
   companySlug: string,
-  pageText: string
+  pageText: string,
 ): Promise<ExtractionResult> {
   const userPrompt = `Extract pricing and feature data for "${companySlug}" from the following page content:\n\n${pageText}`;
 
@@ -76,9 +81,7 @@ export async function extractWithLlm(
     throw new Error(`OpenAI API error: ${response.status} ${body}`);
   }
 
-  const data = (await response.json()) as {
-    choices: Array<{ message: { content: string } }>;
-  };
+  const data: OpenAiChatCompletionResponse = await response.json();
 
   const rawResponse = data.choices[0]?.message?.content ?? "{}";
 
@@ -87,7 +90,7 @@ export async function extractWithLlm(
     const parsed = ExtractionResultSchema.safeParse(parsedJson);
 
     if (!parsed.success) {
-      console.error("Invalid LLM extraction payload:", parsed.error.flatten());
+      console.error("Invalid LLM extraction payload:", parsed.error.issues);
       return {
         companyName: companySlug,
         plans: [],
@@ -96,7 +99,7 @@ export async function extractWithLlm(
     }
 
     return {
-      companyName: parsed.data.companyName || companySlug,
+      companyName: parsed.data.companyName,
       plans: parsed.data.plans,
       rawResponse,
     };

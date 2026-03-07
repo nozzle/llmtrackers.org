@@ -23,7 +23,7 @@ describe("verifyTurnstileToken", () => {
       vi.fn().mockResolvedValue({
         ok: true,
         json: async () => ({ success: true }),
-      })
+      }),
     );
 
     await expect(verifyTurnstileToken("token", "secret", "127.0.0.1")).resolves.toEqual({

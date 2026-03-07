@@ -33,9 +33,7 @@ export const Route = createRootRoute({
       { name: "twitter:title", content: SITE_TITLE },
       { name: "twitter:description", content: SITE_DESCRIPTION },
     ],
-    links: [
-      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
-    ],
+    links: [{ rel: "icon", type: "image/svg+xml", href: "/favicon.svg" }],
   }),
   component: RootComponent,
 });
@@ -62,9 +60,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       </head>
       <body className="min-h-screen bg-gray-50 text-gray-900 antialiased">
         <Header />
-        <main className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 lg:px-8">
-          {children}
-        </main>
+        <main className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 lg:px-8">{children}</main>
         <Footer />
         <Scripts />
       </body>
@@ -77,11 +73,7 @@ function Header() {
     <header className="border-b border-gray-200 bg-white">
       <div className="mx-auto flex max-w-[1600px] items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center">
-          <img
-            src="/llmtrackers-logo.png"
-            alt="LLM Trackers"
-            className="h-8 w-auto sm:h-10"
-          />
+          <img src="/llmtrackers-logo.png" alt="LLM Trackers" className="h-8 w-auto sm:h-10" />
         </Link>
         <nav className="flex items-center gap-3 sm:gap-6">
           <Link

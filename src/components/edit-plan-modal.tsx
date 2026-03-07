@@ -1,11 +1,6 @@
 import { useState, useMemo, useEffect, useId, useCallback } from "react";
 import { LlmIcon } from "~/components/llm-icon";
-import {
-  LLM_MODEL_LABELS,
-  type Plan,
-  type LlmModelKey,
-  type LlmSupport,
-} from "@llm-tracker/shared";
+import { LLM_MODEL_LABELS, type Plan, type LlmModelKey } from "@llm-tracker/shared";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -18,6 +13,10 @@ interface EditPlanModalProps {
   planName: string;
   plan: Plan;
   onClose: () => void;
+}
+
+interface PrMutationSuccess {
+  prUrl: string;
 }
 
 /** Mirrors PlanChanges from form-worker edit-handler */
@@ -53,7 +52,7 @@ declare global {
           sitekey: string;
           callback: (token: string) => void;
           "expired-callback"?: () => void;
-        }
+        },
       ) => string;
     };
   }
@@ -76,12 +75,14 @@ function TurnstileWidget({
       window.turnstile.render(`#${containerId}`, {
         sitekey: siteKey,
         callback: onTokenChange,
-        "expired-callback": () => onTokenChange(""),
+        "expired-callback": () => {
+          onTokenChange("");
+        },
       });
     };
 
     const existingScript = document.querySelector<HTMLScriptElement>(
-      'script[src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"]'
+      'script[src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"]',
     );
 
     if (existingScript) {
@@ -90,8 +91,7 @@ function TurnstileWidget({
     }
 
     const script = document.createElement("script");
-    script.src =
-      "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
     script.async = true;
     script.defer = true;
     script.onload = renderWidget;
@@ -121,7 +121,7 @@ function formatDisplayValue(value: unknown): string {
   if (value === false) return "No";
   if (value === true) return "Yes";
   if (typeof value === "number") return value.toLocaleString("en-US");
-  return String(value);
+  return typeof value === "string" ? value : JSON.stringify(value);
 }
 
 function formatPriceAmount(amount: number | null): string {
@@ -150,22 +150,16 @@ interface FormState {
 
 function planToFormState(plan: Plan): FormState {
   return {
-    priceAmount:
-      plan.price.amount !== null ? String(plan.price.amount) : "",
+    priceAmount: plan.price.amount !== null ? String(plan.price.amount) : "",
     priceCurrency: plan.price.currency,
     pricePeriod: plan.price.period,
     priceNote: plan.price.note ?? "",
-    aiResponsesMonthly:
-      plan.aiResponsesMonthly != null
-        ? String(plan.aiResponsesMonthly)
-        : "",
+    aiResponsesMonthly: plan.aiResponsesMonthly != null ? String(plan.aiResponsesMonthly) : "",
     schedule: plan.schedule,
     locationSupport: String(plan.locationSupport),
     personaSupport: String(plan.personaSupport),
-    contentGeneration:
-      plan.contentGeneration === false ? "" : plan.contentGeneration,
-    contentOptimization:
-      plan.contentOptimization === false ? "" : plan.contentOptimization,
+    contentGeneration: plan.contentGeneration === false ? "" : plan.contentGeneration,
+    contentOptimization: plan.contentOptimization === false ? "" : plan.contentOptimization,
     integrations: plan.integrations.join(", "),
     llmSupport: { ...plan.llmSupport },
   };
@@ -183,18 +177,15 @@ interface DiffEntry {
 
 function computeChangesAndDiff(
   original: Plan,
-  form: FormState
+  form: FormState,
 ): { changes: PlanChanges; diff: DiffEntry[] } {
   const changes: PlanChanges = {};
   const diff: DiffEntry[] = [];
 
   // Price amount
-  const newAmount =
-    form.priceAmount.trim() === ""
-      ? null
-      : Number(form.priceAmount.trim());
+  const newAmount = form.priceAmount.trim() === "" ? null : Number(form.priceAmount.trim());
   if (newAmount !== original.price.amount && !Number.isNaN(newAmount ?? 0)) {
-    if (!changes.price) changes.price = {};
+    changes.price ??= {};
     changes.price.amount = newAmount;
     diff.push({
       label: "Price",
@@ -205,7 +196,7 @@ function computeChangesAndDiff(
 
   // Price currency
   if (form.priceCurrency.trim() !== original.price.currency) {
-    if (!changes.price) changes.price = {};
+    changes.price ??= {};
     changes.price.currency = form.priceCurrency.trim();
     diff.push({
       label: "Currency",
@@ -216,7 +207,7 @@ function computeChangesAndDiff(
 
   // Price period
   if (form.pricePeriod !== original.price.period) {
-    if (!changes.price) changes.price = {};
+    changes.price ??= {};
     changes.price.period = form.pricePeriod;
     diff.push({
       label: "Billing Period",
@@ -229,7 +220,7 @@ function computeChangesAndDiff(
   const newNote = form.priceNote.trim() === "" ? null : form.priceNote.trim();
   const origNote = original.price.note ?? null;
   if (newNote !== origNote) {
-    if (!changes.price) changes.price = {};
+    changes.price ??= {};
     changes.price.note = newNote;
     diff.push({
       label: "Price Note",
@@ -240,9 +231,7 @@ function computeChangesAndDiff(
 
   // AI Responses Monthly
   const newResponses =
-    form.aiResponsesMonthly.trim() === ""
-      ? null
-      : Number(form.aiResponsesMonthly.trim());
+    form.aiResponsesMonthly.trim() === "" ? null : Number(form.aiResponsesMonthly.trim());
   const origResponses = original.aiResponsesMonthly ?? null;
   if (newResponses !== origResponses && !Number.isNaN(newResponses ?? 0)) {
     changes.aiResponsesMonthly = newResponses;
@@ -255,8 +244,12 @@ function computeChangesAndDiff(
 
   // Auto-computed: show cost/1K if price or responses changed
   if (changes.price?.amount !== undefined || changes.aiResponsesMonthly !== undefined) {
-    const effectivePrice = changes.price?.amount !== undefined ? changes.price.amount : original.price.amount;
-    const effectiveResponses = changes.aiResponsesMonthly !== undefined ? changes.aiResponsesMonthly : (original.aiResponsesMonthly ?? null);
+    const effectivePrice =
+      changes.price?.amount !== undefined ? changes.price.amount : original.price.amount;
+    const effectiveResponses =
+      changes.aiResponsesMonthly !== undefined
+        ? changes.aiResponsesMonthly
+        : (original.aiResponsesMonthly ?? null);
     let newCostPer1K: number | null = null;
     if (effectivePrice !== null && effectiveResponses !== null && effectiveResponses > 0) {
       newCostPer1K = Number(((effectivePrice / effectiveResponses) * 1000).toFixed(2));
@@ -326,9 +319,7 @@ function computeChangesAndDiff(
 
   // Content Optimization
   const newCO: string | false =
-    form.contentOptimization.trim() === ""
-      ? false
-      : form.contentOptimization.trim();
+    form.contentOptimization.trim() === "" ? false : form.contentOptimization.trim();
   if (String(newCO) !== String(original.contentOptimization)) {
     changes.contentOptimization = newCO;
     diff.push({
@@ -398,13 +389,10 @@ export function EditPlanModal({
   const [errorMessage, setErrorMessage] = useState("");
   const [prUrl, setPrUrl] = useState("");
 
-  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "";
 
   // Compute diff
-  const { changes, diff } = useMemo(
-    () => computeChangesAndDiff(plan, form),
-    [plan, form]
-  );
+  const { changes, diff } = useMemo(() => computeChangesAndDiff(plan, form), [plan, form]);
 
   const hasChanges = diff.length > 0;
 
@@ -414,7 +402,9 @@ export function EditPlanModal({
       if (e.key === "Escape") onClose();
     };
     document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
+    return () => {
+      document.removeEventListener("keydown", handler);
+    };
   }, [onClose]);
 
   // Prevent background scroll
@@ -425,13 +415,12 @@ export function EditPlanModal({
     };
   }, []);
 
-  const handleTurnstileToken = useCallback(
-    (token: string) => setTurnstileToken(token),
-    []
-  );
+  const handleTurnstileToken = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
 
   // Submit
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: SubmitEvent | React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!hasChanges) return;
 
@@ -455,8 +444,7 @@ export function EditPlanModal({
       const contrib: { name?: string; email?: string; company?: string } = {};
       if (contributor.name.trim()) contrib.name = contributor.name.trim();
       if (contributor.email.trim()) contrib.email = contributor.email.trim();
-      if (contributor.company.trim())
-        contrib.company = contributor.company.trim();
+      if (contributor.company.trim()) contrib.company = contributor.company.trim();
       if (Object.keys(contrib).length > 0) payload.contributor = contrib;
 
       if (turnstileToken) payload.turnstileToken = turnstileToken;
@@ -472,23 +460,18 @@ export function EditPlanModal({
         throw new Error(text || `Request failed (${response.status})`);
       }
 
-      const result = (await response.json()) as { prUrl: string };
+      const result: PrMutationSuccess = await response.json();
       setPrUrl(result.prUrl);
       setStatus("success");
     } catch (err) {
       setStatus("error");
-      setErrorMessage(
-        err instanceof Error ? err.message : "Something went wrong"
-      );
+      setErrorMessage(err instanceof Error ? err.message : "Something went wrong");
     }
   }
 
   // -- Update helpers --
 
-  function updateForm<K extends keyof FormState>(
-    key: K,
-    value: FormState[K]
-  ) {
+  function updateForm<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
@@ -515,7 +498,9 @@ export function EditPlanModal({
       >
         <div
           className="mx-4 w-full max-w-md rounded-lg bg-white p-8 shadow-xl"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
         >
           <div className="text-center">
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
@@ -526,19 +511,13 @@ export function EditPlanModal({
                 strokeWidth="2"
                 stroke="currentColor"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4.5 12.75l6 6 9-13.5"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">
-              Pull Request Created
-            </h3>
+            <h3 className="text-lg font-semibold text-gray-900">Pull Request Created</h3>
             <p className="mt-2 text-sm text-gray-600">
-              Your suggested edit has been submitted as a GitHub pull request.
-              Our team will review it shortly.
+              Your suggested edit has been submitted as a GitHub pull request. Our team will review
+              it shortly.
             </p>
             {prUrl && (
               <a
@@ -571,14 +550,14 @@ export function EditPlanModal({
     >
       <div
         className="mx-4 flex max-h-[90vh] w-full max-w-4xl flex-col rounded-lg bg-white shadow-xl"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">
-              Suggest Edit
-            </h2>
+            <h2 className="text-lg font-semibold text-gray-900">Suggest Edit</h2>
             <p className="text-sm text-gray-500">
               {companyName} &mdash; {planName}
             </p>
@@ -595,18 +574,16 @@ export function EditPlanModal({
               strokeWidth="2"
               stroke="currentColor"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
         {/* Body: left form + right diff */}
         <form
-          onSubmit={handleSubmit}
+          onSubmit={(e) => {
+            void handleSubmit(e);
+          }}
           className="flex min-h-0 flex-1 flex-col"
         >
           <div className="flex min-h-0 flex-1 divide-x divide-gray-200">
@@ -620,46 +597,37 @@ export function EditPlanModal({
                 <div className="space-y-3">
                   <div className="grid grid-cols-2 gap-3">
                     <label className="block">
-                      <span className="text-xs font-medium text-gray-600">
-                        Price ($/mo)
-                      </span>
+                      <span className="text-xs font-medium text-gray-600">Price ($/mo)</span>
                       <input
                         type="text"
                         value={form.priceAmount}
-                        onChange={(e) =>
-                          updateForm("priceAmount", e.target.value)
-                        }
+                        onChange={(e) => {
+                          updateForm("priceAmount", e.target.value);
+                        }}
                         placeholder="Leave empty for Custom"
                         className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                     </label>
                     <label className="block">
-                      <span className="text-xs font-medium text-gray-600">
-                        Currency
-                      </span>
+                      <span className="text-xs font-medium text-gray-600">Currency</span>
                       <input
                         type="text"
                         value={form.priceCurrency}
-                        onChange={(e) =>
-                          updateForm("priceCurrency", e.target.value)
-                        }
+                        onChange={(e) => {
+                          updateForm("priceCurrency", e.target.value);
+                        }}
                         className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                     </label>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <label className="block">
-                      <span className="text-xs font-medium text-gray-600">
-                        Billing Period
-                      </span>
+                      <span className="text-xs font-medium text-gray-600">Billing Period</span>
                       <select
                         value={form.pricePeriod}
-                        onChange={(e) =>
-                          updateForm(
-                            "pricePeriod",
-                            e.target.value as FormState["pricePeriod"]
-                          )
-                        }
+                        onChange={(e) => {
+                          updateForm("pricePeriod", e.target.value as FormState["pricePeriod"]);
+                        }}
                         className="mt-1 block w-full cursor-pointer rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       >
                         <option value="monthly">Monthly</option>
@@ -668,15 +636,13 @@ export function EditPlanModal({
                       </select>
                     </label>
                     <label className="block">
-                      <span className="text-xs font-medium text-gray-600">
-                        Price Note
-                      </span>
+                      <span className="text-xs font-medium text-gray-600">Price Note</span>
                       <input
                         type="text"
                         value={form.priceNote}
-                        onChange={(e) =>
-                          updateForm("priceNote", e.target.value)
-                        }
+                        onChange={(e) => {
+                          updateForm("priceNote", e.target.value);
+                        }}
                         placeholder="e.g. per seat"
                         className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
@@ -691,15 +657,13 @@ export function EditPlanModal({
                   Usage
                 </legend>
                 <label className="block">
-                  <span className="text-xs font-medium text-gray-600">
-                    AI Responses / month
-                  </span>
+                  <span className="text-xs font-medium text-gray-600">AI Responses / month</span>
                   <input
                     type="text"
                     value={form.aiResponsesMonthly}
-                    onChange={(e) =>
-                      updateForm("aiResponsesMonthly", e.target.value)
-                    }
+                    onChange={(e) => {
+                      updateForm("aiResponsesMonthly", e.target.value);
+                    }}
                     placeholder="Leave empty for N/A"
                     className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
@@ -713,17 +677,12 @@ export function EditPlanModal({
                 </legend>
                 <div className="space-y-3">
                   <label className="block">
-                    <span className="text-xs font-medium text-gray-600">
-                      Schedule
-                    </span>
+                    <span className="text-xs font-medium text-gray-600">Schedule</span>
                     <select
                       value={form.schedule}
-                      onChange={(e) =>
-                        updateForm(
-                          "schedule",
-                          e.target.value as FormState["schedule"]
-                        )
-                      }
+                      onChange={(e) => {
+                        updateForm("schedule", e.target.value as FormState["schedule"]);
+                      }}
                       className="mt-1 block w-full cursor-pointer rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     >
                       <option value="daily">Daily</option>
@@ -733,29 +692,25 @@ export function EditPlanModal({
                   </label>
                   <div className="grid grid-cols-2 gap-3">
                     <label className="block">
-                      <span className="text-xs font-medium text-gray-600">
-                        Location Support
-                      </span>
+                      <span className="text-xs font-medium text-gray-600">Location Support</span>
                       <input
                         type="text"
                         value={form.locationSupport}
-                        onChange={(e) =>
-                          updateForm("locationSupport", e.target.value)
-                        }
+                        onChange={(e) => {
+                          updateForm("locationSupport", e.target.value);
+                        }}
                         placeholder='"global" or a number'
                         className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                     </label>
                     <label className="block">
-                      <span className="text-xs font-medium text-gray-600">
-                        Persona Support
-                      </span>
+                      <span className="text-xs font-medium text-gray-600">Persona Support</span>
                       <input
                         type="text"
                         value={form.personaSupport}
-                        onChange={(e) =>
-                          updateForm("personaSupport", e.target.value)
-                        }
+                        onChange={(e) => {
+                          updateForm("personaSupport", e.target.value);
+                        }}
                         placeholder='"unlimited" or a number'
                         className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
@@ -771,29 +726,25 @@ export function EditPlanModal({
                 </legend>
                 <div className="space-y-3">
                   <label className="block">
-                    <span className="text-xs font-medium text-gray-600">
-                      Content Generation
-                    </span>
+                    <span className="text-xs font-medium text-gray-600">Content Generation</span>
                     <input
                       type="text"
                       value={form.contentGeneration}
-                      onChange={(e) =>
-                        updateForm("contentGeneration", e.target.value)
-                      }
+                      onChange={(e) => {
+                        updateForm("contentGeneration", e.target.value);
+                      }}
                       placeholder="Leave empty for No"
                       className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                   </label>
                   <label className="block">
-                    <span className="text-xs font-medium text-gray-600">
-                      Content Optimization
-                    </span>
+                    <span className="text-xs font-medium text-gray-600">Content Optimization</span>
                     <input
                       type="text"
                       value={form.contentOptimization}
-                      onChange={(e) =>
-                        updateForm("contentOptimization", e.target.value)
-                      }
+                      onChange={(e) => {
+                        updateForm("contentOptimization", e.target.value);
+                      }}
                       placeholder="Leave empty for No"
                       className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
@@ -815,13 +766,13 @@ export function EditPlanModal({
                       <input
                         type="checkbox"
                         checked={form.llmSupport[key]}
-                        onChange={() => toggleLlm(key)}
+                        onChange={() => {
+                          toggleLlm(key);
+                        }}
                         className="cursor-pointer accent-blue-600"
                       />
                       <LlmIcon model={key} size={16} />
-                      <span className="text-gray-700">
-                        {LLM_MODEL_LABELS[key]}
-                      </span>
+                      <span className="text-gray-700">{LLM_MODEL_LABELS[key]}</span>
                     </label>
                   ))}
                 </div>
@@ -839,9 +790,9 @@ export function EditPlanModal({
                   <input
                     type="text"
                     value={form.integrations}
-                    onChange={(e) =>
-                      updateForm("integrations", e.target.value)
-                    }
+                    onChange={(e) => {
+                      updateForm("integrations", e.target.value);
+                    }}
                     placeholder="e.g. GSC, GA4, Semrush"
                     className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
@@ -865,9 +816,7 @@ export function EditPlanModal({
                       key={entry.label}
                       className="rounded border border-gray-200 bg-white px-3 py-2"
                     >
-                      <div className="text-xs font-medium text-gray-500">
-                        {entry.label}
-                      </div>
+                      <div className="text-xs font-medium text-gray-500">{entry.label}</div>
                       <div className="mt-1 flex items-center gap-2 text-sm">
                         <span className="rounded bg-red-50 px-1.5 py-0.5 text-red-700 line-through">
                           {entry.oldValue}
@@ -908,41 +857,35 @@ export function EditPlanModal({
             {/* Contributor fields */}
             <div className="mb-3 grid grid-cols-3 gap-3">
               <label className="block">
-                <span className="text-xs font-medium text-gray-500">
-                  Your Name (optional)
-                </span>
+                <span className="text-xs font-medium text-gray-500">Your Name (optional)</span>
                 <input
                   type="text"
                   value={contributor.name}
-                  onChange={(e) =>
-                    setContributor((p) => ({ ...p, name: e.target.value }))
-                  }
+                  onChange={(e) => {
+                    setContributor((p) => ({ ...p, name: e.target.value }));
+                  }}
                   className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </label>
               <label className="block">
-                <span className="text-xs font-medium text-gray-500">
-                  Email (optional)
-                </span>
+                <span className="text-xs font-medium text-gray-500">Email (optional)</span>
                 <input
                   type="email"
                   value={contributor.email}
-                  onChange={(e) =>
-                    setContributor((p) => ({ ...p, email: e.target.value }))
-                  }
+                  onChange={(e) => {
+                    setContributor((p) => ({ ...p, email: e.target.value }));
+                  }}
                   className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </label>
               <label className="block">
-                <span className="text-xs font-medium text-gray-500">
-                  Company (optional)
-                </span>
+                <span className="text-xs font-medium text-gray-500">Company (optional)</span>
                 <input
                   type="text"
                   value={contributor.company}
-                  onChange={(e) =>
-                    setContributor((p) => ({ ...p, company: e.target.value }))
-                  }
+                  onChange={(e) => {
+                    setContributor((p) => ({ ...p, company: e.target.value }));
+                  }}
                   className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </label>
@@ -951,18 +894,14 @@ export function EditPlanModal({
             {/* Turnstile */}
             {turnstileSiteKey ? (
               <div className="mb-3">
-                <TurnstileWidget
-                  siteKey={turnstileSiteKey}
-                  onTokenChange={handleTurnstileToken}
-                />
+                <TurnstileWidget siteKey={turnstileSiteKey} onTokenChange={handleTurnstileToken} />
               </div>
             ) : null}
 
             {/* Disclaimer + buttons */}
             <div className="flex items-center justify-between gap-4">
               <p className="text-xs text-gray-400">
-                Your edit will be submitted as a public GitHub pull request for
-                review.
+                Your edit will be submitted as a public GitHub pull request for review.
               </p>
               <div className="flex shrink-0 gap-2">
                 <button
@@ -981,9 +920,7 @@ export function EditPlanModal({
                   }
                   className="cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {status === "submitting"
-                    ? "Submitting..."
-                    : "Submit Suggestion"}
+                  {status === "submitting" ? "Submitting..." : "Submit Suggestion"}
                 </button>
               </div>
             </div>

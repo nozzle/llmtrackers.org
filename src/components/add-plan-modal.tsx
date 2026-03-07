@@ -1,9 +1,6 @@
 import { useState, useMemo, useEffect, useId, useCallback } from "react";
 import { LlmIcon } from "~/components/llm-icon";
-import {
-  LLM_MODEL_LABELS,
-  type LlmModelKey,
-} from "@llm-tracker/shared";
+import { LLM_MODEL_LABELS, type LlmModelKey } from "@llm-tracker/shared";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -34,6 +31,10 @@ interface NewPlanPayload {
   llmSupport: Record<LlmModelKey, boolean>;
 }
 
+interface PrMutationSuccess {
+  prUrl: string;
+}
+
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
 // ---------------------------------------------------------------------------
@@ -49,7 +50,7 @@ declare global {
           sitekey: string;
           callback: (token: string) => void;
           "expired-callback"?: () => void;
-        }
+        },
       ) => string;
     };
   }
@@ -72,12 +73,14 @@ function TurnstileWidget({
       window.turnstile.render(`#${containerId}`, {
         sitekey: siteKey,
         callback: onTokenChange,
-        "expired-callback": () => onTokenChange(""),
+        "expired-callback": () => {
+          onTokenChange("");
+        },
       });
     };
 
     const existingScript = document.querySelector<HTMLScriptElement>(
-      'script[src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"]'
+      'script[src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"]',
     );
 
     if (existingScript) {
@@ -86,8 +89,7 @@ function TurnstileWidget({
     }
 
     const script = document.createElement("script");
-    script.src =
-      "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
     script.async = true;
     script.defer = true;
     script.onload = renderWidget;
@@ -117,7 +119,7 @@ function formatDisplayValue(value: unknown): string {
   if (value === false) return "No";
   if (value === true) return "Yes";
   if (typeof value === "number") return value.toLocaleString("en-US");
-  return String(value);
+  return typeof value === "string" ? value : JSON.stringify(value);
 }
 
 function slugify(name: string): string {
@@ -163,9 +165,7 @@ function defaultFormState(): FormState {
     contentGeneration: "",
     contentOptimization: "",
     integrations: "",
-    llmSupport: Object.fromEntries(
-      LLM_KEYS.map((k) => [k, false])
-    ) as Record<LlmModelKey, boolean>,
+    llmSupport: Object.fromEntries(LLM_KEYS.map((k) => [k, false])) as Record<LlmModelKey, boolean>,
   };
 }
 
@@ -188,8 +188,7 @@ function computePreview(form: FormState): PreviewEntry[] {
     entries.push({ label: "Slug", value: form.slug.trim() });
   }
 
-  const priceAmount =
-    form.priceAmount.trim() === "" ? null : Number(form.priceAmount.trim());
+  const priceAmount = form.priceAmount.trim() === "" ? null : Number(form.priceAmount.trim());
   entries.push({
     label: "Price",
     value:
@@ -206,18 +205,14 @@ function computePreview(form: FormState): PreviewEntry[] {
   entries.push({
     label: "AI Responses/mo",
     value: formatDisplayValue(
-      form.aiResponsesMonthly.trim() === ""
-        ? null
-        : Number(form.aiResponsesMonthly.trim())
+      form.aiResponsesMonthly.trim() === "" ? null : Number(form.aiResponsesMonthly.trim()),
     ),
   });
 
   // Auto-computed cost/1K
   if (priceAmount !== null && !Number.isNaN(priceAmount)) {
     const responses =
-      form.aiResponsesMonthly.trim() === ""
-        ? null
-        : Number(form.aiResponsesMonthly.trim());
+      form.aiResponsesMonthly.trim() === "" ? null : Number(form.aiResponsesMonthly.trim());
     if (responses !== null && !Number.isNaN(responses) && responses > 0) {
       const costPer1K = Number(((priceAmount / responses) * 1000).toFixed(2));
       entries.push({
@@ -233,7 +228,7 @@ function computePreview(form: FormState): PreviewEntry[] {
     value: formatDisplayValue(
       form.locationSupport.trim().toLowerCase() === "global"
         ? "global"
-        : Number(form.locationSupport.trim()) || form.locationSupport.trim()
+        : Number(form.locationSupport.trim()) || form.locationSupport.trim(),
     ),
   });
   entries.push({
@@ -241,7 +236,7 @@ function computePreview(form: FormState): PreviewEntry[] {
     value: formatDisplayValue(
       form.personaSupport.trim().toLowerCase() === "unlimited"
         ? "unlimited"
-        : Number(form.personaSupport.trim()) || form.personaSupport.trim()
+        : Number(form.personaSupport.trim()) || form.personaSupport.trim(),
     ),
   });
   entries.push({
@@ -265,16 +260,14 @@ function computePreview(form: FormState): PreviewEntry[] {
   const supportedLlms = LLM_KEYS.filter((k) => form.llmSupport[k]);
   entries.push({
     label: "LLM Support",
-    value:
-      supportedLlms.map((k) => LLM_MODEL_LABELS[k]).join(", ") || "—",
+    value: supportedLlms.map((k) => LLM_MODEL_LABELS[k]).join(", ") || "—",
   });
 
   return entries;
 }
 
 function formToPayload(form: FormState): NewPlanPayload {
-  const priceAmount =
-    form.priceAmount.trim() === "" ? null : Number(form.priceAmount.trim());
+  const priceAmount = form.priceAmount.trim() === "" ? null : Number(form.priceAmount.trim());
 
   const locStr = form.locationSupport.trim().toLowerCase();
   const locationSupport: "global" | number =
@@ -294,20 +287,13 @@ function formToPayload(form: FormState): NewPlanPayload {
       note: form.priceNote.trim() || null,
     },
     aiResponsesMonthly:
-      form.aiResponsesMonthly.trim() === ""
-        ? null
-        : Number(form.aiResponsesMonthly.trim()),
+      form.aiResponsesMonthly.trim() === "" ? null : Number(form.aiResponsesMonthly.trim()),
     schedule: form.schedule,
     locationSupport,
     personaSupport,
-    contentGeneration:
-      form.contentGeneration.trim() === ""
-        ? false
-        : form.contentGeneration.trim(),
+    contentGeneration: form.contentGeneration.trim() === "" ? false : form.contentGeneration.trim(),
     contentOptimization:
-      form.contentOptimization.trim() === ""
-        ? false
-        : form.contentOptimization.trim(),
+      form.contentOptimization.trim() === "" ? false : form.contentOptimization.trim(),
     integrations: form.integrations
       .split(",")
       .map((s) => s.trim())
@@ -323,10 +309,7 @@ function formToPayload(form: FormState): NewPlanPayload {
 function validateForm(form: FormState): string | null {
   if (!form.name.trim()) return "Plan name is required";
   if (!form.slug.trim()) return "Plan slug is required";
-  if (
-    form.priceAmount.trim() !== "" &&
-    Number.isNaN(Number(form.priceAmount.trim()))
-  ) {
+  if (form.priceAmount.trim() !== "" && Number.isNaN(Number(form.priceAmount.trim()))) {
     return "Price amount must be a number or empty for Custom";
   }
   if (
@@ -350,11 +333,7 @@ function validateForm(form: FormState): string | null {
 // AddPlanModal
 // ---------------------------------------------------------------------------
 
-export function AddPlanModal({
-  companySlug,
-  companyName,
-  onClose,
-}: Readonly<AddPlanModalProps>) {
+export function AddPlanModal({ companySlug, companyName, onClose }: Readonly<AddPlanModalProps>) {
   const [form, setForm] = useState<FormState>(defaultFormState);
   const [autoSlug, setAutoSlug] = useState(true);
   const [contributor, setContributor] = useState({
@@ -367,7 +346,7 @@ export function AddPlanModal({
   const [errorMessage, setErrorMessage] = useState("");
   const [prUrl, setPrUrl] = useState("");
 
-  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "";
 
   const preview = useMemo(() => computePreview(form), [form]);
   const validationError = useMemo(() => validateForm(form), [form]);
@@ -386,7 +365,9 @@ export function AddPlanModal({
       if (e.key === "Escape") onClose();
     };
     document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
+    return () => {
+      document.removeEventListener("keydown", handler);
+    };
   }, [onClose]);
 
   // Prevent background scroll
@@ -397,12 +378,11 @@ export function AddPlanModal({
     };
   }, []);
 
-  const handleTurnstileToken = useCallback(
-    (token: string) => setTurnstileToken(token),
-    []
-  );
+  const handleTurnstileToken = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: SubmitEvent | React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!isValid) return;
 
@@ -425,8 +405,7 @@ export function AddPlanModal({
       const contrib: { name?: string; email?: string; company?: string } = {};
       if (contributor.name.trim()) contrib.name = contributor.name.trim();
       if (contributor.email.trim()) contrib.email = contributor.email.trim();
-      if (contributor.company.trim())
-        contrib.company = contributor.company.trim();
+      if (contributor.company.trim()) contrib.company = contributor.company.trim();
       if (Object.keys(contrib).length > 0) payload.contributor = contrib;
 
       if (turnstileToken) payload.turnstileToken = turnstileToken;
@@ -442,21 +421,16 @@ export function AddPlanModal({
         throw new Error(text || `Request failed (${response.status})`);
       }
 
-      const result = (await response.json()) as { prUrl: string };
+      const result: PrMutationSuccess = await response.json();
       setPrUrl(result.prUrl);
       setStatus("success");
     } catch (err) {
       setStatus("error");
-      setErrorMessage(
-        err instanceof Error ? err.message : "Something went wrong"
-      );
+      setErrorMessage(err instanceof Error ? err.message : "Something went wrong");
     }
   }
 
-  function updateForm<K extends keyof FormState>(
-    key: K,
-    value: FormState[K]
-  ) {
+  function updateForm<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
@@ -483,7 +457,9 @@ export function AddPlanModal({
       >
         <div
           className="mx-4 w-full max-w-md rounded-lg bg-white p-8 shadow-xl"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
         >
           <div className="text-center">
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
@@ -494,19 +470,13 @@ export function AddPlanModal({
                 strokeWidth="2"
                 stroke="currentColor"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4.5 12.75l6 6 9-13.5"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">
-              Pull Request Created
-            </h3>
+            <h3 className="text-lg font-semibold text-gray-900">Pull Request Created</h3>
             <p className="mt-2 text-sm text-gray-600">
-              Your new plan suggestion has been submitted as a GitHub pull
-              request. Our team will review it shortly.
+              Your new plan suggestion has been submitted as a GitHub pull request. Our team will
+              review it shortly.
             </p>
             {prUrl && (
               <a
@@ -539,14 +509,14 @@ export function AddPlanModal({
     >
       <div
         className="mx-4 flex max-h-[90vh] w-full max-w-4xl flex-col rounded-lg bg-white shadow-xl"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">
-              Add New Plan
-            </h2>
+            <h2 className="text-lg font-semibold text-gray-900">Add New Plan</h2>
             <p className="text-sm text-gray-500">{companyName}</p>
           </div>
           <button
@@ -561,18 +531,16 @@ export function AddPlanModal({
               strokeWidth="2"
               stroke="currentColor"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
         {/* Body: left form + right preview */}
         <form
-          onSubmit={handleSubmit}
+          onSubmit={(e) => {
+            void handleSubmit(e);
+          }}
           className="flex min-h-0 flex-1 flex-col"
         >
           <div className="flex min-h-0 flex-1 divide-x divide-gray-200">
@@ -585,21 +553,19 @@ export function AddPlanModal({
                 </legend>
                 <div className="space-y-3">
                   <label className="block">
-                    <span className="text-xs font-medium text-gray-600">
-                      Plan Name
-                    </span>
+                    <span className="text-xs font-medium text-gray-600">Plan Name</span>
                     <input
                       type="text"
                       value={form.name}
-                      onChange={(e) => updateForm("name", e.target.value)}
+                      onChange={(e) => {
+                        updateForm("name", e.target.value);
+                      }}
                       placeholder='e.g. "Pro" or "Enterprise"'
                       className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                   </label>
                   <label className="block">
-                    <span className="text-xs font-medium text-gray-600">
-                      Slug
-                    </span>
+                    <span className="text-xs font-medium text-gray-600">Slug</span>
                     <input
                       type="text"
                       value={form.slug}
@@ -625,46 +591,37 @@ export function AddPlanModal({
                 <div className="space-y-3">
                   <div className="grid grid-cols-2 gap-3">
                     <label className="block">
-                      <span className="text-xs font-medium text-gray-600">
-                        Price ($/mo)
-                      </span>
+                      <span className="text-xs font-medium text-gray-600">Price ($/mo)</span>
                       <input
                         type="text"
                         value={form.priceAmount}
-                        onChange={(e) =>
-                          updateForm("priceAmount", e.target.value)
-                        }
+                        onChange={(e) => {
+                          updateForm("priceAmount", e.target.value);
+                        }}
                         placeholder="Leave empty for Custom"
                         className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                     </label>
                     <label className="block">
-                      <span className="text-xs font-medium text-gray-600">
-                        Currency
-                      </span>
+                      <span className="text-xs font-medium text-gray-600">Currency</span>
                       <input
                         type="text"
                         value={form.priceCurrency}
-                        onChange={(e) =>
-                          updateForm("priceCurrency", e.target.value)
-                        }
+                        onChange={(e) => {
+                          updateForm("priceCurrency", e.target.value);
+                        }}
                         className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                     </label>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <label className="block">
-                      <span className="text-xs font-medium text-gray-600">
-                        Billing Period
-                      </span>
+                      <span className="text-xs font-medium text-gray-600">Billing Period</span>
                       <select
                         value={form.pricePeriod}
-                        onChange={(e) =>
-                          updateForm(
-                            "pricePeriod",
-                            e.target.value as FormState["pricePeriod"]
-                          )
-                        }
+                        onChange={(e) => {
+                          updateForm("pricePeriod", e.target.value as FormState["pricePeriod"]);
+                        }}
                         className="mt-1 block w-full cursor-pointer rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       >
                         <option value="monthly">Monthly</option>
@@ -673,15 +630,13 @@ export function AddPlanModal({
                       </select>
                     </label>
                     <label className="block">
-                      <span className="text-xs font-medium text-gray-600">
-                        Price Note
-                      </span>
+                      <span className="text-xs font-medium text-gray-600">Price Note</span>
                       <input
                         type="text"
                         value={form.priceNote}
-                        onChange={(e) =>
-                          updateForm("priceNote", e.target.value)
-                        }
+                        onChange={(e) => {
+                          updateForm("priceNote", e.target.value);
+                        }}
                         placeholder="e.g. per seat"
                         className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
@@ -696,15 +651,13 @@ export function AddPlanModal({
                   Usage
                 </legend>
                 <label className="block">
-                  <span className="text-xs font-medium text-gray-600">
-                    AI Responses / month
-                  </span>
+                  <span className="text-xs font-medium text-gray-600">AI Responses / month</span>
                   <input
                     type="text"
                     value={form.aiResponsesMonthly}
-                    onChange={(e) =>
-                      updateForm("aiResponsesMonthly", e.target.value)
-                    }
+                    onChange={(e) => {
+                      updateForm("aiResponsesMonthly", e.target.value);
+                    }}
                     placeholder="Leave empty for N/A"
                     className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
@@ -718,17 +671,12 @@ export function AddPlanModal({
                 </legend>
                 <div className="space-y-3">
                   <label className="block">
-                    <span className="text-xs font-medium text-gray-600">
-                      Schedule
-                    </span>
+                    <span className="text-xs font-medium text-gray-600">Schedule</span>
                     <select
                       value={form.schedule}
-                      onChange={(e) =>
-                        updateForm(
-                          "schedule",
-                          e.target.value as FormState["schedule"]
-                        )
-                      }
+                      onChange={(e) => {
+                        updateForm("schedule", e.target.value as FormState["schedule"]);
+                      }}
                       className="mt-1 block w-full cursor-pointer rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     >
                       <option value="daily">Daily</option>
@@ -738,29 +686,25 @@ export function AddPlanModal({
                   </label>
                   <div className="grid grid-cols-2 gap-3">
                     <label className="block">
-                      <span className="text-xs font-medium text-gray-600">
-                        Location Support
-                      </span>
+                      <span className="text-xs font-medium text-gray-600">Location Support</span>
                       <input
                         type="text"
                         value={form.locationSupport}
-                        onChange={(e) =>
-                          updateForm("locationSupport", e.target.value)
-                        }
+                        onChange={(e) => {
+                          updateForm("locationSupport", e.target.value);
+                        }}
                         placeholder='"global" or a number'
                         className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                     </label>
                     <label className="block">
-                      <span className="text-xs font-medium text-gray-600">
-                        Persona Support
-                      </span>
+                      <span className="text-xs font-medium text-gray-600">Persona Support</span>
                       <input
                         type="text"
                         value={form.personaSupport}
-                        onChange={(e) =>
-                          updateForm("personaSupport", e.target.value)
-                        }
+                        onChange={(e) => {
+                          updateForm("personaSupport", e.target.value);
+                        }}
                         placeholder='"unlimited" or a number'
                         className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
@@ -776,29 +720,25 @@ export function AddPlanModal({
                 </legend>
                 <div className="space-y-3">
                   <label className="block">
-                    <span className="text-xs font-medium text-gray-600">
-                      Content Generation
-                    </span>
+                    <span className="text-xs font-medium text-gray-600">Content Generation</span>
                     <input
                       type="text"
                       value={form.contentGeneration}
-                      onChange={(e) =>
-                        updateForm("contentGeneration", e.target.value)
-                      }
+                      onChange={(e) => {
+                        updateForm("contentGeneration", e.target.value);
+                      }}
                       placeholder="Leave empty for No"
                       className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                   </label>
                   <label className="block">
-                    <span className="text-xs font-medium text-gray-600">
-                      Content Optimization
-                    </span>
+                    <span className="text-xs font-medium text-gray-600">Content Optimization</span>
                     <input
                       type="text"
                       value={form.contentOptimization}
-                      onChange={(e) =>
-                        updateForm("contentOptimization", e.target.value)
-                      }
+                      onChange={(e) => {
+                        updateForm("contentOptimization", e.target.value);
+                      }}
                       placeholder="Leave empty for No"
                       className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
@@ -820,13 +760,13 @@ export function AddPlanModal({
                       <input
                         type="checkbox"
                         checked={form.llmSupport[key]}
-                        onChange={() => toggleLlm(key)}
+                        onChange={() => {
+                          toggleLlm(key);
+                        }}
                         className="cursor-pointer accent-blue-600"
                       />
                       <LlmIcon model={key} size={16} />
-                      <span className="text-gray-700">
-                        {LLM_MODEL_LABELS[key]}
-                      </span>
+                      <span className="text-gray-700">{LLM_MODEL_LABELS[key]}</span>
                     </label>
                   ))}
                 </div>
@@ -844,9 +784,9 @@ export function AddPlanModal({
                   <input
                     type="text"
                     value={form.integrations}
-                    onChange={(e) =>
-                      updateForm("integrations", e.target.value)
-                    }
+                    onChange={(e) => {
+                      updateForm("integrations", e.target.value);
+                    }}
                     placeholder="e.g. GSC, GA4, Semrush"
                     className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
@@ -860,9 +800,7 @@ export function AddPlanModal({
                 Plan Preview
               </h3>
               {form.name.trim() === "" ? (
-                <p className="text-sm text-gray-400 italic">
-                  Enter a plan name to see a preview.
-                </p>
+                <p className="text-sm text-gray-400 italic">Enter a plan name to see a preview.</p>
               ) : (
                 <div className="space-y-2">
                   {preview.map((entry) => (
@@ -870,12 +808,8 @@ export function AddPlanModal({
                       key={entry.label}
                       className="rounded border border-gray-200 bg-white px-3 py-2"
                     >
-                      <div className="text-xs font-medium text-gray-500">
-                        {entry.label}
-                      </div>
-                      <div className="mt-0.5 text-sm text-gray-900">
-                        {entry.value}
-                      </div>
+                      <div className="text-xs font-medium text-gray-500">{entry.label}</div>
+                      <div className="mt-0.5 text-sm text-gray-900">{entry.value}</div>
                     </div>
                   ))}
                 </div>
@@ -898,41 +832,35 @@ export function AddPlanModal({
 
             <div className="mb-3 grid grid-cols-3 gap-3">
               <label className="block">
-                <span className="text-xs font-medium text-gray-500">
-                  Your Name (optional)
-                </span>
+                <span className="text-xs font-medium text-gray-500">Your Name (optional)</span>
                 <input
                   type="text"
                   value={contributor.name}
-                  onChange={(e) =>
-                    setContributor((p) => ({ ...p, name: e.target.value }))
-                  }
+                  onChange={(e) => {
+                    setContributor((p) => ({ ...p, name: e.target.value }));
+                  }}
                   className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </label>
               <label className="block">
-                <span className="text-xs font-medium text-gray-500">
-                  Email (optional)
-                </span>
+                <span className="text-xs font-medium text-gray-500">Email (optional)</span>
                 <input
                   type="email"
                   value={contributor.email}
-                  onChange={(e) =>
-                    setContributor((p) => ({ ...p, email: e.target.value }))
-                  }
+                  onChange={(e) => {
+                    setContributor((p) => ({ ...p, email: e.target.value }));
+                  }}
                   className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </label>
               <label className="block">
-                <span className="text-xs font-medium text-gray-500">
-                  Company (optional)
-                </span>
+                <span className="text-xs font-medium text-gray-500">Company (optional)</span>
                 <input
                   type="text"
                   value={contributor.company}
-                  onChange={(e) =>
-                    setContributor((p) => ({ ...p, company: e.target.value }))
-                  }
+                  onChange={(e) => {
+                    setContributor((p) => ({ ...p, company: e.target.value }));
+                  }}
                   className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </label>
@@ -940,17 +868,13 @@ export function AddPlanModal({
 
             {turnstileSiteKey ? (
               <div className="mb-3">
-                <TurnstileWidget
-                  siteKey={turnstileSiteKey}
-                  onTokenChange={handleTurnstileToken}
-                />
+                <TurnstileWidget siteKey={turnstileSiteKey} onTokenChange={handleTurnstileToken} />
               </div>
             ) : null}
 
             <div className="flex items-center justify-between gap-4">
               <p className="text-xs text-gray-400">
-                Your suggestion will be submitted as a public GitHub pull
-                request for review.
+                Your suggestion will be submitted as a public GitHub pull request for review.
               </p>
               <div className="flex shrink-0 gap-2">
                 <button
@@ -969,9 +893,7 @@ export function AddPlanModal({
                   }
                   className="cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {status === "submitting"
-                    ? "Submitting..."
-                    : "Submit New Plan"}
+                  {status === "submitting" ? "Submitting..." : "Submit New Plan"}
                 </button>
               </div>
             </div>

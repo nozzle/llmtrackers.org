@@ -1,6 +1,4 @@
-export {
-  handleUpdateAdminRequest,
-} from "./admin";
+export { handleUpdateAdminRequest } from "./admin";
 export {
   enqueueAllCompanyUpdates,
   enqueueSingleCompanyUpdate,

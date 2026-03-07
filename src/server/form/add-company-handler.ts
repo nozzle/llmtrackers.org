@@ -79,12 +79,18 @@ interface GitHubEnv {
 const VALID_PERIODS = ["monthly", "yearly", "one-time"];
 const VALID_SCHEDULES = ["daily", "weekly", "monthly"];
 const VALID_LLM_KEYS: LlmModelKey[] = [
-  "aiMode", "aiOverviews", "chatgpt", "gemini",
-  "perplexity", "grok", "llama", "claude",
+  "aiMode",
+  "aiOverviews",
+  "chatgpt",
+  "gemini",
+  "perplexity",
+  "grok",
+  "llama",
+  "claude",
 ];
 
 export function validateAddCompanyPayload(
-  data: unknown
+  data: unknown,
 ): { ok: true; value: AddCompanyPayload } | { ok: false; error: string } {
   if (!data || typeof data !== "object") {
     return { ok: false, error: "Request body must be a JSON object" };
@@ -130,19 +136,19 @@ export function validateAddCompanyPayload(
     value: {
       company: companyResult.value,
       contributor: d.contributor as AddCompanyPayload["contributor"],
-      turnstileToken: d.turnstileToken as string | undefined,
+      turnstileToken: d.turnstileToken,
       website: d.website as string | undefined,
     },
   };
 }
 
 function validateNewCompanyData(
-  raw: Record<string, unknown>
+  raw: Record<string, unknown>,
 ): { ok: true; value: NewCompanyData } | { ok: false; error: string } {
   if (typeof raw.slug !== "string" || raw.slug.trim().length === 0) {
     return { ok: false, error: "company.slug is required" };
   }
-  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(raw.slug as string)) {
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(raw.slug)) {
     return { ok: false, error: "company.slug must be lowercase alphanumeric with hyphens" };
   }
   if (typeof raw.name !== "string" || raw.name.trim().length === 0) {
@@ -152,7 +158,7 @@ function validateNewCompanyData(
     return { ok: false, error: "company.website is required" };
   }
   try {
-    new URL(raw.website as string);
+    new URL(raw.website);
   } catch {
     return { ok: false, error: "company.website must be a valid URL" };
   }
@@ -166,7 +172,9 @@ function validateNewCompanyData(
       return { ok: false, error: "company.pricingUrl must be a string or null" };
     }
     if (raw.pricingUrl.trim().length > 0) {
-      try { new URL(raw.pricingUrl as string); } catch {
+      try {
+        new URL(raw.pricingUrl);
+      } catch {
         return { ok: false, error: "company.pricingUrl must be a valid URL" };
       }
     }
@@ -178,7 +186,9 @@ function validateNewCompanyData(
       return { ok: false, error: "company.featuresUrl must be a string or null" };
     }
     if (raw.featuresUrl.trim().length > 0) {
-      try { new URL(raw.featuresUrl as string); } catch {
+      try {
+        new URL(raw.featuresUrl);
+      } catch {
         return { ok: false, error: "company.featuresUrl must be a valid URL" };
       }
     }
@@ -191,7 +201,7 @@ function validateNewCompanyData(
 
   const plans: NewCompanyPlan[] = [];
   for (let i = 0; i < raw.plans.length; i++) {
-    const planRaw = raw.plans[i];
+    const planRaw: unknown = raw.plans[i];
     if (!planRaw || typeof planRaw !== "object") {
       return { ok: false, error: `company.plans[${i}] must be an object` };
     }
@@ -212,16 +222,18 @@ function validateNewCompanyData(
   return {
     ok: true,
     value: {
-      slug: (raw.slug as string).trim(),
-      name: (raw.name as string).trim(),
-      website: (raw.website as string).trim(),
-      description: (raw.description as string).trim(),
-      pricingUrl: raw.pricingUrl !== undefined && raw.pricingUrl !== null
-        ? (raw.pricingUrl as string).trim() || null
-        : null,
-      featuresUrl: raw.featuresUrl !== undefined && raw.featuresUrl !== null
-        ? (raw.featuresUrl as string).trim() || null
-        : null,
+      slug: raw.slug.trim(),
+      name: raw.name.trim(),
+      website: raw.website.trim(),
+      description: raw.description.trim(),
+      pricingUrl:
+        raw.pricingUrl !== undefined && raw.pricingUrl !== null
+          ? raw.pricingUrl.trim() || null
+          : null,
+      featuresUrl:
+        raw.featuresUrl !== undefined && raw.featuresUrl !== null
+          ? raw.featuresUrl.trim() || null
+          : null,
       plans,
     },
   };
@@ -229,7 +241,7 @@ function validateNewCompanyData(
 
 function validateNewCompanyPlan(
   raw: Record<string, unknown>,
-  index: number
+  index: number,
 ): { ok: true; value: NewCompanyPlan } | { ok: false; error: string } {
   const prefix = `company.plans[${index}]`;
 
@@ -295,21 +307,21 @@ function validateNewCompanyPlan(
   return {
     ok: true,
     value: {
-      name: (raw.name as string).trim(),
-      slug: (raw.slug as string).trim(),
+      name: raw.name.trim(),
+      slug: raw.slug.trim(),
       price: {
-        amount: p.amount as number | null,
-        currency: p.currency as string,
+        amount: p.amount,
+        currency: p.currency,
         period: p.period as "monthly" | "yearly" | "one-time",
         note: (p.note as string | null | undefined) ?? null,
       },
       aiResponsesMonthly: (raw.aiResponsesMonthly as number | null | undefined) ?? null,
       schedule: raw.schedule as "daily" | "weekly" | "monthly",
-      locationSupport: raw.locationSupport as "global" | number,
-      personaSupport: raw.personaSupport as "unlimited" | number,
-      contentGeneration: raw.contentGeneration as string | false,
-      contentOptimization: raw.contentOptimization as string | false,
-      integrations: raw.integrations as string[],
+      locationSupport: raw.locationSupport,
+      personaSupport: raw.personaSupport,
+      contentGeneration: raw.contentGeneration,
+      contentOptimization: raw.contentOptimization,
+      integrations: raw.integrations,
       llmSupport: ls as Record<LlmModelKey, boolean>,
     },
   };
@@ -318,22 +330,32 @@ function validateNewCompanyPlan(
 // ---- Core logic ----
 
 const LLM_KEYS: LlmModelKey[] = [
-  "chatgpt", "gemini", "perplexity", "claude",
-  "llama", "grok", "aiOverviews", "aiMode",
+  "chatgpt",
+  "gemini",
+  "perplexity",
+  "claude",
+  "llama",
+  "grok",
+  "aiOverviews",
+  "aiMode",
 ];
 
 function normalizeLlmSupport(
-  llmSupport: Partial<Record<LlmModelKey, boolean>>
+  llmSupport: Partial<Record<LlmModelKey, boolean>>,
 ): Record<LlmModelKey, boolean> {
-  return Object.fromEntries(
-    LLM_KEYS.map((key) => [key, llmSupport[key] ?? false])
-  ) as Record<LlmModelKey, boolean>;
+  return Object.fromEntries(LLM_KEYS.map((key) => [key, llmSupport[key] ?? false])) as Record<
+    LlmModelKey,
+    boolean
+  >;
 }
 
 export async function handleAddCompany(
   payload: AddCompanyPayload,
-  env: GitHubEnv
-): Promise<{ success: true; prUrl: string; prNumber: number } | { success: false; error: string; status: number }> {
+  env: GitHubEnv,
+): Promise<
+  | { success: true; prUrl: string; prNumber: number }
+  | { success: false; error: string; status: number }
+> {
   const { company: newData, contributor } = payload;
 
   // 1. Authenticate
@@ -420,7 +442,15 @@ export async function handleAddCompany(
   const prTitle = `[Suggestion] Add new company: ${newData.name}`;
   const prBody = buildAddCompanyPrBody(newData.name, summaryTable, plans, contributor);
 
-  const pr = await createPullRequest(token, owner, repo, prTitle, prBody, branchName, defaultBranch);
+  const pr = await createPullRequest(
+    token,
+    owner,
+    repo,
+    prTitle,
+    prBody,
+    branchName,
+    defaultBranch,
+  );
 
   return { success: true, prUrl: pr.html_url, prNumber: pr.number };
 }
@@ -432,11 +462,11 @@ function formatValue(value: unknown): string {
   if (value === false) return "No";
   if (value === true) return "Yes";
   if (typeof value === "number") return value.toLocaleString("en-US");
-  return String(value);
+  return typeof value === "string" ? value : JSON.stringify(value);
 }
 
 function buildCompanySummaryTable(company: CompanyYamlValue): string {
-  const rows: Array<[string, string]> = [
+  const rows: [string, string][] = [
     ["Slug", company.slug],
     ["Name", company.name],
     ["Website", company.website],
@@ -457,8 +487,11 @@ function buildCompanySummaryTable(company: CompanyYamlValue): string {
 }
 
 function buildPlanSummaryTable(plan: Plan): string {
-  const rows: Array<[string, string]> = [
-    ["Price", plan.price.amount !== null ? `$${plan.price.amount.toLocaleString("en-US")}` : "Custom"],
+  const rows: [string, string][] = [
+    [
+      "Price",
+      plan.price.amount !== null ? `$${plan.price.amount.toLocaleString("en-US")}` : "Custom",
+    ],
     ["Billing Period", plan.price.period],
     ["AI Responses/mo", formatValue(plan.aiResponsesMonthly)],
     ["Schedule", plan.schedule],
@@ -485,7 +518,7 @@ function buildAddCompanyPrBody(
   companyName: string,
   companyTable: string,
   plans: Plan[],
-  contributor?: AddCompanyPayload["contributor"]
+  contributor?: AddCompanyPayload["contributor"],
 ): string {
   const lines: string[] = [
     `## Suggested New Company: ${companyName}`,
@@ -497,12 +530,7 @@ function buildAddCompanyPrBody(
   ];
 
   for (const plan of plans) {
-    lines.push(
-      `### Plan: ${plan.name}`,
-      "",
-      buildPlanSummaryTable(plan),
-      "",
-    );
+    lines.push(`### Plan: ${plan.name}`, "", buildPlanSummaryTable(plan), "");
   }
 
   if (contributor?.name || contributor?.email || contributor?.company) {
@@ -513,10 +541,7 @@ function buildAddCompanyPrBody(
     lines.push("");
   }
 
-  lines.push(
-    "---",
-    "*Submitted via the LLM Trackers website.*"
-  );
+  lines.push("---", "*Submitted via the LLM Trackers website.*");
 
   return lines.join("\n");
 }

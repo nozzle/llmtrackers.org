@@ -25,7 +25,7 @@ export function getAllPlansWithCompany(): PlanWithCompanyMeta[] {
       companyName: company.name,
       companyWebsite: company.website,
       companyReviewSites: company.reviewSites,
-    }))
+    })),
   );
 }
 

@@ -10,16 +10,13 @@ export async function createPullRequest(
   title: string,
   body: string,
   head: string,
-  base: string
+  base: string,
 ): Promise<{ html_url: string; number: number }> {
-  const res = await ghFetch(
-    `https://api.github.com/repos/${owner}/${repo}/pulls`,
-    {
-      method: "POST",
-      headers: { Authorization: `token ${token}` },
-      body: JSON.stringify({ title, body, head, base }),
-    }
-  );
+  const res = await ghFetch(`https://api.github.com/repos/${owner}/${repo}/pulls`, {
+    method: "POST",
+    headers: { Authorization: `token ${token}` },
+    body: JSON.stringify({ title, body, head, base }),
+  });
   if (!res.ok) {
     const errorBody = await res.text();
     throw new Error(`createPR failed: ${res.status} ${errorBody}`);
@@ -34,11 +31,9 @@ export async function findOpenPullRequestByHead(
   token: string,
   owner: string,
   repo: string,
-  head: string
+  head: string,
 ): Promise<{ html_url: string; number: number } | null> {
-  const url = new URL(
-    `https://api.github.com/repos/${owner}/${repo}/pulls`
-  );
+  const url = new URL(`https://api.github.com/repos/${owner}/${repo}/pulls`);
   url.searchParams.set("state", "open");
   url.searchParams.set("head", `${owner}:${head}`);
 
@@ -46,14 +41,12 @@ export async function findOpenPullRequestByHead(
     headers: { Authorization: `token ${token}` },
   });
   if (!res.ok) {
-    throw new Error(
-      `findOpenPullRequestByHead failed: ${res.status} ${await res.text()}`
-    );
+    throw new Error(`findOpenPullRequestByHead failed: ${res.status} ${await res.text()}`);
   }
 
-  const pulls = (await res.json()) as Array<{
+  const pulls = (await res.json()) as {
     html_url: string;
     number: number;
-  }>;
+  }[];
   return pulls[0] ?? null;
 }

@@ -24,8 +24,7 @@ export const Route = createFileRoute("/compare")({
       { property: "og:title", content: "Compare Plans - LLM Trackers" },
       {
         property: "og:description",
-        content:
-          "Side-by-side plan comparison for AI search visibility tools.",
+        content: "Side-by-side plan comparison for AI search visibility tools.",
       },
     ],
   }),
@@ -51,10 +50,7 @@ interface ComparisonRow {
 const ROWS: ComparisonRow[] = [
   {
     label: "Price / month",
-    values: (p) =>
-      p.price.amount !== null
-        ? `$${p.price.amount.toLocaleString()}`
-        : "Custom",
+    values: (p) => (p.price.amount !== null ? `$${p.price.amount.toLocaleString()}` : "Custom"),
   },
   {
     label: "Price note",
@@ -63,9 +59,7 @@ const ROWS: ComparisonRow[] = [
   {
     label: "Cost per 1K responses",
     values: (p) =>
-      p.pricePer1000Responses != null
-        ? `$${p.pricePer1000Responses.toFixed(2)}`
-        : "-",
+      p.pricePer1000Responses != null ? `$${p.pricePer1000Responses.toFixed(2)}` : "-",
   },
   {
     label: "AI Responses / month",
@@ -81,28 +75,20 @@ const ROWS: ComparisonRow[] = [
   },
   {
     label: "Location Support",
-    values: (p) =>
-      p.locationSupport === "global"
-        ? "Global"
-        : `${p.locationSupport} regions`,
+    values: (p) => (p.locationSupport === "global" ? "Global" : `${p.locationSupport} regions`),
   },
   {
     label: "Persona Support",
-    values: (p) =>
-      p.personaSupport === "unlimited"
-        ? "Unlimited"
-        : String(p.personaSupport),
+    values: (p) => (p.personaSupport === "unlimited" ? "Unlimited" : String(p.personaSupport)),
   },
   {
     label: "Content Generation",
-    values: (p) =>
-      p.contentGeneration === false ? false : p.contentGeneration,
+    values: (p) => (p.contentGeneration === false ? false : p.contentGeneration),
     type: "boolean",
   },
   {
     label: "Content Optimization",
-    values: (p) =>
-      p.contentOptimization === false ? false : p.contentOptimization,
+    values: (p) => (p.contentOptimization === false ? false : p.contentOptimization),
     type: "boolean",
   },
   ...LLM_KEYS.map(
@@ -110,7 +96,7 @@ const ROWS: ComparisonRow[] = [
       label: LLM_MODEL_LABELS[key],
       values: (p) => p.llmSupport[key],
       type: "boolean",
-    })
+    }),
   ),
 ];
 
@@ -144,9 +130,7 @@ function ComparePage() {
         <Link to="/" className="text-sm text-blue-600 hover:underline">
           &larr; Back to comparison
         </Link>
-        <h1 className="mt-2 text-2xl font-bold text-gray-900">
-          Plan Comparison
-        </h1>
+        <h1 className="mt-2 text-2xl font-bold text-gray-900">Plan Comparison</h1>
       </div>
 
       <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
@@ -157,9 +141,7 @@ function ComparePage() {
                 Feature
               </th>
               {plans.map((plan) => {
-                const company = companies.find(
-                  (c) => c.slug === plan.companySlug
-                );
+                const company = companies.find((c) => c.slug === plan.companySlug);
                 return (
                   <th
                     key={`${plan.companySlug}/${plan.slug}`}
@@ -175,9 +157,7 @@ function ComparePage() {
                         >
                           {plan.companyName}
                         </Link>
-                        <div className="font-normal normal-case text-gray-400">
-                          {plan.name}
-                        </div>
+                        <div className="font-normal normal-case text-gray-400">{plan.name}</div>
                       </div>
                     </div>
                     {company?.score && (
@@ -199,10 +179,7 @@ function ComparePage() {
                 {plans.map((plan) => {
                   const val = row.values(plan);
                   return (
-                    <td
-                      key={`${plan.companySlug}/${plan.slug}`}
-                      className="px-4 py-3 text-sm"
-                    >
+                    <td key={`${plan.companySlug}/${plan.slug}`} className="px-4 py-3 text-sm">
                       {row.type === "boolean" ? (
                         typeof val === "boolean" ? (
                           val ? (
@@ -211,7 +188,7 @@ function ComparePage() {
                             <span className="text-gray-400">No</span>
                           )
                         ) : (
-                          <span className="text-green-600">{String(val)}</span>
+                          <span className="text-green-600">{val}</span>
                         )
                       ) : (
                         <span>{String(val)}</span>
@@ -227,10 +204,7 @@ function ComparePage() {
                 Integrations
               </td>
               {plans.map((plan) => (
-                <td
-                  key={`${plan.companySlug}/${plan.slug}`}
-                  className="px-4 py-3 text-sm"
-                >
+                <td key={`${plan.companySlug}/${plan.slug}`} className="px-4 py-3 text-sm">
                   <div className="flex flex-wrap gap-1">
                     {plan.integrations.map((int) => (
                       <span

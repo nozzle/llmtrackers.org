@@ -8,7 +8,4 @@ export {
   upsertFile,
   type GitHubFileContent,
 } from "./repos.js";
-export {
-  createPullRequest,
-  findOpenPullRequestByHead,
-} from "./pulls.js";
+export { createPullRequest, findOpenPullRequestByHead } from "./pulls.js";

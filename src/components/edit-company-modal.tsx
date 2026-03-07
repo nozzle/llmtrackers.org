@@ -18,6 +18,10 @@ interface CompanyChanges {
   featuresUrl?: string | null;
 }
 
+interface PrMutationSuccess {
+  prUrl: string;
+}
+
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
 // ---------------------------------------------------------------------------
@@ -33,7 +37,7 @@ declare global {
           sitekey: string;
           callback: (token: string) => void;
           "expired-callback"?: () => void;
-        }
+        },
       ) => string;
     };
   }
@@ -56,12 +60,14 @@ function TurnstileWidget({
       window.turnstile.render(`#${containerId}`, {
         sitekey: siteKey,
         callback: onTokenChange,
-        "expired-callback": () => onTokenChange(""),
+        "expired-callback": () => {
+          onTokenChange("");
+        },
       });
     };
 
     const existingScript = document.querySelector<HTMLScriptElement>(
-      'script[src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"]'
+      'script[src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"]',
     );
 
     if (existingScript) {
@@ -70,8 +76,7 @@ function TurnstileWidget({
     }
 
     const script = document.createElement("script");
-    script.src =
-      "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
     script.async = true;
     script.defer = true;
     script.onload = renderWidget;
@@ -87,7 +92,7 @@ function TurnstileWidget({
 
 function formatDisplayValue(value: unknown): string {
   if (value === null || value === undefined || value === "") return "—";
-  return String(value);
+  return typeof value === "string" ? value : JSON.stringify(value);
 }
 
 // ---------------------------------------------------------------------------
@@ -124,7 +129,7 @@ interface DiffEntry {
 
 function computeChangesAndDiff(
   original: Company,
-  form: FormState
+  form: FormState,
 ): { changes: CompanyChanges; diff: DiffEntry[] } {
   const changes: CompanyChanges = {};
   const diff: DiffEntry[] = [];
@@ -185,13 +190,8 @@ function computeChangesAndDiff(
 // EditCompanyModal
 // ---------------------------------------------------------------------------
 
-export function EditCompanyModal({
-  company,
-  onClose,
-}: Readonly<EditCompanyModalProps>) {
-  const [form, setForm] = useState<FormState>(() =>
-    companyToFormState(company)
-  );
+export function EditCompanyModal({ company, onClose }: Readonly<EditCompanyModalProps>) {
+  const [form, setForm] = useState<FormState>(() => companyToFormState(company));
   const [contributor, setContributor] = useState({
     name: "",
     email: "",
@@ -202,12 +202,9 @@ export function EditCompanyModal({
   const [errorMessage, setErrorMessage] = useState("");
   const [prUrl, setPrUrl] = useState("");
 
-  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "";
 
-  const { changes, diff } = useMemo(
-    () => computeChangesAndDiff(company, form),
-    [company, form]
-  );
+  const { changes, diff } = useMemo(() => computeChangesAndDiff(company, form), [company, form]);
 
   const hasChanges = diff.length > 0;
 
@@ -217,7 +214,9 @@ export function EditCompanyModal({
       if (e.key === "Escape") onClose();
     };
     document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
+    return () => {
+      document.removeEventListener("keydown", handler);
+    };
   }, [onClose]);
 
   // Prevent background scroll
@@ -228,12 +227,11 @@ export function EditCompanyModal({
     };
   }, []);
 
-  const handleTurnstileToken = useCallback(
-    (token: string) => setTurnstileToken(token),
-    []
-  );
+  const handleTurnstileToken = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: SubmitEvent | React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!hasChanges) return;
 
@@ -254,8 +252,7 @@ export function EditCompanyModal({
       const contrib: { name?: string; email?: string; company?: string } = {};
       if (contributor.name.trim()) contrib.name = contributor.name.trim();
       if (contributor.email.trim()) contrib.email = contributor.email.trim();
-      if (contributor.company.trim())
-        contrib.company = contributor.company.trim();
+      if (contributor.company.trim()) contrib.company = contributor.company.trim();
       if (Object.keys(contrib).length > 0) payload.contributor = contrib;
 
       if (turnstileToken) payload.turnstileToken = turnstileToken;
@@ -271,21 +268,16 @@ export function EditCompanyModal({
         throw new Error(text || `Request failed (${response.status})`);
       }
 
-      const result = (await response.json()) as { prUrl: string };
+      const result: PrMutationSuccess = await response.json();
       setPrUrl(result.prUrl);
       setStatus("success");
     } catch (err) {
       setStatus("error");
-      setErrorMessage(
-        err instanceof Error ? err.message : "Something went wrong"
-      );
+      setErrorMessage(err instanceof Error ? err.message : "Something went wrong");
     }
   }
 
-  function updateForm<K extends keyof FormState>(
-    key: K,
-    value: FormState[K]
-  ) {
+  function updateForm<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
@@ -302,7 +294,9 @@ export function EditCompanyModal({
       >
         <div
           className="mx-4 w-full max-w-md rounded-lg bg-white p-8 shadow-xl"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
         >
           <div className="text-center">
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
@@ -313,19 +307,13 @@ export function EditCompanyModal({
                 strokeWidth="2"
                 stroke="currentColor"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4.5 12.75l6 6 9-13.5"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">
-              Pull Request Created
-            </h3>
+            <h3 className="text-lg font-semibold text-gray-900">Pull Request Created</h3>
             <p className="mt-2 text-sm text-gray-600">
-              Your suggested company edit has been submitted as a GitHub pull
-              request. Our team will review it shortly.
+              Your suggested company edit has been submitted as a GitHub pull request. Our team will
+              review it shortly.
             </p>
             {prUrl && (
               <a
@@ -358,14 +346,14 @@ export function EditCompanyModal({
     >
       <div
         className="mx-4 flex max-h-[90vh] w-full max-w-4xl flex-col rounded-lg bg-white shadow-xl"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">
-              Edit Company Info
-            </h2>
+            <h2 className="text-lg font-semibold text-gray-900">Edit Company Info</h2>
             <p className="text-sm text-gray-500">{company.name}</p>
           </div>
           <button
@@ -380,18 +368,16 @@ export function EditCompanyModal({
               strokeWidth="2"
               stroke="currentColor"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
         {/* Body: left form + right diff */}
         <form
-          onSubmit={handleSubmit}
+          onSubmit={(e) => {
+            void handleSubmit(e);
+          }}
           className="flex min-h-0 flex-1 flex-col"
         >
           <div className="flex min-h-0 flex-1 divide-x divide-gray-200">
@@ -403,37 +389,35 @@ export function EditCompanyModal({
                 </legend>
                 <div className="space-y-3">
                   <label className="block">
-                    <span className="text-xs font-medium text-gray-600">
-                      Company Name
-                    </span>
+                    <span className="text-xs font-medium text-gray-600">Company Name</span>
                     <input
                       type="text"
                       value={form.name}
-                      onChange={(e) => updateForm("name", e.target.value)}
+                      onChange={(e) => {
+                        updateForm("name", e.target.value);
+                      }}
                       className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                   </label>
                   <label className="block">
-                    <span className="text-xs font-medium text-gray-600">
-                      Description
-                    </span>
+                    <span className="text-xs font-medium text-gray-600">Description</span>
                     <textarea
                       value={form.description}
-                      onChange={(e) =>
-                        updateForm("description", e.target.value)
-                      }
+                      onChange={(e) => {
+                        updateForm("description", e.target.value);
+                      }}
                       rows={3}
                       className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                   </label>
                   <label className="block">
-                    <span className="text-xs font-medium text-gray-600">
-                      Website
-                    </span>
+                    <span className="text-xs font-medium text-gray-600">Website</span>
                     <input
                       type="url"
                       value={form.website}
-                      onChange={(e) => updateForm("website", e.target.value)}
+                      onChange={(e) => {
+                        updateForm("website", e.target.value);
+                      }}
                       className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                   </label>
@@ -446,29 +430,25 @@ export function EditCompanyModal({
                 </legend>
                 <div className="space-y-3">
                   <label className="block">
-                    <span className="text-xs font-medium text-gray-600">
-                      Pricing URL
-                    </span>
+                    <span className="text-xs font-medium text-gray-600">Pricing URL</span>
                     <input
                       type="url"
                       value={form.pricingUrl}
-                      onChange={(e) =>
-                        updateForm("pricingUrl", e.target.value)
-                      }
+                      onChange={(e) => {
+                        updateForm("pricingUrl", e.target.value);
+                      }}
                       placeholder="Leave empty to remove"
                       className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                   </label>
                   <label className="block">
-                    <span className="text-xs font-medium text-gray-600">
-                      Features URL
-                    </span>
+                    <span className="text-xs font-medium text-gray-600">Features URL</span>
                     <input
                       type="url"
                       value={form.featuresUrl}
-                      onChange={(e) =>
-                        updateForm("featuresUrl", e.target.value)
-                      }
+                      onChange={(e) => {
+                        updateForm("featuresUrl", e.target.value);
+                      }}
                       placeholder="Leave empty to remove"
                       className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
@@ -493,9 +473,7 @@ export function EditCompanyModal({
                       key={entry.label}
                       className="rounded border border-gray-200 bg-white px-3 py-2"
                     >
-                      <div className="text-xs font-medium text-gray-500">
-                        {entry.label}
-                      </div>
+                      <div className="text-xs font-medium text-gray-500">{entry.label}</div>
                       <div className="mt-1 flex items-center gap-2 text-sm">
                         <span className="rounded bg-red-50 px-1.5 py-0.5 text-red-700 line-through">
                           {entry.oldValue}
@@ -534,41 +512,35 @@ export function EditCompanyModal({
 
             <div className="mb-3 grid grid-cols-3 gap-3">
               <label className="block">
-                <span className="text-xs font-medium text-gray-500">
-                  Your Name (optional)
-                </span>
+                <span className="text-xs font-medium text-gray-500">Your Name (optional)</span>
                 <input
                   type="text"
                   value={contributor.name}
-                  onChange={(e) =>
-                    setContributor((p) => ({ ...p, name: e.target.value }))
-                  }
+                  onChange={(e) => {
+                    setContributor((p) => ({ ...p, name: e.target.value }));
+                  }}
                   className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </label>
               <label className="block">
-                <span className="text-xs font-medium text-gray-500">
-                  Email (optional)
-                </span>
+                <span className="text-xs font-medium text-gray-500">Email (optional)</span>
                 <input
                   type="email"
                   value={contributor.email}
-                  onChange={(e) =>
-                    setContributor((p) => ({ ...p, email: e.target.value }))
-                  }
+                  onChange={(e) => {
+                    setContributor((p) => ({ ...p, email: e.target.value }));
+                  }}
                   className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </label>
               <label className="block">
-                <span className="text-xs font-medium text-gray-500">
-                  Company (optional)
-                </span>
+                <span className="text-xs font-medium text-gray-500">Company (optional)</span>
                 <input
                   type="text"
                   value={contributor.company}
-                  onChange={(e) =>
-                    setContributor((p) => ({ ...p, company: e.target.value }))
-                  }
+                  onChange={(e) => {
+                    setContributor((p) => ({ ...p, company: e.target.value }));
+                  }}
                   className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </label>
@@ -576,17 +548,13 @@ export function EditCompanyModal({
 
             {turnstileSiteKey ? (
               <div className="mb-3">
-                <TurnstileWidget
-                  siteKey={turnstileSiteKey}
-                  onTokenChange={handleTurnstileToken}
-                />
+                <TurnstileWidget siteKey={turnstileSiteKey} onTokenChange={handleTurnstileToken} />
               </div>
             ) : null}
 
             <div className="flex items-center justify-between gap-4">
               <p className="text-xs text-gray-400">
-                Your edit will be submitted as a public GitHub pull request for
-                review.
+                Your edit will be submitted as a public GitHub pull request for review.
               </p>
               <div className="flex shrink-0 gap-2">
                 <button
@@ -605,9 +573,7 @@ export function EditCompanyModal({
                   }
                   className="cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {status === "submitting"
-                    ? "Submitting..."
-                    : "Submit Suggestion"}
+                  {status === "submitting" ? "Submitting..." : "Submit Suggestion"}
                 </button>
               </div>
             </div>

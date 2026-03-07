@@ -56,10 +56,7 @@ const homeSearchSchema = z.object({
   trustradiusMax: optionalNumber,
   capterraMin: optionalNumber,
   capterraMax: optionalNumber,
-  locationType: z
-    .enum(["all", "global", "regional"])
-    .optional()
-    .catch(undefined),
+  locationType: z.enum(["all", "global", "regional"]).optional().catch(undefined),
 
   // column visibility — comma-separated list of column ids to show.
   // When absent, all columns are shown.
@@ -85,8 +82,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       {
-        title:
-          "LLM Trackers - Compare AI Search Visibility Tools",
+        title: "LLM Trackers - Compare AI Search Visibility Tools",
       },
       {
         name: "description",
@@ -122,9 +118,19 @@ function getReviewSiteScore(
   plan: PlanWithCompany & {
     companyReviewSites?: Partial<Record<ReviewSitePlatform, { score?: number | null }>>;
   },
-  platform: ReviewSitePlatform
+  platform: ReviewSitePlatform,
 ): number | null {
   return plan.companyReviewSites?.[platform]?.score ?? null;
+}
+
+function getReviewSiteMaxScore(
+  plan: PlanWithCompany & {
+    companyReviewSites?: Partial<Record<ReviewSitePlatform, { maxScore?: number | null }>>;
+  },
+  platform: ReviewSitePlatform,
+  fallback: number,
+): number {
+  return plan.companyReviewSites?.[platform]?.maxScore ?? fallback;
 }
 
 const LLM_KEYS: LlmModelKey[] = [
@@ -178,10 +184,7 @@ const COLUMN_LABELS: Record<ColumnId, string> = {
 // ---------------------------------------------------------------------------
 
 /** Generic click-outside hook */
-function useClickOutside(
-  ref: React.RefObject<HTMLElement | null>,
-  onClose: () => void
-) {
+function useClickOutside(ref: React.RefObject<HTMLElement | null>, onClose: () => void) {
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) {
@@ -189,7 +192,9 @@ function useClickOutside(
       }
     }
     document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
   }, [ref, onClose]);
 }
 
@@ -293,7 +298,9 @@ function RangeFilterPopover({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  useClickOutside(ref, () => setOpen(false));
+  useClickOutside(ref, () => {
+    setOpen(false);
+  });
 
   const hasValue = minValue != null || maxValue != null;
   const fmt = formatLabel ?? ((v: number) => String(v));
@@ -302,26 +309,34 @@ function RangeFilterPopover({
       ? `${fmt(minValue)}–${fmt(maxValue)}`
       : minValue != null
         ? `${fmt(minValue)}+`
-        : `≤${fmt(maxValue!)}`
+        : maxValue != null
+          ? `≤${fmt(maxValue)}`
+          : null
     : null;
 
   const effectiveLow = minValue ?? rangeMin;
   const effectiveHigh = maxValue ?? rangeMax;
 
   const handleLowChange = useCallback(
-    (v: number) => onMinChange(v <= rangeMin ? undefined : v),
-    [onMinChange, rangeMin]
+    (v: number) => {
+      onMinChange(v <= rangeMin ? undefined : v);
+    },
+    [onMinChange, rangeMin],
   );
   const handleHighChange = useCallback(
-    (v: number) => onMaxChange(v >= rangeMax ? undefined : v),
-    [onMaxChange, rangeMax]
+    (v: number) => {
+      onMaxChange(v >= rangeMax ? undefined : v);
+    },
+    [onMaxChange, rangeMax],
   );
 
   return (
     <div ref={ref} className="relative">
       <button
         type="button"
-        onClick={() => setOpen(!open)}
+        onClick={() => {
+          setOpen(!open);
+        }}
         className={`flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-2 text-sm transition-colors ${
           hasValue
             ? "border-blue-300 bg-blue-50 text-blue-700"
@@ -329,21 +344,14 @@ function RangeFilterPopover({
         }`}
       >
         {label}
-        {summary && (
-          <span className="font-medium">: {summary}</span>
-        )}
+        {summary && <span className="font-medium">: {summary}</span>}
         <svg
           className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
       {open && (
@@ -386,7 +394,9 @@ function LlmMultiSelect({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  useClickOutside(ref, () => setOpen(false));
+  useClickOutside(ref, () => {
+    setOpen(false);
+  });
 
   function toggle(key: LlmModelKey) {
     if (selected.includes(key)) {
@@ -402,7 +412,9 @@ function LlmMultiSelect({
     <div ref={ref} className="relative">
       <button
         type="button"
-        onClick={() => setOpen(!open)}
+        onClick={() => {
+          setOpen(!open);
+        }}
         className={`flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-2 text-sm transition-colors ${
           hasValue
             ? "border-blue-300 bg-blue-50 text-blue-700"
@@ -421,12 +433,7 @@ function LlmMultiSelect({
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
       {open && (
@@ -439,7 +446,9 @@ function LlmMultiSelect({
               <input
                 type="checkbox"
                 checked={selected.includes(key)}
-                onChange={() => toggle(key)}
+                onChange={() => {
+                  toggle(key);
+                }}
                 className="h-3.5 w-3.5 cursor-pointer rounded border-gray-300 text-blue-600"
               />
               <LlmIcon model={key} size={16} />
@@ -449,7 +458,9 @@ function LlmMultiSelect({
           {selected.length > 0 && (
             <button
               type="button"
-              onClick={() => onChange([])}
+              onClick={() => {
+                onChange([]);
+              }}
               className="w-full cursor-pointer border-t border-gray-100 px-3 py-1.5 text-left text-xs text-gray-500 hover:bg-gray-50"
             >
               Clear all
@@ -462,13 +473,7 @@ function LlmMultiSelect({
 }
 
 /** A dismissable chip/pill for an active filter */
-function FilterChip({
-  label,
-  onDismiss,
-}: {
-  label: string;
-  onDismiss: () => void;
-}) {
+function FilterChip({ label, onDismiss }: { label: string; onDismiss: () => void }) {
   return (
     <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 py-0.5 pl-2.5 pr-1 text-xs font-medium text-blue-800">
       {label}
@@ -478,7 +483,12 @@ function FilterChip({
         className="ml-0.5 inline-flex h-4 w-4 cursor-pointer items-center justify-center rounded-full text-blue-600 hover:bg-blue-200 hover:text-blue-900"
       >
         <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M6 18L18 6M6 6l12 12"
+          />
         </svg>
       </button>
     </span>
@@ -521,7 +531,9 @@ function MoreFiltersDropdown({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  useClickOutside(ref, () => setOpen(false));
+  useClickOutside(ref, () => {
+    setOpen(false);
+  });
 
   const secondaryFilterCount = [
     g2Min,
@@ -544,7 +556,9 @@ function MoreFiltersDropdown({
     <div ref={ref} className="relative">
       <button
         type="button"
-        onClick={() => setOpen(!open)}
+        onClick={() => {
+          setOpen(!open);
+        }}
         className={`flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-2 text-sm transition-colors ${
           secondaryFilterCount > 0
             ? "border-blue-300 bg-blue-50 text-blue-700"
@@ -598,16 +612,7 @@ function MoreFiltersDropdown({
                       10,
                       0.1,
                     ],
-                    [
-                      "Capterra",
-                      capterraMin,
-                      capterraMax,
-                      "capterraMin",
-                      "capterraMax",
-                      0,
-                      5,
-                      0.1,
-                    ],
+                    ["Capterra", capterraMin, capterraMax, "capterraMin", "capterraMax", 0, 5, 0.1],
                   ] as [
                     string,
                     number | undefined,
@@ -618,32 +623,28 @@ function MoreFiltersDropdown({
                     number,
                     number,
                   ][]
-                ).map(
-                  ([label, min, max, minKey, maxKey, rMin, rMax, step]) => (
-                    <div key={label}>
-                      <div className="mb-1 text-xs text-gray-600">
-                        {label}
-                      </div>
-                      <DualRangeSlider
-                        min={rMin}
-                        max={rMax}
-                        step={step}
-                        valueLow={min ?? rMin}
-                        valueHigh={max ?? rMax}
-                        onLowChange={(v) =>
-                          onUpdate({
-                            [minKey]: v <= rMin ? undefined : v,
-                          })
-                        }
-                        onHighChange={(v) =>
-                          onUpdate({
-                            [maxKey]: v >= rMax ? undefined : v,
-                          })
-                        }
-                      />
-                    </div>
-                  )
-                )}
+                ).map(([label, min, max, minKey, maxKey, rMin, rMax, step]) => (
+                  <div key={label}>
+                    <div className="mb-1 text-xs text-gray-600">{label}</div>
+                    <DualRangeSlider
+                      min={rMin}
+                      max={rMax}
+                      step={step}
+                      valueLow={min ?? rMin}
+                      valueHigh={max ?? rMax}
+                      onLowChange={(v) => {
+                        onUpdate({
+                          [minKey]: v <= rMin ? undefined : v,
+                        });
+                      }}
+                      onHighChange={(v) => {
+                        onUpdate({
+                          [maxKey]: v >= rMax ? undefined : v,
+                        });
+                      }}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -661,12 +662,12 @@ function MoreFiltersDropdown({
                     step={1}
                     valueLow={costMin ?? 0}
                     valueHigh={costMax ?? 200}
-                    onLowChange={(v) =>
-                      onUpdate({ costMin: v <= 0 ? undefined : v })
-                    }
-                    onHighChange={(v) =>
-                      onUpdate({ costMax: v >= 200 ? undefined : v })
-                    }
+                    onLowChange={(v) => {
+                      onUpdate({ costMin: v <= 0 ? undefined : v });
+                    }}
+                    onHighChange={(v) => {
+                      onUpdate({ costMax: v >= 200 ? undefined : v });
+                    }}
                     formatLabel={(v) => `$${v}`}
                   />
                 </div>
@@ -678,14 +679,14 @@ function MoreFiltersDropdown({
                     step={1000}
                     valueLow={responsesMin ?? 0}
                     valueHigh={responsesMax ?? 2000000}
-                    onLowChange={(v) =>
-                      onUpdate({ responsesMin: v <= 0 ? undefined : v })
-                    }
-                    onHighChange={(v) =>
+                    onLowChange={(v) => {
+                      onUpdate({ responsesMin: v <= 0 ? undefined : v });
+                    }}
+                    onHighChange={(v) => {
                       onUpdate({
                         responsesMax: v >= 2000000 ? undefined : v,
-                      })
-                    }
+                      });
+                    }}
                     formatLabel={(v) =>
                       v >= 1000000
                         ? `${(v / 1000000).toFixed(1)}M`
@@ -708,14 +709,11 @@ function MoreFiltersDropdown({
                   <span className="w-20 text-xs text-gray-600">Schedule</span>
                   <select
                     value={scheduleFilter}
-                    onChange={(e) =>
+                    onChange={(e) => {
                       onUpdate({
-                        schedule:
-                          e.target.value === "all"
-                            ? undefined
-                            : e.target.value,
-                      })
-                    }
+                        schedule: e.target.value === "all" ? undefined : e.target.value,
+                      });
+                    }}
                     className="flex-1 rounded-md border border-gray-300 px-2 py-1 text-xs focus:border-blue-500 focus:outline-none"
                   >
                     <option value="all">All</option>
@@ -727,14 +725,11 @@ function MoreFiltersDropdown({
                   <span className="w-20 text-xs text-gray-600">Locations</span>
                   <select
                     value={locationType}
-                    onChange={(e) =>
+                    onChange={(e) => {
                       onUpdate({
-                        locationType:
-                          e.target.value === "all"
-                            ? undefined
-                            : e.target.value,
-                      })
-                    }
+                        locationType: e.target.value === "all" ? undefined : e.target.value,
+                      });
+                    }}
                     className="flex-1 rounded-md border border-gray-300 px-2 py-1 text-xs focus:border-blue-500 focus:outline-none"
                   >
                     <option value="all">All</option>
@@ -748,7 +743,7 @@ function MoreFiltersDropdown({
             {secondaryFilterCount > 0 && (
               <button
                 type="button"
-                onClick={() =>
+                onClick={() => {
                   onUpdate({
                     g2Min: undefined,
                     g2Max: undefined,
@@ -764,8 +759,8 @@ function MoreFiltersDropdown({
                     responsesMax: undefined,
                     schedule: undefined,
                     locationType: undefined,
-                  })
-                }
+                  });
+                }}
                 className="cursor-pointer text-xs text-red-500 hover:text-red-700"
               >
                 Clear all secondary filters
@@ -787,7 +782,9 @@ function ColumnVisibilityPicker({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  useClickOutside(ref, () => setOpen(false));
+  useClickOutside(ref, () => {
+    setOpen(false);
+  });
 
   const allVisible = visibleColumns.length === ALL_COLUMN_IDS.length;
 
@@ -800,7 +797,7 @@ function ColumnVisibilityPicker({
     } else {
       // Insert in canonical order
       const next = ALL_COLUMN_IDS.filter(
-        (c) => visibleColumns.includes(c) || c === id
+        (c) => visibleColumns.includes(c) || c === id,
       ) as unknown as ColumnId[];
       onChange(next);
     }
@@ -810,7 +807,9 @@ function ColumnVisibilityPicker({
     <div ref={ref} className="relative">
       <button
         type="button"
-        onClick={() => setOpen(!open)}
+        onClick={() => {
+          setOpen(!open);
+        }}
         className="flex cursor-pointer items-center gap-1.5 rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
       >
         <svg
@@ -838,9 +837,9 @@ function ColumnVisibilityPicker({
           <div className="border-b border-gray-100 px-3 py-2">
             <button
               type="button"
-              onClick={() =>
-                onChange(allVisible ? ["name"] : [...ALL_COLUMN_IDS])
-              }
+              onClick={() => {
+                onChange(allVisible ? ["name"] : [...ALL_COLUMN_IDS]);
+              }}
               className="cursor-pointer text-xs text-blue-600 hover:text-blue-800"
             >
               {allVisible ? "Hide all" : "Show all"}
@@ -854,7 +853,9 @@ function ColumnVisibilityPicker({
               <input
                 type="checkbox"
                 checked={visibleColumns.includes(id)}
-                onChange={() => toggleColumn(id)}
+                onChange={() => {
+                  toggleColumn(id);
+                }}
                 className="h-3.5 w-3.5 cursor-pointer rounded border-gray-300 text-blue-600"
               />
               {COLUMN_LABELS[id]}
@@ -886,8 +887,9 @@ function HomePage() {
   const sortBy = search.sort ?? "score";
   const sortDir = search.dir ?? (sortBy === "name" ? "asc" : "desc");
   const scheduleFilter = search.schedule ?? "all";
-  const llmFilter: LlmModelKey[] =
-    (parseCommaSeparated(search.llms) as LlmModelKey[] | undefined) ?? [];
+  const llmFilter = useMemo<LlmModelKey[]>(() => {
+    return (parseCommaSeparated(search.llms) as LlmModelKey[] | undefined) ?? [];
+  }, [search.llms]);
   const scoreMin = search.scoreMin;
   const scoreMax = search.scoreMax;
   const priceMin = search.priceMin;
@@ -905,10 +907,9 @@ function HomePage() {
   const capterraMin = search.capterraMin;
   const capterraMax = search.capterraMax;
   const locationType = search.locationType ?? "all";
-  const visibleColumns: ColumnId[] =
-    (parseCommaSeparated(search.cols) as ColumnId[] | undefined) ?? [
-      ...ALL_COLUMN_IDS,
-    ];
+  const visibleColumns: ColumnId[] = (parseCommaSeparated(search.cols) as
+    | ColumnId[]
+    | undefined) ?? [...ALL_COLUMN_IDS];
 
   // ---- Navigate helper — omits defaults to keep URLs clean ----
 
@@ -919,7 +920,7 @@ function HomePage() {
   };
 
   function updateSearch(patch: SearchPatch) {
-    navigate({
+    void navigate({
       to: "/",
       search: (prev: HomeSearch) => {
         // Merge, converting array fields to comma strings
@@ -934,18 +935,14 @@ function HomePage() {
         if (next.q) cleaned.q = next.q;
         if (next.sort && next.sort !== "score") cleaned.sort = next.sort;
         if (next.dir) {
-          const naturalDir =
-            (next.sort ?? "score") === "name" ? "asc" : "desc";
+          const naturalDir = (next.sort ?? "score") === "name" ? "asc" : "desc";
           if (next.dir !== naturalDir) cleaned.dir = next.dir;
         }
-        if (next.schedule && next.schedule !== "all")
-          cleaned.schedule = next.schedule;
+        if (next.schedule && next.schedule !== "all") cleaned.schedule = next.schedule;
 
         // llms — could be string (from prev) or array (from patch)
         const llmsVal = next.llms;
-        const llmsStr = Array.isArray(llmsVal)
-          ? llmsVal.join(",")
-          : llmsVal;
+        const llmsStr = Array.isArray(llmsVal) ? llmsVal.join(",") : llmsVal;
         if (llmsStr) cleaned.llms = llmsStr;
 
         if (next.scoreMin != null) cleaned.scoreMin = next.scoreMin;
@@ -954,10 +951,8 @@ function HomePage() {
         if (next.priceMax != null) cleaned.priceMax = next.priceMax;
         if (next.costMin != null) cleaned.costMin = next.costMin;
         if (next.costMax != null) cleaned.costMax = next.costMax;
-        if (next.responsesMin != null)
-          cleaned.responsesMin = next.responsesMin;
-        if (next.responsesMax != null)
-          cleaned.responsesMax = next.responsesMax;
+        if (next.responsesMin != null) cleaned.responsesMin = next.responsesMin;
+        if (next.responsesMax != null) cleaned.responsesMax = next.responsesMax;
         if (next.g2Min != null) cleaned.g2Min = next.g2Min;
         if (next.g2Max != null) cleaned.g2Max = next.g2Max;
         if (next.trustpilotMin != null) cleaned.trustpilotMin = next.trustpilotMin;
@@ -971,9 +966,7 @@ function HomePage() {
 
         // cols — only persist when not all columns are visible
         const colsVal = next.cols;
-        const colsArr = Array.isArray(colsVal)
-          ? colsVal
-          : parseCommaSeparated(colsVal as string | undefined);
+        const colsArr = Array.isArray(colsVal) ? colsVal : parseCommaSeparated(colsVal);
         if (colsArr && colsArr.length !== ALL_COLUMN_IDS.length) {
           cleaned.cols = colsArr.join(",");
         }
@@ -1003,9 +996,7 @@ function HomePage() {
     if (q) {
       const lower = q.toLowerCase();
       result = result.filter(
-        (p) =>
-          p.companyName.toLowerCase().includes(lower) ||
-          p.name.toLowerCase().includes(lower)
+        (p) => p.companyName.toLowerCase().includes(lower) || p.name.toLowerCase().includes(lower),
       );
     }
 
@@ -1016,9 +1007,7 @@ function HomePage() {
 
     // LLM multi-select (match ALL)
     if (llmFilter.length > 0) {
-      result = result.filter((p) =>
-        llmFilter.every((k) => p.llmSupport[k])
-      );
+      result = result.filter((p) => llmFilter.every((k) => p.llmSupport[k]));
     }
 
     // Score
@@ -1065,11 +1054,11 @@ function HomePage() {
       });
     }
 
-    const reviewSiteRanges: Array<{
+    const reviewSiteRanges: {
       platform: ReviewSitePlatform;
       min: number | undefined;
       max: number | undefined;
-    }> = [
+    }[] = [
       { platform: "g2", min: g2Min, max: g2Max },
       { platform: "trustpilot", min: trustpilotMin, max: trustpilotMax },
       { platform: "trustradius", min: trustradiusMin, max: trustradiusMax },
@@ -1103,8 +1092,7 @@ function HomePage() {
           cmp = (a.price.amount ?? 99999) - (b.price.amount ?? 99999);
           break;
         case "responses":
-          cmp =
-            (a.aiResponsesMonthly ?? 0) - (b.aiResponsesMonthly ?? 0);
+          cmp = (a.aiResponsesMonthly ?? 0) - (b.aiResponsesMonthly ?? 0);
           break;
         case "score":
           cmp =
@@ -1115,17 +1103,13 @@ function HomePage() {
         case "trustpilot":
         case "trustradius":
         case "capterra":
-          cmp =
-            (getReviewSiteScore(a, sortBy) ?? -1) -
-            (getReviewSiteScore(b, sortBy) ?? -1);
+          cmp = (getReviewSiteScore(a, sortBy) ?? -1) - (getReviewSiteScore(b, sortBy) ?? -1);
           break;
         case "name":
           cmp = a.companyName.localeCompare(b.companyName);
           break;
         case "costEfficiency":
-          cmp =
-            (a.pricePer1000Responses ?? 999) -
-            (b.pricePer1000Responses ?? 999);
+          cmp = (a.pricePer1000Responses ?? 999) - (b.pricePer1000Responses ?? 999);
           break;
         default:
           cmp = 0;
@@ -1175,7 +1159,7 @@ function HomePage() {
   function handleCompare() {
     if (selectedPlans.size < 2) return;
     const plans = Array.from(selectedPlans).join(",");
-    navigate({ to: "/compare", search: { plans } });
+    void navigate({ to: "/compare", search: { plans } });
   }
 
   function toggleSort(column: string) {
@@ -1222,78 +1206,85 @@ function HomePage() {
   ].filter((v) => v != null && v !== "").length;
 
   // Build secondary filter chips (filters inside "More Filters" that are active)
-  const secondaryChips: Array<{ label: string; onDismiss: () => void }> = [];
+  const secondaryChips: { label: string; onDismiss: () => void }[] = [];
 
   function rangeLabel(name: string, min: number | undefined, max: number | undefined): string {
     if (min != null && max != null) return `${name}: ${min}–${max}`;
     if (min != null) return `${name}: ${min}+`;
-    return `${name}: ≤${max}`;
+    return max === undefined ? name : `${name}: ≤${max}`;
   }
 
   if (g2Min != null || g2Max != null)
     secondaryChips.push({
       label: rangeLabel("G2", g2Min, g2Max),
-      onDismiss: () => updateSearch({ g2Min: undefined, g2Max: undefined }),
+      onDismiss: () => {
+        updateSearch({ g2Min: undefined, g2Max: undefined });
+      },
     });
   if (trustpilotMin != null || trustpilotMax != null)
     secondaryChips.push({
       label: rangeLabel("Trustpilot", trustpilotMin, trustpilotMax),
-      onDismiss: () =>
-        updateSearch({ trustpilotMin: undefined, trustpilotMax: undefined }),
+      onDismiss: () => {
+        updateSearch({ trustpilotMin: undefined, trustpilotMax: undefined });
+      },
     });
   if (trustradiusMin != null || trustradiusMax != null)
     secondaryChips.push({
       label: rangeLabel("TrustRadius", trustradiusMin, trustradiusMax),
-      onDismiss: () =>
-        updateSearch({ trustradiusMin: undefined, trustradiusMax: undefined }),
+      onDismiss: () => {
+        updateSearch({ trustradiusMin: undefined, trustradiusMax: undefined });
+      },
     });
   if (capterraMin != null || capterraMax != null)
     secondaryChips.push({
       label: rangeLabel("Capterra", capterraMin, capterraMax),
-      onDismiss: () =>
-        updateSearch({ capterraMin: undefined, capterraMax: undefined }),
+      onDismiss: () => {
+        updateSearch({ capterraMin: undefined, capterraMax: undefined });
+      },
     });
   if (costMin != null || costMax != null)
     secondaryChips.push({
       label: rangeLabel("$/1K Resp.", costMin, costMax),
-      onDismiss: () => updateSearch({ costMin: undefined, costMax: undefined }),
+      onDismiss: () => {
+        updateSearch({ costMin: undefined, costMax: undefined });
+      },
     });
   if (responsesMin != null || responsesMax != null)
     secondaryChips.push({
       label: rangeLabel("AI Resp./mo", responsesMin, responsesMax),
-      onDismiss: () =>
-        updateSearch({ responsesMin: undefined, responsesMax: undefined }),
+      onDismiss: () => {
+        updateSearch({ responsesMin: undefined, responsesMax: undefined });
+      },
     });
   if (scheduleFilter !== "all")
     secondaryChips.push({
       label: `Schedule: ${scheduleFilter}`,
-      onDismiss: () => updateSearch({ schedule: undefined }),
+      onDismiss: () => {
+        updateSearch({ schedule: undefined });
+      },
     });
   if (locationType !== "all")
     secondaryChips.push({
       label: `Location: ${locationType}`,
-      onDismiss: () => updateSearch({ locationType: undefined }),
+      onDismiss: () => {
+        updateSearch({ locationType: undefined });
+      },
     });
 
   return (
     <div>
       <div className="mb-8">
         <div className="flex items-center gap-3">
-          <h1 className="text-3xl font-bold text-gray-900">
-            AI Search Visibility Tool Comparison
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-900">AI Search Visibility Tool Comparison</h1>
           <button
             type="button"
-            onClick={() => setAddingCompany(true)}
+            onClick={() => {
+              setAddingCompany(true);
+            }}
             className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 transition-colors"
             title="Add a new company"
           >
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -1305,8 +1296,8 @@ function HomePage() {
           </button>
         </div>
         <p className="mt-2 text-gray-600">
-          Compare {companies.length} LLM tracking tools across{" "}
-          {allPlans.length} plans. Select plans to compare side-by-side.
+          Compare {companies.length} LLM tracking tools across {allPlans.length} plans. Select plans
+          to compare side-by-side.
         </p>
       </div>
 
@@ -1331,9 +1322,9 @@ function HomePage() {
             type="text"
             placeholder="Search companies or plans..."
             value={q}
-            onChange={(e) =>
-              updateSearch({ q: e.target.value || undefined })
-            }
+            onChange={(e) => {
+              updateSearch({ q: e.target.value || undefined });
+            }}
             className="w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           />
         </div>
@@ -1343,8 +1334,12 @@ function HomePage() {
           label="Score"
           minValue={scoreMin}
           maxValue={scoreMax}
-          onMinChange={(v) => updateSearch({ scoreMin: v })}
-          onMaxChange={(v) => updateSearch({ scoreMax: v })}
+          onMinChange={(v) => {
+            updateSearch({ scoreMin: v });
+          }}
+          onMaxChange={(v) => {
+            updateSearch({ scoreMax: v });
+          }}
           rangeMin={0}
           rangeMax={48}
         />
@@ -1354,8 +1349,12 @@ function HomePage() {
           label="Price"
           minValue={priceMin}
           maxValue={priceMax}
-          onMinChange={(v) => updateSearch({ priceMin: v })}
-          onMaxChange={(v) => updateSearch({ priceMax: v })}
+          onMinChange={(v) => {
+            updateSearch({ priceMin: v });
+          }}
+          onMaxChange={(v) => {
+            updateSearch({ priceMax: v });
+          }}
           rangeMin={0}
           rangeMax={2000}
           step={10}
@@ -1365,9 +1364,9 @@ function HomePage() {
         {/* LLM multi-select */}
         <LlmMultiSelect
           selected={llmFilter}
-          onChange={(v) =>
-            updateSearch({ llms: v.length > 0 ? v : undefined })
-          }
+          onChange={(v) => {
+            updateSearch({ llms: v.length > 0 ? v : undefined });
+          }}
         />
 
         {/* More Filters dropdown */}
@@ -1386,21 +1385,19 @@ function HomePage() {
           responsesMax={responsesMax}
           scheduleFilter={scheduleFilter}
           locationType={locationType}
-          onUpdate={(patch) => updateSearch(patch as SearchPatch)}
+          onUpdate={(patch) => {
+            updateSearch(patch as SearchPatch);
+          }}
         />
 
         {/* Active secondary filter chips */}
         {secondaryChips.map((chip) => (
-          <FilterChip
-            key={chip.label}
-            label={chip.label}
-            onDismiss={chip.onDismiss}
-          />
+          <FilterChip key={chip.label} label={chip.label} onDismiss={chip.onDismiss} />
         ))}
 
         {activeFilterCount > 0 && (
           <button
-            onClick={() =>
+            onClick={() => {
               updateSearch({
                 q: undefined,
                 schedule: undefined,
@@ -1422,8 +1419,8 @@ function HomePage() {
                 capterraMin: undefined,
                 capterraMax: undefined,
                 locationType: undefined,
-              })
-            }
+              });
+            }}
             className="cursor-pointer text-xs text-red-500 hover:text-red-700"
           >
             Clear all filters
@@ -1442,7 +1439,9 @@ function HomePage() {
           )}
           {selectedPlans.size > 0 && (
             <button
-              onClick={() => setSelectedPlans(new Set())}
+              onClick={() => {
+                setSelectedPlans(new Set());
+              }}
               className="cursor-pointer text-xs text-gray-500 hover:text-gray-700"
             >
               Clear selection
@@ -1450,7 +1449,9 @@ function HomePage() {
           )}
           <ColumnVisibilityPicker
             visibleColumns={visibleColumns}
-            onChange={(cols) => updateSearch({ cols })}
+            onChange={(cols) => {
+              updateSearch({ cols });
+            }}
           />
         </div>
       </div>
@@ -1461,20 +1462,20 @@ function HomePage() {
           <thead className="bg-gray-50">
             {/* Column group headers */}
             {(() => {
-              const reviewCols = (
-                ["g2", "trustpilot", "trustradius", "capterra"] as const
-              ).filter(isColumnVisible).length;
-              const pricingCols = (
-                ["price", "costEfficiency", "responses"] as const
-              ).filter(isColumnVisible).length;
+              const reviewCols = (["g2", "trustpilot", "trustradius", "capterra"] as const).filter(
+                isColumnVisible,
+              ).length;
+              const pricingCols = (["price", "costEfficiency", "responses"] as const).filter(
+                isColumnVisible,
+              ).length;
               const leadingCols =
                 1 +
                 (isColumnVisible("name") ? 1 : 0) +
                 (isColumnVisible("plan") ? 1 : 0) +
                 (isColumnVisible("score") ? 1 : 0);
-              const trailingCols = (
-                ["schedule", "llmSupport", "locations"] as const
-              ).filter(isColumnVisible).length;
+              const trailingCols = (["schedule", "llmSupport", "locations"] as const).filter(
+                isColumnVisible,
+              ).length;
               const hasGroupRow = reviewCols > 0 || pricingCols > 0;
               // Row 2 top offset: when the group row is visible, offset by its height
               const row2Top = hasGroupRow ? "top-[25px]" : "top-0";
@@ -1515,20 +1516,26 @@ function HomePage() {
                     {isColumnVisible("name") && (
                       <th
                         className={`sticky left-10 ${row2Top} z-30 cursor-pointer bg-gray-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700`}
-                        onClick={() => toggleSort("name")}
+                        onClick={() => {
+                          toggleSort("name");
+                        }}
                       >
                         Company{sortIndicator("name")}
                       </th>
                     )}
                     {isColumnVisible("plan") && (
-                      <th className={`sticky ${row2Top} z-20 bg-gray-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500`}>
+                      <th
+                        className={`sticky ${row2Top} z-20 bg-gray-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500`}
+                      >
                         Plan
                       </th>
                     )}
                     {isColumnVisible("score") && (
                       <th
                         className={`sticky ${row2Top} z-20 cursor-pointer bg-gray-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700`}
-                        onClick={() => toggleSort("score")}
+                        onClick={() => {
+                          toggleSort("score");
+                        }}
                       >
                         Score{sortIndicator("score")}
                       </th>
@@ -1536,7 +1543,9 @@ function HomePage() {
                     {isColumnVisible("g2") && (
                       <th
                         className={`sticky ${row2Top} z-20 cursor-pointer bg-gray-50 px-4 py-3 text-center text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700`}
-                        onClick={() => toggleSort("g2")}
+                        onClick={() => {
+                          toggleSort("g2");
+                        }}
                         title={REVIEW_SITE_LABELS.g2}
                       >
                         <span className="inline-flex items-center gap-1">
@@ -1548,7 +1557,9 @@ function HomePage() {
                     {isColumnVisible("trustpilot") && (
                       <th
                         className={`sticky ${row2Top} z-20 cursor-pointer bg-gray-50 px-4 py-3 text-center text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700`}
-                        onClick={() => toggleSort("trustpilot")}
+                        onClick={() => {
+                          toggleSort("trustpilot");
+                        }}
                         title={REVIEW_SITE_LABELS.trustpilot}
                       >
                         <span className="inline-flex items-center gap-1">
@@ -1560,7 +1571,9 @@ function HomePage() {
                     {isColumnVisible("trustradius") && (
                       <th
                         className={`sticky ${row2Top} z-20 cursor-pointer bg-gray-50 px-4 py-3 text-center text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700`}
-                        onClick={() => toggleSort("trustradius")}
+                        onClick={() => {
+                          toggleSort("trustradius");
+                        }}
                         title={REVIEW_SITE_LABELS.trustradius}
                       >
                         <span className="inline-flex items-center gap-1">
@@ -1572,7 +1585,9 @@ function HomePage() {
                     {isColumnVisible("capterra") && (
                       <th
                         className={`sticky ${row2Top} z-20 cursor-pointer bg-gray-50 px-4 py-3 text-center text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700`}
-                        onClick={() => toggleSort("capterra")}
+                        onClick={() => {
+                          toggleSort("capterra");
+                        }}
                         title={REVIEW_SITE_LABELS.capterra}
                       >
                         <span className="inline-flex items-center gap-1">
@@ -1584,7 +1599,9 @@ function HomePage() {
                     {isColumnVisible("price") && (
                       <th
                         className={`sticky ${row2Top} z-20 cursor-pointer bg-gray-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700`}
-                        onClick={() => toggleSort("price")}
+                        onClick={() => {
+                          toggleSort("price");
+                        }}
                       >
                         Price/mo{sortIndicator("price")}
                       </th>
@@ -1592,7 +1609,9 @@ function HomePage() {
                     {isColumnVisible("costEfficiency") && (
                       <th
                         className={`sticky ${row2Top} z-20 cursor-pointer bg-gray-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700`}
-                        onClick={() => toggleSort("costEfficiency")}
+                        onClick={() => {
+                          toggleSort("costEfficiency");
+                        }}
                       >
                         $/1K Resp.{sortIndicator("costEfficiency")}
                       </th>
@@ -1600,23 +1619,31 @@ function HomePage() {
                     {isColumnVisible("responses") && (
                       <th
                         className={`sticky ${row2Top} z-20 cursor-pointer bg-gray-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700`}
-                        onClick={() => toggleSort("responses")}
+                        onClick={() => {
+                          toggleSort("responses");
+                        }}
                       >
                         AI Resp./mo{sortIndicator("responses")}
                       </th>
                     )}
                     {isColumnVisible("schedule") && (
-                      <th className={`sticky ${row2Top} z-20 bg-gray-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500`}>
+                      <th
+                        className={`sticky ${row2Top} z-20 bg-gray-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500`}
+                      >
                         Schedule
                       </th>
                     )}
                     {isColumnVisible("llmSupport") && (
-                      <th className={`sticky ${row2Top} z-20 bg-gray-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500`}>
+                      <th
+                        className={`sticky ${row2Top} z-20 bg-gray-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500`}
+                      >
                         LLM Support
                       </th>
                     )}
                     {isColumnVisible("locations") && (
-                      <th className={`sticky ${row2Top} z-20 bg-gray-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500`}>
+                      <th
+                        className={`sticky ${row2Top} z-20 bg-gray-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500`}
+                      >
                         Locations
                       </th>
                     )}
@@ -1629,9 +1656,7 @@ function HomePage() {
             {filteredPlans.map((plan) => {
               const key = `${plan.companySlug}/${plan.slug}`;
               const isSelected = selectedPlans.has(key);
-              const company = companies.find(
-                (c) => c.slug === plan.companySlug
-              );
+              const company = companies.find((c) => c.slug === plan.companySlug);
               return (
                 <tr
                   key={key}
@@ -1643,7 +1668,9 @@ function HomePage() {
                     <input
                       type="checkbox"
                       checked={isSelected}
-                      onChange={() => togglePlan(key)}
+                      onChange={() => {
+                        togglePlan(key);
+                      }}
                       className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
                   </td>
@@ -1652,11 +1679,7 @@ function HomePage() {
                       className={`sticky left-10 z-10 px-4 py-3 ${isSelected ? "bg-blue-50" : "bg-white"}`}
                     >
                       <div className="flex items-center gap-3">
-                        <CompanyMark
-                          slug={plan.companySlug}
-                          name={plan.companyName}
-                          size="sm"
-                        />
+                        <CompanyMark slug={plan.companySlug} name={plan.companyName} size="sm" />
                         <Link
                           to="/companies/$slug"
                           params={{ slug: plan.companySlug }}
@@ -1666,7 +1689,9 @@ function HomePage() {
                         </Link>
                         <button
                           type="button"
-                          onClick={() => setEditingPlan(plan)}
+                          onClick={() => {
+                            setEditingPlan(plan);
+                          }}
                           className="cursor-pointer rounded p-0.5 text-gray-400 opacity-0 transition-opacity hover:bg-gray-100 hover:text-gray-600 group-hover:opacity-100"
                           title="Suggest an edit"
                         >
@@ -1688,9 +1713,7 @@ function HomePage() {
                     </td>
                   )}
                   {isColumnVisible("plan") && (
-                    <td className="px-4 py-3 text-sm text-gray-700">
-                      {plan.name}
-                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-700">{plan.name}</td>
                   )}
                   {isColumnVisible("score") && (
                     <td className="px-4 py-3">
@@ -1700,7 +1723,7 @@ function HomePage() {
                         </span>
                       ) : (
                         <span className="text-sm text-gray-400">-</span>
-                        )}
+                      )}
                     </td>
                   )}
                   {isColumnVisible("g2") && (
@@ -1708,7 +1731,7 @@ function HomePage() {
                       <ReviewSiteScoreBadge
                         platform="g2"
                         score={getReviewSiteScore(plan, "g2")}
-                        maxScore={plan.companyReviewSites?.g2?.maxScore ?? 5}
+                        maxScore={getReviewSiteMaxScore(plan, "g2", 5)}
                         compact
                       />
                     </td>
@@ -1718,7 +1741,7 @@ function HomePage() {
                       <ReviewSiteScoreBadge
                         platform="trustpilot"
                         score={getReviewSiteScore(plan, "trustpilot")}
-                        maxScore={plan.companyReviewSites?.trustpilot?.maxScore ?? 5}
+                        maxScore={getReviewSiteMaxScore(plan, "trustpilot", 5)}
                         compact
                       />
                     </td>
@@ -1728,7 +1751,7 @@ function HomePage() {
                       <ReviewSiteScoreBadge
                         platform="trustradius"
                         score={getReviewSiteScore(plan, "trustradius")}
-                        maxScore={plan.companyReviewSites?.trustradius?.maxScore ?? 10}
+                        maxScore={getReviewSiteMaxScore(plan, "trustradius", 10)}
                         compact
                       />
                     </td>
@@ -1738,7 +1761,7 @@ function HomePage() {
                       <ReviewSiteScoreBadge
                         platform="capterra"
                         score={getReviewSiteScore(plan, "capterra")}
-                        maxScore={plan.companyReviewSites?.capterra?.maxScore ?? 5}
+                        maxScore={getReviewSiteMaxScore(plan, "capterra", 5)}
                         compact
                       />
                     </td>
@@ -1747,9 +1770,7 @@ function HomePage() {
                     <td className="px-4 py-3 text-sm font-medium">
                       {formatPrice(plan)}
                       {plan.price.note && (
-                        <div className="text-xs text-gray-400">
-                          {plan.price.note}
-                        </div>
+                        <div className="text-xs text-gray-400">{plan.price.note}</div>
                       )}
                     </td>
                   )}
@@ -1783,18 +1804,14 @@ function HomePage() {
                   {isColumnVisible("llmSupport") && (
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1.5">
-                        {LLM_KEYS.filter((k) => plan.llmSupport[k]).map(
-                          (k) => (
-                            <LlmIcon key={k} model={k} size={18} />
-                          )
-                        )}
+                        {LLM_KEYS.filter((k) => plan.llmSupport[k]).map((k) => (
+                          <LlmIcon key={k} model={k} size={18} />
+                        ))}
                       </div>
                     </td>
                   )}
                   {isColumnVisible("locations") && (
-                    <td className="px-4 py-3 text-sm">
-                      {formatLocation(plan.locationSupport)}
-                    </td>
+                    <td className="px-4 py-3 text-sm">{formatLocation(plan.locationSupport)}</td>
                   )}
                 </tr>
               );
@@ -1816,12 +1833,18 @@ function HomePage() {
           planSlug={editingPlan.slug}
           planName={editingPlan.name}
           plan={editingPlan}
-          onClose={() => setEditingPlan(null)}
+          onClose={() => {
+            setEditingPlan(null);
+          }}
         />
       )}
 
       {addingCompany && (
-        <AddCompanyModal onClose={() => setAddingCompany(false)} />
+        <AddCompanyModal
+          onClose={() => {
+            setAddingCompany(false);
+          }}
+        />
       )}
     </div>
   );

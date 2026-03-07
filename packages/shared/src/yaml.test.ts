@@ -125,11 +125,7 @@ describe("yaml helpers", () => {
     const { company } = parseCompanyYaml(baseYaml);
     const merged = mergeCompanyWithExtractedPlans(company, [starterUpdate, newPlan], "2025-03-06");
 
-    expect(merged.plans.map((plan) => plan.name)).toEqual([
-      "Starter",
-      "Enterprise",
-      "Growth",
-    ]);
+    expect(merged.plans.map((plan) => plan.name)).toEqual(["Starter", "Enterprise", "Growth"]);
     expect(merged.plans[0]?.price.amount).toBe(120);
     expect(merged.plans[0]?.pricePer1000Responses).toBe(10);
     expect(merged.plans[2]?.slug).toBe("growth");
@@ -140,10 +136,7 @@ describe("yaml helpers", () => {
     const prepared = prepareUpdatedCompanyYaml(baseYaml, [starterUpdate], "2025-03-06");
 
     expect(prepared.yamlText).toMatch(/lastChecked: 2025-03-06/);
-    expect(prepared.company.plans.map((plan) => plan.name)).toEqual([
-      "Starter",
-      "Enterprise",
-    ]);
+    expect(prepared.company.plans.map((plan) => plan.name)).toEqual(["Starter", "Enterprise"]);
     expect(prepared.company.plans[1]?.slug).toBe("enterprise");
   });
 
@@ -194,8 +187,6 @@ describe("yaml helpers", () => {
 
     expect(prepared.yamlText).toMatch(/reviewSites:/);
     expect(prepared.company.reviewSites.trustpilot?.reviewCount).toBe(42);
-    expect(prepared.company.reviewSites.trustpilot?.reviews[0]?.excerpt).toBe(
-      "Helpful tool"
-    );
+    expect(prepared.company.reviewSites.trustpilot?.reviews[0]?.excerpt).toBe("Helpful tool");
   });
 });

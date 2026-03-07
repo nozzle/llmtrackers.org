@@ -1,0 +1,7 @@
+dist/
+.wrangler/
+.vinxi/
+node_modules/
+packages/shared/compiled-data.json
+src/routeTree.gen.ts
+worker-configuration.d.ts

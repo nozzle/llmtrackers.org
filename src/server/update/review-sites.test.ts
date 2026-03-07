@@ -97,7 +97,7 @@ describe("review site parsers", () => {
   it("parses Trustpilot aggregate data, native distribution, and snippets", () => {
     const parsed = parseTrustpilotReviewSite(
       "https://www.trustpilot.com/review/example.com",
-      trustpilotHtml
+      trustpilotHtml,
     );
 
     expect(parsed?.score).toBe(1.8);
@@ -117,7 +117,7 @@ describe("review site parsers", () => {
   it("parses TrustRadius aggregate data, buckets, and review snippets", () => {
     const parsed = parseTrustRadiusReviewSite(
       "https://www.trustradius.com/products/ahrefs/reviews",
-      trustRadiusHtml
+      trustRadiusHtml,
     );
 
     expect(parsed?.score).toBe(8.977);
@@ -161,7 +161,7 @@ describe("review site diffs", () => {
           ],
           reviews: [],
         },
-      }
+      },
     );
 
     expect(diffs).toHaveLength(1);

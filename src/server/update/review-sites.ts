@@ -30,9 +30,7 @@ const PARSERS: Record<ReviewSitePlatform, Parser> = {
   capterra: parseGenericReviewSite,
 };
 
-export async function collectReviewSites(
-  reviewSites: ReviewSites
-): Promise<Partial<ReviewSites>> {
+export async function collectReviewSites(reviewSites: ReviewSites): Promise<Partial<ReviewSites>> {
   const collected: Partial<ReviewSites> = {};
 
   for (const platform of REVIEW_SITE_PLATFORMS) {
@@ -54,10 +52,7 @@ export async function collectReviewSites(
   return collected;
 }
 
-export function parseTrustpilotReviewSite(
-  url: string,
-  html: string
-): ReviewSiteData | null {
+export function parseTrustpilotReviewSite(url: string, html: string): ReviewSiteData | null {
   const aggregate = extractAggregateFromJsonLd(html);
   if (!aggregate) return null;
 
@@ -76,10 +71,7 @@ export function parseTrustpilotReviewSite(
   });
 }
 
-export function parseTrustRadiusReviewSite(
-  url: string,
-  html: string
-): ReviewSiteData | null {
+export function parseTrustRadiusReviewSite(url: string, html: string): ReviewSiteData | null {
   const aggregate = extractAggregateFromJsonLd(html);
   const nextData = extractNextData(html);
   const pageProps = asRecord(asRecord(asRecord(nextData).props).pageProps);
@@ -87,8 +79,7 @@ export function parseTrustRadiusReviewSite(
   const productCounts = asRecord(product.counts);
   const productRating = asRecord(product.rating);
 
-  const reviewCount =
-    toNumber(productCounts.publishedReviews) ?? toNumber(aggregate?.reviewCount);
+  const reviewCount = toNumber(productCounts.publishedReviews) ?? toNumber(aggregate?.reviewCount);
 
   const score = toNumber(productRating.trScore) ?? toNumber(aggregate?.score);
 
@@ -96,13 +87,9 @@ export function parseTrustRadiusReviewSite(
 
   const ratingDistribution = extractTrustRadiusDistribution(pageProps);
   const reviews = extractTrustRadiusReviews(url, pageProps).slice(0, 3);
-  const distributionCount = ratingDistribution.reduce(
-    (sum, bucket) => sum + bucket.count,
-    0
-  );
+  const distributionCount = ratingDistribution.reduce((sum, bucket) => sum + bucket.count, 0);
   const normalizedReviewCount = reviewCount ?? (distributionCount > 0 ? distributionCount : null);
-  const normalizedScore =
-    normalizedReviewCount && normalizedReviewCount > 0 ? score : null;
+  const normalizedScore = normalizedReviewCount && normalizedReviewCount > 0 ? score : null;
 
   if (
     normalizedScore == null &&
@@ -123,10 +110,7 @@ export function parseTrustRadiusReviewSite(
   });
 }
 
-export function parseGenericReviewSite(
-  url: string,
-  html: string
-): ReviewSiteData | null {
+export function parseGenericReviewSite(url: string, html: string): ReviewSiteData | null {
   const aggregate = extractAggregateFromJsonLd(html);
   const reviews = extractReviewsFromJsonLd(html).slice(0, 3);
 
@@ -144,7 +128,7 @@ export function parseGenericReviewSite(
 
 export function diffReviewSites(
   existing: ReviewSites,
-  next: Partial<ReviewSites>
+  next: Partial<ReviewSites>,
 ): ReviewSiteDiff[] {
   const diffs: ReviewSiteDiff[] = [];
 
@@ -244,13 +228,9 @@ function compactReviewSiteData(data: ReviewSiteData): ReviewSiteData {
   };
 }
 
-function extractTrustpilotDistribution(
-  html: string,
-  reviewCount: number
-): ReviewSiteBucket[] {
+function extractTrustpilotDistribution(html: string, reviewCount: number): ReviewSiteBucket[] {
   const buckets: ReviewSiteBucket[] = [];
-  const regex =
-    /data-star-rating="(five|four|three|two|one)"[\s\S]*?style="width:([0-9.]+)%"/g;
+  const regex = /data-star-rating="(five|four|three|two|one)"[\s\S]*?style="width:([0-9.]+)%"/g;
 
   let match: RegExpExecArray | null;
   while ((match = regex.exec(html))) {
@@ -282,13 +262,13 @@ function extractTrustRadiusDistribution(pageProps: unknown): ReviewSiteBucket[] 
   const filters = asArray(searchData.userFilters);
 
   for (const filter of filters) {
-    const buckets = asArray(asRecord(filter)?.buckets);
+    const buckets = asArray(asRecord(filter).buckets);
     const normalized = buckets
       .map((bucket) => {
-        const value = toNumber(asRecord(bucket)?.key);
+        const bucketRecord = asRecord(bucket);
+        const value = toNumber(bucketRecord.key);
         const count =
-          toNumber(asRecord(bucket)?.filtered_count) ??
-          toNumber(asRecord(bucket)?.unfiltered_count);
+          toNumber(bucketRecord.filtered_count) ?? toNumber(bucketRecord.unfiltered_count);
         if (value == null || count == null) return null;
         return {
           label: `${value}`,
@@ -314,10 +294,7 @@ function extractTrustRadiusDistribution(pageProps: unknown): ReviewSiteBucket[] 
   return [];
 }
 
-function extractTrustRadiusReviews(
-  url: string,
-  pageProps: unknown
-): ReviewSiteSnippet[] {
+function extractTrustRadiusReviews(url: string, pageProps: unknown): ReviewSiteSnippet[] {
   const pagePropsRecord = asRecord(pageProps);
   const truncatedReviews = asRecord(pagePropsRecord.truncatedReviews);
   const hits = asArray(truncatedReviews.hits);
@@ -335,10 +312,12 @@ function extractTrustRadiusReviews(
       author: asString(reviewer.fullName) ?? null,
       title: asString(record.heading) ?? null,
       rating: toNumber(record.rating) ?? null,
-      date:
-        asString(record.publishedDate) ?? asString(record.editedDate) ?? null,
+      date: asString(record.publishedDate) ?? asString(record.editedDate) ?? null,
       excerpt,
-      url: asString(record.slug) ? `${url}#${asString(record.slug)}` : null,
+      url: (() => {
+        const slug = asString(record.slug);
+        return slug ? `${url}#${slug}` : null;
+      })(),
     });
   }
 
@@ -375,8 +354,7 @@ function extractAggregateFromJsonLd(html: string): {
 
     const score = toNumber(aggregate.ratingValue);
     const maxScore = toNumber(aggregate.bestRating) ?? 5;
-    const reviewCount =
-      toNumber(aggregate.reviewCount) ?? toNumber(aggregate.ratingCount);
+    const reviewCount = toNumber(aggregate.reviewCount) ?? toNumber(aggregate.ratingCount);
 
     return {
       score,
@@ -414,14 +392,14 @@ function extractReviewsFromJsonLd(html: string): ReviewSiteSnippet[] {
   return reviews;
 }
 
-function extractJsonLdItems(html: string): Array<Record<string, unknown>> {
-  const items: Array<Record<string, unknown>> = [];
+function extractJsonLdItems(html: string): Record<string, unknown>[] {
+  const items: Record<string, unknown>[] = [];
   const regex = /<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi;
 
   let match: RegExpExecArray | null;
   while ((match = regex.exec(html))) {
     try {
-      const parsed = JSON.parse(match[1]);
+      const parsed: unknown = JSON.parse(match[1]);
       flattenJsonLd(parsed, items);
     } catch {
       continue;
@@ -431,10 +409,7 @@ function extractJsonLdItems(html: string): Array<Record<string, unknown>> {
   return items;
 }
 
-function flattenJsonLd(
-  value: unknown,
-  items: Array<Record<string, unknown>>
-): void {
+function flattenJsonLd(value: unknown, items: Record<string, unknown>[]): void {
   if (Array.isArray(value)) {
     for (const item of value) flattenJsonLd(item, items);
     return;
@@ -451,9 +426,8 @@ function flattenJsonLd(
 }
 
 function extractNextData(html: string): Record<string, unknown> | null {
-  const match = html.match(
-    /<script id="__NEXT_DATA__" type="application\/json"[^>]*>([\s\S]*?)<\/script>/i
-  );
+  const match =
+    /<script id="__NEXT_DATA__" type="application\/json"[^>]*>([\s\S]*?)<\/script>/i.exec(html);
   if (!match) return null;
 
   try {
@@ -467,9 +441,7 @@ function summarizeReviewSite(site: ReviewSiteData): string {
   const parts = [
     site.score != null ? `${site.score}/${site.maxScore}` : null,
     site.reviewCount != null ? `${site.reviewCount} reviews` : null,
-    site.ratingDistribution.length > 0
-      ? summarizeDistribution(site.ratingDistribution)
-      : null,
+    site.ratingDistribution.length > 0 ? summarizeDistribution(site.ratingDistribution) : null,
   ].filter((part): part is string => Boolean(part));
 
   return parts.join(", ") || site.url;
@@ -481,7 +453,7 @@ function summarizeDistribution(distribution: ReviewSiteBucket[]): string {
 
 function hasMeaningfulScoreChange(
   current: number | null | undefined,
-  next: number | null | undefined
+  next: number | null | undefined,
 ): boolean {
   if (current == null || next == null) return current !== next;
   return Math.abs(current - next) >= 0.1;
@@ -489,7 +461,7 @@ function hasMeaningfulScoreChange(
 
 function hasMeaningfulCountChange(
   current: number | null | undefined,
-  next: number | null | undefined
+  next: number | null | undefined,
 ): boolean {
   if (current == null || next == null) return current !== next;
   const threshold = Math.max(5, Math.ceil(current * 0.05));
@@ -498,7 +470,7 @@ function hasMeaningfulCountChange(
 
 function hasMeaningfulDistributionChange(
   current: ReviewSiteBucket[],
-  next: ReviewSiteBucket[]
+  next: ReviewSiteBucket[],
 ): boolean {
   if (current.length === 0 || next.length === 0) {
     return current.length !== next.length;

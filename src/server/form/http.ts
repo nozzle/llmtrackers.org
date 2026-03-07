@@ -16,11 +16,12 @@ export function corsHeaders(): HeadersInit {
 }
 
 export function jsonResponse(data: unknown, status: number): Response {
+  const cors = corsHeaders();
   return new Response(JSON.stringify(data), {
     status,
     headers: {
       "Content-Type": "application/json",
-      ...corsHeaders(),
+      ...(cors as Record<string, string>),
     },
   });
 }
@@ -50,7 +51,7 @@ export function getClientIdentifier(request: Request): string {
 
 export function isRateLimited(clientId: string, now: number = Date.now()): boolean {
   const recent = (submissionLog.get(clientId) ?? []).filter(
-    (timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS
+    (timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS,
   );
 
   if (recent.length >= MAX_REQUESTS_PER_WINDOW) {
@@ -64,7 +65,7 @@ export function isRateLimited(clientId: string, now: number = Date.now()): boole
 }
 
 export async function parseJsonBody(
-  request: Request
+  request: Request,
 ): Promise<{ ok: true; value: unknown } | { ok: false; response: Response }> {
   try {
     return { ok: true, value: await request.json() };
@@ -76,16 +77,17 @@ export async function parseJsonBody(
 export async function verifyTurnstileOrRespond(
   request: Request,
   env: AppEnv,
-  token?: string
+  token?: string,
 ): Promise<Response | null> {
-  if (!turnstileEnabled(env.TURNSTILE_SITE_KEY, env.TURNSTILE_SECRET_KEY)) {
+  const secretKey = env.TURNSTILE_SECRET_KEY;
+  if (!turnstileEnabled(env.TURNSTILE_SITE_KEY, secretKey) || !secretKey) {
     return null;
   }
 
   const verification = await verifyTurnstileToken(
     token ?? "",
-    env.TURNSTILE_SECRET_KEY as string,
-    getClientIdentifier(request)
+    secretKey,
+    getClientIdentifier(request),
   );
   if (!verification.ok) {
     return jsonResponse({ error: verification.error }, 403);

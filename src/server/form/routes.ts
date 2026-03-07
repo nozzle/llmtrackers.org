@@ -15,10 +15,7 @@ import {
 } from "./http";
 import type { AppEnv } from "../types";
 
-export async function handleFormRequest(
-  request: Request,
-  env: AppEnv
-): Promise<Response> {
+export async function handleFormRequest(request: Request, env: AppEnv): Promise<Response> {
   if (request.method === "OPTIONS") {
     return new Response(null, { status: 204, headers: corsHeaders() });
   }
@@ -28,10 +25,7 @@ export async function handleFormRequest(
   }
 
   if (!isJsonRequest(request)) {
-    return jsonResponse(
-      { error: "Content-Type must be application/json" },
-      415
-    );
+    return jsonResponse({ error: "Content-Type must be application/json" }, 415);
   }
 
   if (requestBodyTooLarge(request)) {
@@ -39,10 +33,7 @@ export async function handleFormRequest(
   }
 
   if (isRateLimited(getClientIdentifier(request))) {
-    return jsonResponse(
-      { error: "Too many submissions. Please try again later." },
-      429
-    );
+    return jsonResponse({ error: "Too many submissions. Please try again later." }, 429);
   }
 
   const parsed = await parseJsonBody(request);

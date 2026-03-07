@@ -46,12 +46,7 @@ const LLM_KEYS: LlmModelKey[] = [
   "aiMode",
 ];
 
-const REVIEW_SITE_PLATFORMS: ReviewSitePlatform[] = [
-  "g2",
-  "trustpilot",
-  "trustradius",
-  "capterra",
-];
+const REVIEW_SITE_PLATFORMS: ReviewSitePlatform[] = ["g2", "trustpilot", "trustradius", "capterra"];
 
 export function parseCompanyYaml(yamlText: string): {
   company: CompanyYamlValue;
@@ -76,12 +71,10 @@ export function stringifyCompanyYaml(company: CompanyYamlValue): string {
 export function mergeCompanyWithExtractedPlans(
   company: Company,
   extractedPlans: ExtractedPlanLike[],
-  checkedAt: string
+  checkedAt: string,
 ): CompanyYamlValue {
   const planByName = new Map(company.plans.map((plan) => [normalize(plan.name), plan]));
-  const extractedByName = new Map(
-    extractedPlans.map((plan) => [normalize(plan.name), plan])
-  );
+  const extractedByName = new Map(extractedPlans.map((plan) => [normalize(plan.name), plan]));
 
   const mergedPlans: Plan[] = [];
 
@@ -111,7 +104,7 @@ export function mergeCompanyWithExtractedPlans(
 export function prepareUpdatedCompanyYaml(
   yamlText: string,
   extractedPlans: ExtractedPlanLike[],
-  checkedAt: string
+  checkedAt: string,
 ): PreparedCompanyYaml {
   const { company } = parseCompanyYaml(yamlText);
   const updatedCompany = mergeCompanyWithExtractedPlans(company, extractedPlans, checkedAt);
@@ -127,25 +120,23 @@ export function prepareUpdatedCompanyYaml(
 
 export function mergeCompanyWithReviewSites(
   company: Company,
-  extractedReviewSites: Partial<ReviewSites>
+  extractedReviewSites: Partial<ReviewSites>,
 ): CompanyYamlValue {
-  const mergedReviewSites: ReviewSites = {
-    ...(company.reviewSites ?? {}),
+  let mergedReviewSites: ReviewSites = {
+    ...company.reviewSites,
   };
 
   for (const platform of REVIEW_SITE_PLATFORMS) {
     const nextSite = extractedReviewSites[platform];
     if (!nextSite) continue;
 
-    const mergedSite = mergeReviewSiteData(
-      company.reviewSites?.[platform],
-      nextSite
-    );
+    const mergedSite = mergeReviewSiteData(company.reviewSites[platform], nextSite);
 
     if (mergedSite) {
       mergedReviewSites[platform] = mergedSite;
     } else {
-      delete mergedReviewSites[platform];
+      const { [platform]: _removed, ...remainingSites } = mergedReviewSites;
+      mergedReviewSites = remainingSites as ReviewSites;
     }
   }
 
@@ -157,7 +148,7 @@ export function mergeCompanyWithReviewSites(
 
 export function prepareUpdatedCompanyReviewSitesYaml(
   yamlText: string,
-  extractedReviewSites: Partial<ReviewSites>
+  extractedReviewSites: Partial<ReviewSites>,
 ): PreparedCompanyYaml {
   const { company } = parseCompanyYaml(yamlText);
   const updatedCompany = mergeCompanyWithReviewSites(company, extractedReviewSites);
@@ -175,18 +166,18 @@ function mergePlan(existingPlan: Plan, extractedPlan: ExtractedPlanLike): Plan {
   const nextPriceAmount = chooseNullable(extractedPlan.price.amount, existingPlan.price.amount);
   const nextAiResponses = chooseNullable(
     extractedPlan.aiResponsesMonthly,
-    existingPlan.aiResponsesMonthly ?? null
+    existingPlan.aiResponsesMonthly ?? null,
   );
   const nextPricePer1000Responses =
     nextPriceAmount !== null && nextAiResponses !== null && nextAiResponses > 0
       ? Number(((nextPriceAmount / nextAiResponses) * 1000).toFixed(2))
-      : existingPlan.pricePer1000Responses ?? null;
+      : (existingPlan.pricePer1000Responses ?? null);
 
   return {
     ...existingPlan,
     price: {
       amount: nextPriceAmount,
-      currency: extractedPlan.price.currency || existingPlan.price.currency,
+      currency: extractedPlan.price.currency,
       period: extractedPlan.price.period,
       note: chooseNullable(extractedPlan.price.note, existingPlan.price.note ?? null),
     },
@@ -194,14 +185,17 @@ function mergePlan(existingPlan: Plan, extractedPlan: ExtractedPlanLike): Plan {
     aiResponsesMonthly: nextAiResponses,
     includedLlmModels: chooseNullable(
       extractedPlan.includedLlmModels,
-      existingPlan.includedLlmModels ?? null
+      existingPlan.includedLlmModels ?? null,
     ),
     schedule: extractedPlan.schedule ?? existingPlan.schedule,
     locationSupport: extractedPlan.locationSupport ?? existingPlan.locationSupport,
     personaSupport: extractedPlan.personaSupport ?? existingPlan.personaSupport,
     contentGeneration: extractedPlan.contentGeneration ?? existingPlan.contentGeneration,
     contentOptimization: extractedPlan.contentOptimization ?? existingPlan.contentOptimization,
-    integrations: extractedPlan.integrations.length > 0 ? extractedPlan.integrations : existingPlan.integrations,
+    integrations:
+      extractedPlan.integrations.length > 0
+        ? extractedPlan.integrations
+        : existingPlan.integrations,
     llmSupport: {
       ...existingPlan.llmSupport,
       ...extractedPlan.llmSupport,
@@ -223,7 +217,9 @@ function createPlanFromExtraction(extractedPlan: ExtractedPlanLike): Plan {
       extractedPlan.price.amount !== null &&
       extractedPlan.aiResponsesMonthly !== null &&
       extractedPlan.aiResponsesMonthly > 0
-        ? Number(((extractedPlan.price.amount / extractedPlan.aiResponsesMonthly) * 1000).toFixed(2))
+        ? Number(
+            ((extractedPlan.price.amount / extractedPlan.aiResponsesMonthly) * 1000).toFixed(2),
+          )
         : null,
     aiResponsesMonthly: extractedPlan.aiResponsesMonthly,
     includedLlmModels: extractedPlan.includedLlmModels,
@@ -237,7 +233,9 @@ function createPlanFromExtraction(extractedPlan: ExtractedPlanLike): Plan {
   };
 }
 
-function normalizeLlmSupport(llmSupport: Partial<Record<LlmModelKey, boolean>>): Record<LlmModelKey, boolean> {
+function normalizeLlmSupport(
+  llmSupport: Partial<Record<LlmModelKey, boolean>>,
+): Record<LlmModelKey, boolean> {
   return Object.fromEntries(LLM_KEYS.map((key) => [key, llmSupport[key] ?? false])) as Record<
     LlmModelKey,
     boolean
@@ -246,23 +244,23 @@ function normalizeLlmSupport(llmSupport: Partial<Record<LlmModelKey, boolean>>):
 
 function mergeReviewSiteData(
   existing: ReviewSiteData | undefined,
-  next: ReviewSiteData
+  next: ReviewSiteData,
 ): ReviewSiteData | undefined {
   const merged: ReviewSiteData = {
-    url: next.url || existing?.url || "",
+    url: next.url,
     score: next.score ?? existing?.score ?? null,
-    maxScore: next.maxScore ?? existing?.maxScore ?? 5,
+    maxScore: next.maxScore,
     reviewCount: next.reviewCount ?? existing?.reviewCount ?? null,
     ratingDistribution:
       next.ratingDistribution.length > 0
         ? next.ratingDistribution
-        : existing?.ratingDistribution ?? [],
-    reviews: next.reviews.length > 0 ? next.reviews : existing?.reviews ?? [],
+        : (existing?.ratingDistribution ?? []),
+    reviews: next.reviews.length > 0 ? next.reviews : (existing?.reviews ?? []),
   };
 
   const hasMeaningfulData =
-    merged.score != null ||
-    merged.reviewCount != null ||
+    merged.score !== null ||
+    merged.reviewCount !== null ||
     merged.ratingDistribution.length > 0 ||
     merged.reviews.length > 0;
 
@@ -274,7 +272,7 @@ function mergeReviewSiteData(
 }
 
 function sortCompanyKeys(company: CompanyYamlValue): CompanyYamlValue {
-  const hasReviewSites = Object.keys(company.reviewSites ?? {}).length > 0;
+  const hasReviewSites = Object.keys(company.reviewSites).length > 0;
 
   return {
     slug: company.slug,
@@ -321,7 +319,7 @@ function normalize(value: string): string {
 }
 
 function chooseNullable<T>(nextValue: T | null, fallbackValue: T | null): T | null {
-  return nextValue === null ? fallbackValue : nextValue;
+  return nextValue ?? fallbackValue;
 }
 
 function slugify(value: string): string {

@@ -2,10 +2,7 @@ import { isAuthorizedManualTrigger } from "./auth";
 import { enqueueAllCompanyUpdates, enqueueSingleCompanyUpdate } from "./enqueue";
 import type { AppEnv } from "../types";
 
-export async function handleUpdateAdminRequest(
-  request: Request,
-  env: AppEnv
-): Promise<Response> {
+export async function handleUpdateAdminRequest(request: Request, env: AppEnv): Promise<Response> {
   if (request.method !== "POST") {
     return jsonResponse({ error: "POST required" }, 405);
   }
@@ -27,20 +24,14 @@ export async function handleUpdateAdminRequest(
       return jsonResponse(await enqueueAllCompanyUpdates(env, "manual"), 202);
     }
 
-    const slugMatch = path.match(/^\/api\/admin\/update-checker\/enqueue\/([a-z0-9-]+)$/);
+    const slugMatch = /^\/api\/admin\/update-checker\/enqueue\/([a-z0-9-]+)$/.exec(path);
     if (slugMatch) {
-      return jsonResponse(
-        await enqueueSingleCompanyUpdate(env, slugMatch[1], "manual"),
-        202
-      );
+      return jsonResponse(await enqueueSingleCompanyUpdate(env, slugMatch[1], "manual"), 202);
     }
 
     return jsonResponse({ error: "Not found" }, 404);
   } catch (err) {
-    return jsonResponse(
-      { error: err instanceof Error ? err.message : String(err) },
-      500
-    );
+    return jsonResponse({ error: err instanceof Error ? err.message : String(err) }, 500);
   }
 }
 

@@ -8,7 +8,7 @@ import { join, relative } from "node:path";
 
 const DEFAULT_SITE_URL = "https://llmtrackers.org";
 const CANONICAL_SITE_URL = normalizeSiteUrl(
-  process.env.VITE_SITE_URL ?? process.env.SITE_URL ?? DEFAULT_SITE_URL
+  process.env.VITE_SITE_URL ?? process.env.SITE_URL ?? DEFAULT_SITE_URL,
 );
 const DIST_DIR = join(import.meta.dirname, "../dist/client");
 
@@ -28,7 +28,9 @@ const htmlFiles = findHtmlFiles(DIST_DIR);
 const today = new Date().toISOString().split("T")[0];
 
 const urls = htmlFiles.map((file) => {
-  const rel = relative(DIST_DIR, file).replace(/\/index\.html$/, "").replace(/^index\.html$/, "");
+  const rel = relative(DIST_DIR, file)
+    .replace(/\/index\.html$/, "")
+    .replace(/^index\.html$/, "");
   const path = rel ? `/${rel}` : "/";
 
   // Priority: home > company pages > other

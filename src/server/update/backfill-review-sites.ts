@@ -22,7 +22,7 @@ async function main() {
     console.error(
       targetSlug
         ? `No company YAML found for slug '${targetSlug}'`
-        : `No YAML files found in ${dataDir}`
+        : `No YAML files found in ${dataDir}`,
     );
     process.exit(1);
   }
@@ -58,7 +58,7 @@ async function main() {
   console.log(`\nProcessed ${files.length} file(s); ${changedCount} changed.`);
 }
 
-main().catch((error) => {
+main().catch((error: unknown) => {
   console.error(error);
   process.exit(1);
 });

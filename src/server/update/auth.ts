@@ -1,7 +1,4 @@
-export function isAuthorizedManualTrigger(
-  request: Request,
-  token: string | undefined
-): boolean {
+export function isAuthorizedManualTrigger(request: Request, token: string | undefined): boolean {
   if (!token) {
     return false;
   }

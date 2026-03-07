@@ -1,9 +1,7 @@
 import { jsonResponse, verifyTurnstileOrRespond } from "./http";
 import type { AppEnv } from "../types";
 
-type ValidationResult<T> =
-  | { ok: true; value: T }
-  | { ok: false; error: string };
+type ValidationResult<T> = { ok: true; value: T } | { ok: false; error: string };
 
 type MutationResult =
   | { success: true; prUrl: string; prNumber: number }
@@ -32,11 +30,7 @@ export async function handlePrMutation<T>({
   }
 
   const payload = validation.value as T & { turnstileToken?: string };
-  const turnstileError = await verifyTurnstileOrRespond(
-    request,
-    env,
-    payload.turnstileToken
-  );
+  const turnstileError = await verifyTurnstileOrRespond(request, env, payload.turnstileToken);
   if (turnstileError) return turnstileError;
 
   try {
@@ -51,13 +45,10 @@ export async function handlePrMutation<T>({
         prUrl: result.prUrl,
         prNumber: result.prNumber,
       },
-      201
+      201,
     );
   } catch (err) {
     console.error(`GitHub API error (${logLabel}):`, err);
-    return jsonResponse(
-      { error: "Failed to create GitHub PR. Please try again later." },
-      502
-    );
+    return jsonResponse({ error: "Failed to create GitHub PR. Please try again later." }, 502);
   }
 }

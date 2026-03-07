@@ -15,7 +15,24 @@ export {
   ExtractedPlanSchema,
   ExtractionResultSchema,
 } from "./schema.js";
-export type { Company, CompiledData, Plan, Price, LlmSupport, Review, ReviewSites, ReviewSiteData, ReviewSiteBucket, ReviewSiteSnippet, ReviewSitePlatform, Tweet, Score, PlanWithCompany, LlmModelKey, CompanyYamlValue } from "./types.js";
+export type {
+  Company,
+  CompiledData,
+  Plan,
+  Price,
+  LlmSupport,
+  Review,
+  ReviewSites,
+  ReviewSiteData,
+  ReviewSiteBucket,
+  ReviewSiteSnippet,
+  ReviewSitePlatform,
+  Tweet,
+  Score,
+  PlanWithCompany,
+  LlmModelKey,
+  CompanyYamlValue,
+} from "./types.js";
 export { LLM_MODEL_LABELS, REVIEW_SITE_LABELS, REVIEW_SITE_PLATFORMS } from "./types.js";
 export {
   parseCompanyYaml,

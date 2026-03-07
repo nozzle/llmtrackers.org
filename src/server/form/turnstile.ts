@@ -1,11 +1,11 @@
-interface TurnstileVerificationResponse {
+export interface TurnstileVerificationResponse {
   success: boolean;
   "error-codes"?: string[];
 }
 
 export function turnstileEnabled(
   siteKey: string | undefined,
-  secretKey: string | undefined
+  secretKey: string | undefined,
 ): boolean {
   return Boolean(siteKey && secretKey);
 }
@@ -13,7 +13,7 @@ export function turnstileEnabled(
 export async function verifyTurnstileToken(
   token: string,
   secretKey: string,
-  remoteIp?: string
+  remoteIp?: string,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   if (!token) {
     return { ok: false, error: "Missing Turnstile token" };
@@ -43,7 +43,7 @@ export async function verifyTurnstileToken(
     };
   }
 
-  const result = (await response.json()) as TurnstileVerificationResponse;
+  const result: TurnstileVerificationResponse = await response.json();
   if (!result.success) {
     return {
       ok: false,

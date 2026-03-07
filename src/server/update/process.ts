@@ -5,10 +5,7 @@ import {
   createPullRequest,
   findOpenPullRequestByHead,
 } from "@llm-tracker/github";
-import {
-  parseCompanyYaml,
-  prepareUpdatedCompanyYaml,
-} from "@llm-tracker/shared";
+import { parseCompanyYaml, prepareUpdatedCompanyYaml } from "@llm-tracker/shared";
 import { fetchPageText } from "./scraper";
 import { extractWithLlm } from "./extractor";
 import { diffCompany, formatDiffMarkdown } from "./differ";
@@ -21,7 +18,7 @@ import type { CheckResult, GitHubContext, PlanExtractionResult } from "./types";
 export async function processCompanyUpdate(
   env: AppEnv,
   message: UpdateQueueMessage,
-  githubContext?: GitHubContext
+  githubContext?: GitHubContext,
 ): Promise<CheckResult> {
   const github = githubContext ?? (await createGitHubContext(env));
   return checkCompany(github, env.OPENAI_API_KEY, message.filePath, message.slug);
@@ -31,7 +28,7 @@ async function checkCompany(
   github: GitHubContext,
   openaiKey: string | undefined,
   filePath: string,
-  slug: string
+  slug: string,
 ): Promise<CheckResult> {
   const fileContent = await getFileContent(github.token, github.owner, github.repo, filePath);
   if (!fileContent) {
@@ -40,10 +37,6 @@ async function checkCompany(
 
   const yamlText = atob(fileContent.content);
   const { company } = parseCompanyYaml(yamlText);
-
-  if (!company) {
-    return { slug, status: "error", error: "Failed to parse company YAML" };
-  }
 
   const planResult = openaiKey
     ? await collectPlanChanges(openaiKey, slug, company, yamlText)
@@ -70,7 +63,7 @@ async function checkCompany(
     github.token,
     github.owner,
     github.repo,
-    branchName
+    branchName,
   );
 
   const branchFile = await getFileContent(
@@ -78,16 +71,13 @@ async function checkCompany(
     github.owner,
     github.repo,
     filePath,
-    branchName
+    branchName,
   );
 
   const preparedPlans = planResult?.preparedYamlText ?? yamlText;
   const prepared =
     reviewSiteDiffs.length > 0
-      ? await backfillCompanyReviewSites(
-          preparedPlans,
-          reviewSiteResult.extractedReviewSites
-        )
+      ? await backfillCompanyReviewSites(preparedPlans, reviewSiteResult.extractedReviewSites)
       : { updatedYamlText: preparedPlans };
 
   const branchText = branchFile ? atob(branchFile.content) : null;
@@ -100,7 +90,7 @@ async function checkCompany(
       prepared.updatedYamlText,
       `chore: update ${slug} pricing, feature, and review-site data`,
       branchName,
-      branchFile?.sha
+      branchFile?.sha,
     );
   } else {
     console.log(`${slug}: Branch already contains the latest generated content`);
@@ -128,13 +118,13 @@ async function checkCompany(
     github.token,
     github.owner,
     github.repo,
-    `[Auto] Detected data changes: ${company.name ?? slug}`,
+    `[Auto] Detected data changes: ${company.name}`,
     diffMarkdown +
       "\n\n<details><summary>Raw LLM extraction</summary>\n\n```json\n" +
       (planResult?.rawResponse ?? "{}") +
       "\n```\n\n</details>",
     branchName,
-    github.defaultBranch
+    github.defaultBranch,
   );
 
   console.log(`${slug}: Created PR ${pr.html_url}`);
@@ -151,7 +141,7 @@ async function collectPlanChanges(
   openaiKey: string,
   slug: string,
   company: ReturnType<typeof parseCompanyYaml>["company"],
-  yamlText: string
+  yamlText: string,
 ): Promise<PlanExtractionResult | null> {
   if (!company.pricingUrl) {
     console.log(`${slug}: No pricing URL, skipping plan extraction`);

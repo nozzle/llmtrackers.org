@@ -5,18 +5,20 @@ import { CompanyMark } from "~/components/company-mark";
 import { EditPlanModal } from "~/components/edit-plan-modal";
 import { EditCompanyModal } from "~/components/edit-company-modal";
 import { AddPlanModal } from "~/components/add-plan-modal";
-import { ReviewSiteLabel, ReviewSiteMark, ReviewSiteScoreBadge } from "~/components/review-site-badge";
+import {
+  ReviewSiteLabel,
+  ReviewSiteMark,
+  ReviewSiteScoreBadge,
+} from "~/components/review-site-badge";
 import { getReviewSiteBranding } from "~/review-site-branding";
-import { LLM_MODEL_LABELS, REVIEW_SITE_LABELS, REVIEW_SITE_PLATFORMS } from "@llm-tracker/shared";
+import { LLM_MODEL_LABELS, REVIEW_SITE_PLATFORMS } from "@llm-tracker/shared";
 import type { LlmModelKey, Plan, ReviewSitePlatform } from "@llm-tracker/shared";
 
 export const Route = createFileRoute("/companies/$slug")({
   component: CompanyPage,
   head: ({ params }) => {
     const company = getCompanyBySlug(params.slug);
-    const title = company
-      ? `${company.name} - LLM Trackers`
-      : "Company Not Found";
+    const title = company ? `${company.name} - LLM Trackers` : "Company Not Found";
     const description = company?.description ?? "";
     const planSummary = company
       ? `${company.plans.length} plan${company.plans.length > 1 ? "s" : ""} starting at $${Math.min(...company.plans.map((p) => p.price.amount ?? Infinity))}/mo`
@@ -97,9 +99,7 @@ function CompanyPage() {
     return (
       <div className="text-center">
         <h1 className="text-2xl font-bold text-gray-900">Company Not Found</h1>
-        <p className="mt-2 text-gray-600">
-          No company found with slug &quot;{slug}&quot;.
-        </p>
+        <p className="mt-2 text-gray-600">No company found with slug &quot;{slug}&quot;.</p>
         <Link to="/" className="mt-4 inline-block text-blue-600 hover:underline">
           Back to comparison
         </Link>
@@ -122,7 +122,9 @@ function CompanyPage() {
                 <h1 className="text-3xl font-bold text-gray-900">{company.name}</h1>
                 <button
                   type="button"
-                  onClick={() => setEditingCompany(true)}
+                  onClick={() => {
+                    setEditingCompany(true);
+                  }}
                   className="cursor-pointer rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
                   title="Suggest company info edit"
                 >
@@ -141,26 +143,22 @@ function CompanyPage() {
                   </svg>
                 </button>
               </div>
-            <p className="mt-1 text-lg text-gray-600">{company.description}</p>
-            <a
-              href={company.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 inline-flex items-center gap-2 break-all text-sm text-blue-600 hover:underline"
-            >
-              <CompanyMark slug={company.slug} name={company.name} size="sm" mode="favicon" />
-              {company.website}
-            </a>
+              <p className="mt-1 text-lg text-gray-600">{company.description}</p>
+              <a
+                href={company.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-flex items-center gap-2 break-all text-sm text-blue-600 hover:underline"
+              >
+                <CompanyMark slug={company.slug} name={company.name} size="sm" mode="favicon" />
+                {company.website}
+              </a>
             </div>
           </div>
           {company.score && (
             <div className="flex-shrink-0 rounded-lg bg-green-50 px-6 py-4 text-center">
-              <div className="text-3xl font-bold text-green-700">
-                {company.score.total}
-              </div>
-              <div className="text-sm text-green-600">
-                / {company.score.maxTotal}
-              </div>
+              <div className="text-3xl font-bold text-green-700">{company.score.total}</div>
+              <div className="text-sm text-green-600">/ {company.score.maxTotal}</div>
             </div>
           )}
         </div>
@@ -177,7 +175,9 @@ function CompanyPage() {
           <h2 className="text-xl font-semibold text-gray-900">Plans</h2>
           <button
             type="button"
-            onClick={() => setAddingPlan(true)}
+            onClick={() => {
+              setAddingPlan(true);
+            }}
             className="flex cursor-pointer items-center gap-1.5 rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             <svg
@@ -187,11 +187,7 @@ function CompanyPage() {
               strokeWidth="2"
               stroke="currentColor"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 4.5v15m7.5-7.5h-15"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
             Add Plan
           </button>
@@ -204,7 +200,9 @@ function CompanyPage() {
             >
               <button
                 type="button"
-                onClick={() => setEditingPlan(plan)}
+                onClick={() => {
+                  setEditingPlan(plan);
+                }}
                 className="absolute right-2 top-2 cursor-pointer rounded p-1 text-gray-400 opacity-0 transition-opacity hover:bg-gray-100 hover:text-gray-600 group-hover:opacity-100"
                 title="Suggest an edit"
               >
@@ -223,9 +221,7 @@ function CompanyPage() {
                 </svg>
               </button>
               <div className="mb-4 flex items-start justify-between">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {plan.name}
-                </h3>
+                <h3 className="text-lg font-semibold text-gray-900">{plan.name}</h3>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-gray-900">
                     {plan.price.amount !== null
@@ -235,9 +231,7 @@ function CompanyPage() {
                   <div className="text-xs text-gray-500">
                     /{plan.price.period}
                     {plan.price.note && (
-                      <span className="block text-gray-400">
-                        {plan.price.note}
-                      </span>
+                      <span className="block text-gray-400">{plan.price.note}</span>
                     )}
                   </div>
                 </div>
@@ -273,16 +267,12 @@ function CompanyPage() {
                 <div className="flex justify-between">
                   <span className="text-gray-500">Personas</span>
                   <span className="font-medium">
-                    {plan.personaSupport === "unlimited"
-                      ? "Unlimited"
-                      : plan.personaSupport}
+                    {plan.personaSupport === "unlimited" ? "Unlimited" : plan.personaSupport}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">LLM Models</span>
-                  <span className="font-medium">
-                    {plan.includedLlmModels ?? "-"}
-                  </span>
+                  <span className="font-medium">{plan.includedLlmModels ?? "-"}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Content Generation</span>
@@ -293,18 +283,14 @@ function CompanyPage() {
                 <div className="flex justify-between">
                   <span className="text-gray-500">Content Optimization</span>
                   <span className="font-medium">
-                    {plan.contentOptimization === false
-                      ? "No"
-                      : plan.contentOptimization}
+                    {plan.contentOptimization === false ? "No" : plan.contentOptimization}
                   </span>
                 </div>
               </div>
 
               {/* LLM Support */}
               <div className="mt-4 border-t border-gray-100 pt-4">
-                <h4 className="mb-2 text-xs font-medium uppercase text-gray-500">
-                  LLM Support
-                </h4>
+                <h4 className="mb-2 text-xs font-medium uppercase text-gray-500">LLM Support</h4>
                 <div className="flex flex-wrap gap-1.5">
                   {LLM_KEYS.map((key) => (
                     <span
@@ -324,9 +310,7 @@ function CompanyPage() {
               {/* Integrations */}
               {plan.integrations.length > 0 && (
                 <div className="mt-4 border-t border-gray-100 pt-4">
-                  <h4 className="mb-2 text-xs font-medium uppercase text-gray-500">
-                    Integrations
-                  </h4>
+                  <h4 className="mb-2 text-xs font-medium uppercase text-gray-500">Integrations</h4>
                   <div className="flex flex-wrap gap-1.5">
                     {plan.integrations.map((int) => (
                       <span
@@ -403,11 +387,14 @@ function CompanyPage() {
                       {site.ratingDistribution.map((bucket) => {
                         const maxCount = Math.max(
                           ...site.ratingDistribution.map((entry) => entry.count),
-                          1
+                          1,
                         );
 
                         return (
-                          <div key={`${platform}-${bucket.label}`} className="flex items-center gap-3">
+                          <div
+                            key={`${platform}-${bucket.label}`}
+                            className="flex items-center gap-3"
+                          >
                             <div className="w-12 text-sm text-gray-600">
                               {formatBucketLabel(platform, bucket.label)}
                             </div>
@@ -441,9 +428,7 @@ function CompanyPage() {
                               {review.author ?? "Anonymous"}
                             </span>
                             {review.title && (
-                              <span className="text-sm text-gray-600">
-                                {review.title}
-                              </span>
+                              <span className="text-sm text-gray-600">{review.title}</span>
                             )}
                             {review.rating != null && (
                               <span className="text-xs font-medium text-gray-500">
@@ -483,9 +468,7 @@ function CompanyPage() {
           <div className="flex flex-wrap gap-4">
             {company.reviews.map((review) => {
               const matchedPlatform = getReviewPlatformMatch(review.platform);
-              const branding = matchedPlatform
-                ? getReviewSiteBranding(matchedPlatform)
-                : null;
+              const branding = matchedPlatform ? getReviewSiteBranding(matchedPlatform) : null;
 
               return (
                 <a
@@ -502,8 +485,8 @@ function CompanyPage() {
                       review.platform
                     )}
                   </span>
-                  {review.score != null && (
-                    matchedPlatform ? (
+                  {review.score != null &&
+                    (matchedPlatform ? (
                       <ReviewSiteScoreBadge
                         platform={matchedPlatform}
                         score={review.score}
@@ -515,8 +498,7 @@ function CompanyPage() {
                       <span className="rounded-full bg-yellow-100 px-2 py-0.5 text-sm font-semibold text-yellow-800">
                         {review.score}/{review.maxScore}
                       </span>
-                    )
-                  )}
+                    ))}
                 </a>
               );
             })}
@@ -527,9 +509,7 @@ function CompanyPage() {
       {/* Tweets */}
       {company.tweets.length > 0 && (
         <section className="mb-12">
-          <h2 className="mb-4 text-xl font-semibold text-gray-900">
-            What People Are Saying
-          </h2>
+          <h2 className="mb-4 text-xl font-semibold text-gray-900">What People Are Saying</h2>
           <div className="grid gap-4 md:grid-cols-2">
             {company.tweets.map((tweet) => (
               <a
@@ -540,9 +520,7 @@ function CompanyPage() {
                 className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm hover:border-blue-300"
               >
                 <div className="mb-2 flex flex-wrap items-center gap-x-2 gap-y-1">
-                  <span className="font-medium text-gray-900">
-                    {tweet.authorName}
-                  </span>
+                  <span className="font-medium text-gray-900">{tweet.authorName}</span>
                   <span className="text-sm text-gray-500">{tweet.author}</span>
                   <span className="text-xs text-gray-400">{tweet.date}</span>
                 </div>
@@ -583,29 +561,35 @@ function CompanyPage() {
         </Link>
       </section>
 
-      {editingPlan && company && (
+      {editingPlan && (
         <EditPlanModal
           companySlug={company.slug}
           companyName={company.name}
           planSlug={editingPlan.slug}
           planName={editingPlan.name}
           plan={editingPlan}
-          onClose={() => setEditingPlan(null)}
+          onClose={() => {
+            setEditingPlan(null);
+          }}
         />
       )}
 
-      {editingCompany && company && (
+      {editingCompany && (
         <EditCompanyModal
           company={company}
-          onClose={() => setEditingCompany(false)}
+          onClose={() => {
+            setEditingCompany(false);
+          }}
         />
       )}
 
-      {addingPlan && company && (
+      {addingPlan && (
         <AddPlanModal
           companySlug={company.slug}
           companyName={company.name}
-          onClose={() => setAddingPlan(false)}
+          onClose={() => {
+            setAddingPlan(false);
+          }}
         />
       )}
     </div>

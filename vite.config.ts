@@ -11,9 +11,7 @@ export default defineConfig(() => ({
   },
   plugins: [
     tsConfigPaths(),
-    ...(!process.env.VITEST
-      ? [cloudflare({ viteEnvironment: { name: "ssr" } })]
-      : []),
+    ...(!process.env.VITEST ? [cloudflare({ viteEnvironment: { name: "ssr" } })] : []),
     tanstackStart({
       prerender: {
         enabled: true,

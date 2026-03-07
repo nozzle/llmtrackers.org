@@ -21,13 +21,15 @@ const VALID_FIELDS = [
   "other",
 ];
 
-export function validateSubmission(data: unknown): {
-  ok: true;
-  value: FormSubmission;
-} | {
-  ok: false;
-  error: string;
-} {
+export function validateSubmission(data: unknown):
+  | {
+      ok: true;
+      value: FormSubmission;
+    }
+  | {
+      ok: false;
+      error: string;
+    } {
   if (!data || typeof data !== "object") {
     return { ok: false, error: "Request body must be a JSON object" };
   }
@@ -43,10 +45,7 @@ export function validateSubmission(data: unknown): {
       error: `field must be one of: ${VALID_FIELDS.join(", ")}`,
     };
   }
-  if (
-    typeof d.suggestedValue !== "string" ||
-    d.suggestedValue.trim().length === 0
-  ) {
+  if (typeof d.suggestedValue !== "string" || d.suggestedValue.trim().length === 0) {
     return { ok: false, error: "suggestedValue is required" };
   }
 
@@ -82,16 +81,14 @@ export function validateSubmission(data: unknown): {
   return {
     ok: true,
     value: {
-      companySlug: d.companySlug as string,
-      field: d.field as string,
-      currentValue:
-        typeof d.currentValue === "string" ? d.currentValue : undefined,
-      suggestedValue: d.suggestedValue as string,
+      companySlug: d.companySlug,
+      field: d.field,
+      currentValue: typeof d.currentValue === "string" ? d.currentValue : undefined,
+      suggestedValue: d.suggestedValue,
       sourceUrl: typeof d.sourceUrl === "string" ? d.sourceUrl : undefined,
       notes: typeof d.notes === "string" ? d.notes : undefined,
       website: typeof d.website === "string" ? d.website : undefined,
-      turnstileToken:
-        typeof d.turnstileToken === "string" ? d.turnstileToken : undefined,
+      turnstileToken: typeof d.turnstileToken === "string" ? d.turnstileToken : undefined,
     },
   };
 }

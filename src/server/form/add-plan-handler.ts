@@ -70,12 +70,18 @@ interface GitHubEnv {
 const VALID_PERIODS = ["monthly", "yearly", "one-time"];
 const VALID_SCHEDULES = ["daily", "weekly", "monthly"];
 const VALID_LLM_KEYS: LlmModelKey[] = [
-  "aiMode", "aiOverviews", "chatgpt", "gemini",
-  "perplexity", "grok", "llama", "claude",
+  "aiMode",
+  "aiOverviews",
+  "chatgpt",
+  "gemini",
+  "perplexity",
+  "grok",
+  "llama",
+  "claude",
 ];
 
 export function validateAddPlanPayload(
-  data: unknown
+  data: unknown,
 ): { ok: true; value: AddPlanPayload } | { ok: false; error: string } {
   if (!data || typeof data !== "object") {
     return { ok: false, error: "Request body must be a JSON object" };
@@ -122,17 +128,17 @@ export function validateAddPlanPayload(
   return {
     ok: true,
     value: {
-      companySlug: (d.companySlug as string).trim(),
+      companySlug: d.companySlug.trim(),
       plan: planResult.value,
       contributor: d.contributor as AddPlanPayload["contributor"],
-      turnstileToken: d.turnstileToken as string | undefined,
+      turnstileToken: d.turnstileToken,
       website: d.website as string | undefined,
     },
   };
 }
 
 function validateNewPlanData(
-  raw: Record<string, unknown>
+  raw: Record<string, unknown>,
 ): { ok: true; value: NewPlanData } | { ok: false; error: string } {
   if (typeof raw.name !== "string" || raw.name.trim().length === 0) {
     return { ok: false, error: "plan.name is required" };
@@ -203,21 +209,21 @@ function validateNewPlanData(
   return {
     ok: true,
     value: {
-      name: (raw.name as string).trim(),
-      slug: (raw.slug as string).trim(),
+      name: raw.name.trim(),
+      slug: raw.slug.trim(),
       price: {
-        amount: p.amount as number | null,
-        currency: p.currency as string,
+        amount: p.amount,
+        currency: p.currency,
         period: p.period as "monthly" | "yearly" | "one-time",
         note: (p.note as string | null | undefined) ?? null,
       },
       aiResponsesMonthly: (raw.aiResponsesMonthly as number | null | undefined) ?? null,
       schedule: raw.schedule as "daily" | "weekly" | "monthly",
-      locationSupport: raw.locationSupport as "global" | number,
-      personaSupport: raw.personaSupport as "unlimited" | number,
-      contentGeneration: raw.contentGeneration as string | false,
-      contentOptimization: raw.contentOptimization as string | false,
-      integrations: raw.integrations as string[],
+      locationSupport: raw.locationSupport,
+      personaSupport: raw.personaSupport,
+      contentGeneration: raw.contentGeneration,
+      contentOptimization: raw.contentOptimization,
+      integrations: raw.integrations,
       llmSupport: ls as Record<LlmModelKey, boolean>,
     },
   };
@@ -227,8 +233,11 @@ function validateNewPlanData(
 
 export async function handleAddPlan(
   payload: AddPlanPayload,
-  env: GitHubEnv
-): Promise<{ success: true; prUrl: string; prNumber: number } | { success: false; error: string; status: number }> {
+  env: GitHubEnv,
+): Promise<
+  | { success: true; prUrl: string; prNumber: number }
+  | { success: false; error: string; status: number }
+> {
   const { companySlug, plan: newPlanData, contributor } = payload;
 
   // 1. Authenticate
@@ -258,7 +267,11 @@ export async function handleAddPlan(
 
   // 4. Check for slug conflict
   if (company.plans.some((p) => p.slug === newPlanData.slug)) {
-    return { success: false, error: `Plan slug '${newPlanData.slug}' already exists in company '${companySlug}'`, status: 409 };
+    return {
+      success: false,
+      error: `Plan slug '${newPlanData.slug}' already exists in company '${companySlug}'`,
+      status: 409,
+    };
   }
 
   // 5. Build the full plan object with computed fields
@@ -312,13 +325,30 @@ export async function handleAddPlan(
   await createBranch(token, owner, repo, branchName, baseSha);
 
   const commitMessage = `suggest: add plan "${newPlanData.name}" to ${companySlug}`;
-  await upsertFile(token, owner, repo, filePath, updatedYaml, commitMessage, branchName, fileContent.sha);
+  await upsertFile(
+    token,
+    owner,
+    repo,
+    filePath,
+    updatedYaml,
+    commitMessage,
+    branchName,
+    fileContent.sha,
+  );
 
   const summaryTable = buildNewPlanTable(validation.data);
   const prTitle = `[Suggestion] Add plan "${newPlanData.name}" to ${company.name}`;
   const prBody = buildAddPlanPrBody(company.name, newPlanData.name, summaryTable, contributor);
 
-  const pr = await createPullRequest(token, owner, repo, prTitle, prBody, branchName, defaultBranch);
+  const pr = await createPullRequest(
+    token,
+    owner,
+    repo,
+    prTitle,
+    prBody,
+    branchName,
+    defaultBranch,
+  );
 
   return { success: true, prUrl: pr.html_url, prNumber: pr.number };
 }
@@ -326,16 +356,23 @@ export async function handleAddPlan(
 // ---- Helpers ----
 
 const LLM_KEYS: LlmModelKey[] = [
-  "chatgpt", "gemini", "perplexity", "claude",
-  "llama", "grok", "aiOverviews", "aiMode",
+  "chatgpt",
+  "gemini",
+  "perplexity",
+  "claude",
+  "llama",
+  "grok",
+  "aiOverviews",
+  "aiMode",
 ];
 
 function normalizeLlmSupport(
-  llmSupport: Partial<Record<LlmModelKey, boolean>>
+  llmSupport: Partial<Record<LlmModelKey, boolean>>,
 ): Record<LlmModelKey, boolean> {
-  return Object.fromEntries(
-    LLM_KEYS.map((key) => [key, llmSupport[key] ?? false])
-  ) as Record<LlmModelKey, boolean>;
+  return Object.fromEntries(LLM_KEYS.map((key) => [key, llmSupport[key] ?? false])) as Record<
+    LlmModelKey,
+    boolean
+  >;
 }
 
 function formatValue(value: unknown): string {
@@ -343,14 +380,17 @@ function formatValue(value: unknown): string {
   if (value === false) return "No";
   if (value === true) return "Yes";
   if (typeof value === "number") return value.toLocaleString("en-US");
-  return String(value);
+  return typeof value === "string" ? value : JSON.stringify(value);
 }
 
 function buildNewPlanTable(plan: Plan): string {
-  const rows: Array<[string, string]> = [
+  const rows: [string, string][] = [
     ["Name", plan.name],
     ["Slug", plan.slug],
-    ["Price", plan.price.amount !== null ? `$${plan.price.amount.toLocaleString("en-US")}` : "Custom"],
+    [
+      "Price",
+      plan.price.amount !== null ? `$${plan.price.amount.toLocaleString("en-US")}` : "Custom",
+    ],
     ["Currency", plan.price.currency],
     ["Billing Period", plan.price.period],
   ];
@@ -387,7 +427,7 @@ function buildAddPlanPrBody(
   companyName: string,
   planName: string,
   summaryTable: string,
-  contributor?: AddPlanPayload["contributor"]
+  contributor?: AddPlanPayload["contributor"],
 ): string {
   const lines: string[] = [
     `## Suggested New Plan: ${companyName} — ${planName}`,
@@ -404,10 +444,7 @@ function buildAddPlanPrBody(
     lines.push("");
   }
 
-  lines.push(
-    "---",
-    "*Submitted via the LLM Trackers website.*"
-  );
+  lines.push("---", "*Submitted via the LLM Trackers website.*");
 
   return lines.join("\n");
 }

@@ -1,18 +1,18 @@
-import { z } from "zod";
+import { type z } from "zod";
 import {
-  CompanySchema,
-  CompiledDataSchema,
-  PlanSchema,
-  PriceSchema,
-  LlmSupportSchema,
-  ReviewSchema,
-  ReviewSitesSchema,
-  ReviewSiteDataSchema,
-  ReviewSiteBucketSchema,
-  ReviewSiteSnippetSchema,
-  ReviewSitePlatformSchema,
-  TweetSchema,
-  ScoreSchema,
+  type CompanySchema,
+  type CompiledDataSchema,
+  type PlanSchema,
+  type PriceSchema,
+  type LlmSupportSchema,
+  type ReviewSchema,
+  type ReviewSitesSchema,
+  type ReviewSiteDataSchema,
+  type ReviewSiteBucketSchema,
+  type ReviewSiteSnippetSchema,
+  type ReviewSitePlatformSchema,
+  type TweetSchema,
+  type ScoreSchema,
 } from "./schema.js";
 
 export type Company = z.infer<typeof CompanySchema>;
@@ -50,9 +50,7 @@ export type PlanWithCompany = Plan & {
   companyWebsite: string;
 };
 
-export type CompanyYamlValue = Company & {
-  [key: string]: unknown;
-};
+export type CompanyYamlValue = Company & Record<string, unknown>;
 
 /** All LLM model keys */
 export type LlmModelKey = keyof LlmSupport;

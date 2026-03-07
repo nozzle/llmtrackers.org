@@ -1,8 +1,4 @@
-import {
-  createAppJwt,
-  getInstallationToken,
-  createGitHubIssue,
-} from "@llm-tracker/github";
+import { createAppJwt, getInstallationToken, createGitHubIssue } from "@llm-tracker/github";
 import { validateSubmission } from "./validation";
 import { formatIssueBody, formatIssueTitle, issueLabels } from "./issue";
 import { jsonResponse, verifyTurnstileOrRespond } from "./http";
@@ -11,7 +7,7 @@ import type { AppEnv } from "../types";
 export async function handleSuggestIssue(
   body: unknown,
   request: Request,
-  env: AppEnv
+  env: AppEnv,
 ): Promise<Response> {
   const validation = validateSubmission(body);
   if (!validation.ok) {
@@ -19,11 +15,7 @@ export async function handleSuggestIssue(
   }
 
   const form = validation.value;
-  const turnstileError = await verifyTurnstileOrRespond(
-    request,
-    env,
-    form.turnstileToken
-  );
+  const turnstileError = await verifyTurnstileOrRespond(request, env, form.turnstileToken);
   if (turnstileError) return turnstileError;
 
   try {
@@ -36,7 +28,7 @@ export async function handleSuggestIssue(
       env.GITHUB_REPO_NAME,
       formatIssueTitle(form),
       formatIssueBody(form),
-      issueLabels(form.field)
+      issueLabels(form.field),
     );
 
     return jsonResponse(
@@ -45,13 +37,10 @@ export async function handleSuggestIssue(
         issueUrl: issue.html_url,
         issueNumber: issue.number,
       },
-      201
+      201,
     );
   } catch (err) {
     console.error("GitHub API error:", err);
-    return jsonResponse(
-      { error: "Failed to create GitHub issue. Please try again later." },
-      502
-    );
+    return jsonResponse({ error: "Failed to create GitHub issue. Please try again later." }, 502);
   }
 }

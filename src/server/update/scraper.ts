@@ -28,13 +28,15 @@ export async function fetchPageText(url: string): Promise<string | null> {
  */
 export async function fetchPageHtml(
   url: string,
-  options: FetchPageOptions = {}
+  options: FetchPageOptions = {},
 ): Promise<string | null> {
   const maxLength = options.maxLength ?? MAX_RESPONSE_BYTES;
 
   for (let attempt = 1; attempt <= MAX_RETRIES + 1; attempt++) {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, FETCH_TIMEOUT_MS);
 
     try {
       const response = await fetch(url, {
@@ -129,7 +131,7 @@ function shouldRetryStatus(status: number): boolean {
 
 function isTextLikeContentType(contentType: string): boolean {
   return ["text/html", "text/plain", "application/xhtml+xml"].some((value) =>
-    contentType.includes(value)
+    contentType.includes(value),
   );
 }
 

@@ -36,7 +36,7 @@ describe("enqueueSingleCompanyUpdate", () => {
         slug: "test-company",
         filePath: "data/companies/test-company.yaml",
         triggeredBy: "manual",
-      })
+      }),
     );
   });
 });

@@ -14,7 +14,7 @@ describe("fetchPageText", () => {
         ok: true,
         headers: new Headers({ "content-type": "text/html" }),
         text: async () => "<html><body><h1>Pricing</h1><p>$99/month</p></body></html>",
-      })
+      }),
     );
 
     const text = await fetchPageText("https://example.com/pricing");
@@ -25,10 +25,7 @@ describe("fetchPageText", () => {
 
   it("returns null when fetch fails", async () => {
     vi.useFakeTimers();
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockRejectedValue(new Error("network error"))
-    );
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("network error")));
 
     const pending = fetchPageText("https://example.com/pricing");
     await vi.runAllTimersAsync();
@@ -44,7 +41,7 @@ describe("fetchPageText", () => {
         ok: true,
         headers: new Headers({ "content-type": "application/pdf" }),
         text: async () => "not used",
-      })
+      }),
     );
 
     const text = await fetchPageText("https://example.com/pricing");
@@ -63,7 +60,7 @@ describe("fetchPageText", () => {
           ok: true,
           headers: new Headers({ "content-type": "text/html" }),
           text: async () => "<p>Recovered</p>",
-        })
+        }),
     );
 
     const pending = fetchPageText("https://example.com/pricing");
@@ -80,7 +77,7 @@ describe("fetchPageText", () => {
         ok: true,
         headers: new Headers({ "content-type": "text/html" }),
         text: async () => "<html><body><h1>Raw</h1></body></html>",
-      })
+      }),
     );
 
     const html = await fetchPageHtml("https://example.com/raw");

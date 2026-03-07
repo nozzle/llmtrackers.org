@@ -57,7 +57,7 @@ interface GitHubEnv {
 // ---- Validation ----
 
 export function validateCompanyEditPayload(
-  data: unknown
+  data: unknown,
 ): { ok: true; value: CompanyEditPayload } | { ok: false; error: string } {
   if (!data || typeof data !== "object") {
     return { ok: false, error: "Request body must be a JSON object" };
@@ -108,17 +108,17 @@ export function validateCompanyEditPayload(
   return {
     ok: true,
     value: {
-      companySlug: (d.companySlug as string).trim(),
+      companySlug: d.companySlug.trim(),
       changes: changes.value,
       contributor: d.contributor as CompanyEditPayload["contributor"],
-      turnstileToken: d.turnstileToken as string | undefined,
+      turnstileToken: d.turnstileToken,
       website: d.website as string | undefined,
     },
   };
 }
 
 function validateCompanyChanges(
-  raw: Record<string, unknown>
+  raw: Record<string, unknown>,
 ): { ok: true; value: CompanyChanges } | { ok: false; error: string } {
   const changes: CompanyChanges = {};
 
@@ -187,8 +187,11 @@ function validateCompanyChanges(
 
 export async function handleCompanyEdit(
   payload: CompanyEditPayload,
-  env: GitHubEnv
-): Promise<{ success: true; prUrl: string; prNumber: number } | { success: false; error: string; status: number }> {
+  env: GitHubEnv,
+): Promise<
+  | { success: true; prUrl: string; prNumber: number }
+  | { success: false; error: string; status: number }
+> {
   const { companySlug, changes, contributor } = payload;
 
   // 1. Authenticate
@@ -246,13 +249,30 @@ export async function handleCompanyEdit(
   await createBranch(token, owner, repo, branchName, baseSha);
 
   const commitMessage = `suggest: update company info for ${companySlug}`;
-  await upsertFile(token, owner, repo, filePath, updatedYaml, commitMessage, branchName, fileContent.sha);
+  await upsertFile(
+    token,
+    owner,
+    repo,
+    filePath,
+    updatedYaml,
+    commitMessage,
+    branchName,
+    fileContent.sha,
+  );
 
   const diffTable = buildCompanyDiffTable(originalCompany, updatedCompany, changes);
   const prTitle = `[Suggestion] Update company info: ${updatedCompany.name}`;
   const prBody = buildCompanyPrBody(updatedCompany.name, diffTable, contributor);
 
-  const pr = await createPullRequest(token, owner, repo, prTitle, prBody, branchName, defaultBranch);
+  const pr = await createPullRequest(
+    token,
+    owner,
+    repo,
+    prTitle,
+    prBody,
+    branchName,
+    defaultBranch,
+  );
 
   return { success: true, prUrl: pr.html_url, prNumber: pr.number };
 }
@@ -261,15 +281,15 @@ export async function handleCompanyEdit(
 
 function formatValue(value: unknown): string {
   if (value === null || value === undefined) return "*none*";
-  return String(value);
+  return typeof value === "string" ? value : JSON.stringify(value);
 }
 
 function buildCompanyDiffTable(
   original: CompanyYamlValue,
   updated: CompanyYamlValue,
-  changes: CompanyChanges
+  changes: CompanyChanges,
 ): string {
-  const rows: Array<[string, string, string]> = [];
+  const rows: [string, string, string][] = [];
 
   if (changes.name !== undefined) {
     rows.push(["Name", formatValue(original.name), formatValue(updated.name)]);
@@ -284,7 +304,11 @@ function buildCompanyDiffTable(
     rows.push(["Pricing URL", formatValue(original.pricingUrl), formatValue(updated.pricingUrl)]);
   }
   if (changes.featuresUrl !== undefined) {
-    rows.push(["Features URL", formatValue(original.featuresUrl), formatValue(updated.featuresUrl)]);
+    rows.push([
+      "Features URL",
+      formatValue(original.featuresUrl),
+      formatValue(updated.featuresUrl),
+    ]);
   }
 
   if (rows.length === 0) {
@@ -303,14 +327,9 @@ function buildCompanyDiffTable(
 function buildCompanyPrBody(
   companyName: string,
   diffTable: string,
-  contributor?: CompanyEditPayload["contributor"]
+  contributor?: CompanyEditPayload["contributor"],
 ): string {
-  const lines: string[] = [
-    `## Suggested Company Edit: ${companyName}`,
-    "",
-    diffTable,
-    "",
-  ];
+  const lines: string[] = [`## Suggested Company Edit: ${companyName}`, "", diffTable, ""];
 
   if (contributor?.name || contributor?.email || contributor?.company) {
     lines.push("### Contributor");
@@ -320,10 +339,7 @@ function buildCompanyPrBody(
     lines.push("");
   }
 
-  lines.push(
-    "---",
-    "*Submitted via the LLM Trackers website edit mode.*"
-  );
+  lines.push("---", "*Submitted via the LLM Trackers website edit mode.*");
 
   return lines.join("\n");
 }

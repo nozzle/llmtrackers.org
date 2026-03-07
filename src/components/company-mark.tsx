@@ -17,14 +17,9 @@ export function CompanyMark({
       ? branding.logo
       : mode === "favicon"
         ? branding.favicon
-        : branding.logo ?? branding.favicon;
+        : (branding.logo ?? branding.favicon);
 
-  const sizeClasses =
-    size === "sm"
-      ? "h-8 w-8"
-      : size === "lg"
-        ? "h-16 w-16"
-        : "h-10 w-10";
+  const sizeClasses = size === "sm" ? "h-8 w-8" : size === "lg" ? "h-16 w-16" : "h-10 w-10";
 
   const imageClasses =
     mode === "favicon" || (!branding.logo && branding.favicon)
@@ -43,7 +38,9 @@ export function CompanyMark({
   }
 
   return (
-    <div className={`${sizeClasses} flex items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-white p-1`}>
+    <div
+      className={`${sizeClasses} flex items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-white p-1`}
+    >
       <img src={src} alt={`${name} logo`} className={imageClasses} loading="lazy" />
     </div>
   );

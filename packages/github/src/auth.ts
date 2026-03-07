@@ -17,10 +17,7 @@ import { ghFetch } from "./fetch.js";
  * Create a JWT for GitHub App authentication.
  * Valid for 10 minutes (GitHub's maximum).
  */
-export async function createAppJwt(
-  appId: string,
-  privateKeyPem: string
-): Promise<string> {
+export async function createAppJwt(appId: string, privateKeyPem: string): Promise<string> {
   const now = Math.floor(Date.now() / 1000);
 
   const header = { alg: "RS256", typ: "JWT" };
@@ -43,20 +40,15 @@ export async function createAppJwt(
 /**
  * Get an installation access token for the GitHub App.
  */
-export async function getInstallationToken(
-  jwt: string,
-  installationId: string
-): Promise<string> {
+export async function getInstallationToken(jwt: string, installationId: string): Promise<string> {
   const res = await ghFetch(
     `https://api.github.com/app/installations/${installationId}/access_tokens`,
-    { method: "POST", headers: { Authorization: `Bearer ${jwt}` } }
+    { method: "POST", headers: { Authorization: `Bearer ${jwt}` } },
   );
 
   if (!res.ok) {
     const body = await res.text();
-    throw new Error(
-      `Failed to get installation token: ${res.status} ${body}`
-    );
+    throw new Error(`Failed to get installation token: ${res.status} ${body}`);
   }
 
   const data = (await res.json()) as { token: string };
@@ -67,7 +59,7 @@ export async function getInstallationToken(
 
 function base64UrlEncode(str: string): string {
   const bytes = new TextEncoder().encode(str);
-  return arrayBufferToBase64Url(bytes.buffer as ArrayBuffer);
+  return arrayBufferToBase64Url(bytes.buffer);
 }
 
 function arrayBufferToBase64Url(buffer: ArrayBuffer): string {
@@ -76,10 +68,7 @@ function arrayBufferToBase64Url(buffer: ArrayBuffer): string {
   for (const b of bytes) {
     binary += String.fromCharCode(b);
   }
-  return btoa(binary)
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
 async function importPrivateKey(pem: string): Promise<CryptoKey> {
@@ -92,19 +81,15 @@ async function importPrivateKey(pem: string): Promise<CryptoKey> {
 
   return crypto.subtle.importKey(
     "pkcs8",
-    binaryDer.buffer as ArrayBuffer,
+    binaryDer.buffer,
     { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
     false,
-    ["sign"]
+    ["sign"],
   );
 }
 
 async function signData(key: CryptoKey, data: string): Promise<string> {
   const encoded = new TextEncoder().encode(data);
-  const signature = await crypto.subtle.sign(
-    "RSASSA-PKCS1-v1_5",
-    key,
-    encoded
-  );
+  const signature = await crypto.subtle.sign("RSASSA-PKCS1-v1_5", key, encoded);
   return arrayBufferToBase64Url(signature);
 }
