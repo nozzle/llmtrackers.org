@@ -2,8 +2,7 @@ slug: writesonic-geo
 name: Writesonic GEO
 group: Writesonic
 website: https://writesonic.com/
-description: "Combines AI visibility with actionable writing + optimization tools. Starts at $16/mo."
-
+description: Combines AI visibility with actionable writing + optimization tools. Starts at $16/mo.
 plans:
   - name: Starter
     slug: starter
@@ -23,22 +22,89 @@ plans:
     integrations:
       - Writesonic Suite
     llmSupport:
-      aiMode: true
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: true
-      grok: false
-      llama: true
       claude: true
-
+      llama: true
+      grok: false
+      aiOverviews: true
+      aiMode: true
 score:
   total: 34
   maxTotal: 48
-  summary: "Combines AI visibility with actionable writing + optimization tools. Starts at $16/mo."
-
+  summary: Combines AI visibility with actionable writing + optimization tools. Starts at $16/mo.
+reviewSites:
+  trustpilot:
+    url: https://www.trustpilot.com/review/writesonic.com
+    score: 4.7
+    maxScore: 5
+    reviewCount: 5808
+    ratingDistribution:
+      - label: 5-star
+        value: 5
+        count: 5054
+      - label: 4-star
+        value: 4
+        count: 517
+      - label: 3-star
+        value: 3
+        count: 100
+      - label: 2-star
+        value: 2
+        count: 21
+      - label: 1-star
+        value: 1
+        count: 116
+    reviews:
+      - author: Nikki Lam
+        title: Amazing customer service and platform.
+        rating: 5
+        date: 2026-02-25T20:17:07.000Z
+        excerpt: Amazing customer service and an overall very customer centric brand. Very fast turnarounds on requests and ideas. Very quick implementation if there's a bug. Such a friendly and fast team.This platform is unmatched compared to all of the AI visibility platforms I've demoed or used. Excellent UI, great AI integration to help you actually get work done. But what sets them apart is their deep knowledge of SEO and Content Marketing, which informs all of the amazing out of the box data views you get without needing to export anything, custom build views, etc. You can hop into the platform and get insights FAST.
+        url: null
+      - author: B K
+        title: Tread carefully
+        rating: 1
+        date: 2026-02-15T11:30:33.000Z
+        excerpt: Tread carefully, they will set up hidden charges, recurring fees and more without any communication or refunds. I assume their revenue comes from unsuspecting punters. There are several free seo aeo tools out there. They pretend to be one but you will end up with several hundred dollars in fees without knowing. Do not trust.
+        url: null
+      - author: Aaditya Hiwale
+        title: This helps me spark ideas fast thoguh I…
+        rating: 5
+        date: 2025-12-16T11:24:27.000Z
+        excerpt: This helps me spark ideas fast thoguh I still tweak things to fit my tone. 5/5
+        url: null
+  trustradius:
+    url: https://www.trustradius.com/products/writesonic/reviews
+    score: 9.435
+    maxScore: 10
+    reviewCount: 1
+    ratingDistribution:
+      - label: "5"
+        value: 5
+        count: 0
+      - label: "4"
+        value: 4
+        count: 1
+      - label: "3"
+        value: 3
+        count: 0
+      - label: "2"
+        value: 2
+        count: 0
+      - label: "1"
+        value: 1
+        count: 0
+    reviews:
+      - author: null
+        title: Really helpful content writing assistant
+        rating: 8
+        date: 2023-04-07T23:08:00.481Z
+        excerpt: Everyday content creation for marketing purposes has become easier using the Writesonic. It has increased the content team's efficiency, and reduced writer dependency of the marketing team.
+        url: https://www.trustradius.com/products/writesonic/reviews#writesonic-2023-04-05-10-25-29
 reviews: []
 tweets: []
 pricingUrl: https://writesonic.com/pricing
 featuresUrl: https://writesonic.com/features
-lastChecked: "2025-07-29"
+lastChecked: 2025-07-29

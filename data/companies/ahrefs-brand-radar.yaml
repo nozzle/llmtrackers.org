@@ -2,8 +2,7 @@ slug: ahrefs-brand-radar
 name: Ahrefs Brand Radar
 group: Ahrefs
 website: https://ahrefs.com/brand-radar
-description: "Seamless if you already use Ahrefs. Strong docs and visibility metrics."
-
+description: Seamless if you already use Ahrefs. Strong docs and visibility metrics.
 plans:
   - name: Brand Radar
     slug: brand-radar
@@ -11,8 +10,8 @@ plans:
       amount: 159
       currency: USD
       period: monthly
-      note: "$499 for full Ahrefs Suite"
-    pricePer1000Responses: 15.90
+      note: $499 for full Ahrefs Suite
+    pricePer1000Responses: 15.9
     aiResponsesMonthly: 10000
     includedLlmModels: 3
     schedule: weekly
@@ -23,26 +22,61 @@ plans:
     integrations:
       - Ahrefs Suite
     llmSupport:
-      aiMode: true
-      aiOverviews: false
       chatgpt: true
       gemini: true
       perplexity: false
-      grok: false
-      llama: false
       claude: false
-
+      llama: false
+      grok: false
+      aiOverviews: false
+      aiMode: true
 score:
   total: 34
   maxTotal: 48
-  summary: "Seamless if you already use Ahrefs. Strong docs and visibility metrics."
-
+  summary: Seamless if you already use Ahrefs. Strong docs and visibility metrics.
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/ahrefs.com
-
+    score: 1.8
+    maxScore: 5
+    reviewCount: 306
+    ratingDistribution:
+      - label: 5-star
+        value: 5
+        count: 71
+      - label: 4-star
+        value: 4
+        count: 34
+      - label: 3-star
+        value: 3
+        count: 24
+      - label: 2-star
+        value: 2
+        count: 23
+      - label: 1-star
+        value: 1
+        count: 154
+    reviews:
+      - author: KAMUK LIFE KamukLife.com
+        title: horrible service they blackmail…
+        rating: 1
+        date: 2026-02-16T07:39:34.000Z
+        excerpt: horrible service they blackmail customers and when they downgrade and never bill on then 29 USD downgrade plan , further they dont allow you to make the payment or cancel subcribtion
+        url: null
+      - author: sandeep kumar
+        title: 250 USD Wasted and Throw in BIN…
+        rating: 1
+        date: 2026-02-12T21:04:19.000Z
+        excerpt: 250 USD Wasted and Throw in BIN Service. I recently subscribed before 10 day's back and today i am feeling that it's my mistake i paid for it. It's totally a wastage service with Bad Support in whole world they have everything right's to resolve the problem but what they claiming in my case to close the account " hac king" wow is it a valid reason of account close even i am ready to provide every single proof's but they oversmart " Diano and Hiago (mainly) expert in creating stories instead of resolving the problemReally suggest no one to order it
+        url: null
+      - author: Justina Jacques
+        title: Such bad organic traffic data
+        rating: 1
+        date: 2026-02-09T15:34:56.000Z
+        excerpt: Such bad organic traffic data, what a scam of a site misleading people. do not use their bad data
+        url: null
 reviews: []
 tweets: []
 pricingUrl: https://ahrefs.com/brand-radar
 featuresUrl: https://ahrefs.com/brand-radar
-lastChecked: "2025-07-29"
+lastChecked: 2025-07-29

@@ -64,6 +64,10 @@ score:
   maxTotal: 48
   summary: "Straightforward prompt visibility at an accessible price point."
 
+reviewSites:
+  trustpilot:
+    url: https://www.trustpilot.com/review/peec.ai
+
 reviews: []
 tweets: []
 pricingUrl: https://www.peec.ai/pricing

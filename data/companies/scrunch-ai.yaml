@@ -2,8 +2,7 @@ slug: scrunch-ai
 name: Scrunch AI
 group: Scrunch AI
 website: https://scrunch.ai/
-description: "Mid-tier prompt benchmarking."
-
+description: Mid-tier prompt benchmarking.
 plans:
   - name: Scrunch AI Growth
     slug: scrunch-ai-growth
@@ -23,15 +22,14 @@ plans:
     integrations:
       - Google Analytics
     llmSupport:
-      aiMode: true
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: true
-      grok: false
-      llama: true
       claude: false
-
+      llama: true
+      grok: false
+      aiOverviews: true
+      aiMode: true
   - name: Scrunch AI Enterprise
     slug: scrunch-ai-enterprise
     price:
@@ -39,7 +37,7 @@ plans:
       currency: USD
       period: monthly
       note: null
-    pricePer1000Responses: 5.0
+    pricePer1000Responses: 5
     aiResponsesMonthly: 300000
     includedLlmModels: 10
     schedule: daily
@@ -50,22 +48,43 @@ plans:
     integrations:
       - Full Stack
     llmSupport:
-      aiMode: true
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: true
-      grok: true
-      llama: true
       claude: true
-
+      llama: true
+      grok: true
+      aiOverviews: true
+      aiMode: true
 score:
   total: 35
   maxTotal: 48
-  summary: "Mid-tier prompt benchmarking."
-
+  summary: Mid-tier prompt benchmarking.
+reviewSites:
+  trustradius:
+    url: https://www.trustradius.com/products/scrunch-ai/reviews
+    score: 0
+    maxScore: 10
+    reviewCount: null
+    ratingDistribution:
+      - label: "5"
+        value: 5
+        count: 0
+      - label: "4"
+        value: 4
+        count: 0
+      - label: "3"
+        value: 3
+        count: 0
+      - label: "2"
+        value: 2
+        count: 0
+      - label: "1"
+        value: 1
+        count: 0
+    reviews: []
 reviews: []
 tweets: []
 pricingUrl: https://scrunch.ai/pricing
 featuresUrl: https://scrunch.ai/features
-lastChecked: "2025-07-29"
+lastChecked: 2025-07-29

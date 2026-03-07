@@ -96,10 +96,17 @@ export function parseTrustRadiusReviewSite(
 
   const ratingDistribution = extractTrustRadiusDistribution(pageProps);
   const reviews = extractTrustRadiusReviews(url, pageProps).slice(0, 3);
+  const distributionCount = ratingDistribution.reduce(
+    (sum, bucket) => sum + bucket.count,
+    0
+  );
+  const normalizedReviewCount = reviewCount ?? (distributionCount > 0 ? distributionCount : null);
+  const normalizedScore =
+    normalizedReviewCount && normalizedReviewCount > 0 ? score : null;
 
   if (
-    score == null &&
-    reviewCount == null &&
+    normalizedScore == null &&
+    normalizedReviewCount == null &&
     ratingDistribution.length === 0 &&
     reviews.length === 0
   ) {
@@ -108,9 +115,9 @@ export function parseTrustRadiusReviewSite(
 
   return compactReviewSiteData({
     url,
-    score,
+    score: normalizedScore,
     maxScore,
-    reviewCount,
+    reviewCount: normalizedReviewCount,
     ratingDistribution,
     reviews,
   });
@@ -296,6 +303,10 @@ function extractTrustRadiusDistribution(pageProps: unknown): ReviewSiteBucket[] 
       normalized.every((bucket) => bucket.value >= 1 && bucket.value <= 5);
 
     if (looksLikeRatingBuckets) {
+      const total = normalized.reduce((sum, bucket) => sum + bucket.count, 0);
+      if (total === 0) {
+        return [];
+      }
       return normalized.sort((a, b) => b.value - a.value);
     }
   }

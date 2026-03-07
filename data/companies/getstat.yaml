@@ -2,8 +2,7 @@ slug: getstat
 name: Getstat
 group: Getstat
 website: https://getstat.com/
-description: "Deep coverage tracking for AI + SERP visibility."
-
+description: Deep coverage tracking for AI + SERP visibility.
 plans:
   - name: Pro
     slug: pro
@@ -23,22 +22,43 @@ plans:
     integrations:
       - Full Stack
     llmSupport:
-      aiMode: true
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: false
-      grok: false
-      llama: false
       claude: false
-
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: true
 score:
   total: 33
   maxTotal: 48
-  summary: "Deep coverage tracking for AI + SERP visibility."
-
+  summary: Deep coverage tracking for AI + SERP visibility.
+reviewSites:
+  trustradius:
+    url: https://www.trustradius.com/products/stat-search-analytics/reviews
+    score: 9.091
+    maxScore: 10
+    reviewCount: 1
+    ratingDistribution:
+      - label: "5"
+        value: 5
+        count: 0
+      - label: "4"
+        value: 4
+        count: 0
+      - label: "3"
+        value: 3
+        count: 0
+      - label: "2"
+        value: 2
+        count: 0
+      - label: "1"
+        value: 1
+        count: 0
+    reviews: []
 reviews: []
 tweets: []
 pricingUrl: https://getstat.com/pricing
 featuresUrl: https://getstat.com/features
-lastChecked: "2025-07-29"
+lastChecked: 2025-07-29

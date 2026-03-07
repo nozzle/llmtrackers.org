@@ -137,10 +137,16 @@ export function mergeCompanyWithReviewSites(
     const nextSite = extractedReviewSites[platform];
     if (!nextSite) continue;
 
-    mergedReviewSites[platform] = mergeReviewSiteData(
+    const mergedSite = mergeReviewSiteData(
       company.reviewSites?.[platform],
       nextSite
     );
+
+    if (mergedSite) {
+      mergedReviewSites[platform] = mergedSite;
+    } else {
+      delete mergedReviewSites[platform];
+    }
   }
 
   return {
@@ -241,8 +247,8 @@ function normalizeLlmSupport(llmSupport: Partial<Record<LlmModelKey, boolean>>):
 function mergeReviewSiteData(
   existing: ReviewSiteData | undefined,
   next: ReviewSiteData
-): ReviewSiteData {
-  return {
+): ReviewSiteData | undefined {
+  const merged: ReviewSiteData = {
     url: next.url || existing?.url || "",
     score: next.score ?? existing?.score ?? null,
     maxScore: next.maxScore ?? existing?.maxScore ?? 5,
@@ -253,6 +259,18 @@ function mergeReviewSiteData(
         : existing?.ratingDistribution ?? [],
     reviews: next.reviews.length > 0 ? next.reviews : existing?.reviews ?? [],
   };
+
+  const hasMeaningfulData =
+    merged.score != null ||
+    merged.reviewCount != null ||
+    merged.ratingDistribution.length > 0 ||
+    merged.reviews.length > 0;
+
+  if (!hasMeaningfulData && !existing) {
+    return undefined;
+  }
+
+  return merged;
 }
 
 function sortCompanyKeys(company: CompanyYamlValue): CompanyYamlValue {

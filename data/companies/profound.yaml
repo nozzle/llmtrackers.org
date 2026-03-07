@@ -2,8 +2,7 @@ slug: profound
 name: Profound
 group: Profound
 website: https://www.tryprofound.com/
-description: "Unmatched breadth- tracks brand mentions, citations, AI crawler logs, shopping visibility, and prompt trends. Best for agencies and enterprise teams."
-
+description: Unmatched breadth- tracks brand mentions, citations, AI crawler logs, shopping visibility, and prompt trends. Best for agencies and enterprise teams.
 plans:
   - name: Profound Growth
     slug: profound-growth
@@ -18,8 +17,8 @@ plans:
     schedule: daily
     locationSupport: global
     personaSupport: 5
-    contentGeneration: "3 articles/month"
-    contentOptimization: "3 articles/month"
+    contentGeneration: 3 articles/month
+    contentOptimization: 3 articles/month
     integrations:
       - Google Analytics
       - Vercel
@@ -29,49 +28,51 @@ plans:
       - Fastly
       - Akamai
     llmSupport:
-      aiMode: false
-      aiOverviews: true
       chatgpt: true
       gemini: false
       perplexity: true
-      grok: false
-      llama: false
       claude: false
-
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: false
   - name: Profound Enterprise
     slug: profound-enterprise
     price:
       amount: 999
       currency: USD
       period: monthly
-      note: "Custom, starts $999+"
+      note: Custom, starts $999+
     pricePer1000Responses: 4.76
     aiResponsesMonthly: 210000
     includedLlmModels: 7
     schedule: daily
     locationSupport: global
     personaSupport: unlimited
-    contentGeneration: "Unlimited"
-    contentOptimization: "Unlimited"
+    contentGeneration: Unlimited
+    contentOptimization: Unlimited
     integrations:
       - Full Stack
     llmSupport:
-      aiMode: true
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: true
-      grok: false
-      llama: false
       claude: true
-
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: true
 score:
   total: 40
   maxTotal: 48
-  summary: "Unmatched breadth- tracks brand mentions, citations, AI crawler logs, shopping visibility, and prompt trends. Best for agencies and enterprise teams."
-
+  summary: Unmatched breadth- tracks brand mentions, citations, AI crawler logs, shopping visibility, and prompt trends. Best for agencies and enterprise teams.
+reviewSites:
+  trustpilot:
+    url: https://www.trustpilot.com/review/tryprofound.com
+  trustradius:
+    url: https://www.trustradius.com/products/profound/reviews
 reviews: []
 tweets: []
 pricingUrl: https://www.tryprofound.com/pricing
 featuresUrl: https://www.tryprofound.com/features
-lastChecked: "2025-07-29"
+lastChecked: 2025-07-29
