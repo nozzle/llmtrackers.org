@@ -55,7 +55,7 @@
     "website": "https://www.peec.ai/"
   },
   "profound": {
-    "logo": null,
+    "logo": "profound-logo.ico",
     "favicon": "profound-favicon.ico",
     "website": "https://www.tryprofound.com/"
   },
@@ -65,10 +65,9 @@
     "website": "https://www.rankscale.ai/"
   },
   "scrunch-ai": {
-    "logo": null,
+    "logo": "scrunch-ai-logo.ico",
     "favicon": "scrunch-ai-favicon.ico",
-    "website": "https://scrunch.ai/",
-    "error": "TypeError: fetch failed"
+    "website": "https://scrunch.ai/"
   },
   "waikay": {
     "logo": "waikay-logo.png",

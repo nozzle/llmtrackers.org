@@ -43,6 +43,7 @@ export const COMPANY_BRANDING: Record<string, CompanyBranding> = {
     favicon: "/company-assets/peec-ai-favicon.png",
   },
   profound: {
+    logo: "/company-assets/profound-logo.ico",
     favicon: "/company-assets/profound-favicon.ico",
   },
   rankscale: {
@@ -50,6 +51,7 @@ export const COMPANY_BRANDING: Record<string, CompanyBranding> = {
     favicon: "/company-assets/rankscale-favicon.png",
   },
   "scrunch-ai": {
+    logo: "/company-assets/scrunch-ai-logo.ico",
     favicon: "/company-assets/scrunch-ai-favicon.ico",
   },
   waikay: {
