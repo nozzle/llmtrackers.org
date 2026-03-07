@@ -3,7 +3,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { getAllCompanies, getAllPlansWithCompany } from "~/data";
 import { CompanyMark } from "~/components/company-mark";
 import { LlmIcon } from "~/components/llm-icon";
-import { ReviewSiteMiniList, ReviewSiteScoreBadge } from "~/components/review-site-badge";
+import { ReviewSiteLabel, ReviewSiteScoreBadge } from "~/components/review-site-badge";
 import { LLM_MODEL_LABELS } from "@llm-tracker/shared";
 import type { LlmModelKey, PlanWithCompany, ReviewSitePlatform } from "@llm-tracker/shared";
 import { z } from "zod";
@@ -835,7 +835,10 @@ function HomePage() {
                   className="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700"
                   onClick={() => toggleSort("g2")}
                 >
-                  G2{sortIndicator("g2")}
+                  <span className="inline-flex items-center gap-2 normal-case tracking-normal">
+                    <ReviewSiteLabel platform="g2" mode="favicon" size="sm" />
+                    <span>{sortIndicator("g2")}</span>
+                  </span>
                 </th>
               )}
               {isColumnVisible("trustpilot") && (
@@ -843,7 +846,10 @@ function HomePage() {
                   className="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700"
                   onClick={() => toggleSort("trustpilot")}
                 >
-                  Trustpilot{sortIndicator("trustpilot")}
+                  <span className="inline-flex items-center gap-2 normal-case tracking-normal">
+                    <ReviewSiteLabel platform="trustpilot" mode="favicon" size="sm" />
+                    <span>{sortIndicator("trustpilot")}</span>
+                  </span>
                 </th>
               )}
               {isColumnVisible("trustradius") && (
@@ -851,7 +857,10 @@ function HomePage() {
                   className="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700"
                   onClick={() => toggleSort("trustradius")}
                 >
-                  TrustRadius{sortIndicator("trustradius")}
+                  <span className="inline-flex items-center gap-2 normal-case tracking-normal">
+                    <ReviewSiteLabel platform="trustradius" mode="favicon" size="sm" />
+                    <span>{sortIndicator("trustradius")}</span>
+                  </span>
                 </th>
               )}
               {isColumnVisible("capterra") && (
@@ -859,7 +868,10 @@ function HomePage() {
                   className="cursor-pointer px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700"
                   onClick={() => toggleSort("capterra")}
                 >
-                  Capterra{sortIndicator("capterra")}
+                  <span className="inline-flex items-center gap-2 normal-case tracking-normal">
+                    <ReviewSiteLabel platform="capterra" mode="favicon" size="sm" />
+                    <span>{sortIndicator("capterra")}</span>
+                  </span>
                 </th>
               )}
               {isColumnVisible("price") && (
@@ -1135,6 +1147,7 @@ function HomePage() {
                         score={getReviewSiteScore(plan, "g2")}
                         maxScore={plan.companyReviewSites?.g2?.maxScore ?? 5}
                         compact
+                        showLogo
                       />
                     </td>
                   )}
@@ -1145,6 +1158,7 @@ function HomePage() {
                         score={getReviewSiteScore(plan, "trustpilot")}
                         maxScore={plan.companyReviewSites?.trustpilot?.maxScore ?? 5}
                         compact
+                        showLogo
                       />
                     </td>
                   )}
@@ -1155,6 +1169,7 @@ function HomePage() {
                         score={getReviewSiteScore(plan, "trustradius")}
                         maxScore={plan.companyReviewSites?.trustradius?.maxScore ?? 10}
                         compact
+                        showLogo
                       />
                     </td>
                   )}
@@ -1165,6 +1180,7 @@ function HomePage() {
                         score={getReviewSiteScore(plan, "capterra")}
                         maxScore={plan.companyReviewSites?.capterra?.maxScore ?? 5}
                         compact
+                        showLogo
                       />
                     </td>
                   )}
@@ -1213,9 +1229,6 @@ function HomePage() {
                             <LlmIcon key={k} model={k} size={18} />
                           )
                         )}
-                      </div>
-                      <div className="mt-2">
-                        <ReviewSiteMiniList reviewSites={plan.companyReviewSites ?? {}} />
                       </div>
                     </td>
                   )}

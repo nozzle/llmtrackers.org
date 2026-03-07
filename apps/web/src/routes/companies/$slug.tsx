@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { getCompanyBySlug } from "~/data";
 import { CompanyMark } from "~/components/company-mark";
-import { ReviewSiteScoreBadge } from "~/components/review-site-badge";
+import { ReviewSiteLabel, ReviewSiteMark, ReviewSiteScoreBadge } from "~/components/review-site-badge";
+import { getReviewSiteBranding } from "~/review-site-branding";
 import { LLM_MODEL_LABELS, REVIEW_SITE_LABELS, REVIEW_SITE_PLATFORMS } from "@llm-tracker/shared";
 import type { LlmModelKey, ReviewSitePlatform } from "@llm-tracker/shared";
 
@@ -66,6 +67,19 @@ const LLM_KEYS: LlmModelKey[] = [
 function formatBucketLabel(platform: ReviewSitePlatform, label: string): string {
   if (platform === "trustradius") return `${label}/5`;
   return label;
+}
+
+function getReviewPlatformMatch(platform: string): ReviewSitePlatform | null {
+  const normalized = platform.trim().toLowerCase();
+
+  if (normalized === "g2") return "g2";
+  if (normalized === "trustpilot") return "trustpilot";
+  if (normalized === "trustradius" || normalized === "trust radius") {
+    return "trustradius";
+  }
+  if (normalized === "capterra") return "capterra";
+
+  return null;
 }
 
 function CompanyPage() {
@@ -278,19 +292,20 @@ function CompanyPage() {
               return (
                 <section
                   key={platform}
-                  className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
+                  className={`rounded-xl border border-gray-200 bg-white p-5 shadow-sm ${getReviewSiteBranding(platform).surface}`}
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
-                        {REVIEW_SITE_LABELS[platform]}
+                        <ReviewSiteLabel platform={platform} size="lg" />
                       </h3>
                       <a
                         href={site.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-1 inline-flex text-sm text-blue-600 hover:underline"
+                        className="mt-2 inline-flex items-center gap-2 text-sm text-blue-600 hover:underline"
                       >
+                        <ReviewSiteMark platform={platform} mode="favicon" size="sm" />
                         View official page
                       </a>
                     </div>
@@ -299,6 +314,7 @@ function CompanyPage() {
                         platform={platform}
                         score={site.score}
                         maxScore={site.maxScore}
+                        showLogo
                       />
                       {site.reviewCount != null && (
                         <div className="mt-2 text-sm text-gray-500">
@@ -326,7 +342,7 @@ function CompanyPage() {
                             </div>
                             <div className="h-2 flex-1 overflow-hidden rounded-full bg-gray-100">
                               <div
-                                className="h-full rounded-full bg-blue-500"
+                                className={`h-full rounded-full ${getReviewSiteBranding(platform).bar}`}
                                 style={{ width: `${(bucket.count / maxCount) * 100}%` }}
                               />
                             </div>
@@ -394,24 +410,45 @@ function CompanyPage() {
         <section className="mb-12">
           <h2 className="mb-4 text-xl font-semibold text-gray-900">Reviews</h2>
           <div className="flex flex-wrap gap-4">
-            {company.reviews.map((review) => (
-              <a
-                key={review.platform}
-                href={review.url ?? "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 shadow-sm hover:border-blue-300"
-              >
-                <span className="font-medium text-gray-900">
-                  {review.platform}
-                </span>
-                {review.score != null && (
-                  <span className="rounded-full bg-yellow-100 px-2 py-0.5 text-sm font-semibold text-yellow-800">
-                    {review.score}/{review.maxScore}
+            {company.reviews.map((review) => {
+              const matchedPlatform = getReviewPlatformMatch(review.platform);
+              const branding = matchedPlatform
+                ? getReviewSiteBranding(matchedPlatform)
+                : null;
+
+              return (
+                <a
+                  key={review.platform}
+                  href={review.url ?? "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 shadow-sm hover:border-blue-300 ${branding?.surface ?? ""}`}
+                >
+                  <span className="font-medium text-gray-900">
+                    {matchedPlatform ? (
+                      <ReviewSiteLabel platform={matchedPlatform} mode="logo" size="md" />
+                    ) : (
+                      review.platform
+                    )}
                   </span>
-                )}
-              </a>
-            ))}
+                  {review.score != null && (
+                    matchedPlatform ? (
+                      <ReviewSiteScoreBadge
+                        platform={matchedPlatform}
+                        score={review.score}
+                        maxScore={review.maxScore}
+                        compact
+                        showLogo
+                      />
+                    ) : (
+                      <span className="rounded-full bg-yellow-100 px-2 py-0.5 text-sm font-semibold text-yellow-800">
+                        {review.score}/{review.maxScore}
+                      </span>
+                    )
+                  )}
+                </a>
+              );
+            })}
           </div>
         </section>
       )}
