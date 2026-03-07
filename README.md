@@ -54,7 +54,7 @@ pnpm test
 pnpm typecheck
 pnpm build
 pnpm deploy:check
-pnpm deploy
+pnpm release
 pnpm backfill-review-sites
 ```
 
@@ -235,7 +235,7 @@ pnpm deploy:check
 Deploy with:
 
 ```bash
-pnpm deploy
+pnpm release
 ```
 
 CI/CD is configured in `.github/workflows/`.

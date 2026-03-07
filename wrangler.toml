@@ -1,5 +1,5 @@
 "$schema" = "node_modules/wrangler/config-schema.json"
-name = "llm-tracker-comparison"
+name = "llmtrackers"
 main = "src/server.ts"
 compatibility_date = "2026-03-01"
 compatibility_flags = ["nodejs_compat"]
@@ -9,16 +9,16 @@ crons = ["0 6 * * 1"]
 
 [vars]
 GITHUB_REPO_OWNER = "nozzle"
-GITHUB_REPO_NAME = "llm-tracker-comparison"
+GITHUB_REPO_NAME = "llmtrackers.org"
 # VITE_SITE_URL = "https://llmtrackers.org"
 # TURNSTILE_SITE_KEY = "<optional-public-site-key>"
 
 [[queues.producers]]
 binding = "UPDATE_QUEUE"
-queue = "llm-tracker-update-jobs"
+queue = "update-jobs"
 
 [[queues.consumers]]
-queue = "llm-tracker-update-jobs"
+queue = "update-jobs"
 max_batch_size = 5
 max_batch_timeout = 5
 

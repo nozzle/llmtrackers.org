@@ -1,5 +1,5 @@
 {
-  "name": "llm-tracker-comparison",
+  "name": "llmtrackers.org",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.30.3",
@@ -10,8 +10,8 @@
     "build": "vite build && tsx scripts/generate-sitemap.ts",
     "predeploy:check": "pnpm build",
     "deploy:check": "wrangler deploy --dry-run",
-    "predeploy": "pnpm build",
-    "deploy": "wrangler deploy",
+    "prerelease": "pnpm build",
+    "release": "wrangler deploy",
     "compile-data": "pnpm --filter @llm-tracker/shared compile",
     "backfill-review-sites": "tsx src/server/update/backfill-review-sites.ts",
     "cf-typegen": "wrangler types",
