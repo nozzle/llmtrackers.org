@@ -1,0 +1,25 @@
+name = "llm-tracker-comparison"
+main = "worker/index.ts"
+compatibility_date = "2025-03-06"
+
+[assets]
+directory = "./dist/client"
+binding = "ASSETS"
+
+[triggers]
+crons = ["0 6 * * 1"]
+
+[vars]
+GITHUB_REPO_OWNER = "nozzle"
+GITHUB_REPO_NAME = "llm-tracker-comparison"
+# VITE_SITE_URL = "https://llmtrackers.org"
+# TURNSTILE_SITE_KEY = "<optional-public-site-key>"
+
+[[queues.producers]]
+binding = "UPDATE_QUEUE"
+queue = "llm-tracker-update-jobs"
+
+[[queues.consumers]]
+queue = "llm-tracker-update-jobs"
+max_batch_size = 5
+max_batch_timeout = 5

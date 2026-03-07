@@ -1,39 +1,30 @@
 # LLM Tracker Comparison
 
-Static comparison site for AI search visibility / LLM tracking tools, plus two Cloudflare Workers:
+Single Cloudflare Worker app for the LLM Trackers website, suggestion APIs, and automated update checking.
 
-- `apps/web` - TanStack Start site deployed to Cloudflare Pages via GitHub integration
-- `apps/form-worker` - accepts suggest-form submissions and creates GitHub issues
-- `apps/update-checker` - cron/manual worker that checks vendor pages, extracts structured changes, and opens PRs
-- `packages/shared` - Zod schemas, shared types, YAML helpers, and the compile script
+## Repo Layout
+
+- `src/` - TanStack Start frontend app
+- `public/` - static assets bundled with the site
+- `worker/` - unified Worker runtime, form APIs, cron, and queue consumers
+- `data/companies/` - YAML source of truth for companies and plans
+- `packages/shared/` - schemas, YAML helpers, compile step, and shared types
+- `packages/github/` - GitHub API helpers used by the Worker
 
 ## Stack
 
 - pnpm workspaces
 - React 19 + TanStack Start + Vite 7
 - Tailwind CSS v4
-- Cloudflare Pages + Cloudflare Workers (Wrangler v4)
+- Cloudflare Worker + Cloudflare Queues + cron triggers
 - YAML as the source of truth for company data
 - Zod for validation
 - Vitest for tests
 
-## Repo Layout
-
-```text
-apps/
-  web/
-  form-worker/
-  update-checker/
-data/
-  companies/
-packages/
-  shared/
-```
-
 ## Requirements
 
 - Node.js 24+
-- pnpm 9+
+- pnpm 10+
 
 ## Install
 
@@ -43,28 +34,14 @@ pnpm install
 
 ## Common Commands
 
-From the repo root:
-
 ```bash
 pnpm dev
+pnpm dev:worker
 pnpm compile-data
 pnpm test
 pnpm typecheck
 pnpm build
-```
-
-App-specific:
-
-```bash
-pnpm --filter web dev
-pnpm --filter web build
-
-pnpm --filter form-worker dev
-pnpm --filter form-worker build
-
-pnpm --filter update-checker dev
-pnpm --filter update-checker test
-pnpm --filter update-checker build
+pnpm deploy
 pnpm backfill-review-sites
 ```
 
@@ -72,8 +49,8 @@ pnpm backfill-review-sites
 
 - Source data lives in `data/companies/*.yaml`
 - Each company has one YAML file
-- `packages/shared/src/compile.ts` validates all YAML and outputs `packages/shared/compiled-data.json`
-- The web app reads compiled JSON, not raw YAML
+- `packages/shared/src/compile.ts` validates YAML and outputs `packages/shared/compiled-data.json`
+- The site reads compiled JSON, not raw YAML
 
 When editing data:
 
@@ -85,24 +62,15 @@ pnpm typecheck
 
 ## Environment and Secrets
 
-### Web
-
-Optional local env used by the suggest form:
-
-- `VITE_FORM_WORKER_URL`
-- `VITE_SITE_URL`
-- `VITE_TURNSTILE_SITE_KEY`
-
-### Form Worker
-
-Configured in `apps/form-worker/wrangler.toml`.
+Configured in `wrangler.toml`.
 
 Secrets:
 
 - `GITHUB_APP_ID`
 - `GITHUB_APP_PRIVATE_KEY`
 - `GITHUB_INSTALLATION_ID`
-- `ALLOWED_ORIGIN`
+- `OPENAI_API_KEY`
+- `MANUAL_TRIGGER_TOKEN`
 - `TURNSTILE_SECRET_KEY` (optional)
 
 Vars:
@@ -110,91 +78,65 @@ Vars:
 - `GITHUB_REPO_OWNER`
 - `GITHUB_REPO_NAME`
 - `TURNSTILE_SITE_KEY` (optional public key)
-
-### Update Checker
-
-Configured in `apps/update-checker/wrangler.toml`.
-
-Secrets:
-
-- `GITHUB_APP_ID`
-- `GITHUB_APP_PRIVATE_KEY`
-- `GITHUB_INSTALLATION_ID`
-- `OPENAI_API_KEY`
-- `MANUAL_TRIGGER_TOKEN`
-
-Vars:
-
-- `GITHUB_REPO_OWNER`
-- `GITHUB_REPO_NAME`
+- `VITE_SITE_URL` (optional canonical production URL)
 
 ## Local Worker Secrets
 
 Set worker secrets with Wrangler:
 
 ```bash
-pnpm --filter form-worker exec wrangler secret put GITHUB_APP_ID
-pnpm --filter form-worker exec wrangler secret put GITHUB_APP_PRIVATE_KEY
-pnpm --filter form-worker exec wrangler secret put GITHUB_INSTALLATION_ID
-pnpm --filter form-worker exec wrangler secret put ALLOWED_ORIGIN
-pnpm --filter form-worker exec wrangler secret put TURNSTILE_SECRET_KEY
-
-pnpm --filter update-checker exec wrangler secret put GITHUB_APP_ID
-pnpm --filter update-checker exec wrangler secret put GITHUB_APP_PRIVATE_KEY
-pnpm --filter update-checker exec wrangler secret put GITHUB_INSTALLATION_ID
-pnpm --filter update-checker exec wrangler secret put OPENAI_API_KEY
-pnpm --filter update-checker exec wrangler secret put MANUAL_TRIGGER_TOKEN
+wrangler secret put GITHUB_APP_ID
+wrangler secret put GITHUB_APP_PRIVATE_KEY
+wrangler secret put GITHUB_INSTALLATION_ID
+wrangler secret put OPENAI_API_KEY
+wrangler secret put MANUAL_TRIGGER_TOKEN
+wrangler secret put TURNSTILE_SECRET_KEY
 ```
 
 ## Deploy
 
-### Web App
+GitHub Actions deploys the single Worker app on pushes to `main`.
 
-`apps/web` is intended to deploy through the Cloudflare Pages GitHub integration, which also handles preview deployments for pull requests.
+The Worker serves:
 
-Recommended Cloudflare Pages settings:
+- prerendered site assets from `dist/client`
+- public suggestion APIs under `/api/*`
+- admin update enqueue endpoints under `/api/admin/update-checker/*`
+- weekly cron scheduling
+- Cloudflare Queue consumption for per-company update jobs
 
-- Production branch: `main`
-- Build command: `pnpm build`
-- Build output directory: `apps/web/dist/client`
-- Node.js version: `24`
-
-For URL handling:
-
-- Set `VITE_SITE_URL` to your canonical production URL when you have one
-- Leave previews to use `CF_PAGES_URL` automatically
-- `og:url` will use the preview/runtime URL, while canonical and sitemap URLs prefer `VITE_SITE_URL`
-
-### Workers
-
-GitHub Actions deploys only the workers on pushes to `main`:
-
-- `apps/form-worker`
-- `apps/update-checker`
-
-Required GitHub repository secrets for worker deploys:
+Required GitHub repository secrets:
 
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
 - `GITHUB_APP_ID`
 - `GITHUB_APP_PRIVATE_KEY`
 - `GITHUB_INSTALLATION_ID`
-- `ALLOWED_ORIGIN`
 - `OPENAI_API_KEY`
 - `MANUAL_TRIGGER_TOKEN`
+- `TURNSTILE_SECRET_KEY`
 
-Cloudflare Pages project setup is managed in Cloudflare and does not require the web deploy job in GitHub Actions.
+## Update Checker
 
-## Manual Update Checker Trigger
+The automated updater is queue-driven:
 
-Manual runs require a bearer token.
+- cron enqueues one job per company
+- queue consumers process a single company at a time
+- each job fetches pricing/features pages, runs extraction, diffs YAML, and opens or updates a PR
+
+Manual enqueue all companies:
 
 ```bash
-curl -X POST "https://<update-checker-url>" \
+curl -X POST "https://<worker-url>/api/admin/update-checker/enqueue" \
   -H "Authorization: Bearer $MANUAL_TRIGGER_TOKEN"
 ```
 
-If the token is missing or invalid, the worker returns `401 Unauthorized`.
+Manual enqueue one company:
+
+```bash
+curl -X POST "https://<worker-url>/api/admin/update-checker/enqueue/<slug>" \
+  -H "Authorization: Bearer $MANUAL_TRIGGER_TOKEN"
+```
 
 ## Review Site Backfill
 
@@ -204,7 +146,7 @@ Seed official review-site URLs in `data/companies/*.yaml` under `reviewSites`, t
 pnpm backfill-review-sites
 ```
 
-This runs a dry run by default. To persist updates:
+To persist updates:
 
 ```bash
 pnpm backfill-review-sites -- --write
@@ -216,12 +158,10 @@ To target a single company slug:
 pnpm backfill-review-sites -- ahrefs-brand-radar --write
 ```
 
-The same review-site backfill core is used by the local CLI and the Cloudflare update-checker worker, so local results match the automated path.
-
 ## Testing
 
-- Shared YAML merge/round-trip tests live in `packages/shared/src/yaml.test.ts`
-- Update checker diff/auth tests live in `apps/update-checker/src/*.test.ts`
+- shared YAML merge/round-trip tests live in `packages/shared/src/*.test.ts`
+- Worker form and update tests live in `worker/**/*.test.ts`
 
 Run all tests:
 
@@ -232,11 +172,11 @@ pnpm test
 ## Notes
 
 - YAML is the source of truth
-- The update checker now parses and rewrites YAML via shared helpers instead of regex parsing
-- Manual update-trigger requests are authenticated, but cron runs are unaffected
+- the update checker rewrites YAML via shared helpers, not regex parsing
+- manual enqueue endpoints are authenticated with a bearer token
 
 ## Security and Maintenance
 
 - Security reporting guidance is in `SECURITY.md`
 - Dependabot is configured for npm dependencies and GitHub Actions in `.github/dependabot.yml`
-- GitHub Actions are pinned to commit SHAs for better supply-chain safety
+- GitHub Actions are pinned to commit SHAs where possible

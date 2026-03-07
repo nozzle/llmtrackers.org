@@ -683,8 +683,6 @@ export function AddCompanyModal({
   const [prUrl, setPrUrl] = useState("");
 
   const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
-  const workerUrl =
-    import.meta.env.VITE_FORM_WORKER_URL || "/api/suggest-add-company";
 
   const preview = useMemo(
     () => computeCompanyPreview(company, plans),
@@ -752,9 +750,7 @@ export function AddCompanyModal({
 
       if (turnstileToken) payload.turnstileToken = turnstileToken;
 
-      const endpoint =
-        workerUrl.replace(/\/$/, "") + "/api/suggest-add-company";
-      const response = await fetch(endpoint, {
+      const response = await fetch("/api/suggest-add-company", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -765,7 +761,7 @@ export function AddCompanyModal({
         throw new Error(text || `Request failed (${response.status})`);
       }
 
-      const result = await response.json();
+      const result = (await response.json()) as { prUrl: string };
       setPrUrl(result.prUrl);
       setStatus("success");
     } catch (err) {

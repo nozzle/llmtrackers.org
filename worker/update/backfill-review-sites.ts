@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { backfillCompanyReviewSites } from "./review-site-backfill";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(__dirname, "../../..");
+const repoRoot = path.resolve(__dirname, "../..");
 const dataDir = path.resolve(repoRoot, "data/companies");
 
 async function main() {

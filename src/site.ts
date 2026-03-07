@@ -1,9 +1,8 @@
 const DEFAULT_SITE_URL = "https://llmtrackers.org";
 
 export function getSiteUrl(): string {
-  const previewUrl = import.meta.env.CF_PAGES_URL?.trim();
   const configured = import.meta.env.VITE_SITE_URL?.trim();
-  return normalizeSiteUrl(previewUrl || configured || DEFAULT_SITE_URL);
+  return normalizeSiteUrl(configured || DEFAULT_SITE_URL);
 }
 
 export function getCanonicalSiteUrl(): string {

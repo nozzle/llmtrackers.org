@@ -7,69 +7,13 @@ settings:
 importers:
 
   .:
-    devDependencies:
-      '@eslint/js':
-        specifier: ^9.21.0
-        version: 9.39.4
-      eslint:
-        specifier: ^9.21.0
-        version: 9.39.4(jiti@2.6.1)
-      typescript-eslint:
-        specifier: ^8.24.1
-        version: 8.56.1(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3)
-      vitest:
-        specifier: ^3.2.4
-        version: 3.2.4(@types/node@25.3.5)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2)
-
-  apps/form-worker:
     dependencies:
       '@llm-tracker/github':
         specifier: workspace:*
-        version: link:../../packages/github
+        version: link:packages/github
       '@llm-tracker/shared':
         specifier: workspace:*
-        version: link:../../packages/shared
-    devDependencies:
-      '@cloudflare/workers-types':
-        specifier: ^4.20250306.0
-        version: 4.20260306.1
-      typescript:
-        specifier: ^5.7.0
-        version: 5.9.3
-      vitest:
-        specifier: ^3.2.4
-        version: 3.2.4(@types/node@25.3.5)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2)
-      wrangler:
-        specifier: ^4.71.0
-        version: 4.71.0(@cloudflare/workers-types@4.20260306.1)
-
-  apps/update-checker:
-    dependencies:
-      '@llm-tracker/github':
-        specifier: workspace:*
-        version: link:../../packages/github
-      '@llm-tracker/shared':
-        specifier: workspace:*
-        version: link:../../packages/shared
-    devDependencies:
-      '@cloudflare/workers-types':
-        specifier: ^4.20250306.0
-        version: 4.20260306.1
-      typescript:
-        specifier: ^5.7.0
-        version: 5.9.3
-      vitest:
-        specifier: ^3.2.4
-        version: 3.2.4(@types/node@25.3.5)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2)
-      wrangler:
-        specifier: ^4.71.0
-        version: 4.71.0(@cloudflare/workers-types@4.20260306.1)
-
-  apps/web:
-    dependencies:
-      '@llm-tracker/shared':
-        specifier: workspace:*
-        version: link:../../packages/shared
+        version: link:packages/shared
       '@tanstack/react-router':
         specifier: ^1.114.0
         version: 1.166.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -83,6 +27,12 @@ importers:
         specifier: ^19.1.0
         version: 19.2.4(react@19.2.4)
     devDependencies:
+      '@cloudflare/workers-types':
+        specifier: ^4.20250306.0
+        version: 4.20260306.1
+      '@eslint/js':
+        specifier: ^9.21.0
+        version: 9.39.4
       '@tailwindcss/vite':
         specifier: ^4.1.0
         version: 4.2.1(vite@7.3.1(@types/node@25.3.5)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2))
@@ -98,6 +48,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^5.1.0
         version: 5.1.4(vite@7.3.1(@types/node@25.3.5)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2))
+      eslint:
+        specifier: ^9.21.0
+        version: 9.39.4(jiti@2.6.1)
       tailwindcss:
         specifier: ^4.1.0
         version: 4.2.1
@@ -107,12 +60,21 @@ importers:
       typescript:
         specifier: ^5.7.0
         version: 5.9.3
+      typescript-eslint:
+        specifier: ^8.24.1
+        version: 8.56.1(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3)
       vite:
         specifier: ^7.0.0
         version: 7.3.1(@types/node@25.3.5)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2)
       vite-tsconfig-paths:
         specifier: ^6.1.0
         version: 6.1.1(typescript@5.9.3)(vite@7.3.1(@types/node@25.3.5)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2))
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(@types/node@25.3.5)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2)
+      wrangler:
+        specifier: ^4.71.0
+        version: 4.71.0(@cloudflare/workers-types@4.20260306.1)
 
   packages/github:
     devDependencies:

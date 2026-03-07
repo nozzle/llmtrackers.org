@@ -110,7 +110,7 @@ function Footer() {
           <p className="text-sm text-gray-500">
             LLM Trackers - Open source comparison data.{" "}
             <a
-              href="https://github.com/nozzle/llmtrackers.org"
+              href="https://github.com/nozzle/llm-tracker-comparison"
               className="text-blue-600 hover:underline"
               target="_blank"
               rel="noopener noreferrer"

@@ -74,10 +74,7 @@ function SuggestPage() {
     setErrorMessage("");
 
     try {
-      // TODO: Replace with actual form worker URL
-      const workerUrl = import.meta.env.VITE_FORM_WORKER_URL || "/api/suggest";
-
-      const response = await fetch(workerUrl, {
+      const response = await fetch("/api/suggest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -154,7 +151,7 @@ function SuggestPage() {
         <p className="mt-2 text-sm text-gray-500">
           Alternatively, you can{" "}
           <a
-            href="https://github.com/nozzle/llmtrackers.org"
+            href="https://github.com/nozzle/llm-tracker-comparison"
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 hover:underline"

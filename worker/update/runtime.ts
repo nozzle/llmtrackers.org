@@ -1,15 +1,3 @@
-/**
- * Update checker worker for LLM Trackers.
- *
- * Runs on a cron schedule (weekly). For each company with a pricingUrl:
- * 1. Fetches the pricing page text
- * 2. Sends it to OpenAI for structured extraction
- * 3. Diffs extracted data against current YAML in the repo
- * 4. If changes detected, creates a PR with a summary
- *
- * Also exposes an HTTP endpoint for manual triggering.
- */
-
 import {
   createAppJwt,
   getInstallationToken,
@@ -27,24 +15,13 @@ import {
 import { fetchPageText } from "./scraper";
 import { extractWithLlm } from "./extractor";
 import { diffCompany, formatDiffMarkdown, type PlanDiff } from "./differ";
-import { isAuthorizedManualTrigger } from "./auth";
 import {
   formatReviewSiteDiffMarkdown,
   type ReviewSiteDiff,
 } from "./review-sites";
 import { backfillCompanyReviewSites } from "./review-site-backfill";
-
-// ---- Types ----
-
-interface Env {
-  GITHUB_APP_ID: string;
-  GITHUB_APP_PRIVATE_KEY: string;
-  GITHUB_INSTALLATION_ID: string;
-  OPENAI_API_KEY: string;
-  MANUAL_TRIGGER_TOKEN: string;
-  GITHUB_REPO_OWNER: string;
-  GITHUB_REPO_NAME: string;
-}
+import { isAuthorizedManualTrigger } from "./auth";
+import type { AppEnv, EnqueueSummary, UpdateQueueMessage } from "../types";
 
 interface CheckResult {
   slug: string;
@@ -61,30 +38,132 @@ interface PlanExtractionResult {
   rawResponse: string;
 }
 
-// ---- Main logic ----
+interface GitHubContext {
+  token: string;
+  owner: string;
+  repo: string;
+  defaultBranch: string;
+  baseSha: string;
+}
 
-async function runUpdateCheck(env: Env): Promise<CheckResult[]> {
-  const results: CheckResult[] = [];
+export async function enqueueAllCompanyUpdates(
+  env: AppEnv,
+  triggeredBy: UpdateQueueMessage["triggeredBy"]
+): Promise<EnqueueSummary> {
+  const github = await createGitHubContext(env);
+  const companies = await listCompanyFiles(github);
+  const messages = companies.map<UpdateQueueMessage>(({ name, path }) => ({
+    slug: name.replace(/\.yaml$/, ""),
+    filePath: path,
+    triggeredBy,
+    requestedAt: new Date().toISOString(),
+  }));
 
-  // Authenticate
+  if (messages.length > 0) {
+    await env.UPDATE_QUEUE.sendBatch(messages.map((body) => ({ body })));
+  }
+
+  return {
+    enqueued: messages.length,
+    slugs: messages.map((message) => message.slug),
+  };
+}
+
+export async function enqueueSingleCompanyUpdate(
+  env: AppEnv,
+  slug: string,
+  triggeredBy: UpdateQueueMessage["triggeredBy"]
+): Promise<EnqueueSummary> {
+  const message: UpdateQueueMessage = {
+    slug,
+    filePath: `data/companies/${slug}.yaml`,
+    triggeredBy,
+    requestedAt: new Date().toISOString(),
+  };
+  await env.UPDATE_QUEUE.send(message);
+  return { enqueued: 1, slugs: [slug] };
+}
+
+export async function processCompanyUpdate(
+  env: AppEnv,
+  message: UpdateQueueMessage
+): Promise<CheckResult> {
+  const github = await createGitHubContext(env);
+  return checkCompany(github, env.OPENAI_API_KEY, message.filePath, message.slug);
+}
+
+export async function handleUpdateAdminRequest(
+  request: Request,
+  env: AppEnv
+): Promise<Response> {
+  if (request.method !== "POST") {
+    return jsonResponse({ error: "POST required" }, 405);
+  }
+
+  if (!isAuthorizedManualTrigger(request, env.MANUAL_TRIGGER_TOKEN)) {
+    return new Response(JSON.stringify({ error: "Unauthorized manual trigger" }), {
+      status: 401,
+      headers: {
+        "Content-Type": "application/json",
+        "WWW-Authenticate": "Bearer",
+      },
+    });
+  }
+
+  const path = new URL(request.url).pathname;
+
+  try {
+    if (path === "/api/admin/update-checker/enqueue") {
+      const summary = await enqueueAllCompanyUpdates(env, "manual");
+      return jsonResponse(summary, 202);
+    }
+
+    const slugMatch = path.match(/^\/api\/admin\/update-checker\/enqueue\/([a-z0-9-]+)$/);
+    if (slugMatch) {
+      const summary = await enqueueSingleCompanyUpdate(env, slugMatch[1], "manual");
+      return jsonResponse(summary, 202);
+    }
+
+    return jsonResponse({ error: "Not found" }, 404);
+  } catch (err) {
+    return jsonResponse(
+      { error: err instanceof Error ? err.message : String(err) },
+      500
+    );
+  }
+}
+
+export async function handleScheduledUpdate(
+  env: AppEnv,
+  ctx: ExecutionContext
+): Promise<void> {
+  ctx.waitUntil(
+    enqueueAllCompanyUpdates(env, "cron").then((summary) => {
+      console.log(`Enqueued ${summary.enqueued} company update jobs`);
+    })
+  );
+}
+
+async function createGitHubContext(env: AppEnv): Promise<GitHubContext> {
   const jwt = await createAppJwt(env.GITHUB_APP_ID, env.GITHUB_APP_PRIVATE_KEY);
   const token = await getInstallationToken(jwt, env.GITHUB_INSTALLATION_ID);
   const owner = env.GITHUB_REPO_OWNER;
   const repo = env.GITHUB_REPO_NAME;
-
-  // Get default branch info
   const { branch: defaultBranch, sha: baseSha } = await getDefaultBranchSha(
     token,
     owner,
     repo
   );
 
-  // List company YAML files by reading the data/companies/ directory
+  return { token, owner, repo, defaultBranch, baseSha };
+}
+
+async function listCompanyFiles(github: GitHubContext) {
   const dirRes = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}/contents/data/companies`,
+    `https://api.github.com/repos/${github.owner}/${github.repo}/contents/data/companies`,
     {
       headers: {
-        Authorization: `token ${token}`,
+        Authorization: `token ${github.token}`,
         Accept: "application/vnd.github+json",
         "User-Agent": "llm-tracker-update-checker",
         "X-GitHub-Api-Version": "2022-11-28",
@@ -97,54 +176,16 @@ async function runUpdateCheck(env: Env): Promise<CheckResult[]> {
   }
 
   const files = (await dirRes.json()) as Array<{ name: string; path: string }>;
-  const yamlFiles = files.filter((f) => f.name.endsWith(".yaml"));
-
-  console.log(`Found ${yamlFiles.length} company files to check`);
-
-  // Process each company
-  for (const file of yamlFiles) {
-    const slug = file.name.replace(".yaml", "");
-
-    try {
-      const result = await checkCompany(
-        token,
-        env.OPENAI_API_KEY,
-        owner,
-        repo,
-        defaultBranch,
-        baseSha,
-        file.path,
-        slug
-      );
-      results.push(result);
-    } catch (err) {
-      console.error(`Error checking ${slug}:`, err);
-      results.push({
-        slug,
-        status: "error",
-        error: err instanceof Error ? err.message : String(err),
-      });
-    }
-
-    // Small delay to be respectful of rate limits
-    await sleep(1000);
-  }
-
-  return results;
+  return files.filter((file) => file.name.endsWith(".yaml"));
 }
 
 async function checkCompany(
-  token: string,
-  openaiKey: string,
-  owner: string,
-  repo: string,
-  defaultBranch: string,
-  baseSha: string,
+  github: GitHubContext,
+  openaiKey: string | undefined,
   filePath: string,
   slug: string
 ): Promise<CheckResult> {
-  // 1. Read current YAML from repo
-  const fileContent = await getFileContent(token, owner, repo, filePath);
+  const fileContent = await getFileContent(github.token, github.owner, github.repo, filePath);
   if (!fileContent) {
     return { slug, status: "error", error: "File not found in repo" };
   }
@@ -156,7 +197,9 @@ async function checkCompany(
     return { slug, status: "error", error: "Failed to parse company YAML" };
   }
 
-  const planResult = await collectPlanChanges(openaiKey, slug, company, yamlText);
+  const planResult = openaiKey
+    ? await collectPlanChanges(openaiKey, slug, company, yamlText)
+    : null;
   const diffs = planResult?.diffs ?? [];
 
   const reviewSiteResult = await backfillCompanyReviewSites(yamlText);
@@ -172,13 +215,23 @@ async function checkCompany(
     return { slug, status: "no-changes" };
   }
 
-  console.log(
-    `${slug}: ${diffs.length} plan(s) with changes, ${reviewSiteDiffs.length} review site(s) with changes`
+  const branchName = `auto-update/${slug}`;
+  await createBranch(github.token, github.owner, github.repo, branchName, github.baseSha);
+
+  const existingPr = await findOpenPullRequestByHead(
+    github.token,
+    github.owner,
+    github.repo,
+    branchName
   );
 
-  // 5. Create a PR with the changes
-  const branchName = `auto-update/${slug}`;
-  await createBranch(token, owner, repo, branchName, baseSha);
+  const branchFile = await getFileContent(
+    github.token,
+    github.owner,
+    github.repo,
+    filePath,
+    branchName
+  );
 
   const preparedPlans = planResult?.preparedYamlText ?? yamlText;
   const prepared =
@@ -190,14 +243,14 @@ async function checkCompany(
       : { updatedYamlText: preparedPlans };
 
   await upsertFile(
-    token,
-    owner,
-    repo,
+    github.token,
+    github.owner,
+    github.repo,
     filePath,
     prepared.updatedYamlText,
     `chore: update ${slug} pricing, feature, and review-site data`,
     branchName,
-    fileContent.sha
+    branchFile?.sha
   );
 
   const markdownSections = [];
@@ -206,35 +259,29 @@ async function checkCompany(
     markdownSections.push(formatReviewSiteDiffMarkdown(reviewSiteDiffs));
   }
   const diffMarkdown = markdownSections.join("\n\n");
-  const existingPr = await findOpenPullRequestByHead(
-    token,
-    owner,
-    repo,
-    branchName
-  );
 
   if (existingPr) {
     console.log(`${slug}: Reusing existing PR ${existingPr.html_url}`);
-      return {
-        slug,
-        status: "changes-detected",
-        diffs,
-        reviewSiteDiffs,
-        prUrl: existingPr.html_url,
-      };
+    return {
+      slug,
+      status: "changes-detected",
+      diffs,
+      reviewSiteDiffs,
+      prUrl: existingPr.html_url,
+    };
   }
 
   const pr = await createPullRequest(
-    token,
-    owner,
-    repo,
+    github.token,
+    github.owner,
+    github.repo,
     `[Auto] Detected data changes: ${company.name ?? slug}`,
     diffMarkdown +
       "\n\n<details><summary>Raw LLM extraction</summary>\n\n```json\n" +
       (planResult?.rawResponse ?? "{}") +
       "\n```\n\n</details>",
     branchName,
-    defaultBranch
+    github.defaultBranch
   );
 
   console.log(`${slug}: Created PR ${pr.html_url}`);
@@ -291,66 +338,9 @@ async function collectPlanChanges(
   };
 }
 
-// ---- Helpers ----
-
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+function jsonResponse(data: unknown, status: number): Response {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
 }
-
-// ---- Worker export ----
-
-export default {
-  // Cron trigger
-  async scheduled(
-    _controller: ScheduledController,
-    env: Env,
-    ctx: ExecutionContext
-  ): Promise<void> {
-    ctx.waitUntil(
-      runUpdateCheck(env).then((results) => {
-        const summary = results.map(
-          (r) =>
-            `${r.slug}: ${r.status}${r.prUrl ? ` (${r.prUrl})` : ""}${r.error ? ` - ${r.error}` : ""}`
-        );
-        console.log("Update check complete:\n" + summary.join("\n"));
-      })
-    );
-  },
-
-  // HTTP trigger (for manual runs)
-  async fetch(request: Request, env: Env): Promise<Response> {
-    if (request.method !== "POST") {
-      return new Response(
-        JSON.stringify({ error: "POST to trigger manual check" }),
-        { status: 405, headers: { "Content-Type": "application/json" } }
-      );
-    }
-
-    if (!isAuthorizedManualTrigger(request, env.MANUAL_TRIGGER_TOKEN)) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized manual trigger" }),
-        {
-          status: 401,
-          headers: {
-            "Content-Type": "application/json",
-            "WWW-Authenticate": "Bearer",
-          },
-        }
-      );
-    }
-
-    try {
-      const results = await runUpdateCheck(env);
-      return new Response(JSON.stringify({ results }, null, 2), {
-        headers: { "Content-Type": "application/json" },
-      });
-    } catch (err) {
-      return new Response(
-        JSON.stringify({
-          error: err instanceof Error ? err.message : String(err),
-        }),
-        { status: 500, headers: { "Content-Type": "application/json" } }
-      );
-    }
-  },
-} satisfies ExportedHandler<Env>;

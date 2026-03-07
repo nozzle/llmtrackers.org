@@ -8,7 +8,7 @@ import { join, relative } from "node:path";
 
 const DEFAULT_SITE_URL = "https://llmtrackers.org";
 const CANONICAL_SITE_URL = normalizeSiteUrl(
-  process.env.VITE_SITE_URL ?? process.env.CF_PAGES_URL ?? process.env.SITE_URL ?? DEFAULT_SITE_URL
+  process.env.VITE_SITE_URL ?? process.env.SITE_URL ?? DEFAULT_SITE_URL
 );
 const DIST_DIR = join(import.meta.dirname, "../dist/client");
 

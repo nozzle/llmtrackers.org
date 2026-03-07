@@ -1,21 +1,47 @@
 {
   "name": "llm-tracker-comparison",
   "private": true,
+  "type": "module",
   "packageManager": "pnpm@10.30.3",
   "scripts": {
-    "dev": "pnpm --filter web dev",
-    "build": "pnpm compile-data && pnpm --filter web build",
+    "dev": "vite dev",
+    "dev:worker": "wrangler dev",
+    "build": "pnpm build:web && pnpm build:worker",
+    "build:web": "pnpm compile-data && vite build && tsx scripts/generate-sitemap.ts",
+    "build:worker": "wrangler deploy --dry-run --outdir=dist/worker",
+    "deploy": "pnpm build:web && wrangler deploy",
     "compile-data": "pnpm --filter @llm-tracker/shared compile",
-    "backfill-review-sites": "pnpm --filter update-checker backfill-review-sites",
+    "backfill-review-sites": "tsx worker/update/backfill-review-sites.ts",
     "lint": "eslint .",
-    "test": "pnpm -r test",
-    "typecheck": "pnpm compile-data && pnpm -r typecheck"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "pnpm compile-data && tsc --noEmit && pnpm --filter @llm-tracker/shared typecheck && pnpm --filter @llm-tracker/github typecheck"
+  },
+  "dependencies": {
+    "@llm-tracker/github": "workspace:*",
+    "@llm-tracker/shared": "workspace:*",
+    "@tanstack/react-router": "^1.114.0",
+    "@tanstack/react-start": "^1.166.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250306.0",
     "@eslint/js": "^9.21.0",
+    "@tailwindcss/vite": "^4.1.0",
+    "@types/node": "^25.3.5",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^5.1.0",
     "eslint": "^9.21.0",
+    "tailwindcss": "^4.1.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
     "typescript-eslint": "^8.24.1",
-    "vitest": "^3.2.4"
+    "vite": "^7.0.0",
+    "vite-tsconfig-paths": "^6.1.0",
+    "vitest": "^3.2.4",
+    "wrangler": "^4.71.0"
   },
   "engines": {
     "node": ">=24"

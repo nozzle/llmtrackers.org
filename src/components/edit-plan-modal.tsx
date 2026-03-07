@@ -2,42 +2,46 @@ import { useState, useMemo, useEffect, useId, useCallback } from "react";
 import { LlmIcon } from "~/components/llm-icon";
 import {
   LLM_MODEL_LABELS,
+  type Plan,
   type LlmModelKey,
+  type LlmSupport,
 } from "@llm-tracker/shared";
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
-interface AddPlanModalProps {
+interface EditPlanModalProps {
   companySlug: string;
   companyName: string;
+  planSlug: string;
+  planName: string;
+  plan: Plan;
   onClose: () => void;
 }
 
-interface NewPlanPayload {
-  name: string;
-  slug: string;
-  price: {
-    amount: number | null;
-    currency: string;
-    period: "monthly" | "yearly" | "one-time";
+/** Mirrors PlanChanges from form-worker edit-handler */
+interface PlanChanges {
+  price?: {
+    amount?: number | null;
+    currency?: string;
+    period?: "monthly" | "yearly" | "one-time";
     note?: string | null;
   };
-  aiResponsesMonthly: number | null;
-  schedule: "daily" | "weekly" | "monthly";
-  locationSupport: "global" | number;
-  personaSupport: "unlimited" | number;
-  contentGeneration: string | false;
-  contentOptimization: string | false;
-  integrations: string[];
-  llmSupport: Record<LlmModelKey, boolean>;
+  aiResponsesMonthly?: number | null;
+  schedule?: "daily" | "weekly" | "monthly";
+  locationSupport?: "global" | number;
+  personaSupport?: "unlimited" | number;
+  contentGeneration?: string | false;
+  contentOptimization?: string | false;
+  integrations?: string[];
+  llmSupport?: Partial<Record<LlmModelKey, boolean>>;
 }
 
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
 // ---------------------------------------------------------------------------
-// Turnstile
+// Turnstile (reused pattern from suggest.tsx)
 // ---------------------------------------------------------------------------
 
 declare global {
@@ -113,250 +117,277 @@ const LLM_KEYS: LlmModelKey[] = [
 ];
 
 function formatDisplayValue(value: unknown): string {
-  if (value === null || value === undefined || value === "") return "—";
+  if (value === null || value === undefined) return "—";
   if (value === false) return "No";
   if (value === true) return "Yes";
   if (typeof value === "number") return value.toLocaleString("en-US");
   return String(value);
 }
 
-function slugify(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+function formatPriceAmount(amount: number | null): string {
+  if (amount === null) return "Custom";
+  return `$${amount.toLocaleString("en-US")}`;
 }
 
 // ---------------------------------------------------------------------------
-// Form state
+// Form state type (flat, easy to diff against original plan)
 // ---------------------------------------------------------------------------
 
 interface FormState {
-  name: string;
-  slug: string;
-  priceAmount: string;
+  priceAmount: string; // "" means null/custom
   priceCurrency: string;
   pricePeriod: "monthly" | "yearly" | "one-time";
   priceNote: string;
-  aiResponsesMonthly: string;
+  aiResponsesMonthly: string; // "" means null
   schedule: "daily" | "weekly" | "monthly";
-  locationSupport: string;
-  personaSupport: string;
-  contentGeneration: string;
-  contentOptimization: string;
-  integrations: string;
+  locationSupport: string; // "global" or numeric string
+  personaSupport: string; // "unlimited" or numeric string
+  contentGeneration: string; // "" means false
+  contentOptimization: string; // "" means false
+  integrations: string; // comma-separated
   llmSupport: Record<LlmModelKey, boolean>;
 }
 
-function defaultFormState(): FormState {
+function planToFormState(plan: Plan): FormState {
   return {
-    name: "",
-    slug: "",
-    priceAmount: "",
-    priceCurrency: "USD",
-    pricePeriod: "monthly",
-    priceNote: "",
-    aiResponsesMonthly: "",
-    schedule: "weekly",
-    locationSupport: "global",
-    personaSupport: "unlimited",
-    contentGeneration: "",
-    contentOptimization: "",
-    integrations: "",
-    llmSupport: Object.fromEntries(
-      LLM_KEYS.map((k) => [k, false])
-    ) as Record<LlmModelKey, boolean>,
+    priceAmount:
+      plan.price.amount !== null ? String(plan.price.amount) : "",
+    priceCurrency: plan.price.currency,
+    pricePeriod: plan.price.period,
+    priceNote: plan.price.note ?? "",
+    aiResponsesMonthly:
+      plan.aiResponsesMonthly != null
+        ? String(plan.aiResponsesMonthly)
+        : "",
+    schedule: plan.schedule,
+    locationSupport: String(plan.locationSupport),
+    personaSupport: String(plan.personaSupport),
+    contentGeneration:
+      plan.contentGeneration === false ? "" : plan.contentGeneration,
+    contentOptimization:
+      plan.contentOptimization === false ? "" : plan.contentOptimization,
+    integrations: plan.integrations.join(", "),
+    llmSupport: { ...plan.llmSupport },
   };
 }
 
 // ---------------------------------------------------------------------------
-// Preview computation
+// Diff computation
 // ---------------------------------------------------------------------------
 
-interface PreviewEntry {
+interface DiffEntry {
   label: string;
-  value: string;
+  oldValue: string;
+  newValue: string;
 }
 
-function computePreview(form: FormState): PreviewEntry[] {
-  const entries: PreviewEntry[] = [];
+function computeChangesAndDiff(
+  original: Plan,
+  form: FormState
+): { changes: PlanChanges; diff: DiffEntry[] } {
+  const changes: PlanChanges = {};
+  const diff: DiffEntry[] = [];
 
-  if (form.name.trim()) {
-    entries.push({ label: "Plan Name", value: form.name.trim() });
-  }
-  if (form.slug.trim()) {
-    entries.push({ label: "Slug", value: form.slug.trim() });
-  }
-
-  const priceAmount =
-    form.priceAmount.trim() === "" ? null : Number(form.priceAmount.trim());
-  entries.push({
-    label: "Price",
-    value:
-      priceAmount !== null && !Number.isNaN(priceAmount)
-        ? `$${priceAmount.toLocaleString("en-US")}`
-        : "Custom",
-  });
-  entries.push({ label: "Currency", value: form.priceCurrency || "USD" });
-  entries.push({ label: "Billing Period", value: form.pricePeriod });
-  if (form.priceNote.trim()) {
-    entries.push({ label: "Price Note", value: form.priceNote.trim() });
+  // Price amount
+  const newAmount =
+    form.priceAmount.trim() === ""
+      ? null
+      : Number(form.priceAmount.trim());
+  if (newAmount !== original.price.amount && !Number.isNaN(newAmount ?? 0)) {
+    if (!changes.price) changes.price = {};
+    changes.price.amount = newAmount;
+    diff.push({
+      label: "Price",
+      oldValue: formatPriceAmount(original.price.amount),
+      newValue: formatPriceAmount(newAmount),
+    });
   }
 
-  entries.push({
-    label: "AI Responses/mo",
-    value: formatDisplayValue(
-      form.aiResponsesMonthly.trim() === ""
-        ? null
-        : Number(form.aiResponsesMonthly.trim())
-    ),
-  });
+  // Price currency
+  if (form.priceCurrency.trim() !== original.price.currency) {
+    if (!changes.price) changes.price = {};
+    changes.price.currency = form.priceCurrency.trim();
+    diff.push({
+      label: "Currency",
+      oldValue: original.price.currency,
+      newValue: form.priceCurrency.trim(),
+    });
+  }
 
-  // Auto-computed cost/1K
-  if (priceAmount !== null && !Number.isNaN(priceAmount)) {
-    const responses =
-      form.aiResponsesMonthly.trim() === ""
-        ? null
-        : Number(form.aiResponsesMonthly.trim());
-    if (responses !== null && !Number.isNaN(responses) && responses > 0) {
-      const costPer1K = Number(((priceAmount / responses) * 1000).toFixed(2));
-      entries.push({
-        label: "$/1K Responses",
-        value: `$${costPer1K.toLocaleString("en-US")}`,
-      });
+  // Price period
+  if (form.pricePeriod !== original.price.period) {
+    if (!changes.price) changes.price = {};
+    changes.price.period = form.pricePeriod;
+    diff.push({
+      label: "Billing Period",
+      oldValue: original.price.period,
+      newValue: form.pricePeriod,
+    });
+  }
+
+  // Price note
+  const newNote = form.priceNote.trim() === "" ? null : form.priceNote.trim();
+  const origNote = original.price.note ?? null;
+  if (newNote !== origNote) {
+    if (!changes.price) changes.price = {};
+    changes.price.note = newNote;
+    diff.push({
+      label: "Price Note",
+      oldValue: formatDisplayValue(origNote),
+      newValue: formatDisplayValue(newNote),
+    });
+  }
+
+  // AI Responses Monthly
+  const newResponses =
+    form.aiResponsesMonthly.trim() === ""
+      ? null
+      : Number(form.aiResponsesMonthly.trim());
+  const origResponses = original.aiResponsesMonthly ?? null;
+  if (newResponses !== origResponses && !Number.isNaN(newResponses ?? 0)) {
+    changes.aiResponsesMonthly = newResponses;
+    diff.push({
+      label: "AI Responses/mo",
+      oldValue: formatDisplayValue(origResponses),
+      newValue: formatDisplayValue(newResponses),
+    });
+  }
+
+  // Auto-computed: show cost/1K if price or responses changed
+  if (changes.price?.amount !== undefined || changes.aiResponsesMonthly !== undefined) {
+    const effectivePrice = changes.price?.amount !== undefined ? changes.price.amount : original.price.amount;
+    const effectiveResponses = changes.aiResponsesMonthly !== undefined ? changes.aiResponsesMonthly : (original.aiResponsesMonthly ?? null);
+    let newCostPer1K: number | null = null;
+    if (effectivePrice !== null && effectiveResponses !== null && effectiveResponses > 0) {
+      newCostPer1K = Number(((effectivePrice / effectiveResponses) * 1000).toFixed(2));
     }
+    diff.push({
+      label: "$/1K Responses",
+      oldValue: formatDisplayValue(original.pricePer1000Responses ?? null),
+      newValue: formatDisplayValue(newCostPer1K),
+    });
   }
 
-  entries.push({ label: "Schedule", value: form.schedule });
-  entries.push({
-    label: "Location Support",
-    value: formatDisplayValue(
-      form.locationSupport.trim().toLowerCase() === "global"
-        ? "global"
-        : Number(form.locationSupport.trim()) || form.locationSupport.trim()
-    ),
-  });
-  entries.push({
-    label: "Persona Support",
-    value: formatDisplayValue(
-      form.personaSupport.trim().toLowerCase() === "unlimited"
-        ? "unlimited"
-        : Number(form.personaSupport.trim()) || form.personaSupport.trim()
-    ),
-  });
-  entries.push({
-    label: "Content Generation",
-    value: form.contentGeneration.trim() || "No",
-  });
-  entries.push({
-    label: "Content Optimization",
-    value: form.contentOptimization.trim() || "No",
-  });
+  // Schedule
+  if (form.schedule !== original.schedule) {
+    changes.schedule = form.schedule;
+    diff.push({
+      label: "Schedule",
+      oldValue: original.schedule,
+      newValue: form.schedule,
+    });
+  }
 
-  const integrations = form.integrations
+  // Location support
+  const newLoc: "global" | number =
+    form.locationSupport.trim().toLowerCase() === "global"
+      ? "global"
+      : Number(form.locationSupport.trim());
+  if (
+    String(newLoc) !== String(original.locationSupport) &&
+    (newLoc === "global" || !Number.isNaN(newLoc))
+  ) {
+    changes.locationSupport = newLoc;
+    diff.push({
+      label: "Location Support",
+      oldValue: formatDisplayValue(original.locationSupport),
+      newValue: formatDisplayValue(newLoc),
+    });
+  }
+
+  // Persona support
+  const newPersona: "unlimited" | number =
+    form.personaSupport.trim().toLowerCase() === "unlimited"
+      ? "unlimited"
+      : Number(form.personaSupport.trim());
+  if (
+    String(newPersona) !== String(original.personaSupport) &&
+    (newPersona === "unlimited" || !Number.isNaN(newPersona))
+  ) {
+    changes.personaSupport = newPersona;
+    diff.push({
+      label: "Persona Support",
+      oldValue: formatDisplayValue(original.personaSupport),
+      newValue: formatDisplayValue(newPersona),
+    });
+  }
+
+  // Content Generation
+  const newCG: string | false =
+    form.contentGeneration.trim() === "" ? false : form.contentGeneration.trim();
+  if (String(newCG) !== String(original.contentGeneration)) {
+    changes.contentGeneration = newCG;
+    diff.push({
+      label: "Content Generation",
+      oldValue: formatDisplayValue(original.contentGeneration),
+      newValue: formatDisplayValue(newCG),
+    });
+  }
+
+  // Content Optimization
+  const newCO: string | false =
+    form.contentOptimization.trim() === ""
+      ? false
+      : form.contentOptimization.trim();
+  if (String(newCO) !== String(original.contentOptimization)) {
+    changes.contentOptimization = newCO;
+    diff.push({
+      label: "Content Optimization",
+      oldValue: formatDisplayValue(original.contentOptimization),
+      newValue: formatDisplayValue(newCO),
+    });
+  }
+
+  // Integrations
+  const newIntegrations = form.integrations
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
-  entries.push({
-    label: "Integrations",
-    value: integrations.join(", ") || "—",
-  });
-
-  const supportedLlms = LLM_KEYS.filter((k) => form.llmSupport[k]);
-  entries.push({
-    label: "LLM Support",
-    value:
-      supportedLlms.map((k) => LLM_MODEL_LABELS[k]).join(", ") || "—",
-  });
-
-  return entries;
-}
-
-function formToPayload(form: FormState): NewPlanPayload {
-  const priceAmount =
-    form.priceAmount.trim() === "" ? null : Number(form.priceAmount.trim());
-
-  const locStr = form.locationSupport.trim().toLowerCase();
-  const locationSupport: "global" | number =
-    locStr === "global" ? "global" : Number(form.locationSupport.trim());
-
-  const perStr = form.personaSupport.trim().toLowerCase();
-  const personaSupport: "unlimited" | number =
-    perStr === "unlimited" ? "unlimited" : Number(form.personaSupport.trim());
-
-  return {
-    name: form.name.trim(),
-    slug: form.slug.trim(),
-    price: {
-      amount: priceAmount,
-      currency: form.priceCurrency.trim() || "USD",
-      period: form.pricePeriod,
-      note: form.priceNote.trim() || null,
-    },
-    aiResponsesMonthly:
-      form.aiResponsesMonthly.trim() === ""
-        ? null
-        : Number(form.aiResponsesMonthly.trim()),
-    schedule: form.schedule,
-    locationSupport,
-    personaSupport,
-    contentGeneration:
-      form.contentGeneration.trim() === ""
-        ? false
-        : form.contentGeneration.trim(),
-    contentOptimization:
-      form.contentOptimization.trim() === ""
-        ? false
-        : form.contentOptimization.trim(),
-    integrations: form.integrations
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean),
-    llmSupport: { ...form.llmSupport },
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Validation
-// ---------------------------------------------------------------------------
-
-function validateForm(form: FormState): string | null {
-  if (!form.name.trim()) return "Plan name is required";
-  if (!form.slug.trim()) return "Plan slug is required";
+  const origIntegrations = original.integrations;
   if (
-    form.priceAmount.trim() !== "" &&
-    Number.isNaN(Number(form.priceAmount.trim()))
+    newIntegrations.length !== origIntegrations.length ||
+    newIntegrations.some((v, i) => v !== origIntegrations[i])
   ) {
-    return "Price amount must be a number or empty for Custom";
+    changes.integrations = newIntegrations;
+    diff.push({
+      label: "Integrations",
+      oldValue: origIntegrations.join(", ") || "—",
+      newValue: newIntegrations.join(", ") || "—",
+    });
   }
-  if (
-    form.aiResponsesMonthly.trim() !== "" &&
-    Number.isNaN(Number(form.aiResponsesMonthly.trim()))
-  ) {
-    return "AI Responses/mo must be a number or empty";
+
+  // LLM Support
+  const llmChanges: Partial<Record<LlmModelKey, boolean>> = {};
+  for (const key of LLM_KEYS) {
+    if (form.llmSupport[key] !== original.llmSupport[key]) {
+      llmChanges[key] = form.llmSupport[key];
+      diff.push({
+        label: LLM_MODEL_LABELS[key],
+        oldValue: original.llmSupport[key] ? "Yes" : "No",
+        newValue: form.llmSupport[key] ? "Yes" : "No",
+      });
+    }
   }
-  const locStr = form.locationSupport.trim().toLowerCase();
-  if (locStr !== "global" && Number.isNaN(Number(locStr))) {
-    return 'Location support must be "global" or a number';
+  if (Object.keys(llmChanges).length > 0) {
+    changes.llmSupport = llmChanges;
   }
-  const perStr = form.personaSupport.trim().toLowerCase();
-  if (perStr !== "unlimited" && Number.isNaN(Number(perStr))) {
-    return 'Persona support must be "unlimited" or a number';
-  }
-  return null;
+
+  return { changes, diff };
 }
 
 // ---------------------------------------------------------------------------
-// AddPlanModal
+// EditPlanModal
 // ---------------------------------------------------------------------------
 
-export function AddPlanModal({
+export function EditPlanModal({
   companySlug,
   companyName,
+  planSlug,
+  planName,
+  plan,
   onClose,
-}: Readonly<AddPlanModalProps>) {
-  const [form, setForm] = useState<FormState>(defaultFormState);
-  const [autoSlug, setAutoSlug] = useState(true);
+}: Readonly<EditPlanModalProps>) {
+  const [form, setForm] = useState<FormState>(() => planToFormState(plan));
   const [contributor, setContributor] = useState({
     name: "",
     email: "",
@@ -368,19 +399,14 @@ export function AddPlanModal({
   const [prUrl, setPrUrl] = useState("");
 
   const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
-  const workerUrl =
-    import.meta.env.VITE_FORM_WORKER_URL || "/api/suggest-add-plan";
 
-  const preview = useMemo(() => computePreview(form), [form]);
-  const validationError = useMemo(() => validateForm(form), [form]);
-  const isValid = !validationError && form.name.trim().length > 0;
+  // Compute diff
+  const { changes, diff } = useMemo(
+    () => computeChangesAndDiff(plan, form),
+    [plan, form]
+  );
 
-  // Auto-generate slug from name
-  useEffect(() => {
-    if (autoSlug) {
-      setForm((prev) => ({ ...prev, slug: slugify(prev.name) }));
-    }
-  }, [form.name, autoSlug]);
+  const hasChanges = diff.length > 0;
 
   // Close on Escape
   useEffect(() => {
@@ -404,26 +430,28 @@ export function AddPlanModal({
     []
   );
 
+  // Submit
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!isValid) return;
+    if (!hasChanges) return;
 
     setStatus("submitting");
     setErrorMessage("");
 
     try {
-      const plan = formToPayload(form);
-
       const payload: {
         companySlug: string;
-        plan: NewPlanPayload;
+        planSlug: string;
+        changes: PlanChanges;
         contributor?: { name?: string; email?: string; company?: string };
         turnstileToken?: string;
       } = {
         companySlug,
-        plan,
+        planSlug,
+        changes,
       };
 
+      // Only include non-empty contributor fields
       const contrib: { name?: string; email?: string; company?: string } = {};
       if (contributor.name.trim()) contrib.name = contributor.name.trim();
       if (contributor.email.trim()) contrib.email = contributor.email.trim();
@@ -433,9 +461,7 @@ export function AddPlanModal({
 
       if (turnstileToken) payload.turnstileToken = turnstileToken;
 
-      const endpoint =
-        workerUrl.replace(/\/$/, "") + "/api/suggest-add-plan";
-      const response = await fetch(endpoint, {
+      const response = await fetch("/api/suggest-pr", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -446,7 +472,7 @@ export function AddPlanModal({
         throw new Error(text || `Request failed (${response.status})`);
       }
 
-      const result = await response.json();
+      const result = (await response.json()) as { prUrl: string };
       setPrUrl(result.prUrl);
       setStatus("success");
     } catch (err) {
@@ -456,6 +482,8 @@ export function AddPlanModal({
       );
     }
   }
+
+  // -- Update helpers --
 
   function updateForm<K extends keyof FormState>(
     key: K,
@@ -509,8 +537,8 @@ export function AddPlanModal({
               Pull Request Created
             </h3>
             <p className="mt-2 text-sm text-gray-600">
-              Your new plan suggestion has been submitted as a GitHub pull
-              request. Our team will review it shortly.
+              Your suggested edit has been submitted as a GitHub pull request.
+              Our team will review it shortly.
             </p>
             {prUrl && (
               <a
@@ -549,9 +577,11 @@ export function AddPlanModal({
         <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">
-              Add New Plan
+              Suggest Edit
             </h2>
-            <p className="text-sm text-gray-500">{companyName}</p>
+            <p className="text-sm text-gray-500">
+              {companyName} &mdash; {planName}
+            </p>
           </div>
           <button
             onClick={onClose}
@@ -574,7 +604,7 @@ export function AddPlanModal({
           </button>
         </div>
 
-        {/* Body: left form + right preview */}
+        {/* Body: left form + right diff */}
         <form
           onSubmit={handleSubmit}
           className="flex min-h-0 flex-1 flex-col"
@@ -582,45 +612,6 @@ export function AddPlanModal({
           <div className="flex min-h-0 flex-1 divide-x divide-gray-200">
             {/* Left panel: form fields */}
             <div className="flex-1 space-y-5 overflow-y-auto px-6 py-4">
-              {/* ---- Plan Identity ---- */}
-              <fieldset>
-                <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                  Plan Identity
-                </legend>
-                <div className="space-y-3">
-                  <label className="block">
-                    <span className="text-xs font-medium text-gray-600">
-                      Plan Name
-                    </span>
-                    <input
-                      type="text"
-                      value={form.name}
-                      onChange={(e) => updateForm("name", e.target.value)}
-                      placeholder='e.g. "Pro" or "Enterprise"'
-                      className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    />
-                  </label>
-                  <label className="block">
-                    <span className="text-xs font-medium text-gray-600">
-                      Slug
-                    </span>
-                    <input
-                      type="text"
-                      value={form.slug}
-                      onChange={(e) => {
-                        setAutoSlug(false);
-                        updateForm("slug", e.target.value);
-                      }}
-                      placeholder="auto-generated from name"
-                      className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    />
-                    <span className="mt-0.5 block text-xs text-gray-400">
-                      URL-safe identifier (no company prefix needed)
-                    </span>
-                  </label>
-                </div>
-              </fieldset>
-
               {/* ---- Pricing ---- */}
               <fieldset>
                 <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
@@ -858,18 +849,18 @@ export function AddPlanModal({
               </fieldset>
             </div>
 
-            {/* Right panel: live preview */}
+            {/* Right panel: live diff */}
             <div className="w-80 shrink-0 overflow-y-auto bg-gray-50 px-5 py-4">
               <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                Plan Preview
+                Changes Preview
               </h3>
-              {form.name.trim() === "" ? (
+              {diff.length === 0 ? (
                 <p className="text-sm text-gray-400 italic">
-                  Enter a plan name to see a preview.
+                  No changes yet. Edit a field on the left to see a preview.
                 </p>
               ) : (
                 <div className="space-y-2">
-                  {preview.map((entry) => (
+                  {diff.map((entry) => (
                     <div
                       key={entry.label}
                       className="rounded border border-gray-200 bg-white px-3 py-2"
@@ -877,16 +868,29 @@ export function AddPlanModal({
                       <div className="text-xs font-medium text-gray-500">
                         {entry.label}
                       </div>
-                      <div className="mt-0.5 text-sm text-gray-900">
-                        {entry.value}
+                      <div className="mt-1 flex items-center gap-2 text-sm">
+                        <span className="rounded bg-red-50 px-1.5 py-0.5 text-red-700 line-through">
+                          {entry.oldValue}
+                        </span>
+                        <svg
+                          className="h-3 w-3 shrink-0 text-gray-400"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="2"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                          />
+                        </svg>
+                        <span className="rounded bg-green-50 px-1.5 py-0.5 text-green-700">
+                          {entry.newValue}
+                        </span>
                       </div>
                     </div>
                   ))}
-                </div>
-              )}
-              {validationError && form.name.trim() !== "" && (
-                <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
-                  {validationError}
                 </div>
               )}
             </div>
@@ -894,12 +898,14 @@ export function AddPlanModal({
 
           {/* Footer */}
           <div className="border-t border-gray-200 px-6 py-4">
+            {/* Error */}
             {status === "error" && (
               <div className="mb-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
                 {errorMessage || "Failed to submit. Please try again."}
               </div>
             )}
 
+            {/* Contributor fields */}
             <div className="mb-3 grid grid-cols-3 gap-3">
               <label className="block">
                 <span className="text-xs font-medium text-gray-500">
@@ -942,6 +948,7 @@ export function AddPlanModal({
               </label>
             </div>
 
+            {/* Turnstile */}
             {turnstileSiteKey ? (
               <div className="mb-3">
                 <TurnstileWidget
@@ -951,10 +958,11 @@ export function AddPlanModal({
               </div>
             ) : null}
 
+            {/* Disclaimer + buttons */}
             <div className="flex items-center justify-between gap-4">
               <p className="text-xs text-gray-400">
-                Your suggestion will be submitted as a public GitHub pull
-                request for review.
+                Your edit will be submitted as a public GitHub pull request for
+                review.
               </p>
               <div className="flex shrink-0 gap-2">
                 <button
@@ -967,7 +975,7 @@ export function AddPlanModal({
                 <button
                   type="submit"
                   disabled={
-                    !isValid ||
+                    !hasChanges ||
                     status === "submitting" ||
                     Boolean(turnstileSiteKey && !turnstileToken)
                   }
@@ -975,7 +983,7 @@ export function AddPlanModal({
                 >
                   {status === "submitting"
                     ? "Submitting..."
-                    : "Submit New Plan"}
+                    : "Submit Suggestion"}
                 </button>
               </div>
             </div>

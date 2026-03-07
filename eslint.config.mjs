@@ -9,7 +9,7 @@ export default tseslint.config(
       "**/.wrangler/**",
       "**/.vinxi/**",
       "packages/shared/compiled-data.json",
-      "apps/web/src/routeTree.gen.ts",
+      "src/routeTree.gen.ts",
     ],
   },
   js.configs.recommended,
