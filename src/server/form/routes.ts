@@ -4,6 +4,8 @@ import { validateEditPayload, handleEditSuggestion } from "./edit-handler";
 import { validateCompanyEditPayload, handleCompanyEdit } from "./company-edit-handler";
 import { validateAddPlanPayload, handleAddPlan } from "./add-plan-handler";
 import { validateAddCompanyPayload, handleAddCompany } from "./add-company-handler";
+import { validateAddReviewPayload, handleAddReview } from "./add-review-handler";
+import { validateEditReviewPayload, handleEditReview } from "./edit-review-handler";
 import {
   corsHeaders,
   isJsonRequest,
@@ -85,6 +87,28 @@ export async function handleFormRequest(request: Request, env: AppEnv): Promise<
       validate: validateAddCompanyPayload,
       execute: handleAddCompany,
       logLabel: "add-company",
+    });
+  }
+
+  if (path === "/api/suggest-add-review") {
+    return handlePrMutation({
+      body,
+      request,
+      env,
+      validate: validateAddReviewPayload,
+      execute: handleAddReview,
+      logLabel: "add-review",
+    });
+  }
+
+  if (path === "/api/suggest-review-edit") {
+    return handlePrMutation({
+      body,
+      request,
+      env,
+      validate: validateEditReviewPayload,
+      execute: handleEditReview,
+      logLabel: "review-edit",
     });
   }
 

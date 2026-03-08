@@ -45,5 +45,7 @@ export {
   mergeCompanyWithReviewSites,
   prepareUpdatedCompanyYaml,
   prepareUpdatedCompanyReviewSitesYaml,
+  parseReviewYaml,
+  stringifyReviewYaml,
 } from "./yaml.js";
-export type { ExtractedPlanLike, PreparedCompanyYaml } from "./yaml.js";
+export type { ExtractedPlanLike, PreparedCompanyYaml, ReviewYamlValue } from "./yaml.js";

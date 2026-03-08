@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { getReviewBySlug, getCompanyBySlug } from "~/data";
+import { getReviewBySlug, getCompanyBySlug, getAllCompanies } from "~/data";
 import { CompanyMark } from "~/components/company-mark";
+import { EditReviewModal } from "~/components/edit-review-modal";
 
 export const Route = createFileRoute("/reviews/$slug")({
   component: ReviewPage,
@@ -25,6 +27,10 @@ export const Route = createFileRoute("/reviews/$slug")({
 function ReviewPage() {
   const { slug } = Route.useParams();
   const review = getReviewBySlug(slug);
+  const companies = getAllCompanies();
+  const [editingReview, setEditingReview] = useState(false);
+
+  const companyList = companies.map((c) => ({ slug: c.slug, name: c.name }));
 
   if (!review) {
     return (
@@ -48,7 +54,31 @@ function ReviewPage() {
           &larr; All reviews
         </Link>
 
-        <h1 className="mt-4 text-3xl font-bold text-gray-900">{review.name}</h1>
+        <h1 className="mt-4 text-3xl font-bold text-gray-900">
+          {review.name}
+          <button
+            type="button"
+            onClick={() => {
+              setEditingReview(true);
+            }}
+            className="ml-3 inline-flex cursor-pointer items-center align-middle rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            title="Suggest review info edit"
+          >
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+              />
+            </svg>
+          </button>
+        </h1>
 
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600">
           <span>
@@ -166,6 +196,16 @@ function ReviewPage() {
           })}
         </div>
       </section>
+
+      {editingReview && (
+        <EditReviewModal
+          review={review}
+          companies={companyList}
+          onClose={() => {
+            setEditingReview(false);
+          }}
+        />
+      )}
     </div>
   );
 }

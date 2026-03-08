@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { getAllReviews, getCompanyBySlug } from "~/data";
+import { getAllReviews, getAllCompanies, getCompanyBySlug } from "~/data";
 import { CompanyMark } from "~/components/company-mark";
+import { AddReviewModal } from "~/components/add-review-modal";
 
 export const Route = createFileRoute("/reviews/")({
   component: ReviewsIndexPage,
@@ -22,6 +24,10 @@ export const Route = createFileRoute("/reviews/")({
 
 function ReviewsIndexPage() {
   const reviews = getAllReviews();
+  const companies = getAllCompanies();
+  const [addingReview, setAddingReview] = useState(false);
+
+  const companyList = companies.map((c) => ({ slug: c.slug, name: c.name }));
 
   return (
     <div>
@@ -29,10 +35,32 @@ function ReviewsIndexPage() {
         <Link to="/" className="text-sm text-blue-600 hover:underline">
           &larr; Back to comparison
         </Link>
-        <h1 className="mt-4 text-3xl font-bold text-gray-900">Published Reviews</h1>
-        <p className="mt-2 text-gray-600">
-          Editorial reviews and scorecards of AI search visibility tools.
-        </p>
+        <div className="mt-4 flex items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Published Reviews</h1>
+            <p className="mt-2 text-gray-600">
+              Editorial reviews and scorecards of AI search visibility tools.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setAddingReview(true);
+            }}
+            className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700"
+          >
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            Submit a Review
+          </button>
+        </div>
       </div>
 
       {reviews.length === 0 ? (
@@ -121,6 +149,15 @@ function ReviewsIndexPage() {
             );
           })}
         </div>
+      )}
+
+      {addingReview && (
+        <AddReviewModal
+          companies={companyList}
+          onClose={() => {
+            setAddingReview(false);
+          }}
+        />
       )}
     </div>
   );

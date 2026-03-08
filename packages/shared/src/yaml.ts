@@ -1,10 +1,11 @@
 import { Document, parseDocument } from "yaml";
-import { CompanySchema } from "./schema.js";
+import { CompanySchema, PublishedReviewSchema } from "./schema.js";
 import type {
   Company,
   CompanyYamlValue,
   LlmModelKey,
   Plan,
+  PublishedReview,
   ReviewSiteData,
   ReviewSitePlatform,
   ReviewSites,
@@ -326,4 +327,51 @@ function slugify(value: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+// ---- Review YAML ----
+
+export type ReviewYamlValue = PublishedReview & Record<string, unknown>;
+
+export function parseReviewYaml(yamlText: string): {
+  review: ReviewYamlValue;
+  document: Document.Parsed;
+} {
+  const document = parseDocument(yamlText);
+  if (document.errors.length > 0) {
+    throw new Error(document.errors.map((error) => error.message).join("; "));
+  }
+
+  const parsed = document.toJS({ maxAliasCount: -1 }) as unknown;
+  const review = PublishedReviewSchema.parse(parsed) as ReviewYamlValue;
+  return { review, document };
+}
+
+export function stringifyReviewYaml(review: ReviewYamlValue): string {
+  const validated = PublishedReviewSchema.parse(review);
+  const document = new Document(sortReviewKeys(validated as ReviewYamlValue));
+  return document.toString({ indent: 2, lineWidth: 0 });
+}
+
+function sortReviewKeys(review: ReviewYamlValue): ReviewYamlValue {
+  return {
+    slug: review.slug,
+    name: review.name,
+    url: review.url,
+    date: review.date,
+    author: {
+      name: review.author.name,
+      socialProfiles: review.author.socialProfiles.map((sp) => ({
+        label: sp.label,
+        url: sp.url,
+      })),
+    },
+    companyRatings: review.companyRatings.map((cr) => ({
+      companySlug: cr.companySlug,
+      score: cr.score,
+      maxScore: cr.maxScore,
+      summary: cr.summary,
+      ...(cr.directLink ? { directLink: cr.directLink } : {}),
+    })),
+  } as ReviewYamlValue;
 }
