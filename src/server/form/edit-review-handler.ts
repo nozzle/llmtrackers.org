@@ -49,8 +49,8 @@ export interface ReviewChanges {
   };
   companyRatings?: Array<{
     companySlug: string;
-    score: number;
-    maxScore: number;
+    score?: number | null;
+    maxScore?: number | null;
     summary: string;
     directLink?: string | null;
     pros: string[];
@@ -240,19 +240,27 @@ function validateReviewChanges(
       if (typeof r.companySlug !== "string" || r.companySlug.trim().length === 0) {
         return { ok: false, error: `changes.companyRatings[${i}].companySlug is required` };
       }
-      if (typeof r.score !== "number" || r.score < 0) {
+      const hasScore = r.score !== undefined && r.score !== null;
+      const hasMaxScore = r.maxScore !== undefined && r.maxScore !== null;
+      if (hasScore !== hasMaxScore) {
+        return {
+          ok: false,
+          error: `changes.companyRatings[${i}].score and maxScore must both be provided or both be null`,
+        };
+      }
+      if (hasScore && (typeof r.score !== "number" || r.score < 0)) {
         return {
           ok: false,
           error: `changes.companyRatings[${i}].score must be a non-negative number`,
         };
       }
-      if (typeof r.maxScore !== "number" || r.maxScore <= 0) {
+      if (hasMaxScore && (typeof r.maxScore !== "number" || r.maxScore <= 0)) {
         return {
           ok: false,
           error: `changes.companyRatings[${i}].maxScore must be a positive number`,
         };
       }
-      if (r.score > r.maxScore) {
+      if (hasScore && hasMaxScore && (r.score as number) > (r.maxScore as number)) {
         return {
           ok: false,
           error: `changes.companyRatings[${i}].score cannot exceed maxScore`,
@@ -282,8 +290,8 @@ function validateReviewChanges(
 
       ratings.push({
         companySlug: r.companySlug.trim(),
-        score: r.score,
-        maxScore: r.maxScore,
+        score: hasScore ? (r.score as number) : null,
+        maxScore: hasMaxScore ? (r.maxScore as number) : null,
         summary: r.summary.trim(),
         directLink:
           r.directLink !== undefined && r.directLink !== null

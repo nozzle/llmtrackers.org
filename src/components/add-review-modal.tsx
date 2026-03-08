@@ -137,7 +137,7 @@ function createEmptyRating(): CompanyRatingFormState {
     id: `rating-${ratingIdCounter}-${Date.now()}`,
     companySlug: "",
     score: "",
-    maxScore: "48",
+    maxScore: "",
     summary: "",
     directLink: "",
     pros: createHighlightSlots(),
@@ -204,7 +204,7 @@ function computeReviewPreview(
       const scoreStr =
         rating.score.trim() !== "" && rating.maxScore.trim() !== ""
           ? `${rating.score.trim()}/${rating.maxScore.trim()}`
-          : "N/A";
+          : "Not scored";
       const highlightCount =
         compactHighlights(rating.pros).length +
         compactHighlights(rating.cons).length +
@@ -258,13 +258,18 @@ function validateReviewForm(
     }
     slugs.add(rating.companySlug.trim());
 
-    if (rating.score.trim() === "" || Number.isNaN(Number(rating.score.trim()))) {
+    const hasScore = rating.score.trim() !== "";
+    const hasMaxScore = rating.maxScore.trim() !== "";
+    if (hasScore !== hasMaxScore) {
+      return `Rating ${i + 1}: score and max score must both be filled or both be empty`;
+    }
+    if (hasScore && Number.isNaN(Number(rating.score.trim()))) {
       return `Rating ${i + 1}: score must be a number`;
     }
-    if (rating.maxScore.trim() === "" || Number.isNaN(Number(rating.maxScore.trim()))) {
+    if (hasMaxScore && Number.isNaN(Number(rating.maxScore.trim()))) {
       return `Rating ${i + 1}: max score must be a number`;
     }
-    if (Number(rating.score.trim()) > Number(rating.maxScore.trim())) {
+    if (hasScore && hasMaxScore && Number(rating.score.trim()) > Number(rating.maxScore.trim())) {
       return `Rating ${i + 1}: score cannot exceed max score`;
     }
     if (!rating.summary.trim()) return `Rating ${i + 1}: summary is required`;
@@ -293,8 +298,8 @@ function buildPayload(review: ReviewFormState, ratings: CompanyRatingFormState[]
     },
     companyRatings: ratings.map((r) => ({
       companySlug: r.companySlug.trim(),
-      score: Number(r.score.trim()),
-      maxScore: Number(r.maxScore.trim()),
+      score: r.score.trim() === "" ? null : Number(r.score.trim()),
+      maxScore: r.maxScore.trim() === "" ? null : Number(r.maxScore.trim()),
       summary: r.summary.trim(),
       directLink: r.directLink.trim() || null,
       pros: compactHighlights(r.pros),
@@ -436,26 +441,26 @@ function CompanyRatingFormSection({
               </select>
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-gray-600">Score</span>
+              <span className="text-xs font-medium text-gray-600">Score (optional)</span>
               <input
                 type="text"
                 value={rating.score}
                 onChange={(e) => {
                   update("score", e.target.value);
                 }}
-                placeholder="e.g. 36"
+                placeholder="Leave blank if unscored"
                 className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-gray-600">Max Score</span>
+              <span className="text-xs font-medium text-gray-600">Max Score (optional)</span>
               <input
                 type="text"
                 value={rating.maxScore}
                 onChange={(e) => {
                   update("maxScore", e.target.value);
                 }}
-                placeholder="48"
+                placeholder="Leave blank if unscored"
                 className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </label>

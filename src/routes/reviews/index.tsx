@@ -69,8 +69,20 @@ function ReviewsIndexPage() {
         <div className="grid gap-6">
           {reviews.map((review) => {
             const topRatings = [...review.companyRatings]
-              .sort((a, b) => b.score - a.score)
+              .sort((a, b) => {
+                const aHasScore = a.score != null && a.maxScore != null;
+                const bHasScore = b.score != null && b.maxScore != null;
+
+                if (aHasScore && bHasScore) return (b.score as number) - (a.score as number);
+                if (aHasScore) return -1;
+                if (bHasScore) return 1;
+                return 0;
+              })
               .slice(0, 5);
+            const scoredCount = review.companyRatings.filter(
+              (rating) => rating.score != null && rating.maxScore != null,
+            ).length;
+            const isUnscoredRoundup = scoredCount === 0;
             const prosPreview = Array.from(
               new Set(review.companyRatings.flatMap((rating) => rating.pros)),
             ).slice(0, 3);
@@ -102,6 +114,11 @@ function ReviewsIndexPage() {
                       <span>{review.date}</span>
                       <span>{review.companyRatings.length} tools rated</span>
                       {highlightCount > 0 && <span>{highlightCount} highlights</span>}
+                      {isUnscoredRoundup && (
+                        <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
+                          Unscored roundup
+                        </span>
+                      )}
                     </div>
                     <div className="relative mt-3 max-w-3xl">
                       <p className="line-clamp-4 text-sm leading-relaxed text-gray-600">
@@ -178,7 +195,9 @@ function ReviewsIndexPage() {
                           {company?.name ?? rating.companySlug}
                         </span>
                         <span className="text-gray-500">
-                          {rating.score}/{rating.maxScore}
+                          {rating.score != null && rating.maxScore != null
+                            ? `${rating.score}/${rating.maxScore}`
+                            : "Mentioned"}
                         </span>
                       </Link>
                     );

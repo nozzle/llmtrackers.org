@@ -18,8 +18,8 @@ interface EditReviewModalProps {
     };
     companyRatings: Array<{
       companySlug: string;
-      score: number;
-      maxScore: number;
+      score?: number | null;
+      maxScore?: number | null;
       summary: string;
       directLink?: string | null;
       pros: string[];
@@ -43,8 +43,8 @@ interface ReviewChanges {
   };
   companyRatings?: Array<{
     companySlug: string;
-    score: number;
-    maxScore: number;
+    score?: number | null;
+    maxScore?: number | null;
     summary: string;
     directLink?: string | null;
     pros: string[];
@@ -240,8 +240,8 @@ function reviewToFormState(review: EditReviewModalProps["review"]): FormState {
     companyRatings: review.companyRatings.map((cr) => ({
       id: generateCompanyRatingId(),
       companySlug: cr.companySlug,
-      score: String(cr.score),
-      maxScore: String(cr.maxScore),
+      score: cr.score == null ? "" : String(cr.score),
+      maxScore: cr.maxScore == null ? "" : String(cr.maxScore),
       summary: cr.summary,
       directLink: cr.directLink ?? "",
       pros: createHighlightSlots(cr.pros),
@@ -372,8 +372,8 @@ function computeChangesAndDiff(
   );
   const formRatings = form.companyRatings.map((cr) => ({
     companySlug: cr.companySlug.trim(),
-    score: Number(cr.score),
-    maxScore: Number(cr.maxScore),
+    score: cr.score.trim() === "" ? null : Number(cr.score),
+    maxScore: cr.maxScore.trim() === "" ? null : Number(cr.maxScore),
     summary: cr.summary.trim(),
     directLink: cr.directLink.trim() || null,
     pros: compactHighlights(cr.pros),
@@ -496,7 +496,7 @@ function RatingFormSection({
           </label>
           <div className="grid grid-cols-2 gap-3">
             <label className="block">
-              <span className="text-xs font-medium text-gray-600">Score</span>
+              <span className="text-xs font-medium text-gray-600">Score (optional)</span>
               <input
                 type="text"
                 value={rating.score}
@@ -507,7 +507,7 @@ function RatingFormSection({
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-gray-600">Max Score</span>
+              <span className="text-xs font-medium text-gray-600">Max Score (optional)</span>
               <input
                 type="text"
                 value={rating.maxScore}

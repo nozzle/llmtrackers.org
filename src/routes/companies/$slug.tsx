@@ -441,7 +441,8 @@ function CompanyPage() {
               const rating = review.companyRatings.find((entry) => entry.companySlug === company.slug);
               if (!rating) return null;
 
-              const pct = (rating.score / rating.maxScore) * 100;
+              const hasScore = rating.score != null && rating.maxScore != null;
+              const pct = hasScore ? ((rating.score as number) / (rating.maxScore as number)) * 100 : 0;
 
               return (
                 <article
@@ -450,14 +451,22 @@ function CompanyPage() {
                 >
                   {/* Score badge */}
                   <div className="flex shrink-0 items-center gap-3 sm:w-24 sm:flex-col sm:items-center sm:gap-1">
-                    <div className="text-2xl font-bold text-gray-900">{rating.score}</div>
-                    <div className="text-xs text-gray-500">/ {rating.maxScore}</div>
-                    <div className="ml-2 h-1.5 w-16 overflow-hidden rounded-full bg-gray-100 sm:ml-0 sm:w-full">
-                      <div
-                        className={`h-full rounded-full ${pct >= 75 ? "bg-green-500" : pct >= 50 ? "bg-yellow-500" : "bg-red-400"}`}
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
+                    {hasScore ? (
+                      <>
+                        <div className="text-2xl font-bold text-gray-900">{rating.score}</div>
+                        <div className="text-xs text-gray-500">/ {rating.maxScore}</div>
+                        <div className="ml-2 h-1.5 w-16 overflow-hidden rounded-full bg-gray-100 sm:ml-0 sm:w-full">
+                          <div
+                            className={`h-full rounded-full ${pct >= 75 ? "bg-green-500" : pct >= 50 ? "bg-yellow-500" : "bg-red-400"}`}
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <div className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-500">
+                        Mentioned
+                      </div>
+                    )}
                   </div>
 
                   {/* Info */}

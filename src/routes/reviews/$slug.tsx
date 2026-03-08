@@ -78,7 +78,17 @@ function ReviewPage() {
     );
   }
 
-  const sortedRatings = [...review.companyRatings].sort((a, b) => b.score - a.score);
+  const sortedRatings = [...review.companyRatings].sort((a, b) => {
+    const aHasScore = a.score != null && a.maxScore != null;
+    const bHasScore = b.score != null && b.maxScore != null;
+
+    if (aHasScore && bHasScore) return (b.score as number) - (a.score as number);
+    if (aHasScore) return -1;
+    if (bHasScore) return 1;
+    return 0;
+  });
+  const scoredCount = sortedRatings.filter((rating) => rating.score != null && rating.maxScore != null).length;
+  const isUnscoredRoundup = scoredCount === 0;
 
   return (
     <div>
@@ -120,6 +130,11 @@ function ReviewPage() {
             <span className="font-medium text-gray-900">{review.author.name}</span>
           </span>
           <span>{review.date}</span>
+          {isUnscoredRoundup && (
+            <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
+              Unscored roundup
+            </span>
+          )}
           {review.author.socialProfiles.map((profile) => (
             <a
               key={profile.url}
@@ -164,13 +179,16 @@ function ReviewPage() {
       <section>
         <h2 className="mb-1 text-xl font-semibold text-gray-900">Company Ratings</h2>
         <p className="mb-6 text-sm text-gray-600">
-          {sortedRatings.length} tools rated, sorted by score (highest first).
+          {scoredCount > 0
+            ? `${sortedRatings.length} tools covered, with ${scoredCount} scored and ranked first.`
+            : `${sortedRatings.length} tools covered in this review.`}
         </p>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {sortedRatings.map((rating, index) => {
             const company = getCompanyBySlug(rating.companySlug);
-            const pct = (rating.score / rating.maxScore) * 100;
+            const hasScore = rating.score != null && rating.maxScore != null;
+            const pct = hasScore ? ((rating.score as number) / (rating.maxScore as number)) * 100 : 0;
 
             return (
               <article
@@ -179,8 +197,8 @@ function ReviewPage() {
               >
                 {/* Top row: rank + company + score */}
                 <div className="flex items-start gap-3">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-500">
-                    {index + 1}
+                  <span className="flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full bg-gray-100 px-2 text-xs font-semibold text-gray-500">
+                    {hasScore ? index + 1 : "-"}
                   </span>
                   <div className="min-w-0 flex-1">
                     {company ? (
@@ -197,18 +215,28 @@ function ReviewPage() {
                     )}
                   </div>
                   <div className="shrink-0 text-right">
-                    <div className="text-lg font-bold text-gray-900">{rating.score}</div>
-                    <div className="text-xs text-gray-500">/ {rating.maxScore}</div>
+                    {hasScore ? (
+                      <>
+                        <div className="text-lg font-bold text-gray-900">{rating.score}</div>
+                        <div className="text-xs text-gray-500">/ {rating.maxScore}</div>
+                      </>
+                    ) : (
+                      <div className="rounded-full border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-500">
+                        Mentioned
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 {/* Score bar */}
-                <div className="mt-3 h-2 overflow-hidden rounded-full bg-gray-100">
-                  <div
-                    className={`h-full rounded-full ${pct >= 75 ? "bg-green-500" : pct >= 50 ? "bg-yellow-500" : "bg-red-400"}`}
-                    style={{ width: `${pct}%` }}
-                  />
-                </div>
+                {hasScore && (
+                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-gray-100">
+                    <div
+                      className={`h-full rounded-full ${pct >= 75 ? "bg-green-500" : pct >= 50 ? "bg-yellow-500" : "bg-red-400"}`}
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                )}
 
                 {/* Summary */}
                 <p className="mt-3 text-sm leading-relaxed text-gray-700">{rating.summary}</p>

@@ -47,8 +47,8 @@ export interface NewReviewData {
   };
   companyRatings: Array<{
     companySlug: string;
-    score: number;
-    maxScore: number;
+    score?: number | null;
+    maxScore?: number | null;
     summary: string;
     directLink?: string | null;
     pros?: string[];
@@ -243,13 +243,18 @@ function validateCompanyRating(
   if (typeof raw.companySlug !== "string" || raw.companySlug.trim().length === 0) {
     return { ok: false, error: `${prefix}.companySlug is required` };
   }
-  if (typeof raw.score !== "number" || raw.score < 0) {
+  const hasScore = raw.score !== undefined && raw.score !== null;
+  const hasMaxScore = raw.maxScore !== undefined && raw.maxScore !== null;
+  if (hasScore !== hasMaxScore) {
+    return { ok: false, error: `${prefix}.score and ${prefix}.maxScore must both be provided or both be null` };
+  }
+  if (hasScore && (typeof raw.score !== "number" || raw.score < 0)) {
     return { ok: false, error: `${prefix}.score must be a non-negative number` };
   }
-  if (typeof raw.maxScore !== "number" || raw.maxScore <= 0) {
+  if (hasMaxScore && (typeof raw.maxScore !== "number" || raw.maxScore <= 0)) {
     return { ok: false, error: `${prefix}.maxScore must be a positive number` };
   }
-  if (raw.score > raw.maxScore) {
+  if (hasScore && hasMaxScore && (raw.score as number) > (raw.maxScore as number)) {
     return { ok: false, error: `${prefix}.score cannot exceed maxScore` };
   }
   if (typeof raw.summary !== "string" || raw.summary.trim().length === 0) {
@@ -276,8 +281,8 @@ function validateCompanyRating(
     ok: true,
     value: {
       companySlug: raw.companySlug.trim(),
-      score: raw.score,
-      maxScore: raw.maxScore,
+      score: hasScore ? (raw.score as number) : null,
+      maxScore: hasMaxScore ? (raw.maxScore as number) : null,
       summary: raw.summary.trim(),
       directLink:
         raw.directLink !== undefined && raw.directLink !== null
@@ -356,8 +361,8 @@ export async function handleAddReview(
     },
     companyRatings: newData.companyRatings.map((cr) => ({
       companySlug: cr.companySlug,
-      score: cr.score,
-      maxScore: cr.maxScore,
+      ...(cr.score !== null ? { score: cr.score } : {}),
+      ...(cr.maxScore !== null ? { maxScore: cr.maxScore } : {}),
       summary: cr.summary,
       ...(cr.directLink ? { directLink: cr.directLink } : {}),
       pros: cr.pros ?? [],
@@ -439,7 +444,7 @@ function buildReviewSummaryTable(review: ReviewYamlValue): string {
 function buildRatingTable(rating: ReviewYamlValue["companyRatings"][number]): string {
   const rows: [string, string][] = [
     ["Company Slug", rating.companySlug],
-    ["Score", `${rating.score} / ${rating.maxScore}`],
+    ["Score", rating.score != null && rating.maxScore != null ? `${rating.score} / ${rating.maxScore}` : "Not scored"],
     ["Summary", rating.summary],
   ];
   if (rating.directLink) {

@@ -92,8 +92,8 @@ export const ReviewAuthorSchema = z.object({
 
 export const ReviewCompanyRatingSchema = z.object({
   companySlug: z.string(),
-  score: z.number(),
-  maxScore: z.number().positive().default(48),
+  score: z.number().nullable().optional(),
+  maxScore: z.number().positive().nullable().optional(),
   summary: z.string(),
   directLink: z.string().min(1).nullable().optional(),
   pros: z.array(z.string().min(1)).max(3).default([]),
