@@ -1,17 +1,26 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
+  - package-ecosystem: github-actions
     directory: "/"
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
+      interval: monthly
     groups:
-      workspace-dependencies:
+      github-actions:
         patterns:
           - "*"
 
-  - package-ecosystem: "github-actions"
+  - package-ecosystem: npm
     directory: "/"
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
+      interval: monthly
+    groups:
+      dev-deps:
+        dependency-type: "development"
+        update-types:
+          - patch
+          - minor
+      prod-deps:
+        dependency-type: "production"
+        update-types:
+          - patch
+          - minor
