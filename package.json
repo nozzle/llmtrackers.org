@@ -25,8 +25,7 @@
     "check": "pnpm format:check && pnpm lint && pnpm test && pnpm typecheck && pnpm build",
     "pretypecheck": "pnpm compile-data",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit && pnpm --filter @llm-tracker/shared typecheck && pnpm --filter @llm-tracker/github typecheck",
-    "prepare": "husky"
+    "typecheck": "tsc --noEmit && pnpm --filter @llm-tracker/shared typecheck && pnpm --filter @llm-tracker/github typecheck"
   },
   "lint-staged": {
     "*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}": [
@@ -59,7 +58,6 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^7.0.1",
     "globals": "^17.4.0",
-    "husky": "^9.1.7",
     "lint-staged": "^16.3.2",
     "playwright": "^1.58.2",
     "prettier": "^3.8.1",
