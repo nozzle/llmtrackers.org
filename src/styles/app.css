@@ -68,3 +68,106 @@
   border-color: #1d4ed8;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
+
+/* ============================================================
+   Terminal Design - CRT / Hacker aesthetic
+   ============================================================ */
+
+/* Scanline overlay */
+.terminal-scanlines::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 0, 0.03) 2px,
+    rgba(0, 255, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* CRT flicker */
+.terminal-design {
+  animation: crt-flicker 0.1s infinite alternate;
+}
+
+@keyframes crt-flicker {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.98;
+  }
+}
+
+/* Terminal blinking cursor */
+.terminal-blink {
+  animation: terminal-blink 1s step-end infinite;
+}
+
+@keyframes terminal-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ============================================================
+   Cyberpunk Design - Neon glow effects
+   ============================================================ */
+
+/* Grid overlay */
+.cyberpunk-grid::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+/* Card hover glow */
+.cyberpunk-card:hover {
+  box-shadow:
+    0 0 20px rgba(0, 255, 255, 0.1),
+    0 0 60px rgba(0, 255, 255, 0.05),
+    inset 0 0 20px rgba(0, 255, 255, 0.02);
+}
+
+/* Neon glow helpers */
+.neon-glow-cyan {
+  box-shadow: 0 0 6px rgba(0, 255, 255, 0.4);
+}
+
+.neon-glow-yellow {
+  box-shadow: 0 0 6px rgba(255, 255, 0, 0.4);
+}
+
+.neon-glow-pink {
+  box-shadow: 0 0 6px rgba(255, 0, 255, 0.4);
+}
+
+/* Cyberpunk button pulse */
+.cyberpunk-btn:hover {
+  animation: neon-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes neon-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 20px rgba(0, 255, 255, 0.4),
+      0 0 40px rgba(0, 255, 255, 0.1);
+  }
+}
