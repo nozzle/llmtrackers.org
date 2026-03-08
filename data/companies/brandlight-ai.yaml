@@ -60,16 +60,10 @@ plans:
       llama: true
       claude: true
 
-score:
-  total: 35
-  maxTotal: 48
-  summary: "Good balance of AI + traditional SEO diagnostics."
-
 reviewSites:
   g2:
     url: https://www.g2.com/products/brandlight-ai/reviews
 
-reviews: []
 tweets: []
 pricingUrl: https://brandlight.ai/pricing
 featuresUrl: https://brandlight.ai/features

@@ -62,10 +62,6 @@ plans:
       grok: false
       aiOverviews: true
       aiMode: true
-score:
-  total: 40
-  maxTotal: 48
-  summary: Unmatched breadth- tracks brand mentions, citations, AI crawler logs, shopping visibility, and prompt trends. Best for agencies and enterprise teams.
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/tryprofound.com
@@ -81,7 +77,6 @@ reviewSites:
     reviewCount: 0
     ratingDistribution: []
     reviews: []
-reviews: []
 tweets: []
 pricingUrl: https://www.tryprofound.com/pricing
 featuresUrl: https://www.tryprofound.com/features

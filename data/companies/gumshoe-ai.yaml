@@ -32,11 +32,6 @@ plans:
       llama: true
       claude: true
 
-score:
-  total: 25
-  maxTotal: 48
-  summary: "Unique persona segmentation and share-of-voice reports."
-
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/gumshoe.ai
@@ -46,7 +41,6 @@ reviewSites:
     ratingDistribution: []
     reviews: []
 
-reviews: []
 tweets: []
 pricingUrl: https://www.gumshoe.ai/pricing
 featuresUrl: https://www.gumshoe.ai/features

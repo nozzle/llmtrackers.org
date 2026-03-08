@@ -32,11 +32,6 @@ plans:
       llama: false
       claude: true
 
-score:
-  total: 35
-  maxTotal: 48
-  summary: "Real-time AI prompt and answer tracking via credit system."
-
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/rankscale.ai
@@ -46,7 +41,6 @@ reviewSites:
     ratingDistribution: []
     reviews: []
 
-reviews: []
 tweets: []
 pricingUrl: https://www.rankscale.ai/pricing
 featuresUrl: https://www.rankscale.ai/features

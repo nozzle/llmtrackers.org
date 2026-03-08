@@ -83,6 +83,12 @@ function Header() {
             Compare
           </Link>
           <Link
+            to="/reviews"
+            className="text-sm font-medium text-gray-600 hover:text-gray-900 [&.active]:text-blue-600"
+          >
+            Reviews
+          </Link>
+          <Link
             to="/suggest"
             className="rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
           >

@@ -30,10 +30,6 @@ plans:
       grok: false
       aiOverviews: true
       aiMode: true
-score:
-  total: 34
-  maxTotal: 48
-  summary: Combines AI visibility with actionable writing + optimization tools. Starts at $16/mo.
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/writesonic.com
@@ -103,7 +99,6 @@ reviewSites:
         date: 2023-04-07T23:08:00.481Z
         excerpt: Everyday content creation for marketing purposes has become easier using the Writesonic. It has increased the content team's efficiency, and reduced writer dependency of the marketing team.
         url: https://www.trustradius.com/products/writesonic/reviews#writesonic-2023-04-05-10-25-29
-reviews: []
 tweets: []
 pricingUrl: https://writesonic.com/pricing
 featuresUrl: https://writesonic.com/features

@@ -32,18 +32,12 @@ plans:
       llama: false
       claude: false
 
-score:
-  total: 26
-  maxTotal: 48
-  summary: "Tracks brand sentiment, prompt queries, and citations."
-
 reviewSites:
   g2:
     url: https://www.g2.com/products/otterly-ai/reviews
   trustradius:
     url: https://www.trustradius.com/products/otterly-ai/reviews
 
-reviews: []
 tweets: []
 pricingUrl: https://otterly.ai/pricing
 featuresUrl: https://otterly.ai/features

@@ -59,11 +59,6 @@ plans:
       llama: false
       claude: true
 
-score:
-  total: 27
-  maxTotal: 48
-  summary: "Straightforward prompt visibility at an accessible price point."
-
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/peec.ai
@@ -73,7 +68,6 @@ reviewSites:
     ratingDistribution: []
     reviews: []
 
-reviews: []
 tweets: []
 pricingUrl: https://www.peec.ai/pricing
 featuresUrl: https://www.peec.ai/features

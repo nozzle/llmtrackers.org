@@ -89,8 +89,8 @@ Public pages are prerendered into `dist/client` during `pnpm build`.
 
 ## Data Model
 
-- source data lives in `data/companies/*.yaml`
-- each company has one YAML file
+- source data lives in `data/companies/*.yaml` and `data/reviews/*.yaml`
+- each company and each published review gets its own YAML file
 - `packages/shared/src/compile.ts` validates YAML and writes `packages/shared/compiled-data.json`
 - the app reads compiled JSON, not raw YAML, at runtime
 

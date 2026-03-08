@@ -32,11 +32,6 @@ plans:
       llama: true
       claude: true
 
-score:
-  total: 37
-  maxTotal: 48
-  summary: "Great balance of AI + traditional SEO diagnostics. Affordable and transparent."
-
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/ziptie.dev
@@ -46,7 +41,6 @@ reviewSites:
     ratingDistribution: []
     reviews: []
 
-reviews: []
 tweets: []
 pricingUrl: https://ziptie.dev/pricing
 featuresUrl: https://ziptie.dev/features

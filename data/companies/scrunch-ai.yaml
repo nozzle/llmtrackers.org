@@ -56,10 +56,6 @@ plans:
       grok: true
       aiOverviews: true
       aiMode: true
-score:
-  total: 35
-  maxTotal: 48
-  summary: Mid-tier prompt benchmarking.
 reviewSites:
   trustradius:
     url: https://www.trustradius.com/products/scrunch-ai/reviews
@@ -83,7 +79,6 @@ reviewSites:
         value: 1
         count: 0
     reviews: []
-reviews: []
 tweets: []
 pricingUrl: https://scrunch.ai/pricing
 featuresUrl: https://scrunch.ai/features

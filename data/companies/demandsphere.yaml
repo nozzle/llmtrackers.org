@@ -33,12 +33,6 @@ plans:
       llama: true
       claude: true
 
-score:
-  total: 38
-  maxTotal: 48
-  summary: "AI + SERP hybrid tracking with localization and BigQuery integration."
-
-reviews: []
 tweets: []
 pricingUrl: https://www.demandsphere.com/pricing
 featuresUrl: https://www.demandsphere.com/features

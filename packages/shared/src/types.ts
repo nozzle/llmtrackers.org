@@ -5,14 +5,16 @@ import {
   type PlanSchema,
   type PriceSchema,
   type LlmSupportSchema,
-  type ReviewSchema,
   type ReviewSitesSchema,
   type ReviewSiteDataSchema,
   type ReviewSiteBucketSchema,
   type ReviewSiteSnippetSchema,
   type ReviewSitePlatformSchema,
   type TweetSchema,
-  type ScoreSchema,
+  type ReviewAuthorSocialProfileSchema,
+  type ReviewAuthorSchema,
+  type ReviewCompanyRatingSchema,
+  type PublishedReviewSchema,
 } from "./schema.js";
 
 export type Company = z.infer<typeof CompanySchema>;
@@ -20,14 +22,16 @@ export type CompiledData = z.infer<typeof CompiledDataSchema>;
 export type Plan = z.infer<typeof PlanSchema>;
 export type Price = z.infer<typeof PriceSchema>;
 export type LlmSupport = z.infer<typeof LlmSupportSchema>;
-export type Review = z.infer<typeof ReviewSchema>;
 export type ReviewSites = z.infer<typeof ReviewSitesSchema>;
 export type ReviewSiteData = z.infer<typeof ReviewSiteDataSchema>;
 export type ReviewSiteBucket = z.infer<typeof ReviewSiteBucketSchema>;
 export type ReviewSiteSnippet = z.infer<typeof ReviewSiteSnippetSchema>;
 export type ReviewSitePlatform = z.infer<typeof ReviewSitePlatformSchema>;
 export type Tweet = z.infer<typeof TweetSchema>;
-export type Score = z.infer<typeof ScoreSchema>;
+export type ReviewAuthorSocialProfile = z.infer<typeof ReviewAuthorSocialProfileSchema>;
+export type ReviewAuthor = z.infer<typeof ReviewAuthorSchema>;
+export type ReviewCompanyRating = z.infer<typeof ReviewCompanyRatingSchema>;
+export type PublishedReview = z.infer<typeof PublishedReviewSchema>;
 
 export const REVIEW_SITE_PLATFORMS: ReviewSitePlatform[] = [
   "g2",

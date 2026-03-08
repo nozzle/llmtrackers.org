@@ -32,12 +32,6 @@ plans:
       llama: false
       claude: true
 
-score:
-  total: 32
-  maxTotal: 48
-  summary: "Cross-engine prompt tracking plus AI bot accessibility audits make it a great fit for solopreneurs and small agencies."
-
-reviews: []
 tweets: []
 pricingUrl: https://knowatoa.com/pricing
 featuresUrl: https://knowatoa.com/features

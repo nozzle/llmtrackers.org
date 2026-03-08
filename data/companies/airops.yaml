@@ -31,10 +31,6 @@ plans:
       grok: false
       aiOverviews: true
       aiMode: true
-score:
-  total: 31
-  maxTotal: 48
-  summary: API-powered AI tracking for enterprise teams.
 reviewSites:
   trustradius:
     url: https://www.trustradius.com/products/airops/reviews
@@ -43,7 +39,6 @@ reviewSites:
     reviewCount: 0
     ratingDistribution: []
     reviews: []
-reviews: []
 tweets: []
 pricingUrl: https://www.airops.com/pricing
 featuresUrl: https://www.airops.com/features

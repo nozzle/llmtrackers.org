@@ -43,7 +43,6 @@ plans:
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/example.com
-reviews: []
 tweets: []
 `;
 

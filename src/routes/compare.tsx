@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { getPlanByKey, getAllCompanies } from "~/data";
+import { getPlanByKey } from "~/data";
 import type { ComparisonPlan } from "~/data";
 import { CompanyMark } from "~/components/company-mark";
 import { LLM_MODEL_LABELS } from "@llm-tracker/shared";
@@ -102,7 +102,6 @@ const ROWS: ComparisonRow[] = [
 
 function ComparePage() {
   const { plans: plansParam } = Route.useSearch();
-  const companies = getAllCompanies();
 
   const planKeys = plansParam ? plansParam.split(",") : [];
   const plans = planKeys
@@ -141,7 +140,6 @@ function ComparePage() {
                 Feature
               </th>
               {plans.map((plan) => {
-                const company = companies.find((c) => c.slug === plan.companySlug);
                 return (
                   <th
                     key={`${plan.companySlug}/${plan.slug}`}
@@ -160,11 +158,6 @@ function ComparePage() {
                         <div className="font-normal normal-case text-gray-400">{plan.name}</div>
                       </div>
                     </div>
-                    {company?.score && (
-                      <span className="mt-1 inline-block rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
-                        {company.score.total}/{company.score.maxTotal}
-                      </span>
-                    )}
                   </th>
                 );
               })}

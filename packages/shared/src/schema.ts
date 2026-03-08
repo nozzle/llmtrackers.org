@@ -37,14 +37,6 @@ export const PlanSchema = z.object({
   llmSupport: LlmSupportSchema,
 });
 
-// --- Review ---
-export const ReviewSchema = z.object({
-  platform: z.string(),
-  url: z.url().nullable().optional(),
-  score: z.number().nullable().optional(),
-  maxScore: z.number().default(5),
-});
-
 export const ReviewSitePlatformSchema = z.enum(["g2", "trustpilot", "trustradius", "capterra"]);
 
 export const ReviewSiteBucketSchema = z.object({
@@ -87,11 +79,32 @@ export const TweetSchema = z.object({
   url: z.url(),
 });
 
-// --- Score ---
-export const ScoreSchema = z.object({
-  total: z.number(),
-  maxTotal: z.number().default(48),
+// --- Published Reviews ---
+export const ReviewAuthorSocialProfileSchema = z.object({
+  label: z.string(),
+  url: z.url(),
+});
+
+export const ReviewAuthorSchema = z.object({
+  name: z.string(),
+  socialProfiles: z.array(ReviewAuthorSocialProfileSchema).default([]),
+});
+
+export const ReviewCompanyRatingSchema = z.object({
+  companySlug: z.string(),
+  score: z.number(),
+  maxScore: z.number().positive().default(48),
   summary: z.string(),
+  directLink: z.string().min(1).nullable().optional(),
+});
+
+export const PublishedReviewSchema = z.object({
+  slug: z.string(),
+  name: z.string(),
+  url: z.url(),
+  date: z.string(),
+  author: ReviewAuthorSchema,
+  companyRatings: z.array(ReviewCompanyRatingSchema).min(1),
 });
 
 // --- Company ---
@@ -102,9 +115,7 @@ export const CompanySchema = z.object({
   website: z.url(),
   description: z.string(),
   plans: z.array(PlanSchema).min(1),
-  score: ScoreSchema.optional(),
   reviewSites: ReviewSitesSchema.default({}),
-  reviews: z.array(ReviewSchema).default([]),
   tweets: z.array(TweetSchema).default([]),
   pricingUrl: z.url().nullable().optional(),
   featuresUrl: z.url().nullable().optional(),
@@ -114,6 +125,7 @@ export const CompanySchema = z.object({
 // --- Compiled Data ---
 export const CompiledDataSchema = z.object({
   companies: z.array(CompanySchema),
+  reviews: z.array(PublishedReviewSchema).default([]),
   generatedAt: z.string(),
 });
 

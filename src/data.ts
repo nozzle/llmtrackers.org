@@ -1,7 +1,7 @@
 import compiledData from "../packages/shared/compiled-data.json";
-import type { Company, CompiledData, PlanWithCompany } from "@llm-tracker/shared";
+import type { Company, CompiledData, PlanWithCompany, PublishedReview } from "@llm-tracker/shared";
 
-const data = compiledData as CompiledData;
+const data = compiledData as unknown as CompiledData;
 
 type PlanWithCompanyMeta = PlanWithCompany & {
   companyReviewSites: Company["reviewSites"];
@@ -15,6 +15,20 @@ export function getAllCompanies(): Company[] {
 
 export function getCompanyBySlug(slug: string): Company | undefined {
   return data.companies.find((c) => c.slug === slug);
+}
+
+export function getAllReviews(): PublishedReview[] {
+  return data.reviews;
+}
+
+export function getReviewBySlug(slug: string): PublishedReview | undefined {
+  return data.reviews.find((review) => review.slug === slug);
+}
+
+export function getReviewsForCompanySlug(companySlug: string): PublishedReview[] {
+  return data.reviews.filter((review) =>
+    review.companyRatings.some((rating) => rating.companySlug === companySlug),
+  );
 }
 
 export function getAllPlansWithCompany(): PlanWithCompanyMeta[] {

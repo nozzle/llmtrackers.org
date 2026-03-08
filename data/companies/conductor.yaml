@@ -30,10 +30,6 @@ plans:
       grok: false
       aiOverviews: true
       aiMode: true
-score:
-  total: 35
-  maxTotal: 48
-  summary: API-powered tracking across AI platforms like ChatGPT and Gemini enables highly accurate brand visibility insights.
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/conductor.com
@@ -103,7 +99,6 @@ reviewSites:
         date: 2025-04-24T19:29:59.819Z
         excerpt: We use Conductor for SEO optimization, monitoring our rankings, and competitor analysis. Their product, team, and community resources are so outstanding. The onboarding calls we had really set us up for success, and their help documentation, blogs, and webinars have continued to allow us to use the tool as efficiently as possible. Into our second year, they came up with a custom priced plan for our use case since we are a smaller business and the cost was getting to be a little too expensive. They also always seem to be dropping new features without making insane changes to the UI, so when things get added everything is in a similar spot and it is not invasive. We love the weekly reports we get about our progress, which has been great for presenting progress to our leadership team. Some of the features are not as useful to those who have smaller scope or a small team, but this is very negligible.
         url: https://www.trustradius.com/products/conductor/reviews#conductor-2024-09-24-13-23-32
-reviews: []
 tweets: []
 pricingUrl: https://www.conductor.com/pricing
 featuresUrl: https://www.conductor.com/features

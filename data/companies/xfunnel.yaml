@@ -32,11 +32,6 @@ plans:
       llama: true
       claude: true
 
-score:
-  total: 40
-  maxTotal: 48
-  summary: "Offers funnel visibility, segmentation, hallucination detection, and experimentation playbooks."
-
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/xfunnel.ai
@@ -46,7 +41,6 @@ reviewSites:
     ratingDistribution: []
     reviews: []
 
-reviews: []
 tweets: []
 pricingUrl: https://www.xfunnel.ai/pricing
 featuresUrl: https://www.xfunnel.ai/features

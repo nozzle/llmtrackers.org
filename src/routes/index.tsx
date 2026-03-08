@@ -24,7 +24,6 @@ const homeSearchSchema = z.object({
   sort: z
     .enum([
       "name",
-      "score",
       "g2",
       "trustpilot",
       "trustradius",
@@ -40,8 +39,6 @@ const homeSearchSchema = z.object({
   // column filters
   schedule: z.string().optional().catch(undefined),
   llms: z.string().optional().catch(undefined),
-  scoreMin: optionalNumber,
-  scoreMax: optionalNumber,
   priceMin: optionalNumber,
   priceMax: optionalNumber,
   costMin: optionalNumber,
@@ -148,7 +145,6 @@ const LLM_KEYS: LlmModelKey[] = [
 const ALL_COLUMN_IDS = [
   "name",
   "plan",
-  "score",
   "g2",
   "trustpilot",
   "trustradius",
@@ -166,7 +162,6 @@ type ColumnId = (typeof ALL_COLUMN_IDS)[number];
 const COLUMN_LABELS: Record<ColumnId, string> = {
   name: "Company",
   plan: "Plan",
-  score: "Score",
   g2: "G2",
   trustpilot: "Trustpilot",
   trustradius: "TrustRadius",
@@ -884,14 +879,12 @@ function HomePage() {
   // ---- Derived search state with defaults ----
 
   const q = search.q ?? "";
-  const sortBy = search.sort ?? "score";
+  const sortBy = search.sort ?? "price";
   const sortDir = search.dir ?? (sortBy === "name" ? "asc" : "desc");
   const scheduleFilter = search.schedule ?? "all";
   const llmFilter = useMemo<LlmModelKey[]>(() => {
     return (parseCommaSeparated(search.llms) as LlmModelKey[] | undefined) ?? [];
   }, [search.llms]);
-  const scoreMin = search.scoreMin;
-  const scoreMax = search.scoreMax;
   const priceMin = search.priceMin;
   const priceMax = search.priceMax;
   const costMin = search.costMin;
@@ -933,9 +926,9 @@ function HomePage() {
         const cleaned: Record<string, unknown> = {};
 
         if (next.q) cleaned.q = next.q;
-        if (next.sort && next.sort !== "score") cleaned.sort = next.sort;
+        if (next.sort && next.sort !== "price") cleaned.sort = next.sort;
         if (next.dir) {
-          const naturalDir = (next.sort ?? "score") === "name" ? "asc" : "desc";
+          const naturalDir = (next.sort ?? "price") === "name" ? "asc" : "desc";
           if (next.dir !== naturalDir) cleaned.dir = next.dir;
         }
         if (next.schedule && next.schedule !== "all") cleaned.schedule = next.schedule;
@@ -945,8 +938,6 @@ function HomePage() {
         const llmsStr = Array.isArray(llmsVal) ? llmsVal.join(",") : llmsVal;
         if (llmsStr) cleaned.llms = llmsStr;
 
-        if (next.scoreMin != null) cleaned.scoreMin = next.scoreMin;
-        if (next.scoreMax != null) cleaned.scoreMax = next.scoreMax;
         if (next.priceMin != null) cleaned.priceMin = next.priceMin;
         if (next.priceMax != null) cleaned.priceMax = next.priceMax;
         if (next.costMin != null) cleaned.costMin = next.costMin;
@@ -977,16 +968,6 @@ function HomePage() {
     });
   }
 
-  // ---- Company score map ----
-
-  const companyScores = useMemo(() => {
-    const map = new Map<string, { total: number; maxTotal: number }>();
-    for (const c of companies) {
-      if (c.score) map.set(c.slug, c.score);
-    }
-    return map;
-  }, [companies]);
-
   // ---- Filter & sort ----
 
   const filteredPlans = useMemo(() => {
@@ -1008,17 +989,6 @@ function HomePage() {
     // LLM multi-select (match ALL)
     if (llmFilter.length > 0) {
       result = result.filter((p) => llmFilter.every((k) => p.llmSupport[k]));
-    }
-
-    // Score
-    if (scoreMin != null || scoreMax != null) {
-      result = result.filter((p) => {
-        const s = companyScores.get(p.companySlug);
-        if (!s) return false;
-        if (scoreMin != null && s.total < scoreMin) return false;
-        if (scoreMax != null && s.total > scoreMax) return false;
-        return true;
-      });
     }
 
     // Price
@@ -1094,11 +1064,6 @@ function HomePage() {
         case "responses":
           cmp = (a.aiResponsesMonthly ?? 0) - (b.aiResponsesMonthly ?? 0);
           break;
-        case "score":
-          cmp =
-            (companyScores.get(a.companySlug)?.total ?? 0) -
-            (companyScores.get(b.companySlug)?.total ?? 0);
-          break;
         case "g2":
         case "trustpilot":
         case "trustradius":
@@ -1125,9 +1090,6 @@ function HomePage() {
     llmFilter,
     sortBy,
     sortDir,
-    companyScores,
-    scoreMin,
-    scoreMax,
     priceMin,
     priceMax,
     costMin,
@@ -1186,8 +1148,6 @@ function HomePage() {
     q,
     scheduleFilter !== "all" ? scheduleFilter : undefined,
     llmFilter.length > 0 ? "llm" : undefined,
-    scoreMin,
-    scoreMax,
     priceMin,
     priceMax,
     costMin,
@@ -1329,21 +1289,6 @@ function HomePage() {
           />
         </div>
 
-        {/* Score range popover */}
-        <RangeFilterPopover
-          label="Score"
-          minValue={scoreMin}
-          maxValue={scoreMax}
-          onMinChange={(v) => {
-            updateSearch({ scoreMin: v });
-          }}
-          onMaxChange={(v) => {
-            updateSearch({ scoreMax: v });
-          }}
-          rangeMin={0}
-          rangeMax={48}
-        />
-
         {/* Price range popover */}
         <RangeFilterPopover
           label="Price"
@@ -1402,8 +1347,6 @@ function HomePage() {
                 q: undefined,
                 schedule: undefined,
                 llms: undefined,
-                scoreMin: undefined,
-                scoreMax: undefined,
                 priceMin: undefined,
                 priceMax: undefined,
                 costMin: undefined,
@@ -1471,8 +1414,7 @@ function HomePage() {
               const leadingCols =
                 1 +
                 (isColumnVisible("name") ? 1 : 0) +
-                (isColumnVisible("plan") ? 1 : 0) +
-                (isColumnVisible("score") ? 1 : 0);
+                (isColumnVisible("plan") ? 1 : 0);
               const trailingCols = (["schedule", "llmSupport", "locations"] as const).filter(
                 isColumnVisible,
               ).length;
@@ -1528,16 +1470,6 @@ function HomePage() {
                         className={`sticky ${row2Top} z-20 bg-gray-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500`}
                       >
                         Plan
-                      </th>
-                    )}
-                    {isColumnVisible("score") && (
-                      <th
-                        className={`sticky ${row2Top} z-20 cursor-pointer bg-gray-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 hover:text-gray-700`}
-                        onClick={() => {
-                          toggleSort("score");
-                        }}
-                      >
-                        Score{sortIndicator("score")}
                       </th>
                     )}
                     {isColumnVisible("g2") && (
@@ -1656,7 +1588,6 @@ function HomePage() {
             {filteredPlans.map((plan) => {
               const key = `${plan.companySlug}/${plan.slug}`;
               const isSelected = selectedPlans.has(key);
-              const company = companies.find((c) => c.slug === plan.companySlug);
               return (
                 <tr
                   key={key}
@@ -1714,17 +1645,6 @@ function HomePage() {
                   )}
                   {isColumnVisible("plan") && (
                     <td className="px-4 py-3 text-sm text-gray-700">{plan.name}</td>
-                  )}
-                  {isColumnVisible("score") && (
-                    <td className="px-4 py-3">
-                      {company?.score ? (
-                        <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                          {company.score.total}/{company.score.maxTotal}
-                        </span>
-                      ) : (
-                        <span className="text-sm text-gray-400">-</span>
-                      )}
-                    </td>
                   )}
                   {isColumnVisible("g2") && (
                     <td className="px-4 py-3">

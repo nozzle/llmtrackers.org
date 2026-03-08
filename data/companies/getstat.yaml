@@ -30,10 +30,6 @@ plans:
       grok: false
       aiOverviews: true
       aiMode: true
-score:
-  total: 33
-  maxTotal: 48
-  summary: Deep coverage tracking for AI + SERP visibility.
 reviewSites:
   trustradius:
     url: https://www.trustradius.com/products/stat-search-analytics/reviews
@@ -57,7 +53,6 @@ reviewSites:
         value: 1
         count: 0
     reviews: []
-reviews: []
 tweets: []
 pricingUrl: https://getstat.com/pricing
 featuresUrl: https://getstat.com/features

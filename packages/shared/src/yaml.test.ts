@@ -67,7 +67,6 @@ plans:
       llama: false
       claude: true
 
-reviews: []
 tweets: []
 pricingUrl: https://example.com/pricing
 featuresUrl: https://example.com/features

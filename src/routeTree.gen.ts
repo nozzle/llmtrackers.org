@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SuggestRouteImport } from './routes/suggest'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ReviewsIndexRouteImport } from './routes/reviews/index'
+import { Route as ReviewsSlugRouteImport } from './routes/reviews/$slug'
 import { Route as CompaniesSlugRouteImport } from './routes/companies/$slug'
 
 const SuggestRoute = SuggestRouteImport.update({
@@ -29,6 +31,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReviewsIndexRoute = ReviewsIndexRouteImport.update({
+  id: '/reviews/',
+  path: '/reviews/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReviewsSlugRoute = ReviewsSlugRouteImport.update({
+  id: '/reviews/$slug',
+  path: '/reviews/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CompaniesSlugRoute = CompaniesSlugRouteImport.update({
   id: '/companies/$slug',
   path: '/companies/$slug',
@@ -40,12 +52,16 @@ export interface FileRoutesByFullPath {
   '/compare': typeof CompareRoute
   '/suggest': typeof SuggestRoute
   '/companies/$slug': typeof CompaniesSlugRoute
+  '/reviews/$slug': typeof ReviewsSlugRoute
+  '/reviews/': typeof ReviewsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
   '/suggest': typeof SuggestRoute
   '/companies/$slug': typeof CompaniesSlugRoute
+  '/reviews/$slug': typeof ReviewsSlugRoute
+  '/reviews': typeof ReviewsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +69,34 @@ export interface FileRoutesById {
   '/compare': typeof CompareRoute
   '/suggest': typeof SuggestRoute
   '/companies/$slug': typeof CompaniesSlugRoute
+  '/reviews/$slug': typeof ReviewsSlugRoute
+  '/reviews/': typeof ReviewsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/compare' | '/suggest' | '/companies/$slug'
+  fullPaths:
+    | '/'
+    | '/compare'
+    | '/suggest'
+    | '/companies/$slug'
+    | '/reviews/$slug'
+    | '/reviews/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/compare' | '/suggest' | '/companies/$slug'
-  id: '__root__' | '/' | '/compare' | '/suggest' | '/companies/$slug'
+  to:
+    | '/'
+    | '/compare'
+    | '/suggest'
+    | '/companies/$slug'
+    | '/reviews/$slug'
+    | '/reviews'
+  id:
+    | '__root__'
+    | '/'
+    | '/compare'
+    | '/suggest'
+    | '/companies/$slug'
+    | '/reviews/$slug'
+    | '/reviews/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +104,8 @@ export interface RootRouteChildren {
   CompareRoute: typeof CompareRoute
   SuggestRoute: typeof SuggestRoute
   CompaniesSlugRoute: typeof CompaniesSlugRoute
+  ReviewsSlugRoute: typeof ReviewsSlugRoute
+  ReviewsIndexRoute: typeof ReviewsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -92,6 +131,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reviews/': {
+      id: '/reviews/'
+      path: '/reviews'
+      fullPath: '/reviews/'
+      preLoaderRoute: typeof ReviewsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reviews/$slug': {
+      id: '/reviews/$slug'
+      path: '/reviews/$slug'
+      fullPath: '/reviews/$slug'
+      preLoaderRoute: typeof ReviewsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/companies/$slug': {
       id: '/companies/$slug'
       path: '/companies/$slug'
@@ -107,6 +160,8 @@ const rootRouteChildren: RootRouteChildren = {
   CompareRoute: CompareRoute,
   SuggestRoute: SuggestRoute,
   CompaniesSlugRoute: CompaniesSlugRoute,
+  ReviewsSlugRoute: ReviewsSlugRoute,
+  ReviewsIndexRoute: ReviewsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

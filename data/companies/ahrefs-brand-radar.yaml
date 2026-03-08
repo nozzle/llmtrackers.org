@@ -30,10 +30,6 @@ plans:
       grok: false
       aiOverviews: false
       aiMode: true
-score:
-  total: 34
-  maxTotal: 48
-  summary: Seamless if you already use Ahrefs. Strong docs and visibility metrics.
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/ahrefs.com
@@ -75,7 +71,6 @@ reviewSites:
         date: 2026-02-09T15:34:56.000Z
         excerpt: Such bad organic traffic data, what a scam of a site misleading people. do not use their bad data
         url: null
-reviews: []
 tweets: []
 pricingUrl: https://ahrefs.com/brand-radar
 featuresUrl: https://ahrefs.com/brand-radar

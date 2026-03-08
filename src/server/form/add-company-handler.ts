@@ -409,7 +409,6 @@ export async function handleAddCompany(
     description: newData.description,
     plans,
     reviewSites: {},
-    reviews: [],
     tweets: [],
     ...(newData.pricingUrl ? { pricingUrl: newData.pricingUrl } : {}),
     ...(newData.featuresUrl ? { featuresUrl: newData.featuresUrl } : {}),

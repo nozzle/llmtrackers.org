@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { getCompanyBySlug } from "~/data";
+import { getCompanyBySlug, getReviewsForCompanySlug } from "~/data";
 import { CompanyMark } from "~/components/company-mark";
 import { EditPlanModal } from "~/components/edit-plan-modal";
 import { EditCompanyModal } from "~/components/edit-company-modal";
@@ -30,18 +30,6 @@ export const Route = createFileRoute("/companies/$slug")({
         { name: "description", content: description },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
-        ...(company?.score
-          ? [
-              {
-                name: "twitter:label1",
-                content: "Score",
-              },
-              {
-                name: "twitter:data1",
-                content: `${company.score.total}/${company.score.maxTotal}`,
-              },
-            ]
-          : []),
         ...(planSummary
           ? [
               {
@@ -75,19 +63,6 @@ function formatBucketLabel(platform: ReviewSitePlatform, label: string): string 
   return label;
 }
 
-function getReviewPlatformMatch(platform: string): ReviewSitePlatform | null {
-  const normalized = platform.trim().toLowerCase();
-
-  if (normalized === "g2") return "g2";
-  if (normalized === "trustpilot") return "trustpilot";
-  if (normalized === "trustradius" || normalized === "trust radius") {
-    return "trustradius";
-  }
-  if (normalized === "capterra") return "capterra";
-
-  return null;
-}
-
 function CompanyPage() {
   const { slug } = Route.useParams();
   const company = getCompanyBySlug(slug);
@@ -106,6 +81,8 @@ function CompanyPage() {
       </div>
     );
   }
+
+  const relatedReviews = getReviewsForCompanySlug(slug);
 
   return (
     <div>
@@ -155,18 +132,7 @@ function CompanyPage() {
               </a>
             </div>
           </div>
-          {company.score && (
-            <div className="flex-shrink-0 rounded-lg bg-green-50 px-6 py-4 text-center">
-              <div className="text-3xl font-bold text-green-700">{company.score.total}</div>
-              <div className="text-sm text-green-600">/ {company.score.maxTotal}</div>
-            </div>
-          )}
         </div>
-        {company.score?.summary && (
-          <div className="mt-4 rounded-md bg-gray-100 p-4 text-sm text-gray-700">
-            {company.score.summary}
-          </div>
-        )}
       </div>
 
       {/* Plans */}
@@ -461,45 +427,78 @@ function CompanyPage() {
         </section>
       )}
 
-      {/* Reviews */}
-      {company.reviews.length > 0 && (
+      {/* Published Reviews */}
+      {relatedReviews.length > 0 && (
         <section className="mb-12">
-          <h2 className="mb-4 text-xl font-semibold text-gray-900">Reviews</h2>
-          <div className="flex flex-wrap gap-4">
-            {company.reviews.map((review) => {
-              const matchedPlatform = getReviewPlatformMatch(review.platform);
-              const branding = matchedPlatform ? getReviewSiteBranding(matchedPlatform) : null;
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold text-gray-900">Published Reviews</h2>
+            <p className="mt-1 text-sm text-gray-600">
+              Editorial reviews and scorecards that include {company.name}.
+            </p>
+          </div>
+          <div className="space-y-3">
+            {relatedReviews.map((review) => {
+              const rating = review.companyRatings.find((entry) => entry.companySlug === company.slug);
+              if (!rating) return null;
+
+              const pct = (rating.score / rating.maxScore) * 100;
 
               return (
-                <a
-                  key={review.platform}
-                  href={review.url ?? "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 shadow-sm hover:border-blue-300 ${branding?.surface ?? ""}`}
+                <article
+                  key={review.slug}
+                  className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white px-5 py-4 shadow-sm sm:flex-row sm:items-center"
                 >
-                  <span className="font-medium text-gray-900">
-                    {matchedPlatform ? (
-                      <ReviewSiteLabel platform={matchedPlatform} mode="logo" size="md" />
-                    ) : (
-                      review.platform
-                    )}
-                  </span>
-                  {review.score != null &&
-                    (matchedPlatform ? (
-                      <ReviewSiteScoreBadge
-                        platform={matchedPlatform}
-                        score={review.score}
-                        maxScore={review.maxScore}
-                        compact
-                        showLogo
+                  {/* Score badge */}
+                  <div className="flex shrink-0 items-center gap-3 sm:w-24 sm:flex-col sm:items-center sm:gap-1">
+                    <div className="text-2xl font-bold text-gray-900">{rating.score}</div>
+                    <div className="text-xs text-gray-500">/ {rating.maxScore}</div>
+                    <div className="ml-2 h-1.5 w-16 overflow-hidden rounded-full bg-gray-100 sm:ml-0 sm:w-full">
+                      <div
+                        className={`h-full rounded-full ${pct >= 75 ? "bg-green-500" : pct >= 50 ? "bg-yellow-500" : "bg-red-400"}`}
+                        style={{ width: `${pct}%` }}
                       />
-                    ) : (
-                      <span className="rounded-full bg-yellow-100 px-2 py-0.5 text-sm font-semibold text-yellow-800">
-                        {review.score}/{review.maxScore}
-                      </span>
-                    ))}
-                </a>
+                    </div>
+                  </div>
+
+                  {/* Info */}
+                  <div className="min-w-0 flex-1">
+                    <Link
+                      to="/reviews/$slug"
+                      params={{ slug: review.slug }}
+                      className="font-semibold text-gray-900 hover:text-blue-600"
+                    >
+                      {review.name}
+                    </Link>
+                    <p className="mt-0.5 text-sm text-gray-500">
+                      {review.author.name} &middot; {review.date} &middot;{" "}
+                      {review.companyRatings.length} tools rated
+                    </p>
+                    <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-gray-600">
+                      {rating.summary}
+                    </p>
+                  </div>
+
+                  {/* Links */}
+                  <div className="flex shrink-0 flex-wrap gap-2 text-sm sm:flex-col sm:items-end">
+                    <Link
+                      to="/reviews/$slug"
+                      params={{ slug: review.slug }}
+                      className="text-blue-600 hover:underline"
+                    >
+                      Full review
+                    </Link>
+                    {rating.directLink && (
+                      <a
+                        href={rating.directLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
+                        Source rating
+                      </a>
+                    )}
+                  </div>
+                </article>
               );
             })}
           </div>

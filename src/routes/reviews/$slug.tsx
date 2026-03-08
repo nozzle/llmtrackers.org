@@ -1,0 +1,171 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { getReviewBySlug, getCompanyBySlug } from "~/data";
+import { CompanyMark } from "~/components/company-mark";
+
+export const Route = createFileRoute("/reviews/$slug")({
+  component: ReviewPage,
+  head: ({ params }) => {
+    const review = getReviewBySlug(params.slug);
+    const title = review ? `${review.name} - LLM Trackers` : "Review Not Found";
+    const description = review
+      ? `Review by ${review.author.name} covering ${review.companyRatings.length} tools. Published ${review.date}.`
+      : "";
+
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+      ],
+    };
+  },
+});
+
+function ReviewPage() {
+  const { slug } = Route.useParams();
+  const review = getReviewBySlug(slug);
+
+  if (!review) {
+    return (
+      <div className="text-center">
+        <h1 className="text-2xl font-bold text-gray-900">Review Not Found</h1>
+        <p className="mt-2 text-gray-600">No review found with slug &quot;{slug}&quot;.</p>
+        <Link to="/reviews" className="mt-4 inline-block text-blue-600 hover:underline">
+          Back to reviews
+        </Link>
+      </div>
+    );
+  }
+
+  const sortedRatings = [...review.companyRatings].sort((a, b) => b.score - a.score);
+
+  return (
+    <div>
+      {/* Header */}
+      <div className="mb-8">
+        <Link to="/reviews" className="text-sm text-blue-600 hover:underline">
+          &larr; All reviews
+        </Link>
+
+        <h1 className="mt-4 text-3xl font-bold text-gray-900">{review.name}</h1>
+
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600">
+          <span>
+            By{" "}
+            <span className="font-medium text-gray-900">{review.author.name}</span>
+          </span>
+          <span>{review.date}</span>
+          {review.author.socialProfiles.map((profile) => (
+            <a
+              key={profile.url}
+              href={profile.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              {profile.label}
+            </a>
+          ))}
+        </div>
+
+        <div className="mt-4">
+          <a
+            href={review.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:underline"
+          >
+            Read the original article
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      {/* Ratings summary */}
+      <section>
+        <h2 className="mb-1 text-xl font-semibold text-gray-900">Company Ratings</h2>
+        <p className="mb-6 text-sm text-gray-600">
+          {sortedRatings.length} tools rated, sorted by score (highest first).
+        </p>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {sortedRatings.map((rating, index) => {
+            const company = getCompanyBySlug(rating.companySlug);
+            const pct = (rating.score / rating.maxScore) * 100;
+
+            return (
+              <article
+                key={rating.companySlug}
+                className="flex flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
+              >
+                {/* Top row: rank + company + score */}
+                <div className="flex items-start gap-3">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-500">
+                    {index + 1}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    {company ? (
+                      <Link
+                        to="/companies/$slug"
+                        params={{ slug: rating.companySlug }}
+                        className="flex items-center gap-2 font-semibold text-gray-900 hover:text-blue-600"
+                      >
+                        <CompanyMark slug={company.slug} name={company.name} size="sm" />
+                        {company.name}
+                      </Link>
+                    ) : (
+                      <span className="font-semibold text-gray-900">{rating.companySlug}</span>
+                    )}
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <div className="text-lg font-bold text-gray-900">{rating.score}</div>
+                    <div className="text-xs text-gray-500">/ {rating.maxScore}</div>
+                  </div>
+                </div>
+
+                {/* Score bar */}
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-gray-100">
+                  <div
+                    className={`h-full rounded-full ${pct >= 75 ? "bg-green-500" : pct >= 50 ? "bg-yellow-500" : "bg-red-400"}`}
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+
+                {/* Summary */}
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-gray-700">
+                  {rating.summary}
+                </p>
+
+                {/* Links */}
+                <div className="mt-3 flex flex-wrap gap-3 border-t border-gray-100 pt-3 text-sm">
+                  {company && (
+                    <Link
+                      to="/companies/$slug"
+                      params={{ slug: rating.companySlug }}
+                      className="text-blue-600 hover:underline"
+                    >
+                      Company details
+                    </Link>
+                  )}
+                  {rating.directLink && (
+                    <a
+                      href={rating.directLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      Source rating
+                    </a>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+    </div>
+  );
+}

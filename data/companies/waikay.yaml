@@ -32,12 +32,6 @@ plans:
       llama: false
       claude: false
 
-score:
-  total: 28
-  maxTotal: 48
-  summary: "Lightweight, affordable, actionable fixes for content accuracy."
-
-reviews: []
 tweets: []
 pricingUrl: https://waikay.io/pricing
 featuresUrl: https://waikay.io/features
