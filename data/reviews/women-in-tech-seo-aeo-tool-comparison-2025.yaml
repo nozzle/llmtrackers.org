@@ -13,73 +13,231 @@ companyRatings:
     maxScore: 48
     summary: Unmatched breadth- tracks brand mentions, citations, AI crawler logs, shopping visibility, and prompt trends. Best for agencies and enterprise teams.
     directLink: https://docs.google.com/document/d/1K286BVeqZ9DbsY4AiePM9z1VaSKqeLZh/edit#heading=h.7em266hho0u1
+    pros:
+      - brand mentions and citation tracking
+      - AI crawler logs and shopping visibility
+      - prompt trend coverage
+    cons:
+      - steep pricing for solos
+      - some gated documentation
+    noteworthy:
+      - enterprise-level AI visibility and analytics
+      - best for agencies and enterprise teams
+      - ChatGPT Shopping trigger and placement tracking
   - companySlug: xfunnel
     score: 40
     maxScore: 48
     summary: Offers funnel visibility, segmentation, hallucination detection, and experimentation playbooks.
     directLink: https://docs.google.com/document/d/1K286BVeqZ9DbsY4AiePM9z1VaSKqeLZh/edit#heading=h.ws3luijefyea
+    pros:
+      - funnel visibility
+      - segmentation
+      - hallucination detection
+    cons:
+      - pricey for individuals
+      - best suited to multi-brand management
+    noteworthy:
+      - full-funnel experimentation and optimization
+      - best pick for agencies
+      - experimentation playbooks
   - companySlug: demandsphere
     score: 38
     maxScore: 48
     summary: AI + SERP hybrid tracking with localization and BigQuery integration.
     directLink: https://docs.google.com/document/d/1K286BVeqZ9DbsY4AiePM9z1VaSKqeLZh/edit#heading=h.9lpwcfmq2ts
+    pros:
+      - AI + SERP hybrid tracking
+      - localization
+      - BigQuery integration
+    cons:
+      - opaque pricing
+      - not ideal for freelancers
+    noteworthy:
+      - deep coverage tracking for AI + SERP visibility
+      - unlimited seats, domains, and competitor tracking
+      - developer-grade data access
   - companySlug: athenahq
     score: 38
     maxScore: 48
     summary: Built by ex-Googlers, with advanced sentiment analysis, prompt tracking, and enterprise integrations.
     directLink: https://docs.google.com/document/d/1K286BVeqZ9DbsY4AiePM9z1VaSKqeLZh/edit#heading=h.hkiy0mf1vv8
+    pros:
+      - advanced sentiment analysis
+      - prompt tracking
+      - enterprise integrations
+    cons:
+      - not self-serve
+      - starts at $270/mo
+    noteworthy:
+      - data-driven brand teams and AI strategy
+      - built by ex-Googlers
+      - content blind-spot detection
   - companySlug: ziptie-dev
     score: 37
     maxScore: 48
     summary: Great balance of AI + traditional SEO diagnostics. Affordable and transparent.
     directLink: https://docs.google.com/document/d/1K286BVeqZ9DbsY4AiePM9z1VaSKqeLZh/edit#heading=h.4qiphpm3hc9k
+    pros:
+      - AI + traditional SEO diagnostics
+      - affordable
+      - transparent
+    cons:
+      - limited deeper prompt insights
+      - no LLM integrations
+    noteworthy:
+      - best pick for solo SEOs and freelancers
+      - SEO + AEO diagnostics for SMBs
+      - crawl budget, indexing, and technical diagnostics
   - companySlug: conductor
     score: 35
     maxScore: 48
     summary: API-powered tracking across AI platforms like ChatGPT and Gemini enables highly accurate brand visibility insights. Built for enterprise teams managing large-scale workflows, topic entity mapping, and internal governance.
     directLink: https://docs.google.com/document/d/1K286BVeqZ9DbsY4AiePM9z1VaSKqeLZh/edit?usp=sharing&ouid=100004155036748780087&rtpof=true&sd=true
+    pros:
+      - API-powered tracking across AI platforms
+      - accurate brand visibility insights
+      - topic entity mapping and internal governance
+    cons:
+      - not built for solo consultants or agencies
+      - lacks technical AI audits
+      - enterprise-level investment
+    noteworthy:
+      - enterprise teams managing large-scale workflows
+      - geo-personalized analytics
+      - integrated content workflows
   - companySlug: rankscale
     score: 35
     maxScore: 48
     summary: Real-time AI prompt and answer tracking via credit system.
     directLink: https://docs.google.com/document/d/1K286BVeqZ9DbsY4AiePM9z1VaSKqeLZh/edit#heading=h.sgli9oawgup
+    pros:
+      - real-time AI prompt tracking
+      - answer tracking
+      - credit-based usage
+    cons:
+      - no prompt writing tools
+      - tracking-focused scope
+    noteworthy:
+      - fast auditing
+      - credit-based usage model
   - companySlug: ahrefs-brand-radar
     score: 34
     maxScore: 48
     summary: Seamless if you already use Ahrefs. Strong docs and visibility metrics.
     directLink: https://docs.google.com/document/d/1K286BVeqZ9DbsY4AiePM9z1VaSKqeLZh/edit#heading=h.11rbzoze8dmw
+    pros:
+      - seamless for Ahrefs users
+      - strong documentation
+      - visibility metrics
+    cons:
+      - no crawler tools
+      - no optimization tools
+    noteworthy:
+      - best for teams already invested in Ahrefs
   - companySlug: writesonic-geo
     score: 34
     maxScore: 48
     summary: Combines AI visibility with actionable writing + optimization tools. Starts at $16/mo.
     directLink: https://docs.google.com/document/d/1K286BVeqZ9DbsY4AiePM9z1VaSKqeLZh/edit#heading=h.5fegr0ecxqj3
+    pros:
+      - AI visibility plus writing tools
+      - optimization workflows
+      - starts at $16/mo
+    cons:
+      - limited e-commerce support
+    noteworthy:
+      - best pick for prompt research and content strategy
+      - integrated content creation tools
+      - AI visibility + content workflows
   - companySlug: knowatoa
     score: 32
     maxScore: 48
     summary: Cross-engine prompt tracking plus AI bot accessibility audits make it a great fit for solopreneurs and small agencies.
     directLink: https://docs.google.com/document/d/1K286BVeqZ9DbsY4AiePM9z1VaSKqeLZh/edit#heading=h.o8a8m9adjsn9
+    pros:
+      - cross-engine prompt tracking
+      - AI bot accessibility audits
+      - great fit for solopreneurs and small agencies
+    cons:
+      - limited optimization tools and integrations
+      - no e-commerce support yet
+      - no workflow automation support yet
+    noteworthy:
+      - best pick for technical SEO and AI accessibility
+      - visibility and reachability audits from 24 AI crawlers
+      - budget-friendly prompt research
   - companySlug: waikay
     score: 28
     maxScore: 48
     summary: Lightweight, affordable, actionable fixes for content accuracy.
     directLink: https://docs.google.com/document/d/1K286BVeqZ9DbsY4AiePM9z1VaSKqeLZh/edit#heading=h.vjnm6atw0zzp
+    pros:
+      - lightweight
+      - affordable
+      - actionable fixes for content accuracy
+    cons:
+      - limited scale
+      - limited scope
+      - limited AI depth
+    noteworthy:
+      - cost-sensitive SMBs and independent consultants
+      - runner-up for solo SEOs and freelancers
+      - topic-level visibility insights
   - companySlug: peec-ai
     score: 27
     maxScore: 48
     summary: Straightforward prompt visibility at an accessible price point.
     directLink: https://docs.google.com/document/d/1K286BVeqZ9DbsY4AiePM9z1VaSKqeLZh/edit#heading=h.7u819lx77ha6
+    pros:
+      - straightforward prompt visibility
+      - accessible price point
+    cons:
+      - lacks deeper technical insights
+    noteworthy:
+      - mid-tier prompt benchmarking
   - companySlug: xofu
     score: 26
     maxScore: 48
     summary: BOFU tracking is ideal for conversion-focused brands in ChatGPT-style answers.
     directLink: https://docs.google.com/document/d/1K286BVeqZ9DbsY4AiePM9z1VaSKqeLZh/edit#heading=h.9fi9w40x0k8
+    pros:
+      - BOFU tracking
+      - fit for conversion-focused brands
+      - ChatGPT-style answer visibility
+    cons:
+      - no pricing details
+      - no public roadmap
+    noteworthy:
+      - bottom-of-funnel optimization
+      - runner-up for e-commerce brands
+      - BOFU inclusion tracking and citation analysis
   - companySlug: otterly-ai
     score: 26
     maxScore: 48
     summary: Tracks brand sentiment, prompt queries, and citations.
     directLink: https://docs.google.com/document/d/1K286BVeqZ9DbsY4AiePM9z1VaSKqeLZh/edit#heading=h.mb7gf9w8hzn0
+    pros:
+      - brand sentiment tracking
+      - prompt query tracking
+      - citation tracking
+    cons:
+      - light documentation
+      - limited integrations
+    noteworthy:
+      - basic prompt research and brand monitoring
+      - monitoring brand performance
   - companySlug: gumshoe-ai
     score: 25
     maxScore: 48
     summary: Unique persona segmentation and share-of-voice reports.
     directLink: https://docs.google.com/document/d/1K286BVeqZ9DbsY4AiePM9z1VaSKqeLZh/edit#heading=h.cau29gqeoww5
+    pros:
+      - persona segmentation
+      - share-of-voice reports
+    cons:
+      - no prompt support
+      - no crawler support
+      - no technical support
+    noteworthy:
+      - persona-level brand visibility
+      - unique audience segmentation

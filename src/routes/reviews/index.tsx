@@ -71,6 +71,17 @@ function ReviewsIndexPage() {
             const topRatings = [...review.companyRatings]
               .sort((a, b) => b.score - a.score)
               .slice(0, 5);
+            const prosPreview = Array.from(
+              new Set(review.companyRatings.flatMap((rating) => rating.pros)),
+            ).slice(0, 3);
+            const consPreview = Array.from(
+              new Set(review.companyRatings.flatMap((rating) => rating.cons)),
+            ).slice(0, 3);
+            const highlightCount = review.companyRatings.reduce(
+              (total, rating) =>
+                total + rating.pros.length + rating.cons.length + rating.noteworthy.length,
+              0,
+            );
 
             return (
               <article
@@ -90,6 +101,7 @@ function ReviewsIndexPage() {
                       <span>By {review.author.name}</span>
                       <span>{review.date}</span>
                       <span>{review.companyRatings.length} tools rated</span>
+                      {highlightCount > 0 && <span>{highlightCount} highlights</span>}
                     </div>
                   </div>
                   <a
@@ -101,6 +113,46 @@ function ReviewsIndexPage() {
                     Original article
                   </a>
                 </div>
+
+                {(prosPreview.length > 0 || consPreview.length > 0) && (
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    {prosPreview.length > 0 && (
+                      <div>
+                        <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          Pros Mentioned
+                        </h3>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {prosPreview.map((item) => (
+                            <span
+                              key={`${review.slug}-pro-${item}`}
+                              className="rounded-full border border-green-200 bg-green-50 px-2.5 py-1 text-xs font-medium text-green-800"
+                            >
+                              {item}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {consPreview.length > 0 && (
+                      <div>
+                        <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          Cons Mentioned
+                        </h3>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {consPreview.map((item) => (
+                            <span
+                              key={`${review.slug}-con-${item}`}
+                              className="rounded-full border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-medium text-red-800"
+                            >
+                              {item}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Top 5 rated companies */}
                 <div className="mt-4 flex flex-wrap gap-3">

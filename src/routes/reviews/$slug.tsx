@@ -4,6 +4,40 @@ import { getReviewBySlug, getCompanyBySlug, getAllCompanies } from "~/data";
 import { CompanyMark } from "~/components/company-mark";
 import { EditReviewModal } from "~/components/edit-review-modal";
 
+function HighlightList({
+  title,
+  items,
+  tone,
+}: Readonly<{
+  title: string;
+  items: string[];
+  tone: "green" | "red" | "blue";
+}>) {
+  if (items.length === 0) return null;
+
+  const toneClasses = {
+    green: "border-green-200 bg-green-50 text-green-800",
+    red: "border-red-200 bg-red-50 text-red-800",
+    blue: "border-blue-200 bg-blue-50 text-blue-800",
+  } as const;
+
+  return (
+    <div>
+      <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">{title}</h3>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {items.map((item) => (
+          <span
+            key={`${title}-${item}`}
+            className={`rounded-full border px-2.5 py-1 text-xs font-medium ${toneClasses[tone]}`}
+          >
+            {item}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export const Route = createFileRoute("/reviews/$slug")({
   component: ReviewPage,
   head: ({ params }) => {
@@ -165,9 +199,19 @@ function ReviewPage() {
                 </div>
 
                 {/* Summary */}
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-gray-700">
-                  {rating.summary}
-                </p>
+                <p className="mt-3 text-sm leading-relaxed text-gray-700">{rating.summary}</p>
+
+                {(rating.pros.length > 0 || rating.cons.length > 0 || rating.noteworthy.length > 0) && (
+                  <div className="mt-4 space-y-3 border-t border-gray-100 pt-4">
+                    <HighlightList title="Pros" items={rating.pros} tone="green" />
+                    <HighlightList title="Cons" items={rating.cons} tone="red" />
+                    <HighlightList
+                      title="Noteworthy"
+                      items={rating.noteworthy}
+                      tone="blue"
+                    />
+                  </div>
+                )}
 
                 {/* Links */}
                 <div className="mt-3 flex flex-wrap gap-3 border-t border-gray-100 pt-3 text-sm">

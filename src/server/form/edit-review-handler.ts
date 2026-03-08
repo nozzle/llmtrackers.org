@@ -51,6 +51,9 @@ export interface ReviewChanges {
     maxScore: number;
     summary: string;
     directLink?: string | null;
+    pros: string[];
+    cons: string[];
+    noteworthy: string[];
   }>;
 }
 
@@ -248,6 +251,19 @@ function validateReviewChanges(
           error: `changes.companyRatings[${i}].directLink must be a string or null`,
         };
       }
+
+      const prosResult = validateHighlightList(r.pros, `changes.companyRatings[${i}].pros`);
+      if (!prosResult.ok) return prosResult;
+
+      const consResult = validateHighlightList(r.cons, `changes.companyRatings[${i}].cons`);
+      if (!consResult.ok) return consResult;
+
+      const noteworthyResult = validateHighlightList(
+        r.noteworthy,
+        `changes.companyRatings[${i}].noteworthy`,
+      );
+      if (!noteworthyResult.ok) return noteworthyResult;
+
       ratings.push({
         companySlug: r.companySlug.trim(),
         score: r.score,
@@ -257,6 +273,9 @@ function validateReviewChanges(
           r.directLink !== undefined && r.directLink !== null
             ? (r.directLink as string).trim() || null
             : null,
+        pros: prosResult.value,
+        cons: consResult.value,
+        noteworthy: noteworthyResult.value,
       });
     }
 
@@ -273,6 +292,34 @@ function validateReviewChanges(
   }
 
   return { ok: true, value: changes };
+}
+
+function validateHighlightList(
+  raw: unknown,
+  fieldPath: string,
+): { ok: true; value: string[] } | { ok: false; error: string } {
+  if (raw === undefined || raw === null) {
+    return { ok: true, value: [] };
+  }
+
+  if (!Array.isArray(raw)) {
+    return { ok: false, error: `${fieldPath} must be an array` };
+  }
+
+  if (raw.length > 3) {
+    return { ok: false, error: `${fieldPath} must contain at most 3 items` };
+  }
+
+  const items: string[] = [];
+  for (let i = 0; i < raw.length; i++) {
+    const item = raw[i];
+    if (typeof item !== "string" || item.trim().length === 0) {
+      return { ok: false, error: `${fieldPath}[${i}] must be a non-empty string` };
+    }
+    items.push(item.trim());
+  }
+
+  return { ok: true, value: items };
 }
 
 // ---- Core logic ----
@@ -416,6 +463,23 @@ function buildReviewDiffTable(
       `${original.companyRatings.length} ratings`,
       `${updated.companyRatings.length} ratings`,
     ]);
+
+    const originalHighlights = original.companyRatings.reduce(
+      (total, rating) => total + rating.pros.length + rating.cons.length + rating.noteworthy.length,
+      0,
+    );
+    const updatedHighlights = updated.companyRatings.reduce(
+      (total, rating) => total + rating.pros.length + rating.cons.length + rating.noteworthy.length,
+      0,
+    );
+
+    if (originalHighlights !== updatedHighlights) {
+      rows.push([
+        "Rating Highlights",
+        `${originalHighlights} highlight${originalHighlights === 1 ? "" : "s"}`,
+        `${updatedHighlights} highlight${updatedHighlights === 1 ? "" : "s"}`,
+      ]);
+    }
   }
 
   if (rows.length === 0) {

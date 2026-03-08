@@ -22,6 +22,9 @@ interface CompanyRatingFormState {
   maxScore: string;
   summary: string;
   directLink: string;
+  pros: string[];
+  cons: string[];
+  noteworthy: string[];
 }
 
 interface ReviewFormState {
@@ -113,6 +116,17 @@ function slugify(name: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
+function createHighlightSlots(items: string[] = []): string[] {
+  return [items[0] ?? "", items[1] ?? "", items[2] ?? ""];
+}
+
+function compactHighlights(items: string[]): string[] {
+  return items
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0)
+    .slice(0, 3);
+}
+
 let ratingIdCounter = 0;
 
 function createEmptyRating(): CompanyRatingFormState {
@@ -124,6 +138,9 @@ function createEmptyRating(): CompanyRatingFormState {
     maxScore: "48",
     summary: "",
     directLink: "",
+    pros: createHighlightSlots(),
+    cons: createHighlightSlots(),
+    noteworthy: createHighlightSlots(),
   };
 }
 
@@ -180,9 +197,14 @@ function computeReviewPreview(
         rating.score.trim() !== "" && rating.maxScore.trim() !== ""
           ? `${rating.score.trim()}/${rating.maxScore.trim()}`
           : "N/A";
+      const highlightCount =
+        compactHighlights(rating.pros).length +
+        compactHighlights(rating.cons).length +
+        compactHighlights(rating.noteworthy).length;
+
       entries.push({
         label: `Rating: ${rating.companySlug.trim()}`,
-        value: scoreStr,
+        value: highlightCount > 0 ? `${scoreStr} • ${highlightCount} highlights` : scoreStr,
       });
     }
   }
@@ -235,6 +257,7 @@ function validateReviewForm(
     if (Number(rating.score.trim()) > Number(rating.maxScore.trim())) {
       return `Rating ${i + 1}: score cannot exceed max score`;
     }
+    if (!rating.summary.trim()) return `Rating ${i + 1}: summary is required`;
   }
 
   return null;
@@ -262,8 +285,43 @@ function buildPayload(review: ReviewFormState, ratings: CompanyRatingFormState[]
       maxScore: Number(r.maxScore.trim()),
       summary: r.summary.trim(),
       directLink: r.directLink.trim() || null,
+      pros: compactHighlights(r.pros),
+      cons: compactHighlights(r.cons),
+      noteworthy: compactHighlights(r.noteworthy),
     })),
   };
+}
+
+function HighlightInputs({
+  label,
+  values,
+  placeholder,
+  onChange,
+}: Readonly<{
+  label: string;
+  values: string[];
+  placeholder: string;
+  onChange: (index: number, value: string) => void;
+}>) {
+  return (
+    <div>
+      <span className="text-xs font-medium text-gray-600">{label}</span>
+      <div className="mt-1 space-y-2">
+        {values.map((value, index) => (
+          <input
+            key={`${label}-${index + 1}`}
+            type="text"
+            value={value}
+            onChange={(e) => {
+              onChange(index, e.target.value);
+            }}
+            placeholder={`${placeholder} ${index + 1}`}
+            className="block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -289,6 +347,16 @@ function CompanyRatingFormSection({
 
   function update<K extends keyof CompanyRatingFormState>(key: K, value: CompanyRatingFormState[K]) {
     onUpdate({ ...rating, [key]: value });
+  }
+
+  function updateHighlight(
+    key: "pros" | "cons" | "noteworthy",
+    highlightIndex: number,
+    value: string,
+  ) {
+    const next = [...rating[key]];
+    next[highlightIndex] = value;
+    update(key, next);
   }
 
   return (
@@ -408,6 +476,33 @@ function CompanyRatingFormSection({
               className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </label>
+
+          <div className="grid gap-3 lg:grid-cols-3">
+            <HighlightInputs
+              label="Pros"
+              values={rating.pros}
+              placeholder="Pro"
+              onChange={(highlightIndex, value) => {
+                updateHighlight("pros", highlightIndex, value);
+              }}
+            />
+            <HighlightInputs
+              label="Cons"
+              values={rating.cons}
+              placeholder="Con"
+              onChange={(highlightIndex, value) => {
+                updateHighlight("cons", highlightIndex, value);
+              }}
+            />
+            <HighlightInputs
+              label="Noteworthy / Unique"
+              values={rating.noteworthy}
+              placeholder="Noteworthy point"
+              onChange={(highlightIndex, value) => {
+                updateHighlight("noteworthy", highlightIndex, value);
+              }}
+            />
+          </div>
         </div>
       )}
     </div>

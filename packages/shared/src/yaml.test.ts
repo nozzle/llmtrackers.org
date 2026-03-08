@@ -3,8 +3,10 @@ import {
   mergeCompanyWithExtractedPlans,
   mergeCompanyWithReviewSites,
   parseCompanyYaml,
+  parseReviewYaml,
   prepareUpdatedCompanyYaml,
   prepareUpdatedCompanyReviewSitesYaml,
+  stringifyReviewYaml,
   type ExtractedPlanLike,
 } from "./yaml.js";
 
@@ -119,6 +121,31 @@ const newPlan: ExtractedPlanLike = {
   },
 };
 
+const reviewYaml = `slug: test-review
+name: Test Review
+url: https://example.com/reviews/test-review
+date: 2026-03-07
+author:
+  name: Reviewer Name
+  socialProfiles:
+    - label: LinkedIn
+      url: https://linkedin.com/in/reviewer
+companyRatings:
+  - companySlug: test-company
+    score: 40
+    maxScore: 48
+    summary: Strong breadth across AI visibility workflows.
+    directLink: https://example.com/reviews/test-review#test-company
+    pros:
+      - broad AI visibility coverage
+      - strong documentation
+    cons:
+      - expensive for small teams
+    noteworthy:
+      - enterprise-friendly workflows
+      - detailed citation tracking
+`;
+
 describe("yaml helpers", () => {
   it("mergeCompanyWithExtractedPlans preserves existing order and appends new plans", () => {
     const { company } = parseCompanyYaml(baseYaml);
@@ -187,5 +214,53 @@ describe("yaml helpers", () => {
     expect(prepared.yamlText).toMatch(/reviewSites:/);
     expect(prepared.company.reviewSites.trustpilot?.reviewCount).toBe(42);
     expect(prepared.company.reviewSites.trustpilot?.reviews[0]?.excerpt).toBe("Helpful tool");
+  });
+
+  it("parseReviewYaml parses review highlights", () => {
+    const { review } = parseReviewYaml(reviewYaml);
+
+    expect(review.companyRatings[0]?.pros).toEqual([
+      "broad AI visibility coverage",
+      "strong documentation",
+    ]);
+    expect(review.companyRatings[0]?.cons).toEqual(["expensive for small teams"]);
+    expect(review.companyRatings[0]?.noteworthy).toEqual([
+      "enterprise-friendly workflows",
+      "detailed citation tracking",
+    ]);
+  });
+
+  it("stringifyReviewYaml omits empty highlight arrays and remains parseable", () => {
+    const yamlText = stringifyReviewYaml({
+      slug: "test-review",
+      name: "Test Review",
+      url: "https://example.com/reviews/test-review",
+      date: "2026-03-07",
+      author: {
+        name: "Reviewer Name",
+        socialProfiles: [],
+      },
+      companyRatings: [
+        {
+          companySlug: "test-company",
+          score: 40,
+          maxScore: 48,
+          summary: "Strong breadth across AI visibility workflows.",
+          directLink: null,
+          pros: [],
+          cons: [],
+          noteworthy: [],
+        },
+      ],
+    });
+
+    expect(yamlText).not.toMatch(/\n\s+pros:/);
+    expect(yamlText).not.toMatch(/\n\s+cons:/);
+    expect(yamlText).not.toMatch(/\n\s+noteworthy:/);
+
+    const { review } = parseReviewYaml(yamlText);
+    expect(review.companyRatings[0]?.pros).toEqual([]);
+    expect(review.companyRatings[0]?.cons).toEqual([]);
+    expect(review.companyRatings[0]?.noteworthy).toEqual([]);
   });
 });

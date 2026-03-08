@@ -473,10 +473,22 @@ function CompanyPage() {
                       {review.author.name} &middot; {review.date} &middot;{" "}
                       {review.companyRatings.length} tools rated
                     </p>
-                    <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-gray-600">
-                      {rating.summary}
-                    </p>
-                  </div>
+                     <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-gray-600">
+                       {rating.summary}
+                     </p>
+                     {rating.noteworthy.length > 0 && (
+                       <div className="mt-2 flex flex-wrap gap-2">
+                         {rating.noteworthy.slice(0, 2).map((item) => (
+                           <span
+                             key={`${review.slug}-${item}`}
+                             className="rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700"
+                           >
+                             {item}
+                           </span>
+                         ))}
+                       </div>
+                     )}
+                   </div>
 
                   {/* Links */}
                   <div className="flex shrink-0 flex-wrap gap-2 text-sm sm:flex-col sm:items-end">

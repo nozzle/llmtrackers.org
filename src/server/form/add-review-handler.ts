@@ -49,6 +49,9 @@ export interface NewReviewData {
     maxScore: number;
     summary: string;
     directLink?: string | null;
+    pros?: string[];
+    cons?: string[];
+    noteworthy?: string[];
   }>;
 }
 
@@ -250,6 +253,15 @@ function validateCompanyRating(
     }
   }
 
+  const prosResult = validateHighlightList(raw.pros, `${prefix}.pros`);
+  if (!prosResult.ok) return prosResult;
+
+  const consResult = validateHighlightList(raw.cons, `${prefix}.cons`);
+  if (!consResult.ok) return consResult;
+
+  const noteworthyResult = validateHighlightList(raw.noteworthy, `${prefix}.noteworthy`);
+  if (!noteworthyResult.ok) return noteworthyResult;
+
   return {
     ok: true,
     value: {
@@ -261,8 +273,39 @@ function validateCompanyRating(
         raw.directLink !== undefined && raw.directLink !== null
           ? (raw.directLink as string).trim() || null
           : null,
+      pros: prosResult.value,
+      cons: consResult.value,
+      noteworthy: noteworthyResult.value,
     },
   };
+}
+
+function validateHighlightList(
+  raw: unknown,
+  fieldPath: string,
+): { ok: true; value: string[] } | { ok: false; error: string } {
+  if (raw === undefined || raw === null) {
+    return { ok: true, value: [] };
+  }
+
+  if (!Array.isArray(raw)) {
+    return { ok: false, error: `${fieldPath} must be an array` };
+  }
+
+  if (raw.length > 3) {
+    return { ok: false, error: `${fieldPath} must contain at most 3 items` };
+  }
+
+  const items: string[] = [];
+  for (let i = 0; i < raw.length; i++) {
+    const item = raw[i];
+    if (typeof item !== "string" || item.trim().length === 0) {
+      return { ok: false, error: `${fieldPath}[${i}] must be a non-empty string` };
+    }
+    items.push(item.trim());
+  }
+
+  return { ok: true, value: items };
 }
 
 // ---- Core logic ----
@@ -305,6 +348,9 @@ export async function handleAddReview(
       maxScore: cr.maxScore,
       summary: cr.summary,
       ...(cr.directLink ? { directLink: cr.directLink } : {}),
+      pros: cr.pros ?? [],
+      cons: cr.cons ?? [],
+      noteworthy: cr.noteworthy ?? [],
     })),
   };
 
@@ -384,6 +430,15 @@ function buildRatingTable(rating: ReviewYamlValue["companyRatings"][number]): st
   ];
   if (rating.directLink) {
     rows.push(["Direct Link", rating.directLink]);
+  }
+  if (rating.pros.length > 0) {
+    rows.push(["Pros", rating.pros.join(", ")]);
+  }
+  if (rating.cons.length > 0) {
+    rows.push(["Cons", rating.cons.join(", ")]);
+  }
+  if (rating.noteworthy.length > 0) {
+    rows.push(["Noteworthy", rating.noteworthy.join(", ")]);
   }
 
   const lines = [

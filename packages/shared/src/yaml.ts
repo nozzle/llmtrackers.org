@@ -372,6 +372,9 @@ function sortReviewKeys(review: ReviewYamlValue): ReviewYamlValue {
       maxScore: cr.maxScore,
       summary: cr.summary,
       ...(cr.directLink ? { directLink: cr.directLink } : {}),
+      ...(cr.pros.length > 0 ? { pros: cr.pros } : {}),
+      ...(cr.cons.length > 0 ? { cons: cr.cons } : {}),
+      ...(cr.noteworthy.length > 0 ? { noteworthy: cr.noteworthy } : {}),
     })),
   } as ReviewYamlValue;
 }
