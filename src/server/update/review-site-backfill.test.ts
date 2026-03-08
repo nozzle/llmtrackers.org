@@ -49,23 +49,26 @@ tweets: []
 describe("backfillCompanyReviewSites", () => {
   it("returns updated YAML when review-site data changes", async () => {
     vi.mocked(collectReviewSites).mockResolvedValue({
-      trustpilot: {
-        url: "https://www.trustpilot.com/review/example.com",
-        score: 4.3,
-        maxScore: 5,
-        reviewCount: 12,
-        ratingDistribution: [{ label: "5-star", value: 5, count: 9 }],
-        reviews: [
-          {
-            author: "Jane",
-            title: "Solid",
-            rating: 5,
-            date: "2026-03-06",
-            excerpt: "Helpful tool",
-            url: null,
-          },
-        ],
+      collected: {
+        trustpilot: {
+          url: "https://www.trustpilot.com/review/example.com",
+          score: 4.3,
+          maxScore: 5,
+          reviewCount: 12,
+          ratingDistribution: [{ label: "5-star", value: 5, count: 9 }],
+          reviews: [
+            {
+              author: "Jane",
+              title: "Solid",
+              rating: 5,
+              date: "2026-03-06",
+              excerpt: "Helpful tool",
+              url: null,
+            },
+          ],
+        },
       },
+      warnings: [],
     });
     vi.mocked(diffReviewSites).mockReturnValue([
       {
@@ -88,7 +91,7 @@ describe("backfillCompanyReviewSites", () => {
   });
 
   it("returns original YAML when no review-site diffs exist", async () => {
-    vi.mocked(collectReviewSites).mockResolvedValue({});
+    vi.mocked(collectReviewSites).mockResolvedValue({ collected: {}, warnings: [] });
     vi.mocked(diffReviewSites).mockReturnValue([]);
 
     const result = await backfillCompanyReviewSites(baseYaml);

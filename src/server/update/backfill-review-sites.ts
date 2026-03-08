@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { backfillCompanyReviewSites } from "./review-site-backfill";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(__dirname, "../..");
+const repoRoot = path.resolve(__dirname, "../../..");
 const dataDir = path.resolve(repoRoot, "data/companies");
 
 async function main() {
@@ -36,6 +36,9 @@ async function main() {
 
     if (result.diffs.length === 0) {
       console.log(`SKIP ${file} (${result.company.name}) - no review-site changes`);
+      for (const warning of result.warnings) {
+        console.log(`  WARN ${warning.platform}: ${warning.message} (${warning.url})`);
+      }
       continue;
     }
 
@@ -43,6 +46,9 @@ async function main() {
     console.log(`UPDATE ${file} (${result.company.name})`);
     for (const diff of result.diffs) {
       console.log(`  ${diff.platform}: ${diff.changes.length} change(s)`);
+    }
+    for (const warning of result.warnings) {
+      console.log(`  WARN ${warning.platform}: ${warning.message} (${warning.url})`);
     }
 
     if (write) {

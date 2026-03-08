@@ -18,6 +18,7 @@ interface PageExtractionResult {
   text: string;
   html: string;
   warnings: string[];
+  challengeDetected: boolean;
 }
 
 interface PageLike {
@@ -66,94 +67,105 @@ async function extractFromPage(page: PageLike, url: string): Promise<PageExtract
 
   const result = await page.evaluate(
     ({ maxTextLength }) => {
-      function getMetaContent(selector: string): string | null {
-        const element = document.querySelector<HTMLMetaElement>(selector);
-        const value = element?.content.trim();
-        return value ?? null;
-      }
-
-      function textFromNode(node: Element | null): string {
-        if (!node) return "";
-        return node.textContent.replace(/\s+/g, " ").trim();
-      }
-
-      function bestContentRoot(): Element | null {
-        const candidates = [
-          document.querySelector("article"),
-          document.querySelector("main article"),
-          document.querySelector("main"),
-          document.querySelector("[role='main']"),
-        ].filter((node): node is Element => Boolean(node));
-
-        if (candidates.length > 0) {
-          return candidates.sort((a, b) => b.textContent.length - a.textContent.length)[0];
-        }
-
-        const bodyChildren = Array.from(document.body.querySelectorAll("div, section"));
-        return (
-          bodyChildren.sort((a, b) => b.textContent.length - a.textContent.length)[0] ??
-          document.body
-        );
-      }
-
-      function parseJsonLdDate(): string | null {
-        const scripts = Array.from(
-          document.querySelectorAll<HTMLScriptElement>('script[type="application/ld+json"]'),
-        );
-
-        for (const script of scripts) {
-          try {
-            const jsonText = script.textContent.trim();
-            const parsed = JSON.parse(jsonText.length > 0 ? jsonText : "null") as unknown;
-            const values = Array.isArray(parsed) ? parsed : [parsed];
-            for (const value of values) {
-              if (typeof value !== "object" || value === null) continue;
-              const candidate = value as Record<string, unknown>;
-              const raw =
-                "datePublished" in candidate ? candidate.datePublished : candidate.dateModified;
-              if (typeof raw === "string" && raw.trim()) {
-                return raw.trim();
-              }
-            }
-          } catch {
-            // ignore malformed JSON-LD
+      const runner = new Function(
+        "maxTextLength",
+        `
+          function getMetaContent(selector) {
+            const element = document.querySelector(selector);
+            const value = element && element.content ? element.content.trim() : null;
+            return value || null;
           }
-        }
 
-        return null;
-      }
+          function textFromNode(node) {
+            if (!node || !node.textContent) return "";
+            return node.textContent.replace(/\\s+/g, " ").trim();
+          }
 
-      function normalizeDate(value: string | null): string | null {
-        if (!value) return null;
-        const match = /\d{4}-\d{2}-\d{2}/.exec(value);
-        if (match) return match[0];
-        const parsed = new Date(value);
-        if (Number.isNaN(parsed.getTime())) return null;
-        return parsed.toISOString().slice(0, 10);
-      }
+          function bestContentRoot() {
+            const candidates = [
+              document.querySelector("article"),
+              document.querySelector("main article"),
+              document.querySelector("main"),
+              document.querySelector("[role='main']"),
+            ].filter(Boolean);
 
-      const root = bestContentRoot();
-      const text = textFromNode(root).slice(0, maxTextLength);
-      const metaAuthor = getMetaContent('meta[name="author"]');
-      const relAuthor = textFromNode(document.querySelector('[rel="author"]')) || null;
-      const itemPropAuthor = textFromNode(document.querySelector('[itemprop="author"]')) || null;
-      const byline = metaAuthor ?? relAuthor ?? itemPropAuthor;
+            if (candidates.length > 0) {
+              return candidates.sort((a, b) => textFromNode(b).length - textFromNode(a).length)[0];
+            }
 
-      const publishedDateSource =
-        getMetaContent('meta[property="article:published_time"]') ??
-        getMetaContent('meta[name="pubdate"]') ??
-        getMetaContent('meta[name="date"]') ??
-        parseJsonLdDate();
+            const bodyChildren = Array.from(document.body.querySelectorAll("div, section"));
+            return bodyChildren.sort((a, b) => textFromNode(b).length - textFromNode(a).length)[0] || document.body;
+          }
 
-      return {
-        finalUrl: window.location.href,
-        title: document.title.trim(),
-        byline,
-        publishedDate: normalizeDate(publishedDateSource),
-        text,
-        html: document.documentElement.outerHTML,
-        warnings: text.length < 1500 ? ["Extracted page text was relatively short."] : [],
-      };
+          function parseJsonLdDate() {
+            const scripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
+            for (const script of scripts) {
+              try {
+                const jsonText = script.textContent ? script.textContent.trim() : "";
+                const parsed = JSON.parse(jsonText.length > 0 ? jsonText : "null");
+                const values = Array.isArray(parsed) ? parsed : [parsed];
+                for (const value of values) {
+                  if (typeof value !== "object" || value === null) continue;
+                  const raw = value.datePublished !== undefined ? value.datePublished : value.dateModified;
+                  if (typeof raw === "string" && raw.trim()) return raw.trim();
+                }
+              } catch {}
+            }
+            return null;
+          }
+
+          function normalizeDate(value) {
+            if (!value) return null;
+            const match = /\\d{4}-\\d{2}-\\d{2}/.exec(value);
+            if (match) return match[0];
+            const parsed = new Date(value);
+            if (Number.isNaN(parsed.getTime())) return null;
+            return parsed.toISOString().slice(0, 10);
+          }
+
+          const root = bestContentRoot();
+          const text = textFromNode(root).slice(0, maxTextLength);
+          const byline =
+            getMetaContent('meta[name="author"]') ||
+            textFromNode(document.querySelector('[rel="author"]')) ||
+            textFromNode(document.querySelector('[itemprop="author"]')) ||
+            null;
+
+          const html = document.documentElement.outerHTML;
+          const challengeDetected =
+            /captcha-delivery\.com/i.test(html) ||
+            /DataDome CAPTCHA/i.test(html) ||
+            /cf-challenge|challenge-platform/i.test(html) ||
+            /verify you are human|checking your browser/i.test(text);
+
+          const publishedDateSource =
+            getMetaContent('meta[property="article:published_time"]') ||
+            getMetaContent('meta[name="pubdate"]') ||
+            getMetaContent('meta[name="date"]') ||
+            parseJsonLdDate();
+
+          const warnings = [];
+          if (text.length < 1500) {
+            warnings.push("Extracted page text was relatively short.");
+          }
+          if (challengeDetected) {
+            warnings.push("Challenge or anti-bot page detected during browser extraction.");
+          }
+
+          return {
+            finalUrl: window.location.href,
+            title: document.title.trim(),
+            byline,
+            publishedDate: normalizeDate(publishedDateSource),
+            text,
+            html,
+            warnings,
+            challengeDetected,
+          };
+        `,
+      ) as (maxTextLength: number) => PageExtractionResult;
+
+      return runner(maxTextLength);
     },
     { maxTextLength: MAX_TEXT_LENGTH },
   );

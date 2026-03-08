@@ -57,7 +57,9 @@ export async function handlePrefillReview(
         byline: null,
         publishedDate: null,
         text: payload.pastedText,
+        html: "",
         warnings: ["Used pasted article text instead of browser extraction."],
+        challengeDetected: false,
       }
     : await extractPageContent(payload.url, env);
 

@@ -8,7 +8,7 @@ import {
   type ReviewSiteSnippet,
   type ReviewSites,
 } from "@llm-tracker/shared";
-import { extractPageHtml } from "../browser/extract-page";
+import { extractPageContent } from "../browser/extract-page";
 import type { AppEnv } from "../types";
 
 export interface ReviewSiteFieldChange {
@@ -20,6 +20,17 @@ export interface ReviewSiteFieldChange {
 export interface ReviewSiteDiff {
   platform: ReviewSitePlatform;
   changes: ReviewSiteFieldChange[];
+}
+
+export interface ReviewSiteCollectionWarning {
+  platform: ReviewSitePlatform;
+  url: string;
+  message: string;
+}
+
+export interface ReviewSiteCollectionResult {
+  collected: Partial<ReviewSites>;
+  warnings: ReviewSiteCollectionWarning[];
 }
 
 type Parser = (url: string, html: string) => ReviewSiteData | null;
@@ -34,17 +45,26 @@ const PARSERS: Record<ReviewSitePlatform, Parser> = {
 export async function collectReviewSites(
   reviewSites: ReviewSites,
   env?: AppEnv,
-): Promise<Partial<ReviewSites>> {
+): Promise<ReviewSiteCollectionResult> {
   const collected: Partial<ReviewSites> = {};
+  const warnings: ReviewSiteCollectionWarning[] = [];
 
   for (const platform of REVIEW_SITE_PLATFORMS) {
     const site = reviewSites[platform];
     if (!site?.url) continue;
 
-    const html = await extractPageHtml(site.url, env);
-    if (!html) continue;
+    const extracted = await extractPageContent(site.url, env);
+    if (!extracted?.html) continue;
 
-    const parsed = PARSERS[platform](site.url, html);
+    if (extracted.challengeDetected) {
+      warnings.push({
+        platform,
+        url: site.url,
+        message: "challenge page detected",
+      });
+    }
+
+    const parsed = PARSERS[platform](site.url, extracted.html);
     if (!parsed) continue;
 
     const result = ReviewSiteDataSchema.safeParse(parsed);
@@ -53,7 +73,7 @@ export async function collectReviewSites(
     }
   }
 
-  return collected;
+  return { collected, warnings };
 }
 
 export function parseTrustpilotReviewSite(url: string, html: string): ReviewSiteData | null {
@@ -189,6 +209,14 @@ export function diffReviewSites(
       });
     }
 
+    if (hasMeaningfulReviewSnippetChange(current.reviews, candidate.reviews)) {
+      changes.push({
+        field: "reviews",
+        oldValue: summarizeReviews(current.reviews),
+        newValue: summarizeReviews(candidate.reviews),
+      });
+    }
+
     if (changes.length > 0) {
       diffs.push({ platform, changes });
     }
@@ -230,6 +258,27 @@ function compactReviewSiteData(data: ReviewSiteData): ReviewSiteData {
       url: review.url ?? null,
     })),
   };
+}
+
+function summarizeReviews(reviews: ReviewSiteSnippet[]): string {
+  if (reviews.length === 0) return "none";
+
+  return reviews
+    .slice(0, 3)
+    .map((review) => {
+      const author = review.author ?? "unknown";
+      const title = review.title ?? "untitled";
+      const excerpt = review.excerpt.trim().slice(0, 80);
+      return `${author}: ${title} - ${excerpt}`;
+    })
+    .join(" | ");
+}
+
+function hasMeaningfulReviewSnippetChange(
+  current: ReviewSiteSnippet[],
+  candidate: ReviewSiteSnippet[],
+): boolean {
+  return summarizeReviews(current) !== summarizeReviews(candidate);
 }
 
 function extractTrustpilotDistribution(html: string, reviewCount: number): ReviewSiteBucket[] {

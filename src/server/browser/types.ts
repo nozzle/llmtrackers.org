@@ -6,4 +6,5 @@ export interface ExtractedPageContent {
   text: string;
   html: string;
   warnings: string[];
+  challengeDetected: boolean;
 }

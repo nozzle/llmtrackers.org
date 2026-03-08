@@ -1,10 +1,15 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
+  collectReviewSites,
   diffReviewSites,
   formatReviewSiteDiffMarkdown,
   parseTrustpilotReviewSite,
   parseTrustRadiusReviewSite,
 } from "./review-sites";
+
+vi.mock("../browser/extract-page", () => ({
+  extractPageContent: vi.fn(),
+}));
 
 const trustpilotHtml = `
 <html><head>
@@ -171,5 +176,85 @@ describe("review site diffs", () => {
     const markdown = formatReviewSiteDiffMarkdown(diffs);
     expect(markdown).toContain("## Review Site Changes");
     expect(markdown).toContain("Trustpilot");
+  });
+
+  it("detects review snippet changes even when aggregate metrics stay the same", () => {
+    const diffs = diffReviewSites(
+      {
+        trustpilot: {
+          url: "https://www.trustpilot.com/review/example.com",
+          score: 4.3,
+          maxScore: 5,
+          reviewCount: 112,
+          ratingDistribution: [
+            { label: "5-star", value: 5, count: 88 },
+            { label: "1-star", value: 1, count: 24 },
+          ],
+          reviews: [],
+        },
+      },
+      {
+        trustpilot: {
+          url: "https://www.trustpilot.com/review/example.com",
+          score: 4.3,
+          maxScore: 5,
+          reviewCount: 112,
+          ratingDistribution: [
+            { label: "5-star", value: 5, count: 88 },
+            { label: "1-star", value: 1, count: 24 },
+          ],
+          reviews: [
+            {
+              author: "Jane Doe",
+              title: "Helpful",
+              rating: 5,
+              date: "2026-03-07",
+              excerpt: "Great support and visibility tracking.",
+              url: "https://example.com/review/1",
+            },
+          ],
+        },
+      },
+    );
+
+    expect(diffs).toHaveLength(1);
+    expect(diffs[0]?.changes.some((change) => change.field === "reviews")).toBe(true);
+  });
+
+  it("surfaces challenge-page warnings during collection", async () => {
+    const { extractPageContent } = await import("../browser/extract-page");
+    vi.mocked(extractPageContent).mockResolvedValue({
+      finalUrl: "https://www.g2.com/products/example/reviews",
+      title: "g2.com",
+      byline: null,
+      publishedDate: null,
+      text: "captcha page",
+      html: "<html>DataDome CAPTCHA</html>",
+      warnings: ["Challenge or anti-bot page detected during browser extraction."],
+      challengeDetected: true,
+    });
+
+    const result = await collectReviewSites(
+      {
+        g2: {
+          url: "https://www.g2.com/products/example/reviews",
+          score: null,
+          maxScore: 5,
+          reviewCount: null,
+          ratingDistribution: [],
+          reviews: [],
+        },
+      },
+      undefined,
+    );
+
+    expect(result.collected).toEqual({});
+    expect(result.warnings).toEqual([
+      {
+        platform: "g2",
+        url: "https://www.g2.com/products/example/reviews",
+        message: "challenge page detected",
+      },
+    ]);
   });
 });

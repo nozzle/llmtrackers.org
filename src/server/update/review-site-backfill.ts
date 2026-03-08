@@ -4,12 +4,18 @@ import {
   type Company,
   type ReviewSites,
 } from "@llm-tracker/shared";
-import { collectReviewSites, diffReviewSites, type ReviewSiteDiff } from "./review-sites";
+import {
+  collectReviewSites,
+  diffReviewSites,
+  type ReviewSiteCollectionWarning,
+  type ReviewSiteDiff,
+} from "./review-sites";
 import type { AppEnv } from "../types";
 
 export interface ReviewSiteBackfillResult {
   company: Company;
   extractedReviewSites: Partial<ReviewSites>;
+  warnings: ReviewSiteCollectionWarning[];
   diffs: ReviewSiteDiff[];
   updatedYamlText: string;
 }
@@ -20,14 +26,17 @@ export async function backfillCompanyReviewSites(
   env?: AppEnv,
 ): Promise<ReviewSiteBackfillResult> {
   const { company } = parseCompanyYaml(yamlText);
-  const nextReviewSites =
-    extractedReviewSites ?? (await collectReviewSites(company.reviewSites, env));
+  const collection = extractedReviewSites
+    ? { collected: extractedReviewSites, warnings: [] }
+    : await collectReviewSites(company.reviewSites, env);
+  const nextReviewSites = collection.collected;
   const diffs = diffReviewSites(company.reviewSites, nextReviewSites);
 
   if (diffs.length === 0) {
     return {
       company,
       extractedReviewSites: nextReviewSites,
+      warnings: collection.warnings,
       diffs,
       updatedYamlText: yamlText,
     };
@@ -38,6 +47,7 @@ export async function backfillCompanyReviewSites(
   return {
     company,
     extractedReviewSites: nextReviewSites,
+    warnings: collection.warnings,
     diffs,
     updatedYamlText: prepared.yamlText,
   };
