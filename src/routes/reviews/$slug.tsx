@@ -146,6 +146,13 @@ function ReviewPage() {
             </svg>
           </a>
         </div>
+
+        <div className="mt-5 max-w-3xl rounded-xl border border-gray-200 bg-gray-50 px-5 py-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+            Article Summary
+          </h2>
+          <p className="mt-2 text-sm leading-7 text-gray-700">{review.summary}</p>
+        </div>
       </div>
 
       {/* Ratings summary */}

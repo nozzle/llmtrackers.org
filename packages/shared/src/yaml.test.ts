@@ -125,6 +125,7 @@ const reviewYaml = `slug: test-review
 name: Test Review
 url: https://example.com/reviews/test-review
 date: 2026-03-07
+summary: A concise summary of the overall article.
 author:
   name: Reviewer Name
   socialProfiles:
@@ -236,6 +237,7 @@ describe("yaml helpers", () => {
       name: "Test Review",
       url: "https://example.com/reviews/test-review",
       date: "2026-03-07",
+      summary: "A concise summary of the overall article.",
       author: {
         name: "Reviewer Name",
         socialProfiles: [],

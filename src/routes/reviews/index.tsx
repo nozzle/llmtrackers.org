@@ -103,6 +103,9 @@ function ReviewsIndexPage() {
                       <span>{review.companyRatings.length} tools rated</span>
                       {highlightCount > 0 && <span>{highlightCount} highlights</span>}
                     </div>
+                    <p className="mt-3 max-w-3xl text-sm leading-relaxed text-gray-600">
+                      {review.summary}
+                    </p>
                   </div>
                   <a
                     href={review.url}

@@ -10,6 +10,7 @@ interface EditReviewModalProps {
     name: string;
     url: string;
     date: string;
+    summary: string;
     author: {
       name: string;
       socialProfiles: Array<{ label: string; url: string }>;
@@ -33,6 +34,7 @@ interface ReviewChanges {
   name?: string;
   url?: string;
   date?: string;
+  summary?: string;
   author?: {
     name?: string;
     socialProfiles?: Array<{ label: string; url: string }>;
@@ -195,6 +197,7 @@ interface FormState {
   name: string;
   url: string;
   date: string;
+  summary: string;
   authorName: string;
   socialProfiles: SocialProfileFormState[];
   companyRatings: CompanyRatingFormState[];
@@ -223,6 +226,7 @@ function reviewToFormState(review: EditReviewModalProps["review"]): FormState {
     name: review.name,
     url: review.url,
     date: review.date,
+    summary: review.summary,
     authorName: review.author.name,
     socialProfiles: review.author.socialProfiles.map((sp) => ({
       id: generateSocialProfileId(),
@@ -287,6 +291,15 @@ function computeChangesAndDiff(
       label: "Date",
       oldValue: original.date,
       newValue: form.date.trim(),
+    });
+  }
+
+  if (form.summary.trim() !== original.summary) {
+    changes.summary = form.summary.trim();
+    diff.push({
+      label: "Summary",
+      oldValue: original.summary,
+      newValue: form.summary.trim(),
     });
   }
 
@@ -849,6 +862,17 @@ export function EditReviewModal({
                       onChange={(e) => {
                         updateForm("date", e.target.value);
                       }}
+                      className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </label>
+                  <label className="block">
+                    <span className="text-xs font-medium text-gray-600">Overall Article Summary</span>
+                    <textarea
+                      value={form.summary}
+                      onChange={(e) => {
+                        updateForm("summary", e.target.value);
+                      }}
+                      rows={3}
                       className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                   </label>

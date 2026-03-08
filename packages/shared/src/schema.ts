@@ -106,6 +106,7 @@ export const PublishedReviewSchema = z.object({
   name: z.string(),
   url: z.url(),
   date: z.string(),
+  summary: z.string(),
   author: ReviewAuthorSchema,
   companyRatings: z.array(ReviewCompanyRatingSchema).min(1),
 });

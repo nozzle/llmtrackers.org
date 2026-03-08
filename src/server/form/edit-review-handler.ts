@@ -41,6 +41,7 @@ export interface ReviewChanges {
   name?: string;
   url?: string;
   date?: string;
+  summary?: string;
   author?: {
     name?: string;
     socialProfiles?: Array<{ label: string; url: string }>;
@@ -157,6 +158,13 @@ function validateReviewChanges(
       return { ok: false, error: "changes.date must be in YYYY-MM-DD format" };
     }
     changes.date = raw.date.trim();
+  }
+
+  if (raw.summary !== undefined) {
+    if (typeof raw.summary !== "string" || raw.summary.trim().length === 0) {
+      return { ok: false, error: "changes.summary must be a non-empty string" };
+    }
+    changes.summary = raw.summary.trim();
   }
 
   if (raw.author !== undefined) {
@@ -364,6 +372,7 @@ export async function handleEditReview(
   if (changes.name !== undefined) updatedReview.name = changes.name;
   if (changes.url !== undefined) updatedReview.url = changes.url;
   if (changes.date !== undefined) updatedReview.date = changes.date;
+  if (changes.summary !== undefined) updatedReview.summary = changes.summary;
   if (changes.author !== undefined) {
     updatedReview.author = {
       ...review.author,
@@ -448,6 +457,9 @@ function buildReviewDiffTable(
   }
   if (changes.date !== undefined) {
     rows.push(["Date", formatValue(original.date), formatValue(updated.date)]);
+  }
+  if (changes.summary !== undefined) {
+    rows.push(["Summary", formatValue(original.summary), formatValue(updated.summary)]);
   }
   if (changes.author?.name !== undefined) {
     rows.push(["Author Name", formatValue(original.author.name), formatValue(updated.author.name)]);
