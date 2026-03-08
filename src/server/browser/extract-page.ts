@@ -1,10 +1,14 @@
-import { chromium } from "playwright";
 import type { ExtractedPageContent } from "./types";
 import type { AppEnv } from "../types";
 
 const NAVIGATION_TIMEOUT_MS = 30_000;
 const EXTRACT_TIMEOUT_MS = 45_000;
 const MAX_TEXT_LENGTH = 60_000;
+
+async function runtimeImport<T>(specifier: string): Promise<T> {
+  const importer = new Function("s", "return import(s)") as (s: string) => Promise<T>;
+  return importer(specifier);
+}
 
 interface PageExtractionResult {
   finalUrl: string;
@@ -177,7 +181,12 @@ async function extractWithCloudflareBrowser(
 ): Promise<ExtractedPageContent | null> {
   if (!env.BROWSER) return null;
 
-  const { launch: launchCloudflareBrowser } = await import("@cloudflare/playwright");
+  const { launch: launchCloudflareBrowser } = await runtimeImport<{
+    launch(browser: Fetcher): Promise<{
+      newContext(options: unknown): Promise<{ newPage(): Promise<PageLike>; close(): Promise<unknown> }>;
+      close(): Promise<unknown>;
+    }>;
+  }>("@cloudflare/playwright");
   const browser = await launchCloudflareBrowser(env.BROWSER);
 
   try {
@@ -204,6 +213,16 @@ async function extractWithLocalBrowser(url: string): Promise<ExtractedPageConten
   } | null = null;
 
   try {
+    const { chromium } = await runtimeImport<{
+      chromium: {
+        launch(options: { headless: boolean }): Promise<{
+          close(): Promise<unknown>;
+          newContext(
+            options: unknown,
+          ): Promise<{ newPage(): Promise<PageLike>; close(): Promise<unknown> }>;
+        }>;
+      };
+    }>("playwright");
     browser = await chromium.launch({ headless: true });
     const context = await browser.newContext({
       userAgent:
