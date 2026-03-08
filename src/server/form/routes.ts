@@ -6,6 +6,7 @@ import { validateAddPlanPayload, handleAddPlan } from "./add-plan-handler";
 import { validateAddCompanyPayload, handleAddCompany } from "./add-company-handler";
 import { validateAddReviewPayload, handleAddReview } from "./add-review-handler";
 import { validateEditReviewPayload, handleEditReview } from "./edit-review-handler";
+import { handlePrefillReview, validatePrefillReviewPayload } from "./prefill-review-handler";
 import {
   corsHeaders,
   isJsonRequest,
@@ -99,6 +100,15 @@ export async function handleFormRequest(request: Request, env: AppEnv): Promise<
       execute: handleAddReview,
       logLabel: "add-review",
     });
+  }
+
+  if (path === "/api/prefill-review-from-url") {
+    const validated = validatePrefillReviewPayload(body);
+    if (!validated.ok) {
+      return jsonResponse({ error: validated.error }, 400);
+    }
+
+    return handlePrefillReview(validated.value, env);
   }
 
   if (path === "/api/suggest-review-edit") {

@@ -44,6 +44,37 @@ interface PrMutationSuccess {
 }
 
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
+type ImportMode = "import" | "editing";
+type ImportStatus = "idle" | "loading" | "error";
+
+interface PrefillResponse {
+  success: true;
+  draft: {
+    review: {
+      name: string;
+      slug: string;
+      url: string;
+      date: string;
+      summary: string;
+      detailedSummary: string;
+      author: {
+        name: string;
+        socialProfiles: Array<{ label: string; url: string }>;
+      };
+    };
+    companyRatings: Array<{
+      companySlug: string;
+      score: number | null;
+      maxScore: number | null;
+      summary: string;
+      directLink: string | null;
+      pros: string[];
+      cons: string[];
+      noteworthy: string[];
+    }>;
+    warnings: string[];
+  };
+}
 
 // ---------------------------------------------------------------------------
 // Turnstile
@@ -590,6 +621,12 @@ function SocialProfileSection({
 // ---------------------------------------------------------------------------
 
 export function AddReviewModal({ companies, onClose }: Readonly<AddReviewModalProps>) {
+  const [mode, setMode] = useState<ImportMode>("import");
+  const [importUrl, setImportUrl] = useState("");
+  const [importStatus, setImportStatus] = useState<ImportStatus>("idle");
+  const [importError, setImportError] = useState("");
+  const [importWarnings, setImportWarnings] = useState<string[]>([]);
+  const [wasPrefilled, setWasPrefilled] = useState(false);
   const [form, setForm] = useState<ReviewFormState>(defaultReviewState);
   const [ratings, setRatings] = useState<CompanyRatingFormState[]>([createEmptyRating()]);
   const [contributor, setContributor] = useState({
@@ -686,6 +723,76 @@ export function AddReviewModal({ companies, onClose }: Readonly<AddReviewModalPr
 
   function updateForm<K extends keyof ReviewFormState>(key: K, value: ReviewFormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function hydrateFromDraft(draft: PrefillResponse["draft"]) {
+    setForm({
+      name: draft.review.name,
+      slug: draft.review.slug,
+      autoSlug: false,
+      url: draft.review.url,
+      date: draft.review.date,
+      summary: draft.review.summary,
+      detailedSummary: draft.review.detailedSummary,
+      authorName: draft.review.author.name,
+      socialProfiles: draft.review.author.socialProfiles.map((profile) => ({
+        id: createEmptySocialProfile().id,
+        label: profile.label,
+        url: profile.url,
+      })),
+    });
+
+    setRatings(
+      draft.companyRatings.length > 0
+        ? draft.companyRatings.map((rating) => ({
+            id: createEmptyRating().id,
+            companySlug: rating.companySlug,
+            score: rating.score == null ? "" : String(rating.score),
+            maxScore: rating.maxScore == null ? "" : String(rating.maxScore),
+            summary: rating.summary,
+            directLink: rating.directLink ?? "",
+            pros: createHighlightSlots(rating.pros),
+            cons: createHighlightSlots(rating.cons),
+            noteworthy: createHighlightSlots(rating.noteworthy),
+          }))
+        : [createEmptyRating()],
+    );
+    setImportWarnings(draft.warnings);
+    setImportUrl(draft.review.url);
+    setWasPrefilled(true);
+    setMode("editing");
+  }
+
+  async function handleImport() {
+    if (!importUrl.trim()) {
+      setImportStatus("error");
+      setImportError("Article URL is required");
+      return;
+    }
+
+    setImportStatus("loading");
+    setImportError("");
+    setImportWarnings([]);
+
+    try {
+      const response = await fetch("/api/prefill-review-from-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: importUrl.trim() }),
+      });
+
+      const result = (await response.json()) as PrefillResponse | { error?: string };
+
+      if (!response.ok || !("success" in result)) {
+        throw new Error(result && "error" in result ? result.error || "Import failed" : "Import failed");
+      }
+
+      hydrateFromDraft(result.draft);
+      setImportStatus("idle");
+    } catch (err) {
+      setImportStatus("error");
+      setImportError(err instanceof Error ? err.message : "Import failed");
+    }
   }
 
   function updateRating(index: number, updated: CompanyRatingFormState) {
@@ -815,16 +922,83 @@ export function AddReviewModal({ companies, onClose }: Readonly<AddReviewModalPr
           </button>
         </div>
 
-        {/* Body: left form + right preview */}
-        <form
-          onSubmit={(e) => {
-            void handleSubmit(e);
-          }}
-          className="flex min-h-0 flex-1 flex-col"
-        >
-          <div className="flex min-h-0 flex-1 divide-x divide-gray-200">
-            {/* Left panel: form */}
-            <div className="flex-1 space-y-5 overflow-y-auto px-6 py-4">
+        {mode === "import" ? (
+          <div className="flex min-h-0 flex-1 flex-col">
+            <div className="flex flex-1 items-center justify-center px-6 py-10">
+              <div className="w-full max-w-xl rounded-xl border border-gray-200 bg-gray-50 p-6">
+                <h3 className="text-base font-semibold text-gray-900">Start with the article URL</h3>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600">
+                  We&apos;ll fetch the article, extract review details, and prefill the submission form so
+                  you can edit instead of starting from scratch.
+                </p>
+                <label className="mt-5 block">
+                  <span className="text-xs font-medium text-gray-600">Article URL</span>
+                  <input
+                    type="url"
+                    value={importUrl}
+                    onChange={(e) => {
+                      setImportUrl(e.target.value);
+                    }}
+                    placeholder="https://example.com/review-article"
+                    className="mt-1 block w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </label>
+                {importStatus === "error" && importError && (
+                  <div className="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                    {importError}
+                  </div>
+                )}
+                <div className="mt-5 flex items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setForm((prev) => ({ ...prev, url: importUrl.trim() }));
+                      setWasPrefilled(false);
+                      setMode("editing");
+                    }}
+                    className="cursor-pointer rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                  >
+                    Continue manually
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void handleImport();
+                    }}
+                    disabled={importStatus === "loading"}
+                    className="cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {importStatus === "loading" ? "Importing..." : "Import details"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <form
+            onSubmit={(e) => {
+              void handleSubmit(e);
+            }}
+            className="flex min-h-0 flex-1 flex-col"
+          >
+            <div className="flex min-h-0 flex-1 divide-x divide-gray-200">
+              {/* Left panel: form */}
+              <div className="flex-1 space-y-5 overflow-y-auto px-6 py-4">
+              {wasPrefilled && (
+                <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+                  We prefilled this from the article. Please verify all fields before submitting.
+                </div>
+              )}
+              {importWarnings.length > 0 && (
+                <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                  <p className="font-medium">Import notes</p>
+                  <ul className="mt-2 list-disc pl-5">
+                    {importWarnings.map((warning) => (
+                      <li key={warning}>{warning}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               {/* Review Details */}
               <fieldset>
                 <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
@@ -873,6 +1047,20 @@ export function AddReviewModal({ companies, onClose }: Readonly<AddReviewModalPr
                       className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                   </label>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setImportUrl(form.url);
+                        setMode("import");
+                        setImportStatus("idle");
+                        setImportError("");
+                      }}
+                      className="mt-5 inline-flex cursor-pointer items-center gap-1.5 text-xs font-medium text-blue-600 hover:underline"
+                    >
+                      Re-import from URL
+                    </button>
+                  </div>
                   <div className="grid grid-cols-2 gap-3">
                     <label className="block">
                       <span className="text-xs font-medium text-gray-600">Date</span>
@@ -1118,6 +1306,7 @@ export function AddReviewModal({ companies, onClose }: Readonly<AddReviewModalPr
             </div>
           </div>
         </form>
+        )}
       </div>
     </div>
   );
