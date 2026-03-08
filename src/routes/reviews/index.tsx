@@ -103,9 +103,12 @@ function ReviewsIndexPage() {
                       <span>{review.companyRatings.length} tools rated</span>
                       {highlightCount > 0 && <span>{highlightCount} highlights</span>}
                     </div>
-                    <p className="mt-3 max-w-3xl text-sm leading-relaxed text-gray-600">
-                      {review.summary}
-                    </p>
+                    <div className="relative mt-3 max-w-3xl">
+                      <p className="line-clamp-4 text-sm leading-relaxed text-gray-600">
+                        {review.detailedSummary}
+                      </p>
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-white to-transparent" />
+                    </div>
                   </div>
                   <a
                     href={review.url}
@@ -195,9 +198,22 @@ function ReviewsIndexPage() {
                   <Link
                     to="/reviews/$slug"
                     params={{ slug: review.slug }}
-                    className="text-sm font-medium text-blue-600 hover:underline"
+                    className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:underline"
                   >
-                    View full review details
+                    Read full review
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="2"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                      />
+                    </svg>
                   </Link>
                 </div>
               </article>

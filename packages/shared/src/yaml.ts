@@ -360,6 +360,7 @@ function sortReviewKeys(review: ReviewYamlValue): ReviewYamlValue {
     url: review.url,
     date: review.date,
     summary: review.summary,
+    detailedSummary: review.detailedSummary,
     author: {
       name: review.author.name,
       socialProfiles: review.author.socialProfiles.map((sp) => ({

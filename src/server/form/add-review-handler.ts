@@ -40,6 +40,7 @@ export interface NewReviewData {
   url: string;
   date: string;
   summary: string;
+  detailedSummary: string;
   author: {
     name: string;
     socialProfiles: Array<{ label: string; url: string }>;
@@ -148,6 +149,9 @@ function validateNewReviewData(
   if (typeof raw.summary !== "string" || raw.summary.trim().length === 0) {
     return { ok: false, error: "review.summary is required" };
   }
+  if (typeof raw.detailedSummary !== "string" || raw.detailedSummary.trim().length === 0) {
+    return { ok: false, error: "review.detailedSummary is required" };
+  }
 
   // Author
   if (!raw.author || typeof raw.author !== "object") {
@@ -215,6 +219,7 @@ function validateNewReviewData(
       url: raw.url.trim(),
       date: raw.date.trim(),
       summary: raw.summary.trim(),
+      detailedSummary: raw.detailedSummary.trim(),
       author: {
         name: author.name.trim(),
         socialProfiles: (
@@ -344,6 +349,7 @@ export async function handleAddReview(
     url: newData.url,
     date: newData.date,
     summary: newData.summary,
+    detailedSummary: newData.detailedSummary,
     author: {
       name: newData.author.name,
       socialProfiles: newData.author.socialProfiles,
@@ -409,6 +415,7 @@ function buildReviewSummaryTable(review: ReviewYamlValue): string {
     ["URL", review.url],
     ["Date", review.date],
     ["Summary", review.summary],
+    ["Detailed Summary", review.detailedSummary],
     ["Author", review.author.name],
     ["Companies Rated", String(review.companyRatings.length)],
   ];

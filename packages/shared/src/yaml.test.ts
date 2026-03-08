@@ -126,6 +126,7 @@ name: Test Review
 url: https://example.com/reviews/test-review
 date: 2026-03-07
 summary: A concise summary of the overall article.
+detailedSummary: A longer summary that explains the review methodology and the kinds of teams the article is meant to help.
 author:
   name: Reviewer Name
   socialProfiles:
@@ -238,6 +239,8 @@ describe("yaml helpers", () => {
       url: "https://example.com/reviews/test-review",
       date: "2026-03-07",
       summary: "A concise summary of the overall article.",
+      detailedSummary:
+        "A longer summary that explains the review methodology and the kinds of teams the article is meant to help.",
       author: {
         name: "Reviewer Name",
         socialProfiles: [],

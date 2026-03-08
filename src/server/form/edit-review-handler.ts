@@ -42,6 +42,7 @@ export interface ReviewChanges {
   url?: string;
   date?: string;
   summary?: string;
+  detailedSummary?: string;
   author?: {
     name?: string;
     socialProfiles?: Array<{ label: string; url: string }>;
@@ -165,6 +166,13 @@ function validateReviewChanges(
       return { ok: false, error: "changes.summary must be a non-empty string" };
     }
     changes.summary = raw.summary.trim();
+  }
+
+  if (raw.detailedSummary !== undefined) {
+    if (typeof raw.detailedSummary !== "string" || raw.detailedSummary.trim().length === 0) {
+      return { ok: false, error: "changes.detailedSummary must be a non-empty string" };
+    }
+    changes.detailedSummary = raw.detailedSummary.trim();
   }
 
   if (raw.author !== undefined) {
@@ -373,6 +381,7 @@ export async function handleEditReview(
   if (changes.url !== undefined) updatedReview.url = changes.url;
   if (changes.date !== undefined) updatedReview.date = changes.date;
   if (changes.summary !== undefined) updatedReview.summary = changes.summary;
+  if (changes.detailedSummary !== undefined) updatedReview.detailedSummary = changes.detailedSummary;
   if (changes.author !== undefined) {
     updatedReview.author = {
       ...review.author,
@@ -460,6 +469,13 @@ function buildReviewDiffTable(
   }
   if (changes.summary !== undefined) {
     rows.push(["Summary", formatValue(original.summary), formatValue(updated.summary)]);
+  }
+  if (changes.detailedSummary !== undefined) {
+    rows.push([
+      "Detailed Summary",
+      formatValue(original.detailedSummary),
+      formatValue(updated.detailedSummary),
+    ]);
   }
   if (changes.author?.name !== undefined) {
     rows.push(["Author Name", formatValue(original.author.name), formatValue(updated.author.name)]);

@@ -11,6 +11,7 @@ interface EditReviewModalProps {
     url: string;
     date: string;
     summary: string;
+    detailedSummary: string;
     author: {
       name: string;
       socialProfiles: Array<{ label: string; url: string }>;
@@ -35,6 +36,7 @@ interface ReviewChanges {
   url?: string;
   date?: string;
   summary?: string;
+  detailedSummary?: string;
   author?: {
     name?: string;
     socialProfiles?: Array<{ label: string; url: string }>;
@@ -198,6 +200,7 @@ interface FormState {
   url: string;
   date: string;
   summary: string;
+  detailedSummary: string;
   authorName: string;
   socialProfiles: SocialProfileFormState[];
   companyRatings: CompanyRatingFormState[];
@@ -227,6 +230,7 @@ function reviewToFormState(review: EditReviewModalProps["review"]): FormState {
     url: review.url,
     date: review.date,
     summary: review.summary,
+    detailedSummary: review.detailedSummary,
     authorName: review.author.name,
     socialProfiles: review.author.socialProfiles.map((sp) => ({
       id: generateSocialProfileId(),
@@ -300,6 +304,15 @@ function computeChangesAndDiff(
       label: "Summary",
       oldValue: original.summary,
       newValue: form.summary.trim(),
+    });
+  }
+
+  if (form.detailedSummary.trim() !== original.detailedSummary) {
+    changes.detailedSummary = form.detailedSummary.trim();
+    diff.push({
+      label: "Detailed Summary",
+      oldValue: original.detailedSummary,
+      newValue: form.detailedSummary.trim(),
     });
   }
 
@@ -866,13 +879,24 @@ export function EditReviewModal({
                     />
                   </label>
                   <label className="block">
-                    <span className="text-xs font-medium text-gray-600">Overall Article Summary</span>
+                    <span className="text-xs font-medium text-gray-600">Short Summary</span>
                     <textarea
                       value={form.summary}
                       onChange={(e) => {
                         updateForm("summary", e.target.value);
                       }}
-                      rows={3}
+                      rows={2}
+                      className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </label>
+                  <label className="block">
+                    <span className="text-xs font-medium text-gray-600">Detailed Summary</span>
+                    <textarea
+                      value={form.detailedSummary}
+                      onChange={(e) => {
+                        updateForm("detailedSummary", e.target.value);
+                      }}
+                      rows={6}
                       className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                   </label>

@@ -151,7 +151,12 @@ function ReviewPage() {
           <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
             Article Summary
           </h2>
-          <p className="mt-2 text-sm leading-7 text-gray-700">{review.summary}</p>
+          <p className="mt-2 text-sm font-medium leading-6 text-gray-700">{review.summary}</p>
+          <div className="mt-3 space-y-4 text-sm leading-7 text-gray-700">
+            {review.detailedSummary.split(/\n\s*\n/).map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
         </div>
       </div>
 

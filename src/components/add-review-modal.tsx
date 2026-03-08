@@ -34,6 +34,7 @@ interface ReviewFormState {
   url: string;
   date: string;
   summary: string;
+  detailedSummary: string;
   authorName: string;
   socialProfiles: SocialProfileFormState[];
 }
@@ -164,6 +165,7 @@ function defaultReviewState(): ReviewFormState {
     url: "",
     date: "",
     summary: "",
+    detailedSummary: "",
     authorName: "",
     socialProfiles: [],
   };
@@ -189,6 +191,9 @@ function computeReviewPreview(
   if (review.url.trim()) entries.push({ label: "URL", value: review.url.trim() });
   if (review.date.trim()) entries.push({ label: "Date", value: review.date.trim() });
   if (review.summary.trim()) entries.push({ label: "Summary", value: review.summary.trim() });
+  if (review.detailedSummary.trim()) {
+    entries.push({ label: "Detailed Summary", value: review.detailedSummary.trim() });
+  }
   if (review.authorName.trim())
     entries.push({ label: "Author", value: review.authorName.trim() });
 
@@ -239,6 +244,7 @@ function validateReviewForm(
     return "Date must be in YYYY-MM-DD format";
   }
   if (!review.summary.trim()) return "Review summary is required";
+  if (!review.detailedSummary.trim()) return "Detailed review summary is required";
   if (!review.authorName.trim()) return "Author name is required";
 
   if (ratings.length === 0) return "At least one company rating is required";
@@ -278,6 +284,7 @@ function buildPayload(review: ReviewFormState, ratings: CompanyRatingFormState[]
     url: review.url.trim(),
     date: review.date.trim(),
     summary: review.summary.trim(),
+    detailedSummary: review.detailedSummary.trim(),
     author: {
       name: review.authorName.trim(),
       socialProfiles: review.socialProfiles
@@ -887,14 +894,26 @@ export function AddReviewModal({ companies, onClose }: Readonly<AddReviewModalPr
                     </label>
                   </div>
                   <label className="block">
-                    <span className="text-xs font-medium text-gray-600">Overall Article Summary</span>
+                    <span className="text-xs font-medium text-gray-600">Short Summary</span>
                     <textarea
                       value={form.summary}
                       onChange={(e) => {
                         updateForm("summary", e.target.value);
                       }}
-                      rows={3}
-                      placeholder="Short summary of the overall article and who it helps"
+                      rows={2}
+                      placeholder="One-line summary for cards and tables"
+                      className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </label>
+                  <label className="block">
+                    <span className="text-xs font-medium text-gray-600">Detailed Summary</span>
+                    <textarea
+                      value={form.detailedSummary}
+                      onChange={(e) => {
+                        updateForm("detailedSummary", e.target.value);
+                      }}
+                      rows={6}
+                      placeholder="Longer article recap, one or two paragraphs"
                       className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                   </label>
