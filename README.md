@@ -40,7 +40,11 @@ It uses:
 
 ```bash
 pnpm install
+pnpm playwright:install
 ```
+
+`pnpm playwright:install` is required for local browser-backed extraction. In production,
+the app uses Cloudflare Browser Rendering.
 
 ## Common Commands
 
@@ -49,6 +53,7 @@ pnpm dev
 pnpm preview
 pnpm dev:server
 pnpm compile-data
+pnpm playwright:install
 pnpm cf-typegen
 pnpm test
 pnpm typecheck

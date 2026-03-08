@@ -8,7 +8,8 @@ import {
   type ReviewSiteSnippet,
   type ReviewSites,
 } from "@llm-tracker/shared";
-import { fetchPageHtml } from "./scraper";
+import { extractPageHtml } from "../browser/extract-page";
+import type { AppEnv } from "../types";
 
 export interface ReviewSiteFieldChange {
   field: string;
@@ -30,14 +31,17 @@ const PARSERS: Record<ReviewSitePlatform, Parser> = {
   capterra: parseGenericReviewSite,
 };
 
-export async function collectReviewSites(reviewSites: ReviewSites): Promise<Partial<ReviewSites>> {
+export async function collectReviewSites(
+  reviewSites: ReviewSites,
+  env?: AppEnv,
+): Promise<Partial<ReviewSites>> {
   const collected: Partial<ReviewSites> = {};
 
   for (const platform of REVIEW_SITE_PLATFORMS) {
     const site = reviewSites[platform];
     if (!site?.url) continue;
 
-    const html = await fetchPageHtml(site.url);
+    const html = await extractPageHtml(site.url, env);
     if (!html) continue;
 
     const parsed = PARSERS[platform](site.url, html);

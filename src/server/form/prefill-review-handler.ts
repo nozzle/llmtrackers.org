@@ -1,11 +1,12 @@
 import { getAllCompanies } from "~/data";
 import { jsonResponse } from "./http";
-import { fetchPageText } from "../update/scraper";
 import { extractReviewPrefillWithLlm } from "./review-prefill";
+import { extractPageContent } from "../browser/extract-page";
 import type { AppEnv } from "../types";
 
 export interface PrefillReviewPayload {
   url: string;
+  pastedText?: string;
 }
 
 export function validatePrefillReviewPayload(
@@ -19,6 +20,9 @@ export function validatePrefillReviewPayload(
   if (typeof raw.url !== "string" || raw.url.trim().length === 0) {
     return { ok: false, error: "url is required" };
   }
+  if (raw.pastedText !== undefined && typeof raw.pastedText !== "string") {
+    return { ok: false, error: "pastedText must be a string" };
+  }
 
   try {
     const parsed = new URL(raw.url.trim());
@@ -29,7 +33,13 @@ export function validatePrefillReviewPayload(
     return { ok: false, error: "url must be a valid URL" };
   }
 
-  return { ok: true, value: { url: raw.url.trim() } };
+  return {
+    ok: true,
+    value: {
+      url: raw.url.trim(),
+      pastedText: typeof raw.pastedText === "string" ? raw.pastedText.trim() : undefined,
+    },
+  };
 }
 
 export async function handlePrefillReview(
@@ -40,12 +50,23 @@ export async function handlePrefillReview(
     return jsonResponse({ error: "Review import is not configured" }, 503);
   }
 
-  const pageText = await fetchPageText(payload.url);
+  const extracted = payload.pastedText
+    ? {
+        finalUrl: payload.url,
+        title: "",
+        byline: null,
+        publishedDate: null,
+        text: payload.pastedText,
+        warnings: ["Used pasted article text instead of browser extraction."],
+      }
+    : await extractPageContent(payload.url, env);
+
+  const pageText = extracted?.text ?? null;
   if (!pageText) {
     return jsonResponse(
       {
         error:
-          "We couldn't fetch or read that article automatically. You can continue manually or try another URL.",
+          "We couldn't extract that article automatically. You can paste the article text or continue manually.",
       },
       422,
     );
@@ -58,6 +79,22 @@ export async function handlePrefillReview(
     pageText,
     companies,
   );
+
+  if (extracted?.warnings.length) {
+    draft.warnings = [...extracted.warnings, ...draft.warnings];
+  }
+
+  if (!draft.review.date && extracted?.publishedDate) {
+    draft.review.date = extracted.publishedDate;
+  }
+
+  if (!draft.review.name && extracted?.title) {
+    draft.review.name = extracted.title;
+  }
+
+  if (!draft.review.author.name && extracted?.byline) {
+    draft.review.author.name = extracted.byline;
+  }
 
   return jsonResponse({ success: true, draft }, 200);
 }

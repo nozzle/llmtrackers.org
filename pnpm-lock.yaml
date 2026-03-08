@@ -26,6 +26,9 @@ importers:
         specifier: ^19.1.0
         version: 19.2.4(react@19.2.4)
     devDependencies:
+      "@cloudflare/playwright":
+        specifier: ^1.1.1
+        version: 1.1.1
       "@cloudflare/vite-plugin":
         specifier: ^1.13.3
         version: 1.26.1(vite@7.3.1(@types/node@25.3.5)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2))(workerd@1.20260301.1)(wrangler@4.71.0(@cloudflare/workers-types@4.20260306.1))
@@ -65,6 +68,9 @@ importers:
       lint-staged:
         specifier: ^16.3.2
         version: 16.3.2
+      playwright:
+        specifier: ^1.58.2
+        version: 1.58.2
       prettier:
         specifier: ^3.8.1
         version: 3.8.1
@@ -290,6 +296,12 @@ packages:
         integrity: sha512-SIOD2DxrRRwQ+jgzlXCqoEFiKOFqaPjhnNTGKXSRLvp1HiOvapLaFG2kEr9dYQTYe8rKrd9uvDUzmAITeNyaHQ==,
       }
     engines: { node: ">=18.0.0" }
+
+  "@cloudflare/playwright@1.1.1":
+    resolution:
+      {
+        integrity: sha512-NZtbwe+1HfnDK+8ZW4Ys5bth7/qJOsA5Khvy1oNVbsw1w7p3tC6mrEIyhsvF7ZeRhTb4B5cvkMBB2cxvQpOviA==,
+      }
 
   "@cloudflare/unenv-preset@2.15.0":
     resolution:
@@ -2411,6 +2423,14 @@ packages:
         integrity: sha512-3+mMldrTAPdta5kjX2G2J7iX4zxtnwpdA8Tr2ZSjkyPSanvbZAcy6flmtnXbEybHrDcU9641lxrMfFuUxVz9vA==,
       }
 
+  fsevents@2.3.2:
+    resolution:
+      {
+        integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==,
+      }
+    engines: { node: ^8.16.0 || ^10.6.0 || >=11.0.0 }
+    os: [darwin]
+
   fsevents@2.3.3:
     resolution:
       {
@@ -3030,6 +3050,22 @@ packages:
         integrity: sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==,
       }
     engines: { node: ">=12" }
+
+  playwright-core@1.58.2:
+    resolution:
+      {
+        integrity: sha512-yZkEtftgwS8CsfYo7nm0KE8jsvm6i/PTgVtB8DL726wNf6H2IMsDuxCpJj59KDaxCtSnrWan2AeDqM7JBaultg==,
+      }
+    engines: { node: ">=18" }
+    hasBin: true
+
+  playwright@1.58.2:
+    resolution:
+      {
+        integrity: sha512-vA30H8Nvkq/cPBnNw4Q8TWz1EJyqgpuinBcHET0YVJVFldr8JDNiU9LaWAE1KqSkRYazuaBhTpB5ZzShOezQ6A==,
+      }
+    engines: { node: ">=18" }
+    hasBin: true
 
   postcss@8.5.8:
     resolution:
@@ -3904,6 +3940,8 @@ snapshots:
       "@babel/helper-validator-identifier": 7.28.5
 
   "@cloudflare/kv-asset-handler@0.4.2": {}
+
+  "@cloudflare/playwright@1.1.1": {}
 
   "@cloudflare/unenv-preset@2.15.0(unenv@2.0.0-rc.24)(workerd@1.20260301.1)":
     dependencies:
@@ -5157,6 +5195,9 @@ snapshots:
 
   flatted@3.3.4: {}
 
+  fsevents@2.3.2:
+    optional: true
+
   fsevents@2.3.3:
     optional: true
 
@@ -5457,6 +5498,14 @@ snapshots:
   picomatch@2.3.1: {}
 
   picomatch@4.0.3: {}
+
+  playwright-core@1.58.2: {}
+
+  playwright@1.58.2:
+    dependencies:
+      playwright-core: 1.58.2
+    optionalDependencies:
+      fsevents: 2.3.2
 
   postcss@8.5.8:
     dependencies:

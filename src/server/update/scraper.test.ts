@@ -1,87 +1,47 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { fetchPageHtml, fetchPageText } from "./scraper";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-describe("fetchPageText", () => {
-  afterEach(() => {
-    vi.unstubAllGlobals();
-    vi.useRealTimers();
+const extractPageTextMock = vi.fn<(url: string) => Promise<string | null>>();
+const extractPageHtmlMock = vi.fn<(url: string) => Promise<string | null>>();
+
+vi.mock("../browser/extract-page", () => ({
+  extractPageContent: vi.fn(),
+  extractPageText: (url: string) => extractPageTextMock(url),
+  extractPageHtml: (url: string) => extractPageHtmlMock(url),
+}));
+
+describe("scraper compatibility wrapper", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    extractPageTextMock.mockReset();
+    extractPageHtmlMock.mockReset();
   });
 
-  it("returns normalized text content for successful HTML responses", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        headers: new Headers({ "content-type": "text/html" }),
-        text: async () => "<html><body><h1>Pricing</h1><p>$99/month</p></body></html>",
-      }),
-    );
+  it("forwards fetchPageText to browser extraction", async () => {
+    extractPageTextMock.mockResolvedValue("Pricing $99/month");
+    const { fetchPageText } = await import("./scraper");
 
     const text = await fetchPageText("https://example.com/pricing");
 
-    expect(text).toContain("Pricing");
-    expect(text).toContain("$99/month");
+    expect(text).toBe("Pricing $99/month");
+    expect(extractPageTextMock).toHaveBeenCalledWith("https://example.com/pricing");
   });
 
-  it("returns null when fetch fails", async () => {
-    vi.useFakeTimers();
-    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("network error")));
-
-    const pending = fetchPageText("https://example.com/pricing");
-    await vi.runAllTimersAsync();
-    const text = await pending;
-
-    expect(text).toBeNull();
-  });
-
-  it("returns null for unsupported content types", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        headers: new Headers({ "content-type": "application/pdf" }),
-        text: async () => "not used",
-      }),
-    );
-
-    const text = await fetchPageText("https://example.com/pricing");
-
-    expect(text).toBeNull();
-  });
-
-  it("retries transient failures before succeeding", async () => {
-    vi.useFakeTimers();
-    vi.stubGlobal(
-      "fetch",
-      vi
-        .fn()
-        .mockResolvedValueOnce({ ok: false, status: 503, headers: new Headers() })
-        .mockResolvedValueOnce({
-          ok: true,
-          headers: new Headers({ "content-type": "text/html" }),
-          text: async () => "<p>Recovered</p>",
-        }),
-    );
-
-    const pending = fetchPageText("https://example.com/pricing");
-    await vi.runAllTimersAsync();
-    const text = await pending;
-
-    expect(text).toContain("Recovered");
-  });
-
-  it("returns raw HTML with fetchPageHtml", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        headers: new Headers({ "content-type": "text/html" }),
-        text: async () => "<html><body><h1>Raw</h1></body></html>",
-      }),
-    );
+  it("forwards fetchPageHtml to browser extraction", async () => {
+    extractPageHtmlMock.mockResolvedValue("<html><body><h1>Raw</h1></body></html>");
+    const { fetchPageHtml } = await import("./scraper");
 
     const html = await fetchPageHtml("https://example.com/raw");
 
     expect(html).toContain("<h1>Raw</h1>");
+    expect(extractPageHtmlMock).toHaveBeenCalledWith("https://example.com/raw");
+  });
+
+  it("returns null when browser extraction returns null", async () => {
+    extractPageTextMock.mockResolvedValue(null);
+    const { fetchPageText } = await import("./scraper");
+
+    const text = await fetchPageText("https://example.com/missing");
+
+    expect(text).toBeNull();
   });
 });

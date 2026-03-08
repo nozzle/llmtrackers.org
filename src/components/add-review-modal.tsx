@@ -5,7 +5,7 @@ import { useState, useMemo, useEffect, useId, useCallback } from "react";
 // ---------------------------------------------------------------------------
 
 interface AddReviewModalProps {
-  companies: Array<{ slug: string; name: string }>;
+  companies: { slug: string; name: string }[];
   onClose: () => void;
 }
 
@@ -59,10 +59,10 @@ interface PrefillResponse {
       detailedSummary: string;
       author: {
         name: string;
-        socialProfiles: Array<{ label: string; url: string }>;
+        socialProfiles: { label: string; url: string }[];
       };
     };
-    companyRatings: Array<{
+    companyRatings: {
       companySlug: string;
       score: number | null;
       maxScore: number | null;
@@ -71,7 +71,7 @@ interface PrefillResponse {
       pros: string[];
       cons: string[];
       noteworthy: string[];
-    }>;
+    }[];
     warnings: string[];
   };
 }
@@ -93,6 +93,16 @@ declare global {
       ) => string;
     };
   }
+}
+
+function isPrefillResponse(value: unknown): value is PrefillResponse {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "success" in value &&
+    (value as { success?: unknown }).success === true &&
+    "draft" in value
+  );
 }
 
 function TurnstileWidget({
@@ -225,8 +235,7 @@ function computeReviewPreview(
   if (review.detailedSummary.trim()) {
     entries.push({ label: "Detailed Summary", value: review.detailedSummary.trim() });
   }
-  if (review.authorName.trim())
-    entries.push({ label: "Author", value: review.authorName.trim() });
+  if (review.authorName.trim()) entries.push({ label: "Author", value: review.authorName.trim() });
 
   entries.push({ label: "Ratings", value: String(ratings.length) });
 
@@ -386,14 +395,17 @@ function CompanyRatingFormSection({
 }: Readonly<{
   rating: CompanyRatingFormState;
   index: number;
-  companies: Array<{ slug: string; name: string }>;
+  companies: { slug: string; name: string }[];
   canRemove: boolean;
   onUpdate: (updated: CompanyRatingFormState) => void;
   onRemove: () => void;
 }>) {
   const [expanded, setExpanded] = useState(true);
 
-  function update<K extends keyof CompanyRatingFormState>(key: K, value: CompanyRatingFormState[K]) {
+  function update<K extends keyof CompanyRatingFormState>(
+    key: K,
+    value: CompanyRatingFormState[K],
+  ) {
     onUpdate({ ...rating, [key]: value });
   }
 
@@ -623,6 +635,7 @@ function SocialProfileSection({
 export function AddReviewModal({ companies, onClose }: Readonly<AddReviewModalProps>) {
   const [mode, setMode] = useState<ImportMode>("import");
   const [importUrl, setImportUrl] = useState("");
+  const [pastedText, setPastedText] = useState("");
   const [importStatus, setImportStatus] = useState<ImportStatus>("idle");
   const [importError, setImportError] = useState("");
   const [importWarnings, setImportWarnings] = useState<string[]>([]);
@@ -778,13 +791,20 @@ export function AddReviewModal({ companies, onClose }: Readonly<AddReviewModalPr
       const response = await fetch("/api/prefill-review-from-url", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: importUrl.trim() }),
+        body: JSON.stringify({
+          url: importUrl.trim(),
+          ...(pastedText.trim() ? { pastedText: pastedText.trim() } : {}),
+        }),
       });
 
-      const result = (await response.json()) as PrefillResponse | { error?: string };
+      const result: unknown = await response.json();
 
-      if (!response.ok || !("success" in result)) {
-        throw new Error(result && "error" in result ? result.error || "Import failed" : "Import failed");
+      if (!response.ok || !isPrefillResponse(result)) {
+        const error =
+          typeof result === "object" && result !== null && "error" in result
+            ? (result as { error?: string }).error
+            : undefined;
+        throw new Error(error ?? "Import failed");
       }
 
       hydrateFromDraft(result.draft);
@@ -926,10 +946,12 @@ export function AddReviewModal({ companies, onClose }: Readonly<AddReviewModalPr
           <div className="flex min-h-0 flex-1 flex-col">
             <div className="flex flex-1 items-center justify-center px-6 py-10">
               <div className="w-full max-w-xl rounded-xl border border-gray-200 bg-gray-50 p-6">
-                <h3 className="text-base font-semibold text-gray-900">Start with the article URL</h3>
+                <h3 className="text-base font-semibold text-gray-900">
+                  Start with the article URL
+                </h3>
                 <p className="mt-2 text-sm leading-relaxed text-gray-600">
-                  We&apos;ll fetch the article, extract review details, and prefill the submission form so
-                  you can edit instead of starting from scratch.
+                  We&apos;ll fetch the article, extract review details, and prefill the submission
+                  form so you can edit instead of starting from scratch.
                 </p>
                 <label className="mt-5 block">
                   <span className="text-xs font-medium text-gray-600">Article URL</span>
@@ -940,6 +962,20 @@ export function AddReviewModal({ companies, onClose }: Readonly<AddReviewModalPr
                       setImportUrl(e.target.value);
                     }}
                     placeholder="https://example.com/review-article"
+                    className="mt-1 block w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </label>
+                <label className="mt-4 block">
+                  <span className="text-xs font-medium text-gray-600">
+                    Paste article text if browser extraction fails (optional)
+                  </span>
+                  <textarea
+                    value={pastedText}
+                    onChange={(e) => {
+                      setPastedText(e.target.value);
+                    }}
+                    rows={6}
+                    placeholder="Paste the article body here if the page is blocked or hard to extract"
                     className="mt-1 block w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </label>
@@ -984,328 +1020,331 @@ export function AddReviewModal({ companies, onClose }: Readonly<AddReviewModalPr
             <div className="flex min-h-0 flex-1 divide-x divide-gray-200">
               {/* Left panel: form */}
               <div className="flex-1 space-y-5 overflow-y-auto px-6 py-4">
-              {wasPrefilled && (
-                <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
-                  We prefilled this from the article. Please verify all fields before submitting.
-                </div>
-              )}
-              {importWarnings.length > 0 && (
-                <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                  <p className="font-medium">Import notes</p>
-                  <ul className="mt-2 list-disc pl-5">
-                    {importWarnings.map((warning) => (
-                      <li key={warning}>{warning}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {/* Review Details */}
-              <fieldset>
-                <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                  Review Details
-                </legend>
-                <div className="space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
+                {wasPrefilled && (
+                  <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+                    We prefilled this from the article. Please verify all fields before submitting.
+                  </div>
+                )}
+                {importWarnings.length > 0 && (
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                    <p className="font-medium">Import notes</p>
+                    <ul className="mt-2 list-disc pl-5">
+                      {importWarnings.map((warning) => (
+                        <li key={warning}>{warning}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {/* Review Details */}
+                <fieldset>
+                  <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                    Review Details
+                  </legend>
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <label className="block">
+                        <span className="text-xs font-medium text-gray-600">Review Name</span>
+                        <input
+                          type="text"
+                          value={form.name}
+                          onChange={(e) => {
+                            updateForm("name", e.target.value);
+                          }}
+                          placeholder='e.g. "Best LLM Tools 2025"'
+                          className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        />
+                      </label>
+                      <label className="block">
+                        <span className="text-xs font-medium text-gray-600">Slug</span>
+                        <input
+                          type="text"
+                          value={form.slug}
+                          onChange={(e) => {
+                            setForm((prev) => ({
+                              ...prev,
+                              slug: e.target.value,
+                              autoSlug: false,
+                            }));
+                          }}
+                          placeholder="auto-generated"
+                          className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        />
+                      </label>
+                    </div>
                     <label className="block">
-                      <span className="text-xs font-medium text-gray-600">Review Name</span>
+                      <span className="text-xs font-medium text-gray-600">URL</span>
                       <input
-                        type="text"
-                        value={form.name}
+                        type="url"
+                        value={form.url}
                         onChange={(e) => {
-                          updateForm("name", e.target.value);
+                          updateForm("url", e.target.value);
                         }}
-                        placeholder='e.g. "Best LLM Tools 2025"'
+                        placeholder="https://example.com/review-article"
+                        className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                    </label>
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setImportUrl(form.url);
+                          setMode("import");
+                          setImportStatus("idle");
+                          setImportError("");
+                        }}
+                        className="mt-5 inline-flex cursor-pointer items-center gap-1.5 text-xs font-medium text-blue-600 hover:underline"
+                      >
+                        Re-import from URL
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <label className="block">
+                        <span className="text-xs font-medium text-gray-600">Date</span>
+                        <input
+                          type="date"
+                          value={form.date}
+                          onChange={(e) => {
+                            updateForm("date", e.target.value);
+                          }}
+                          className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        />
+                      </label>
+                      <label className="block">
+                        <span className="text-xs font-medium text-gray-600">Author Name</span>
+                        <input
+                          type="text"
+                          value={form.authorName}
+                          onChange={(e) => {
+                            updateForm("authorName", e.target.value);
+                          }}
+                          placeholder="e.g. Jane Doe"
+                          className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        />
+                      </label>
+                    </div>
+                    <label className="block">
+                      <span className="text-xs font-medium text-gray-600">Short Summary</span>
+                      <textarea
+                        value={form.summary}
+                        onChange={(e) => {
+                          updateForm("summary", e.target.value);
+                        }}
+                        rows={2}
+                        placeholder="One-line summary for cards and tables"
                         className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                     </label>
                     <label className="block">
-                      <span className="text-xs font-medium text-gray-600">Slug</span>
-                      <input
-                        type="text"
-                        value={form.slug}
+                      <span className="text-xs font-medium text-gray-600">Detailed Summary</span>
+                      <textarea
+                        value={form.detailedSummary}
                         onChange={(e) => {
-                          setForm((prev) => ({
-                            ...prev,
-                            slug: e.target.value,
-                            autoSlug: false,
-                          }));
+                          updateForm("detailedSummary", e.target.value);
                         }}
-                        placeholder="auto-generated"
+                        rows={6}
+                        placeholder="Longer article recap, one or two paragraphs"
                         className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                     </label>
                   </div>
-                  <label className="block">
-                    <span className="text-xs font-medium text-gray-600">URL</span>
-                    <input
-                      type="url"
-                      value={form.url}
-                      onChange={(e) => {
-                        updateForm("url", e.target.value);
-                      }}
-                      placeholder="https://example.com/review-article"
-                      className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    />
-                  </label>
-                  <div>
+                </fieldset>
+
+                {/* Author Social Profiles */}
+                <fieldset>
+                  <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                    Author Social Profiles
+                  </legend>
+                  <div className="space-y-3">
+                    {form.socialProfiles.map((profile, index) => (
+                      <SocialProfileSection
+                        key={profile.id}
+                        profile={profile}
+                        onUpdate={(updated) => {
+                          updateSocialProfile(index, updated);
+                        }}
+                        onRemove={() => {
+                          removeSocialProfile(index);
+                        }}
+                      />
+                    ))}
                     <button
                       type="button"
-                      onClick={() => {
-                        setImportUrl(form.url);
-                        setMode("import");
-                        setImportStatus("idle");
-                        setImportError("");
-                      }}
-                      className="mt-5 inline-flex cursor-pointer items-center gap-1.5 text-xs font-medium text-blue-600 hover:underline"
+                      onClick={addSocialProfile}
+                      className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border-2 border-dashed border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-500 hover:border-blue-400 hover:text-blue-600"
                     >
-                      Re-import from URL
+                      <svg
+                        className="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="2"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 4.5v15m7.5-7.5h-15"
+                        />
+                      </svg>
+                      Add Profile
                     </button>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <label className="block">
-                      <span className="text-xs font-medium text-gray-600">Date</span>
-                      <input
-                        type="date"
-                        value={form.date}
-                        onChange={(e) => {
-                          updateForm("date", e.target.value);
+                </fieldset>
+
+                {/* Company Ratings */}
+                <fieldset>
+                  <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                    Company Ratings
+                  </legend>
+                  <div className="space-y-3">
+                    {ratings.map((rating, index) => (
+                      <CompanyRatingFormSection
+                        key={rating.id}
+                        rating={rating}
+                        index={index}
+                        companies={companies}
+                        canRemove={ratings.length > 1}
+                        onUpdate={(updated) => {
+                          updateRating(index, updated);
                         }}
-                        className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                      />
-                    </label>
-                    <label className="block">
-                      <span className="text-xs font-medium text-gray-600">Author Name</span>
-                      <input
-                        type="text"
-                        value={form.authorName}
-                        onChange={(e) => {
-                          updateForm("authorName", e.target.value);
+                        onRemove={() => {
+                          removeRating(index);
                         }}
-                        placeholder="e.g. Jane Doe"
-                        className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
-                    </label>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={addRating}
+                      className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border-2 border-dashed border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-500 hover:border-blue-400 hover:text-blue-600"
+                    >
+                      <svg
+                        className="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="2"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 4.5v15m7.5-7.5h-15"
+                        />
+                      </svg>
+                      Add Another Rating
+                    </button>
                   </div>
-                  <label className="block">
-                    <span className="text-xs font-medium text-gray-600">Short Summary</span>
-                    <textarea
-                      value={form.summary}
-                      onChange={(e) => {
-                        updateForm("summary", e.target.value);
-                      }}
-                      rows={2}
-                      placeholder="One-line summary for cards and tables"
-                      className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    />
-                  </label>
-                  <label className="block">
-                    <span className="text-xs font-medium text-gray-600">Detailed Summary</span>
-                    <textarea
-                      value={form.detailedSummary}
-                      onChange={(e) => {
-                        updateForm("detailedSummary", e.target.value);
-                      }}
-                      rows={6}
-                      placeholder="Longer article recap, one or two paragraphs"
-                      className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    />
-                  </label>
-                </div>
-              </fieldset>
+                </fieldset>
+              </div>
 
-              {/* Author Social Profiles */}
-              <fieldset>
-                <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                  Author Social Profiles
-                </legend>
-                <div className="space-y-3">
-                  {form.socialProfiles.map((profile, index) => (
-                    <SocialProfileSection
-                      key={profile.id}
-                      profile={profile}
-                      onUpdate={(updated) => {
-                        updateSocialProfile(index, updated);
-                      }}
-                      onRemove={() => {
-                        removeSocialProfile(index);
-                      }}
-                    />
-                  ))}
-                  <button
-                    type="button"
-                    onClick={addSocialProfile}
-                    className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border-2 border-dashed border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-500 hover:border-blue-400 hover:text-blue-600"
-                  >
-                    <svg
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="2"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 4.5v15m7.5-7.5h-15"
-                      />
-                    </svg>
-                    Add Profile
-                  </button>
-                </div>
-              </fieldset>
-
-              {/* Company Ratings */}
-              <fieldset>
-                <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                  Company Ratings
-                </legend>
-                <div className="space-y-3">
-                  {ratings.map((rating, index) => (
-                    <CompanyRatingFormSection
-                      key={rating.id}
-                      rating={rating}
-                      index={index}
-                      companies={companies}
-                      canRemove={ratings.length > 1}
-                      onUpdate={(updated) => {
-                        updateRating(index, updated);
-                      }}
-                      onRemove={() => {
-                        removeRating(index);
-                      }}
-                    />
-                  ))}
-                  <button
-                    type="button"
-                    onClick={addRating}
-                    className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border-2 border-dashed border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-500 hover:border-blue-400 hover:text-blue-600"
-                  >
-                    <svg
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="2"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 4.5v15m7.5-7.5h-15"
-                      />
-                    </svg>
-                    Add Another Rating
-                  </button>
-                </div>
-              </fieldset>
+              {/* Right panel: live preview */}
+              <div className="w-72 shrink-0 overflow-y-auto bg-gray-50 px-5 py-4">
+                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                  Preview
+                </h3>
+                {form.name.trim() === "" ? (
+                  <p className="text-sm text-gray-400 italic">
+                    Enter a review name to see a preview.
+                  </p>
+                ) : (
+                  <div className="space-y-2">
+                    {preview.map((entry) => (
+                      <div
+                        key={entry.label}
+                        className="rounded border border-gray-200 bg-white px-3 py-2"
+                      >
+                        <div className="text-xs font-medium text-gray-500">{entry.label}</div>
+                        <div className="mt-0.5 text-sm text-gray-900">{entry.value}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {validationError && form.name.trim() !== "" && (
+                  <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
+                    {validationError}
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Right panel: live preview */}
-            <div className="w-72 shrink-0 overflow-y-auto bg-gray-50 px-5 py-4">
-              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                Preview
-              </h3>
-              {form.name.trim() === "" ? (
-                <p className="text-sm text-gray-400 italic">
-                  Enter a review name to see a preview.
+            {/* Footer */}
+            <div className="border-t border-gray-200 px-6 py-4">
+              {status === "error" && (
+                <div className="mb-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                  {errorMessage || "Failed to submit. Please try again."}
+                </div>
+              )}
+
+              <div className="mb-3 grid grid-cols-3 gap-3">
+                <label className="block">
+                  <span className="text-xs font-medium text-gray-500">Your Name (optional)</span>
+                  <input
+                    type="text"
+                    value={contributor.name}
+                    onChange={(e) => {
+                      setContributor((p) => ({ ...p, name: e.target.value }));
+                    }}
+                    className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-xs font-medium text-gray-500">Email (optional)</span>
+                  <input
+                    type="email"
+                    value={contributor.email}
+                    onChange={(e) => {
+                      setContributor((p) => ({ ...p, email: e.target.value }));
+                    }}
+                    className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-xs font-medium text-gray-500">Company (optional)</span>
+                  <input
+                    type="text"
+                    value={contributor.company}
+                    onChange={(e) => {
+                      setContributor((p) => ({ ...p, company: e.target.value }));
+                    }}
+                    className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </label>
+              </div>
+
+              {turnstileSiteKey ? (
+                <div className="mb-3">
+                  <TurnstileWidget
+                    siteKey={turnstileSiteKey}
+                    onTokenChange={handleTurnstileToken}
+                  />
+                </div>
+              ) : null}
+
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-xs text-gray-400">
+                  Your submission will be created as a public GitHub pull request for review.
                 </p>
-              ) : (
-                <div className="space-y-2">
-                  {preview.map((entry) => (
-                    <div
-                      key={entry.label}
-                      className="rounded border border-gray-200 bg-white px-3 py-2"
-                    >
-                      <div className="text-xs font-medium text-gray-500">{entry.label}</div>
-                      <div className="mt-0.5 text-sm text-gray-900">{entry.value}</div>
-                    </div>
-                  ))}
+                <div className="flex shrink-0 gap-2">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="cursor-pointer rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={
+                      !isValid ||
+                      status === "submitting" ||
+                      Boolean(turnstileSiteKey && !turnstileToken)
+                    }
+                    className="cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {status === "submitting" ? "Submitting..." : "Submit New Review"}
+                  </button>
                 </div>
-              )}
-              {validationError && form.name.trim() !== "" && (
-                <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
-                  {validationError}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div className="border-t border-gray-200 px-6 py-4">
-            {status === "error" && (
-              <div className="mb-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-                {errorMessage || "Failed to submit. Please try again."}
-              </div>
-            )}
-
-            <div className="mb-3 grid grid-cols-3 gap-3">
-              <label className="block">
-                <span className="text-xs font-medium text-gray-500">Your Name (optional)</span>
-                <input
-                  type="text"
-                  value={contributor.name}
-                  onChange={(e) => {
-                    setContributor((p) => ({ ...p, name: e.target.value }));
-                  }}
-                  className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-              </label>
-              <label className="block">
-                <span className="text-xs font-medium text-gray-500">Email (optional)</span>
-                <input
-                  type="email"
-                  value={contributor.email}
-                  onChange={(e) => {
-                    setContributor((p) => ({ ...p, email: e.target.value }));
-                  }}
-                  className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-              </label>
-              <label className="block">
-                <span className="text-xs font-medium text-gray-500">Company (optional)</span>
-                <input
-                  type="text"
-                  value={contributor.company}
-                  onChange={(e) => {
-                    setContributor((p) => ({ ...p, company: e.target.value }));
-                  }}
-                  className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-              </label>
-            </div>
-
-            {turnstileSiteKey ? (
-              <div className="mb-3">
-                <TurnstileWidget siteKey={turnstileSiteKey} onTokenChange={handleTurnstileToken} />
-              </div>
-            ) : null}
-
-            <div className="flex items-center justify-between gap-4">
-              <p className="text-xs text-gray-400">
-                Your submission will be created as a public GitHub pull request for review.
-              </p>
-              <div className="flex shrink-0 gap-2">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="cursor-pointer rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={
-                    !isValid ||
-                    status === "submitting" ||
-                    Boolean(turnstileSiteKey && !turnstileToken)
-                  }
-                  className="cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {status === "submitting" ? "Submitting..." : "Submit New Review"}
-                </button>
               </div>
             </div>
-          </div>
-        </form>
+          </form>
         )}
       </div>
     </div>

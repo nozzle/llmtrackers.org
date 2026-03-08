@@ -14,6 +14,9 @@ function isFormRoute(pathname: string): boolean {
     "/api/suggest-company-edit",
     "/api/suggest-add-plan",
     "/api/suggest-add-company",
+    "/api/suggest-add-review",
+    "/api/suggest-review-edit",
+    "/api/prefill-review-from-url",
   ].includes(pathname);
 }
 

@@ -6,7 +6,7 @@ import {
   findOpenPullRequestByHead,
 } from "@llm-tracker/github";
 import { parseCompanyYaml, prepareUpdatedCompanyYaml } from "@llm-tracker/shared";
-import { fetchPageText } from "./scraper";
+import { extractPageText } from "../browser/extract-page";
 import { extractWithLlm } from "./extractor";
 import { diffCompany, formatDiffMarkdown } from "./differ";
 import { formatReviewSiteDiffMarkdown } from "./review-sites";
@@ -21,10 +21,11 @@ export async function processCompanyUpdate(
   githubContext?: GitHubContext,
 ): Promise<CheckResult> {
   const github = githubContext ?? (await createGitHubContext(env));
-  return checkCompany(github, env.OPENAI_API_KEY, message.filePath, message.slug);
+  return checkCompany(env, github, env.OPENAI_API_KEY, message.filePath, message.slug);
 }
 
 async function checkCompany(
+  env: AppEnv,
   github: GitHubContext,
   openaiKey: string | undefined,
   filePath: string,
@@ -43,7 +44,7 @@ async function checkCompany(
     : null;
   const diffs = planResult?.diffs ?? [];
 
-  const reviewSiteResult = await backfillCompanyReviewSites(yamlText);
+  const reviewSiteResult = await backfillCompanyReviewSites(yamlText, undefined, env);
   const reviewSiteDiffs = reviewSiteResult.diffs;
 
   if (diffs.length === 0 && reviewSiteDiffs.length === 0) {
@@ -77,7 +78,7 @@ async function checkCompany(
   const preparedPlans = planResult?.preparedYamlText ?? yamlText;
   const prepared =
     reviewSiteDiffs.length > 0
-      ? await backfillCompanyReviewSites(preparedPlans, reviewSiteResult.extractedReviewSites)
+      ? await backfillCompanyReviewSites(preparedPlans, reviewSiteResult.extractedReviewSites, env)
       : { updatedYamlText: preparedPlans };
 
   const branchText = branchFile ? atob(branchFile.content) : null;
@@ -149,10 +150,10 @@ async function collectPlanChanges(
   }
 
   console.log(`${slug}: Fetching ${company.pricingUrl}`);
-  let pageText = await fetchPageText(company.pricingUrl);
+  let pageText = await extractPageText(company.pricingUrl);
 
   if (company.featuresUrl) {
-    const featuresText = await fetchPageText(company.featuresUrl);
+    const featuresText = await extractPageText(company.featuresUrl);
     if (featuresText) {
       pageText = (pageText ?? "") + "\n\n--- FEATURES PAGE ---\n\n" + featuresText;
     }
