@@ -39,8 +39,8 @@
   "dependencies": {
     "@llm-tracker/github": "workspace:*",
     "@llm-tracker/shared": "workspace:*",
-    "@tanstack/react-router": "^1.114.0",
-    "@tanstack/react-start": "^1.166.0",
+    "@tanstack/react-router": "^1.166.7",
+    "@tanstack/react-start": "^1.166.7",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
