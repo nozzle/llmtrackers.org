@@ -10,6 +10,7 @@ import {
   ReviewSiteMark,
   ReviewSiteScoreBadge,
 } from "~/components/review-site-badge";
+import { MediaOverlay } from "~/components/media-overlay";
 import { getReviewSiteBranding } from "~/review-site-branding";
 import { LLM_MODEL_LABELS, REVIEW_SITE_PLATFORMS } from "@llm-tracker/shared";
 import type { LlmModelKey, Plan, ReviewSitePlatform } from "@llm-tracker/shared";
@@ -69,7 +70,10 @@ function CompanyPage() {
   const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
   const [editingCompany, setEditingCompany] = useState(false);
   const [addingPlan, setAddingPlan] = useState(false);
-  const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
+  const [mediaOverlay, setMediaOverlay] = useState<{
+    type: "screenshot" | "video";
+    index: number;
+  } | null>(null);
 
   if (!company) {
     return (
@@ -84,8 +88,6 @@ function CompanyPage() {
   }
 
   const relatedReviews = getReviewsForCompanySlug(slug);
-  const activeVideo = company.videos.find((video) => video.id === activeVideoId) ?? null;
-  const displayedVideo = activeVideo ?? company.videos[0];
 
   return (
     <div>
@@ -299,95 +301,36 @@ function CompanyPage() {
 
       {company.screenshots.length > 0 && (
         <section className="mb-12">
-          <div className="mb-4 flex items-end justify-between gap-4">
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900">Product Screenshots</h2>
-              <p className="mt-1 text-sm text-gray-600">
-                Curated first-party product imagery collected from {company.name}&rsquo;s public
-                site and help resources.
-              </p>
-            </div>
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold text-gray-900">Product Screenshots</h2>
+            <p className="mt-1 text-sm text-gray-600">
+              Curated first-party product imagery collected from {company.name}&rsquo;s public site
+              and help resources.
+            </p>
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-2">
-            {company.screenshots.map((screenshot) => (
-              <article
+          <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-3">
+            {company.screenshots.map((screenshot, i) => (
+              <button
                 key={screenshot.id}
-                className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm"
+                type="button"
+                onClick={() => {
+                  setMediaOverlay({ type: "screenshot", index: i });
+                }}
+                className="group flex-none"
               >
-                <a
-                  href={screenshot.sourcePageUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block bg-linear-to-br from-slate-100 via-white to-blue-50"
-                >
+                <div className="h-32 w-48 overflow-hidden rounded-lg border border-gray-200 bg-gray-50 shadow-sm transition group-hover:-translate-y-0.5 group-hover:shadow-md">
                   <img
                     src={screenshot.assetPath}
                     alt={screenshot.alt}
                     loading="lazy"
-                    className="h-auto w-full object-cover"
+                    className="h-full w-full object-cover"
                   />
-                </a>
-
-                <div className="space-y-3 p-4 sm:p-5">
-                  <div className="flex flex-wrap items-center gap-2">
-                    {screenshot.kind && (
-                      <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
-                        {screenshot.kind}
-                      </span>
-                    )}
-                    <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
-                      {screenshot.sourceType}
-                    </span>
-                    {screenshot.tags.slice(0, 3).map((tag) => (
-                      <span
-                        key={`${screenshot.id}-${tag}`}
-                        className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div>
-                    <h3 className="text-base font-semibold text-gray-900">
-                      {screenshot.contextHeading ?? screenshot.alt}
-                    </h3>
-                    {screenshot.caption && (
-                      <p className="mt-1 text-sm leading-6 text-gray-600">{screenshot.caption}</p>
-                    )}
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-500">
-                    <span>Collected {new Date(screenshot.collectedAt).toLocaleDateString()}</span>
-                    {screenshot.width && screenshot.height && (
-                      <span>
-                        {screenshot.width} x {screenshot.height}
-                      </span>
-                    )}
-                    {screenshot.pageTitle && <span>{screenshot.pageTitle}</span>}
-                  </div>
-
-                  <div className="flex flex-wrap gap-3 text-sm">
-                    <a
-                      href={screenshot.sourcePageUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-medium text-blue-600 hover:underline"
-                    >
-                      View source page
-                    </a>
-                    <a
-                      href={screenshot.sourceImageUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-medium text-blue-600 hover:underline"
-                    >
-                      Open original image
-                    </a>
-                  </div>
                 </div>
-              </article>
+                <p className="mt-1.5 w-48 truncate text-left text-xs font-medium text-gray-700">
+                  {screenshot.contextHeading ?? screenshot.alt}
+                </p>
+              </button>
             ))}
           </div>
         </section>
@@ -403,120 +346,35 @@ function CompanyPage() {
             </p>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-            <div className="aspect-video bg-gray-950">
-              <iframe
-                key={displayedVideo.id}
-                src={getVideoEmbedUrl(displayedVideo.provider, displayedVideo.videoId)}
-                title={displayedVideo.title}
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                referrerPolicy="strict-origin-when-cross-origin"
-                className="h-full w-full border-0"
-              />
-            </div>
-
-            <div className="border-t border-gray-200 p-5">
-              <div className="flex flex-wrap items-center gap-2">
-                {displayedVideo.kind && (
-                  <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-medium text-red-700">
-                    {displayedVideo.kind}
-                  </span>
-                )}
-                <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
-                  {displayedVideo.sourceType}
-                </span>
-                <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
-                  {displayedVideo.provider}
-                </span>
-              </div>
-
-              <h3 className="mt-3 text-lg font-semibold text-gray-900">{displayedVideo.title}</h3>
-              <p className="mt-1 text-sm text-gray-600">
-                {displayedVideo.creatorUrl ? (
-                  <a
-                    href={displayedVideo.creatorUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:underline"
-                  >
-                    {displayedVideo.creator}
-                  </a>
-                ) : (
-                  displayedVideo.creator
-                )}
-                {" · "}
-                Added {new Date(displayedVideo.collectedAt).toLocaleDateString()}
-              </p>
-              {displayedVideo.description && (
-                <p className="mt-3 max-w-3xl text-sm leading-6 text-gray-700">
-                  {displayedVideo.description}
+          <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-3">
+            {company.videos.map((video, i) => (
+              <button
+                key={video.id}
+                type="button"
+                onClick={() => {
+                  setMediaOverlay({ type: "video", index: i });
+                }}
+                className="group flex-none"
+              >
+                <div className="relative h-32 w-48 overflow-hidden rounded-lg border border-gray-200 bg-gray-100 shadow-sm transition group-hover:-translate-y-0.5 group-hover:shadow-md">
+                  <img
+                    src={video.thumbnailUrl}
+                    alt={video.title}
+                    loading="lazy"
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
+                  <div className="absolute bottom-2 left-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-gray-900 shadow-sm">
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="ml-0.5 h-4 w-4">
+                      <path d="M8 5.14v13.72a1 1 0 001.53.85l10.3-6.86a1 1 0 000-1.7L9.53 4.29A1 1 0 008 5.14z" />
+                    </svg>
+                  </div>
+                </div>
+                <p className="mt-1.5 w-48 truncate text-left text-xs font-medium text-gray-700">
+                  {video.title}
                 </p>
-              )}
-
-              <div className="mt-4 flex flex-wrap gap-3 text-sm">
-                <a
-                  href={displayedVideo.watchUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
-                >
-                  Watch on YouTube
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {company.videos.map((video) => {
-              const isActive = video.id === displayedVideo.id;
-
-              return (
-                <button
-                  key={video.id}
-                  type="button"
-                  onClick={() => {
-                    setActiveVideoId(video.id);
-                  }}
-                  className={`overflow-hidden rounded-2xl border bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${
-                    isActive ? "border-blue-400 ring-2 ring-blue-100" : "border-gray-200"
-                  }`}
-                >
-                  <div className="relative aspect-video bg-gray-100">
-                    <img
-                      src={video.thumbnailUrl}
-                      alt={video.title}
-                      loading="lazy"
-                      className="h-full w-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent" />
-                    <div className="absolute bottom-3 left-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-gray-900 shadow-sm">
-                      <svg viewBox="0 0 24 24" fill="currentColor" className="ml-0.5 h-5 w-5">
-                        <path d="M8 5.14v13.72a1 1 0 001.53.85l10.3-6.86a1 1 0 000-1.7L9.53 4.29A1 1 0 008 5.14z" />
-                      </svg>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2 p-4">
-                    <div className="flex flex-wrap items-center gap-2">
-                      {video.kind && (
-                        <span className="rounded-full bg-red-50 px-2 py-0.5 text-xs font-medium text-red-700">
-                          {video.kind}
-                        </span>
-                      )}
-                      <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
-                        {video.sourceType}
-                      </span>
-                    </div>
-                    <h3 className="line-clamp-2 text-sm font-semibold text-gray-900">
-                      {video.title}
-                    </h3>
-                    <p className="text-xs text-gray-500">{video.creator}</p>
-                  </div>
-                </button>
-              );
-            })}
+              </button>
+            ))}
           </div>
         </section>
       ) : null}
@@ -855,6 +713,35 @@ function CompanyPage() {
           companyName={company.name}
           onClose={() => {
             setAddingPlan(false);
+          }}
+        />
+      )}
+
+      {mediaOverlay?.type === "screenshot" && (
+        <MediaOverlay
+          type="screenshot"
+          items={company.screenshots}
+          index={mediaOverlay.index}
+          onClose={() => {
+            setMediaOverlay(null);
+          }}
+          onNavigate={(i) => {
+            setMediaOverlay({ type: "screenshot", index: i });
+          }}
+        />
+      )}
+
+      {mediaOverlay?.type === "video" && (
+        <MediaOverlay
+          type="video"
+          items={company.videos}
+          index={mediaOverlay.index}
+          getEmbedUrl={getVideoEmbedUrl}
+          onClose={() => {
+            setMediaOverlay(null);
+          }}
+          onNavigate={(i) => {
+            setMediaOverlay({ type: "video", index: i });
           }}
         />
       )}
