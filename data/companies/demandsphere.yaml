@@ -2,8 +2,7 @@ slug: demandsphere
 name: Demandsphere
 group: Demandsphere
 website: https://www.demandsphere.com/
-description: "AI + SERP hybrid tracking with localization and BigQuery integration."
-
+description: AI + SERP hybrid tracking with localization and BigQuery integration.
 plans:
   - name: Agency
     slug: agency
@@ -24,16 +23,55 @@ plans:
       - Custom API
       - CMS
     llmSupport:
-      aiMode: true
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: true
-      grok: false
-      llama: true
       claude: true
-
+      llama: true
+      grok: false
+      aiOverviews: true
+      aiMode: true
 tweets: []
 pricingUrl: https://www.demandsphere.com/pricing
 featuresUrl: https://www.demandsphere.com/features
-lastChecked: "2025-07-29"
+screenshotSources:
+  - url: https://www.demandsphere.com/features
+    type: marketing
+    label: Features
+  - url: https://www.demandsphere.com/
+    type: marketing
+    label: Home
+screenshots:
+  - id: the-most-accurate-insights
+    assetPath: /company-assets/demandsphere/screenshots/the-most-accurate-insights.png
+    sourcePageUrl: https://www.demandsphere.com/features
+    sourceImageUrl: https://www.demandsphere.com/wp-content/uploads/2023/12/image-5.png
+    sourceType: marketing
+    collectedAt: 2026-03-11T17:16:10.724Z
+    alt: The Most Accurate Insights
+    kind: tracking
+    caption: We take accuracy and data granularity to a whole new level. With SERP monitoring capability across all devices and all major search engines and languages, down to the postal code for local tracking, DemandSphere has you covered.
+    contextHeading: The Most Accurate Insights
+    pageTitle: Visual analytics for AI and SERP visibility - DemandSphere
+    width: 694
+    height: 500
+    tags:
+      - tracking
+  - id: why-the-best-teams-choose-demandsphere
+    assetPath: /company-assets/demandsphere/screenshots/why-the-best-teams-choose-demandsphere.png
+    sourcePageUrl: https://www.demandsphere.com/features
+    sourceImageUrl: https://www.demandsphere.com/wp-content/uploads/2023/01/demand-sphere-hero-dark-mode.png
+    sourceType: marketing
+    collectedAt: 2026-03-11T17:16:10.541Z
+    alt: Why the best teams choose DemandSphere
+    kind: dashboard
+    caption: DemandSphere quickly becomes the source of truth for our customers who need the most accurate SERP analytics data, insights into AI search, Share of Voice, advanced segmentation, unlimited dashboards, unlimited users, native BigQuery integration, and much more, all in one place.
+    contextHeading: Why the best teams choose DemandSphere
+    pageTitle: Visual analytics for AI and SERP visibility - DemandSphere
+    width: 3808
+    height: 2126
+    tags:
+      - dashboard
+      - analytics
+      - tracking
+lastChecked: 2025-07-29

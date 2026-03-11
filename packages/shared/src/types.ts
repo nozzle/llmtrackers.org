@@ -10,6 +10,9 @@ import {
   type ReviewSiteBucketSchema,
   type ReviewSiteSnippetSchema,
   type ReviewSitePlatformSchema,
+  type ScreenshotSourceTypeSchema,
+  type CompanyScreenshotSourceSchema,
+  type CompanyScreenshotSchema,
   type TweetSchema,
   type ReviewAuthorSocialProfileSchema,
   type ReviewAuthorSchema,
@@ -27,6 +30,9 @@ export type ReviewSiteData = z.infer<typeof ReviewSiteDataSchema>;
 export type ReviewSiteBucket = z.infer<typeof ReviewSiteBucketSchema>;
 export type ReviewSiteSnippet = z.infer<typeof ReviewSiteSnippetSchema>;
 export type ReviewSitePlatform = z.infer<typeof ReviewSitePlatformSchema>;
+export type ScreenshotSourceType = z.infer<typeof ScreenshotSourceTypeSchema>;
+export type CompanyScreenshotSource = z.infer<typeof CompanyScreenshotSourceSchema>;
+export type CompanyScreenshot = z.infer<typeof CompanyScreenshotSchema>;
 export type Tweet = z.infer<typeof TweetSchema>;
 export type ReviewAuthorSocialProfile = z.infer<typeof ReviewAuthorSocialProfileSchema>;
 export type ReviewAuthor = z.infer<typeof ReviewAuthorSchema>;

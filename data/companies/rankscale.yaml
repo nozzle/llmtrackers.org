@@ -2,8 +2,7 @@ slug: rankscale
 name: Rankscale
 group: Rankscale
 website: https://www.rankscale.ai/
-description: "Real-time AI prompt and answer tracking via credit system."
-
+description: Real-time AI prompt and answer tracking via credit system.
 plans:
   - name: Pro
     slug: pro
@@ -12,7 +11,7 @@ plans:
       currency: USD
       period: monthly
       note: null
-    pricePer1000Responses: 3.50
+    pricePer1000Responses: 3.5
     aiResponsesMonthly: 100000
     includedLlmModels: 6
     schedule: daily
@@ -23,15 +22,14 @@ plans:
     integrations:
       - API Only
     llmSupport:
-      aiMode: true
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: true
-      grok: false
-      llama: false
       claude: true
-
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: true
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/rankscale.ai
@@ -40,8 +38,46 @@ reviewSites:
     reviewCount: 0
     ratingDistribution: []
     reviews: []
-
 tweets: []
 pricingUrl: https://www.rankscale.ai/pricing
 featuresUrl: https://www.rankscale.ai/features
-lastChecked: "2025-07-29"
+screenshotSources:
+  - url: https://www.rankscale.ai/features
+    type: marketing
+    label: Features
+  - url: https://www.rankscale.ai/
+    type: marketing
+    label: Home
+screenshots:
+  - id: ai-visibility-analysis-platform-rankscale
+    assetPath: /company-assets/rankscale/screenshots/ai-visibility-analysis-platform-rankscale.jpg
+    sourcePageUrl: https://www.rankscale.ai/
+    sourceImageUrl: https://www.rankscale.ai/features/AI-search-analytics-platform-Rankscale.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-11T17:06:17.434Z
+    alt: AI Visibility Analysis Platform Rankscale
+    kind: dashboard
+    caption: Track 17+ AI Platforms with Rankscale. No Upsell.
+    pageTitle: Rankscale - Track and Deeply Analyze Visibility in AI Search Engines
+    width: 1200
+    height: 750
+    tags:
+      - dashboard
+      - analytics
+      - tracking
+  - id: prompt-research
+    assetPath: /company-assets/rankscale/screenshots/prompt-research.jpg
+    sourcePageUrl: https://www.rankscale.ai/
+    sourceImageUrl: https://www.rankscale.ai/features/Prompt-Research-Rankscale.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-11T17:06:17.768Z
+    alt: Prompt Research
+    kind: dashboard
+    contextHeading: Brand Visibility Dashboard
+    pageTitle: Rankscale - Track and Deeply Analyze Visibility in AI Search Engines
+    width: 1200
+    height: 750
+    tags:
+      - dashboard
+      - tracking
+lastChecked: 2025-07-29

@@ -6,6 +6,7 @@ import {
   parseReviewYaml,
   prepareUpdatedCompanyYaml,
   prepareUpdatedCompanyReviewSitesYaml,
+  stringifyCompanyYaml,
   stringifyReviewYaml,
   type ExtractedPlanLike,
 } from "./yaml.js";
@@ -216,6 +217,53 @@ describe("yaml helpers", () => {
     expect(prepared.yamlText).toMatch(/reviewSites:/);
     expect(prepared.company.reviewSites.trustpilot?.reviewCount).toBe(42);
     expect(prepared.company.reviewSites.trustpilot?.reviews[0]?.excerpt).toBe("Helpful tool");
+  });
+
+  it("stringifyCompanyYaml preserves screenshot metadata and omits empty arrays", () => {
+    const { company } = parseCompanyYaml(baseYaml);
+
+    const yamlWithoutScreenshots = stringifyCompanyYaml(company);
+    expect(yamlWithoutScreenshots).not.toMatch(/\nscreenshotSources:/);
+    expect(yamlWithoutScreenshots).not.toMatch(/\nscreenshots:/);
+
+    const yamlWithScreenshots = stringifyCompanyYaml({
+      ...company,
+      screenshotSources: [
+        {
+          url: "https://example.com/features",
+          type: "marketing",
+          label: "Features page",
+        },
+      ],
+      screenshots: [
+        {
+          id: "dashboard-overview",
+          assetPath: "/company-assets/test-company/screenshots/dashboard-overview.png",
+          sourcePageUrl: "https://example.com/features",
+          sourceImageUrl: "https://cdn.example.com/dashboard-overview.png",
+          sourceType: "marketing",
+          collectedAt: "2026-03-11T18:42:10.000Z",
+          alt: "Test Company dashboard overview",
+          kind: "dashboard",
+          caption: "Primary dashboard showing visibility trends.",
+          contextHeading: "Platform overview",
+          pageTitle: "Features - Test Company",
+          width: 1600,
+          height: 900,
+          tags: ["dashboard", "analytics"],
+        },
+      ],
+    });
+
+    expect(yamlWithScreenshots).toMatch(/screenshotSources:/);
+    expect(yamlWithScreenshots).toMatch(/screenshots:/);
+
+    const reparsed = parseCompanyYaml(yamlWithScreenshots);
+    expect(reparsed.company.screenshotSources[0]?.label).toBe("Features page");
+    expect(reparsed.company.screenshots[0]?.assetPath).toBe(
+      "/company-assets/test-company/screenshots/dashboard-overview.png",
+    );
+    expect(reparsed.company.screenshots[0]?.tags).toEqual(["dashboard", "analytics"]);
   });
 
   it("parseReviewYaml parses review highlights", () => {

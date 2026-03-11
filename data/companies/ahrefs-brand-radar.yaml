@@ -74,4 +74,26 @@ reviewSites:
 tweets: []
 pricingUrl: https://ahrefs.com/brand-radar
 featuresUrl: https://ahrefs.com/brand-radar
+screenshotSources:
+  - url: https://ahrefs.com/brand-radar
+    type: marketing
+    label: Brand Radar
+  - url: https://help.ahrefs.com/en/collections/11479589-brand-radar
+    type: help
+    label: Help Center
+screenshots:
+  - id: brand-radar-dashboard-showing-branded-search-vol
+    assetPath: /company-assets/ahrefs-brand-radar/screenshots/brand-radar-dashboard-showing-branded-search-vol.png
+    sourcePageUrl: https://ahrefs.com/brand-radar
+    sourceImageUrl: https://ahrefs.com/assets/esbuild/search-demand-O2DTAIVX.png
+    sourceType: marketing
+    collectedAt: 2026-03-11T16:33:12.344Z
+    alt: Brand Radar dashboard showing branded search volume trends over time with competitive comparison data
+    kind: dashboard
+    caption: Discover the web mentions shaping how AI describes your brand, from news sites to forums.
+    pageTitle: "Ahrefs Brand Radar: See ANY brand's AI visibility"
+    tags:
+      - dashboard
+      - analytics
+      - tracking
 lastChecked: 2025-07-29

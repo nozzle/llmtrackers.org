@@ -70,6 +70,31 @@ export const ReviewSitesSchema = z.object({
   capterra: ReviewSiteDataSchema.optional(),
 });
 
+export const ScreenshotSourceTypeSchema = z.enum(["marketing", "help", "docs", "blog", "other"]);
+
+export const CompanyScreenshotSourceSchema = z.object({
+  url: z.url(),
+  type: ScreenshotSourceTypeSchema.default("marketing"),
+  label: z.string().min(1).optional(),
+});
+
+export const CompanyScreenshotSchema = z.object({
+  id: z.string().min(1),
+  assetPath: z.string().startsWith("/"),
+  sourcePageUrl: z.url(),
+  sourceImageUrl: z.url(),
+  sourceType: ScreenshotSourceTypeSchema,
+  collectedAt: z.string().min(1),
+  alt: z.string().min(1),
+  kind: z.string().min(1).optional(),
+  caption: z.string().min(1).optional(),
+  contextHeading: z.string().min(1).optional(),
+  pageTitle: z.string().min(1).optional(),
+  width: z.number().int().positive().optional(),
+  height: z.number().int().positive().optional(),
+  tags: z.array(z.string().min(1)).default([]),
+});
+
 // --- Tweet ---
 export const TweetSchema = z.object({
   author: z.string(),
@@ -124,6 +149,8 @@ export const CompanySchema = z.object({
   tweets: z.array(TweetSchema).default([]),
   pricingUrl: z.url().nullable().optional(),
   featuresUrl: z.url().nullable().optional(),
+  screenshotSources: z.array(CompanyScreenshotSourceSchema).default([]),
+  screenshots: z.array(CompanyScreenshotSchema).default([]),
   lastChecked: z.string().nullable().optional(),
 });
 

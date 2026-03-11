@@ -294,6 +294,102 @@ function CompanyPage() {
         </div>
       </section>
 
+      {company.screenshots.length > 0 && (
+        <section className="mb-12">
+          <div className="mb-4 flex items-end justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900">Product Screenshots</h2>
+              <p className="mt-1 text-sm text-gray-600">
+                Curated first-party product imagery collected from {company.name}&rsquo;s public
+                site and help resources.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid gap-5 lg:grid-cols-2">
+            {company.screenshots.map((screenshot) => (
+              <article
+                key={screenshot.id}
+                className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm"
+              >
+                <a
+                  href={screenshot.sourcePageUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block bg-linear-to-br from-slate-100 via-white to-blue-50"
+                >
+                  <img
+                    src={screenshot.assetPath}
+                    alt={screenshot.alt}
+                    loading="lazy"
+                    className="h-auto w-full object-cover"
+                  />
+                </a>
+
+                <div className="space-y-3 p-4 sm:p-5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {screenshot.kind && (
+                      <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
+                        {screenshot.kind}
+                      </span>
+                    )}
+                    <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
+                      {screenshot.sourceType}
+                    </span>
+                    {screenshot.tags.slice(0, 3).map((tag) => (
+                      <span
+                        key={`${screenshot.id}-${tag}`}
+                        className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div>
+                    <h3 className="text-base font-semibold text-gray-900">
+                      {screenshot.contextHeading ?? screenshot.alt}
+                    </h3>
+                    {screenshot.caption && (
+                      <p className="mt-1 text-sm leading-6 text-gray-600">{screenshot.caption}</p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-500">
+                    <span>Collected {new Date(screenshot.collectedAt).toLocaleDateString()}</span>
+                    {screenshot.width && screenshot.height && (
+                      <span>
+                        {screenshot.width} x {screenshot.height}
+                      </span>
+                    )}
+                    {screenshot.pageTitle && <span>{screenshot.pageTitle}</span>}
+                  </div>
+
+                  <div className="flex flex-wrap gap-3 text-sm">
+                    <a
+                      href={screenshot.sourcePageUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-medium text-blue-600 hover:underline"
+                    >
+                      View source page
+                    </a>
+                    <a
+                      href={screenshot.sourceImageUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-medium text-blue-600 hover:underline"
+                    >
+                      Open original image
+                    </a>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
       {REVIEW_SITE_PLATFORMS.some((platform) => company.reviewSites[platform]) && (
         <section className="mb-12">
           <div className="mb-4 flex items-end justify-between gap-4">

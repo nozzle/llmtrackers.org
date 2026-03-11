@@ -2,8 +2,7 @@ slug: athenahq
 name: AthenaHQ
 group: AthenaHQ
 website: https://www.athenahq.ai/
-description: "Built by ex-Googlers, with advanced sentiment analysis, prompt tracking, and enterprise integrations."
-
+description: Built by ex-Googlers, with advanced sentiment analysis, prompt tracking, and enterprise integrations.
 plans:
   - name: Growth
     slug: growth
@@ -12,7 +11,7 @@ plans:
       currency: USD
       period: monthly
       note: null
-    pricePer1000Responses: 7.50
+    pricePer1000Responses: 7.5
     aiResponsesMonthly: 160000
     includedLlmModels: 5
     schedule: daily
@@ -24,20 +23,81 @@ plans:
       - BigQuery
       - APIs
     llmSupport:
-      aiMode: true
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: true
-      grok: false
-      llama: true
       claude: true
-
+      llama: true
+      grok: false
+      aiOverviews: true
+      aiMode: true
 reviewSites:
   g2:
     url: https://www.g2.com/products/athenahq/reviews
-
+    maxScore: 5
+    ratingDistribution: []
+    reviews: []
 tweets: []
 pricingUrl: https://www.athenahq.ai/pricing
 featuresUrl: https://www.athenahq.ai/features
-lastChecked: "2025-07-29"
+screenshotSources:
+  - url: https://www.athenahq.ai/
+    type: marketing
+    label: Home
+  - url: https://www.athenahq.ai/monitoring
+    type: marketing
+    label: Monitoring
+  - url: https://www.athenahq.ai/prompt-volume
+    type: marketing
+    label: Prompt Volume
+  - url: https://www.athenahq.ai/action-center
+    type: marketing
+    label: Action Center
+screenshots:
+  - id: aeo-geo
+    assetPath: /company-assets/athenahq/screenshots/aeo-geo.webp
+    sourcePageUrl: https://www.athenahq.ai/
+    sourceImageUrl: https://www.athenahq.ai/_astro/aeo-geo.C7ahDYgB_1J1akE.webp
+    sourceType: other
+    collectedAt: 2026-03-11T17:21:20.522Z
+    alt: aeo-geo
+    kind: dashboard
+    caption: Unified command center for all GEO activities
+    contextHeading: Executive AI Visibility Dashboard
+    pageTitle: AEO and GEO Platform for AI Search | AthenaHQ
+    width: 1400
+    height: 1000
+    tags:
+      - dashboard
+  - id: content-marketing
+    assetPath: /company-assets/athenahq/screenshots/content-marketing.webp
+    sourcePageUrl: https://www.athenahq.ai/
+    sourceImageUrl: https://www.athenahq.ai/_astro/content-marketing.g_2OKnzu_ZzFIUs.webp
+    sourceType: other
+    collectedAt: 2026-03-11T17:21:20.187Z
+    alt: content-marketing
+    kind: dashboard
+    caption: Primary source for AI answers
+    contextHeading: Brand Visibility Intelligence
+    pageTitle: AEO and GEO Platform for AI Search | AthenaHQ
+    width: 1408
+    height: 1000
+    tags:
+      - dashboard
+      - tracking
+  - id: seo
+    assetPath: /company-assets/athenahq/screenshots/seo.webp
+    sourcePageUrl: https://www.athenahq.ai/
+    sourceImageUrl: https://www.athenahq.ai/_astro/seo.DKyRSXfw_ZsPGlO.webp
+    sourceType: other
+    collectedAt: 2026-03-11T17:21:20.732Z
+    alt: seo
+    kind: tracking
+    caption: Top positions in search responses
+    contextHeading: AI-Powered PR Monitoring & Press Kits
+    pageTitle: AEO and GEO Platform for AI Search | AthenaHQ
+    width: 1408
+    height: 1000
+    tags:
+      - tracking
+lastChecked: 2025-07-29

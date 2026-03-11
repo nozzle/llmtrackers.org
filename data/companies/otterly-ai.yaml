@@ -2,8 +2,7 @@ slug: otterly-ai
 name: Otterly.ai
 group: Otterly.ai
 website: https://otterly.ai/
-description: "Tracks brand sentiment, prompt queries, and citations."
-
+description: Tracks brand sentiment, prompt queries, and citations.
 plans:
   - name: Starter
     slug: starter
@@ -12,7 +11,7 @@ plans:
       currency: USD
       period: monthly
       note: null
-    pricePer1000Responses: 15.00
+    pricePer1000Responses: 15
     aiResponsesMonthly: 10000
     includedLlmModels: 4
     schedule: daily
@@ -23,22 +22,47 @@ plans:
     integrations:
       - Custom API
     llmSupport:
-      aiMode: false
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: false
-      grok: false
-      llama: false
       claude: false
-
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: false
 reviewSites:
   g2:
     url: https://www.g2.com/products/otterly-ai/reviews
+    maxScore: 5
+    ratingDistribution: []
+    reviews: []
   trustradius:
     url: https://www.trustradius.com/products/otterly-ai/reviews
-
+    maxScore: 5
+    ratingDistribution: []
+    reviews: []
 tweets: []
 pricingUrl: https://otterly.ai/pricing
 featuresUrl: https://otterly.ai/features
-lastChecked: "2025-07-29"
+screenshotSources:
+  - url: https://otterly.ai/
+    type: marketing
+    label: Home
+  - url: https://otterly.ai/features
+    type: marketing
+    label: Features
+screenshots:
+  - id: get-instant-access-to-the-full-platform-and-expl
+    assetPath: /company-assets/otterly-ai/screenshots/get-instant-access-to-the-full-platform-and-expl.png
+    sourcePageUrl: https://otterly.ai/
+    sourceImageUrl: https://cdn.prod.website-files.com/67178910ae3c40dcf103666a/697a20ba1e0134492355cf9e_otterly-app-p-500.png
+    sourceType: other
+    collectedAt: 2026-03-11T17:21:19.037Z
+    alt: Get Instant Access To The Full Platform And Expl
+    kind: dashboard
+    caption: Get instant access to the full platform and explore all features, including AI Search visibility, brand mentions, and competitor tracking.
+    pageTitle: "AI Search Monitoring Tool: Track ChatGPT, Perplexity & Google AIO"
+    tags:
+      - dashboard
+      - tracking
+lastChecked: 2025-07-29

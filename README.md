@@ -218,6 +218,37 @@ To target a single company slug:
 pnpm backfill-review-sites -- ahrefs-brand-radar --write
 ```
 
+## Screenshot Collection
+
+Curated product screenshots are stored as first-party images downloaded from seeded public pages.
+
+- seed candidate pages in `data/companies/*.yaml` under `screenshotSources`
+- selected screenshot metadata lives in the same company YAML under `screenshots`
+- downloaded image files live in `public/company-assets/<slug>/screenshots/`
+- temporary discovery output is written to `tmp/company-screenshots/<slug>.json`
+
+Discover candidates for one company:
+
+```bash
+pnpm screenshots:discover -- ahrefs-brand-radar --include-same-host-help
+```
+
+Review the discovered candidates in a compact table:
+
+```bash
+pnpm screenshots:review -- ahrefs-brand-radar
+pnpm screenshots:review -- ahrefs-brand-radar --all
+```
+
+Ingest one or more discovered candidates by index or id:
+
+```bash
+pnpm screenshots:ingest -- ahrefs-brand-radar --pick 1
+pnpm screenshots:ingest -- ahrefs-brand-radar --pick brand-radar-dashboard-showing-branded-search-vol
+```
+
+Use `--force` to replace an existing screenshot with the same id.
+
 ## Testing
 
 - shared YAML tests live in `packages/shared/src/*.test.ts`

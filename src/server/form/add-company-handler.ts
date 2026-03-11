@@ -412,6 +412,8 @@ export async function handleAddCompany(
     tweets: [],
     ...(newData.pricingUrl ? { pricingUrl: newData.pricingUrl } : {}),
     ...(newData.featuresUrl ? { featuresUrl: newData.featuresUrl } : {}),
+    screenshotSources: [],
+    screenshots: [],
   };
 
   // 4. Validate

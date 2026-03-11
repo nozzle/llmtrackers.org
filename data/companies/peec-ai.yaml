@@ -2,8 +2,7 @@ slug: peec-ai
 name: Peec AI
 group: Peec AI
 website: https://www.peec.ai/
-description: "Straightforward prompt visibility at an accessible price point."
-
+description: Straightforward prompt visibility at an accessible price point.
 plans:
   - name: Starter
     slug: starter
@@ -11,7 +10,7 @@ plans:
       amount: 95
       currency: USD
       period: monthly
-      note: "€89 (~$95)"
+      note: €89 (~$95)
     pricePer1000Responses: 10.56
     aiResponsesMonthly: 9000
     includedLlmModels: 3
@@ -23,22 +22,21 @@ plans:
     integrations:
       - Limited
     llmSupport:
-      aiMode: false
-      aiOverviews: false
       chatgpt: true
       gemini: true
       perplexity: false
-      grok: false
-      llama: false
       claude: false
-
+      llama: false
+      grok: false
+      aiOverviews: false
+      aiMode: false
   - name: Agency
     slug: agency
     price:
       amount: 320
       currency: USD
       period: monthly
-      note: "€299 (~$320)"
+      note: €299 (~$320)
     pricePer1000Responses: 2.13
     aiResponsesMonthly: 150000
     includedLlmModels: 5
@@ -50,15 +48,14 @@ plans:
     integrations:
       - Full SEO Tools
     llmSupport:
-      aiMode: false
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: true
-      grok: false
-      llama: false
       claude: true
-
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: false
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/peec.ai
@@ -67,8 +64,45 @@ reviewSites:
     reviewCount: 0
     ratingDistribution: []
     reviews: []
-
 tweets: []
 pricingUrl: https://www.peec.ai/pricing
 featuresUrl: https://www.peec.ai/features
-lastChecked: "2025-07-29"
+screenshotSources:
+  - url: https://www.peec.ai/
+    type: marketing
+    label: Home
+  - url: https://www.peec.ai/features
+    type: marketing
+    label: Features
+screenshots:
+  - id: find-key-sources
+    assetPath: /company-assets/peec-ai/screenshots/find-key-sources.png
+    sourcePageUrl: https://www.peec.ai/
+    sourceImageUrl: https://framerusercontent.com/images/OEby8AbPjsJSLn1cYgflvlivpBA.png?scale-down-to=512&lossless=1&width=2193&height=1596
+    sourceType: marketing
+    collectedAt: 2026-03-11T17:06:16.436Z
+    alt: Find Key Sources
+    kind: dashboard
+    caption: Track rankings across the models that drive the most traffic and visibility.
+    contextHeading: Find Key Sources
+    pageTitle: Peec AI - AI Search Analytics for Marketing Teams
+    width: 2193
+    height: 1596
+    tags:
+      - dashboard
+  - id: spot-the-citations-shaping-your-visibility-and-r
+    assetPath: /company-assets/peec-ai/screenshots/spot-the-citations-shaping-your-visibility-and-r.png
+    sourcePageUrl: https://www.peec.ai/
+    sourceImageUrl: https://framerusercontent.com/images/8dNRwXvbulhWSI1Xi5S8yRz724.png?scale-down-to=512&lossless=1&width=3655&height=2300
+    sourceType: marketing
+    collectedAt: 2026-03-11T17:06:15.664Z
+    alt: Spot The Citations Shaping Your Visibility And R
+    kind: dashboard
+    caption: Spot the citations shaping your visibility and refine your GEO strategy.
+    pageTitle: Peec AI - AI Search Analytics for Marketing Teams
+    width: 3655
+    height: 2300
+    tags:
+      - dashboard
+      - tracking
+lastChecked: 2025-07-29

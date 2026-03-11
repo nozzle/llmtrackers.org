@@ -2,8 +2,7 @@ slug: waikay
 name: Waikay
 group: Waikay
 website: https://waikay.io/
-description: "Lightweight, affordable, actionable fixes for content accuracy."
-
+description: Lightweight, affordable, actionable fixes for content accuracy.
 plans:
   - name: SMB
     slug: smb
@@ -23,16 +22,50 @@ plans:
     integrations:
       - API Only
     llmSupport:
-      aiMode: false
-      aiOverviews: true
       chatgpt: true
       gemini: false
       perplexity: true
-      grok: false
-      llama: false
       claude: false
-
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: false
 tweets: []
 pricingUrl: https://waikay.io/pricing
 featuresUrl: https://waikay.io/features
-lastChecked: "2025-07-29"
+screenshotSources:
+  - url: https://waikay.io/features
+    type: marketing
+    label: Features
+  - url: https://waikay.io/
+    type: marketing
+    label: Home
+screenshots:
+  - id: brand-ai-visibility-tracker
+    assetPath: /company-assets/waikay/screenshots/brand-ai-visibility-tracker.jpg
+    sourcePageUrl: https://waikay.io/features
+    sourceImageUrl: https://waikay.io/wp-content/uploads/brand-visibility-tracker-scaled.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-11T17:10:32.893Z
+    alt: brand AI visibility tracker
+    kind: dashboard
+    pageTitle: Waikay's Innovative AI Tracking & Recommendations' Features
+    width: 2560
+    height: 1220
+    tags:
+      - dashboard
+      - tracking
+  - id: source-pages-screen-for-waikay
+    assetPath: /company-assets/waikay/screenshots/source-pages-screen-for-waikay.jpg
+    sourcePageUrl: https://waikay.io/features
+    sourceImageUrl: https://waikay.io/wp-content/uploads/citation-tracker-scaled.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-11T17:10:33.972Z
+    alt: Source Pages screen for Waikay
+    kind: tracking
+    pageTitle: Waikay's Innovative AI Tracking & Recommendations' Features
+    width: 2560
+    height: 1568
+    tags:
+      - tracking
+lastChecked: 2025-07-29

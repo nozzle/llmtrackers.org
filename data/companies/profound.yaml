@@ -80,4 +80,70 @@ reviewSites:
 tweets: []
 pricingUrl: https://www.tryprofound.com/pricing
 featuresUrl: https://www.tryprofound.com/features
+screenshotSources:
+  - url: https://www.tryprofound.com/features
+    type: marketing
+    label: Features
+  - url: https://www.tryprofound.com/platform
+    type: marketing
+    label: Platform
+  - url: https://www.tryprofound.com/brand
+    type: marketing
+    label: Brand Assets
+  - url: https://www.tryprofound.com/blog
+    type: blog
+    label: Blog
+screenshots:
+  - id: actions-dashboard-dark-theme
+    assetPath: /company-assets/profound/screenshots/actions-dashboard-dark-theme.png
+    sourcePageUrl: https://www.tryprofound.com/brand
+    sourceImageUrl: https://www.tryprofound.com/brand/product-shots/actions-dark.png?dpl=dpl_B5y2XcTUHy2YRG8r5SzLXB8n1q88
+    sourceType: marketing
+    collectedAt: 2026-03-11T17:20:09.921Z
+    alt: Actions Dashboard - Dark Theme
+    kind: dashboard
+    pageTitle: Brand - Profound
+    width: 1920
+    height: 1080
+    tags:
+      - dashboard
+  - id: prompt-volumes-dark-theme
+    assetPath: /company-assets/profound/screenshots/prompt-volumes-dark-theme.png
+    sourcePageUrl: https://www.tryprofound.com/brand
+    sourceImageUrl: https://www.tryprofound.com/brand/product-shots/conversations-dark.png?dpl=dpl_B5y2XcTUHy2YRG8r5SzLXB8n1q88
+    sourceType: marketing
+    collectedAt: 2026-03-11T17:20:10.307Z
+    alt: Prompt Volumes - Dark Theme
+    kind: tracking
+    pageTitle: Brand - Profound
+    width: 1920
+    height: 1080
+    tags:
+      - tracking
+  - id: regions-dashboard-dark-theme
+    assetPath: /company-assets/profound/screenshots/regions-dashboard-dark-theme.png
+    sourcePageUrl: https://www.tryprofound.com/brand
+    sourceImageUrl: https://www.tryprofound.com/brand/product-shots/regions-dark.png?dpl=dpl_B5y2XcTUHy2YRG8r5SzLXB8n1q88
+    sourceType: marketing
+    collectedAt: 2026-03-11T17:20:10.073Z
+    alt: Regions Dashboard - Dark Theme
+    kind: dashboard
+    pageTitle: Brand - Profound
+    width: 1920
+    height: 1080
+    tags:
+      - dashboard
+  - id: visibility-dashboard-dark-theme
+    assetPath: /company-assets/profound/screenshots/visibility-dashboard-dark-theme.png
+    sourcePageUrl: https://www.tryprofound.com/brand
+    sourceImageUrl: https://www.tryprofound.com/brand/product-shots/visibility-dark.png?dpl=dpl_B5y2XcTUHy2YRG8r5SzLXB8n1q88
+    sourceType: marketing
+    collectedAt: 2026-03-11T17:20:09.606Z
+    alt: Visibility Dashboard - Dark Theme
+    kind: dashboard
+    pageTitle: Brand - Profound
+    width: 1920
+    height: 1080
+    tags:
+      - dashboard
 lastChecked: 2025-07-29

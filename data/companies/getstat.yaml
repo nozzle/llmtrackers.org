@@ -56,4 +56,38 @@ reviewSites:
 tweets: []
 pricingUrl: https://getstat.com/pricing
 featuresUrl: https://getstat.com/features
+screenshotSources:
+  - url: https://getstat.com/
+    type: marketing
+    label: Home
+screenshots:
+  - id: how-to-win-brand-visibility-in-ai-search
+    assetPath: /company-assets/getstat/screenshots/how-to-win-brand-visibility-in-ai-search.png
+    sourcePageUrl: https://getstat.com/
+    sourceImageUrl: https://getstat-cms.transforms.svdcdn.com/production/Group-113@2x.png?w=1200&auto=compress%2Cformat&fit=max&dm=1752038814&s=02bfbd6c1d418fd39b29a1aa49b6edfb
+    sourceType: other
+    collectedAt: 2026-03-11T17:16:08.301Z
+    alt: HOW TO WIN BRAND VISIBILITY IN AI SEARCH.
+    kind: dashboard
+    contextHeading: HOW TO WIN BRAND VISIBILITY IN AI SEARCH.
+    pageTitle: STAT Search Analytics — The ultimate large-scale SEO insights tool
+    width: 1200
+    height: 1188
+    tags:
+      - dashboard
+      - tracking
+  - id: some-very-smart-people-love-stat
+    assetPath: /company-assets/getstat/screenshots/some-very-smart-people-love-stat.svg
+    sourcePageUrl: https://getstat.com/
+    sourceImageUrl: https://getstat-cms.files.svdcdn.com/production/4-full-ai-visibility-dashboard.svg?dm=1755065132
+    sourceType: other
+    collectedAt: 2026-03-11T17:16:08.715Z
+    alt: Some very smart people love STAT
+    kind: dashboard
+    caption: So we've brought AI brand visibility tracking to STAT.
+    contextHeading: Some very smart people love STAT
+    pageTitle: STAT Search Analytics — The ultimate large-scale SEO insights tool
+    tags:
+      - dashboard
+      - tracking
 lastChecked: 2025-07-29

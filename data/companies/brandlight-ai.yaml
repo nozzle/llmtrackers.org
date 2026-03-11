@@ -2,8 +2,7 @@ slug: brandlight-ai
 name: Brandlight AI
 group: Brandlight AI
 website: https://brandlight.ai/
-description: "Good balance of AI + traditional SEO diagnostics."
-
+description: Good balance of AI + traditional SEO diagnostics.
 plans:
   - name: Basic
     slug: basic
@@ -23,15 +22,14 @@ plans:
     integrations:
       - Custom
     llmSupport:
-      aiMode: false
-      aiOverviews: false
       chatgpt: true
       gemini: false
       perplexity: true
-      grok: false
-      llama: false
       claude: false
-
+      llama: false
+      grok: false
+      aiOverviews: false
+      aiMode: false
   - name: Pro
     slug: pro
     price:
@@ -51,20 +49,45 @@ plans:
       - HubSpot
       - Salesforce
     llmSupport:
-      aiMode: false
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: true
-      grok: false
-      llama: true
       claude: true
-
+      llama: true
+      grok: false
+      aiOverviews: true
+      aiMode: false
 reviewSites:
   g2:
     url: https://www.g2.com/products/brandlight-ai/reviews
-
+    maxScore: 5
+    ratingDistribution: []
+    reviews: []
 tweets: []
 pricingUrl: https://brandlight.ai/pricing
 featuresUrl: https://brandlight.ai/features
-lastChecked: "2025-07-29"
+screenshotSources:
+  - url: https://brandlight.ai/
+    type: marketing
+    label: Home
+  - url: https://brandlight.ai/features
+    type: marketing
+    label: Features
+screenshots:
+  - id: dashboard-showing-brand-visibility-scores-and-se
+    assetPath: /company-assets/brandlight-ai/screenshots/dashboard-showing-brand-visibility-scores-and-se.png
+    sourcePageUrl: https://brandlight.ai/
+    sourceImageUrl: https://cdn.prod.website-files.com/67739348b465cbb3f4e4a0d8/695a4cf1eb2f48f58f89b614_hp%20visual-p-500.png
+    sourceType: other
+    collectedAt: 2026-03-11T17:16:09.623Z
+    alt: Dashboard showing brand visibility scores and sentiment analysis including a 72% brandlight score with a positive trend, and total sentiment score of 50.3% positive from March to April 2025.
+    kind: dashboard
+    contextHeading: The Enterprise Choice for the AI Platform Shift
+    pageTitle: Master Al Brand Visibility with BrandLight
+    width: 1440
+    height: 686
+    tags:
+      - dashboard
+      - analytics
+      - tracking
+lastChecked: 2025-07-29

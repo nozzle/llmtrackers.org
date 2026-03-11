@@ -102,4 +102,14 @@ reviewSites:
 tweets: []
 pricingUrl: https://www.conductor.com/pricing
 featuresUrl: https://www.conductor.com/features
+screenshotSources:
+  - url: https://www.conductor.com/features/ai-search-insights/
+    type: marketing
+    label: AI Search Insights
+  - url: https://www.conductor.com/platform/
+    type: marketing
+    label: Platform
+  - url: https://www.conductor.com/academy/
+    type: docs
+    label: Academy
 lastChecked: 2025-07-29

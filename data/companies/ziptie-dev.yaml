@@ -2,8 +2,7 @@ slug: ziptie-dev
 name: ZipTie.dev
 group: ZipTie.dev
 website: https://ziptie.dev/
-description: "Great balance of AI + traditional SEO diagnostics. Affordable and transparent."
-
+description: Great balance of AI + traditional SEO diagnostics. Affordable and transparent.
 plans:
   - name: Basic
     slug: basic
@@ -12,7 +11,7 @@ plans:
       currency: USD
       period: monthly
       note: null
-    pricePer1000Responses: 9.90
+    pricePer1000Responses: 9.9
     aiResponsesMonthly: 10000
     includedLlmModels: 4
     schedule: weekly
@@ -23,15 +22,14 @@ plans:
     integrations:
       - Custom API
     llmSupport:
-      aiMode: true
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: true
-      grok: false
-      llama: true
       claude: true
-
+      llama: true
+      grok: false
+      aiOverviews: true
+      aiMode: true
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/ziptie.dev
@@ -40,8 +38,47 @@ reviewSites:
     reviewCount: 0
     ratingDistribution: []
     reviews: []
-
 tweets: []
 pricingUrl: https://ziptie.dev/pricing
 featuresUrl: https://ziptie.dev/features
-lastChecked: "2025-07-29"
+screenshotSources:
+  - url: https://ziptie.dev/
+    type: marketing
+    label: Home
+  - url: https://ziptie.dev/features
+    type: marketing
+    label: Features
+screenshots:
+  - id: monitor-your-ai-search-performance
+    assetPath: /company-assets/ziptie-dev/screenshots/monitor-your-ai-search-performance.png
+    sourcePageUrl: https://ziptie.dev/
+    sourceImageUrl: https://ziptie.dev/wp-content/themes/ziptiedev/assets/img/benefits_1.png
+    sourceType: other
+    collectedAt: 2026-03-11T17:10:31.116Z
+    alt: Monitor your AI Search performance
+    kind: dashboard
+    caption: Understand the full picture of your brand's AI Search presence using in-depth analytics. Dive into the most detailed and precise data on the market covering Google AI Overviews, ChatGPT and Perplexity.
+    contextHeading: Monitor your AI Search performance
+    pageTitle: ZipTie.dev - AI Overviews + ChatGPT + Perplexity tracker
+    width: 612
+    height: 321
+    tags:
+      - dashboard
+      - analytics
+      - tracking
+  - id: ziptie-dashboard-screenshot
+    assetPath: /company-assets/ziptie-dev/screenshots/ziptie-dashboard-screenshot.png
+    sourcePageUrl: https://ziptie.dev/
+    sourceImageUrl: https://ziptie.dev/wp-content/themes/ziptiedev/assets/img/panel_1.png
+    sourceType: other
+    collectedAt: 2026-03-11T17:10:30.921Z
+    alt: ZipTie dashboard screenshot
+    kind: dashboard
+    caption: Empower your Brand and Product's AI Search Visibility
+    pageTitle: ZipTie.dev - AI Overviews + ChatGPT + Perplexity tracker
+    width: 802
+    height: 512
+    tags:
+      - dashboard
+      - tracking
+lastChecked: 2025-07-29

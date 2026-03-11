@@ -2,8 +2,7 @@ slug: knowatoa
 name: Knowatoa
 group: Knowatoa
 website: https://knowatoa.com/
-description: "Cross-engine prompt tracking plus AI bot accessibility audits make it a great fit for solopreneurs and small agencies."
-
+description: Cross-engine prompt tracking plus AI bot accessibility audits make it a great fit for solopreneurs and small agencies.
 plans:
   - name: Agency
     slug: agency
@@ -12,7 +11,7 @@ plans:
       currency: USD
       period: monthly
       note: null
-    pricePer1000Responses: 12.90
+    pricePer1000Responses: 12.9
     aiResponsesMonthly: 10000
     includedLlmModels: 4
     schedule: weekly
@@ -23,16 +22,52 @@ plans:
     integrations:
       - Custom API
     llmSupport:
-      aiMode: true
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: true
-      grok: false
-      llama: false
       claude: true
-
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: true
 tweets: []
 pricingUrl: https://knowatoa.com/pricing
 featuresUrl: https://knowatoa.com/features
-lastChecked: "2025-07-29"
+screenshotSources:
+  - url: https://knowatoa.com/
+    type: marketing
+    label: Home
+  - url: https://knowatoa.com/features
+    type: marketing
+    label: Features
+screenshots:
+  - id: ai-visibility-audit-results
+    assetPath: /company-assets/knowatoa/screenshots/ai-visibility-audit-results.png
+    sourcePageUrl: https://knowatoa.com/
+    sourceImageUrl: https://knowatoa.com/assets/step1-ec01aee3c1e7771dd04f01de011833cabbda15bd89fdca46b5a48ae745986473.png
+    sourceType: other
+    collectedAt: 2026-03-11T17:10:29.915Z
+    alt: AI Visibility Audit Results
+    kind: dashboard
+    caption: Enter your website URL and let Knowatoa query ChatGPT, Claude, Perplexity, and Gemini to see exactly what they say about your brand.
+    contextHeading: Get Personalized Recommendations
+    pageTitle: |2
+        Knowatoa - AI Brand Monitoring
+    tags:
+      - dashboard
+      - tracking
+  - id: visibility-recommendations
+    assetPath: /company-assets/knowatoa/screenshots/visibility-recommendations.png
+    sourcePageUrl: https://knowatoa.com/
+    sourceImageUrl: https://knowatoa.com/assets/step2-4bade26aeb3001bdb0478534593277a6f421b26d843a9f2082ff0fc501bed49c.png
+    sourceType: other
+    collectedAt: 2026-03-11T17:10:30.155Z
+    alt: Visibility Recommendations
+    kind: dashboard
+    caption: Based on your specific questions and competitors, we'll give you personalized recommendations to improve your AI visibility that you can act on today.
+    contextHeading: Get Personalized Recommendations
+    pageTitle: |2
+        Knowatoa - AI Brand Monitoring
+    tags:
+      - dashboard
+lastChecked: 2025-07-29

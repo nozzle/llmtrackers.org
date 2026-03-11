@@ -2,8 +2,7 @@ slug: gumshoe-ai
 name: Gumshoe AI
 group: Gumshoe AI
 website: https://www.gumshoe.ai/
-description: "Unique persona segmentation and share-of-voice reports."
-
+description: Unique persona segmentation and share-of-voice reports.
 plans:
   - name: Premium
     slug: premium
@@ -23,15 +22,14 @@ plans:
     integrations:
       - Full Stack
     llmSupport:
-      aiMode: true
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: true
-      grok: false
-      llama: true
       claude: true
-
+      llama: true
+      grok: false
+      aiOverviews: true
+      aiMode: true
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/gumshoe.ai
@@ -40,8 +38,29 @@ reviewSites:
     reviewCount: 0
     ratingDistribution: []
     reviews: []
-
 tweets: []
 pricingUrl: https://www.gumshoe.ai/pricing
 featuresUrl: https://www.gumshoe.ai/features
-lastChecked: "2025-07-29"
+screenshotSources:
+  - url: https://www.gumshoe.ai/
+    type: marketing
+    label: Home
+  - url: https://www.gumshoe.ai/features
+    type: marketing
+    label: Features
+screenshots:
+  - id: take-control-of-your-brand-s-presence-in-ai-sear
+    assetPath: /company-assets/gumshoe-ai/screenshots/take-control-of-your-brand-s-presence-in-ai-sear.png
+    sourcePageUrl: https://www.gumshoe.ai/
+    sourceImageUrl: https://framerusercontent.com/images/gUsB9WeGPRhgzh5XgSSOqWrig.png?scale-down-to=512&width=1977&height=1171
+    sourceType: marketing
+    collectedAt: 2026-03-11T17:06:18.574Z
+    alt: Take control of your brand’s presence in AI search
+    kind: tracking
+    contextHeading: Take control of your brand’s presence in AI search
+    pageTitle: Gumshoe AI | Understand What AI Thinks About Your Brand
+    width: 1977
+    height: 1171
+    tags:
+      - tracking
+lastChecked: 2025-07-29

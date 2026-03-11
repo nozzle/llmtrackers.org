@@ -2,6 +2,8 @@ import { Document, parseDocument } from "yaml";
 import { CompanySchema, PublishedReviewSchema } from "./schema.js";
 import type {
   Company,
+  CompanyScreenshot,
+  CompanyScreenshotSource,
   CompanyYamlValue,
   LlmModelKey,
   Plan,
@@ -274,6 +276,8 @@ function mergeReviewSiteData(
 
 function sortCompanyKeys(company: CompanyYamlValue): CompanyYamlValue {
   const hasReviewSites = Object.keys(company.reviewSites).length > 0;
+  const hasScreenshotSources = company.screenshotSources.length > 0;
+  const hasScreenshots = company.screenshots.length > 0;
 
   return {
     slug: company.slug,
@@ -286,8 +290,45 @@ function sortCompanyKeys(company: CompanyYamlValue): CompanyYamlValue {
     tweets: company.tweets,
     ...(company.pricingUrl !== undefined ? { pricingUrl: company.pricingUrl } : {}),
     ...(company.featuresUrl !== undefined ? { featuresUrl: company.featuresUrl } : {}),
+    ...(hasScreenshotSources
+      ? {
+          screenshotSources: company.screenshotSources.map(sortScreenshotSourceKeys),
+        }
+      : {}),
+    ...(hasScreenshots
+      ? {
+          screenshots: company.screenshots.map(sortScreenshotKeys),
+        }
+      : {}),
     ...(company.lastChecked !== undefined ? { lastChecked: company.lastChecked } : {}),
   } as CompanyYamlValue;
+}
+
+function sortScreenshotSourceKeys(source: CompanyScreenshotSource): CompanyScreenshotSource {
+  return {
+    url: source.url,
+    type: source.type,
+    ...(source.label ? { label: source.label } : {}),
+  };
+}
+
+function sortScreenshotKeys(screenshot: CompanyScreenshot): CompanyScreenshot {
+  return {
+    id: screenshot.id,
+    assetPath: screenshot.assetPath,
+    sourcePageUrl: screenshot.sourcePageUrl,
+    sourceImageUrl: screenshot.sourceImageUrl,
+    sourceType: screenshot.sourceType,
+    collectedAt: screenshot.collectedAt,
+    alt: screenshot.alt,
+    ...(screenshot.kind ? { kind: screenshot.kind } : {}),
+    ...(screenshot.caption ? { caption: screenshot.caption } : {}),
+    ...(screenshot.contextHeading ? { contextHeading: screenshot.contextHeading } : {}),
+    ...(screenshot.pageTitle ? { pageTitle: screenshot.pageTitle } : {}),
+    ...(screenshot.width ? { width: screenshot.width } : {}),
+    ...(screenshot.height ? { height: screenshot.height } : {}),
+    tags: screenshot.tags,
+  };
 }
 
 function sortPlanKeys(plan: Plan): Plan {
