@@ -1,0 +1,40 @@
+slug: generate-more-semrush-ai-visibility-review-2026
+name: "I Tested SEMrush for AI Search Visibility — Here’s What I Found"
+url: https://www.youtube.com/watch?v=pyaqhpUdBKg
+date: 2026-01-15
+type: video
+summary: A mixed video review that sees SEMrush's AI visibility tooling as useful for existing SEMrush customers, but rough, sometimes off-target, and costly for agencies or multi-property use.
+detailedSummary: |
+  The reviewer says SEMrush does offer real value for AI visibility work, including quick top-line visibility reporting, geo support, prompt visibility views, sentiment-style brand comparisons, and the benefit of sitting inside a broader SEO platform. For teams already invested in SEMrush, that integration is a meaningful advantage.
+
+  The criticism is that the product feels undercooked: topic clustering and automated prompt suggestions can be overly broad or irrelevant, the interface behaves in unexpected ways, and some outputs appear better suited to B2C than B2B or SaaS use cases. Pricing also becomes a major drawback once agencies add users, properties, or more prompts.
+author:
+  name: Generate More
+  socialProfiles:
+    - label: YouTube
+      url: https://www.youtube.com/channel/UC-Kk27cwqPfz6giFWO8Lw0A
+primaryCompanySlug: semrush
+media:
+  provider: youtube
+  videoId: pyaqhpUdBKg
+  watchUrl: https://www.youtube.com/watch?v=pyaqhpUdBKg
+  thumbnailUrl: https://i.ytimg.com/vi/pyaqhpUdBKg/hqdefault.jpg
+  title: "I Tested SEMrush for AI Search Visibility — Here’s What I Found"
+  creator: Generate More
+  creatorUrl: https://www.youtube.com/channel/UC-Kk27cwqPfz6giFWO8Lw0A
+  durationSeconds: 523
+companyRatings:
+  - companySlug: semrush
+    summary: Mixed; worthwhile as an add-on for current SEMrush users, but not yet polished enough to fully meet agency or advanced multi-client needs.
+    pros:
+      - Useful top-line AI visibility reporting with minimal setup.
+      - Benefits from SEMrush's broader SEO tooling and site audit features.
+      - Includes geo tracking and brand performance views.
+    cons:
+      - Automated topics and insights can be inaccurate or irrelevant.
+      - UI has quirks that make workflows frustrating.
+      - Costs rise quickly for extra users, properties, and prompts.
+    noteworthy:
+      - Reviewer tested it actively for 30 days.
+      - Seen as stronger for current SEMrush customers than for new standalone buyers.
+      - Coverage is still largely English-first.

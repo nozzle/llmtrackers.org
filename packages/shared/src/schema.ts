@@ -145,14 +145,30 @@ export const ReviewCompanyRatingSchema = z.object({
   noteworthy: z.array(z.string().min(1)).max(3).default([]),
 });
 
+export const PublishedReviewTypeSchema = z.enum(["article", "video"]);
+
+export const PublishedReviewMediaSchema = z.object({
+  provider: CompanyVideoProviderSchema,
+  videoId: z.string().min(1),
+  watchUrl: z.url(),
+  thumbnailUrl: z.url(),
+  title: z.string().min(1),
+  creator: z.string().min(1),
+  creatorUrl: z.url().optional(),
+  durationSeconds: z.number().int().positive().optional(),
+});
+
 export const PublishedReviewSchema = z.object({
   slug: z.string(),
   name: z.string(),
   url: z.url(),
   date: z.string(),
+  type: PublishedReviewTypeSchema.default("article"),
   summary: z.string(),
   detailedSummary: z.string(),
   author: ReviewAuthorSchema,
+  primaryCompanySlug: z.string().optional(),
+  media: PublishedReviewMediaSchema.optional(),
   companyRatings: z.array(ReviewCompanyRatingSchema).min(1),
 });
 

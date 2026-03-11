@@ -1,0 +1,32 @@
+slug: get-mentioned
+name: Get Mentioned
+group: Get Mentioned
+website: https://getmentioned.ai/
+description: Lightweight AI visibility tracker focused on brand mentions, competitor monitoring, daily prompt runs, and geo-filtered answer-engine coverage.
+plans:
+  - name: Pro
+    slug: pro
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing was not confidently verified.
+    pricePer1000Responses: null
+    aiResponsesMonthly: null
+    includedLlmModels: null
+    schedule: daily
+    locationSupport: global
+    personaSupport: unlimited
+    contentGeneration: false
+    contentOptimization: false
+    integrations: []
+    llmSupport:
+      aiMode: false
+      aiOverviews: false
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      grok: false
+      llama: false
+      claude: false
+tweets: []

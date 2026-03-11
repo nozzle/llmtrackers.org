@@ -20,6 +20,8 @@ import {
   type ReviewAuthorSocialProfileSchema,
   type ReviewAuthorSchema,
   type ReviewCompanyRatingSchema,
+  type PublishedReviewTypeSchema,
+  type PublishedReviewMediaSchema,
   type PublishedReviewSchema,
 } from "./schema.js";
 
@@ -43,6 +45,8 @@ export type Tweet = z.infer<typeof TweetSchema>;
 export type ReviewAuthorSocialProfile = z.infer<typeof ReviewAuthorSocialProfileSchema>;
 export type ReviewAuthor = z.infer<typeof ReviewAuthorSchema>;
 export type ReviewCompanyRating = z.infer<typeof ReviewCompanyRatingSchema>;
+export type PublishedReviewType = z.infer<typeof PublishedReviewTypeSchema>;
+export type PublishedReviewMedia = z.infer<typeof PublishedReviewMediaSchema>;
 export type PublishedReview = z.infer<typeof PublishedReviewSchema>;
 
 export const REVIEW_SITE_PLATFORMS: ReviewSitePlatform[] = [

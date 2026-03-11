@@ -1,5 +1,28 @@
 import type { Company } from "@llm-tracker/shared";
 
+type PrefillReviewType = "article" | "video";
+
+interface PrefillReviewMedia {
+  provider: "youtube";
+  videoId: string;
+  watchUrl: string;
+  thumbnailUrl: string;
+  title: string;
+  creator: string;
+  creatorUrl?: string;
+  durationSeconds?: number;
+}
+
+interface ExtractReviewPrefillOptions {
+  reviewType?: PrefillReviewType;
+  media?: PrefillReviewMedia;
+  suggestedDate?: string | null;
+  suggestedTitle?: string | null;
+  suggestedAuthorName?: string | null;
+  suggestedAuthorProfiles?: { label: string; url: string }[];
+  suggestedPrimaryCompanySlug?: string | null;
+}
+
 interface OpenAiChatCompletionResponse {
   choices: {
     message?: {
@@ -14,8 +37,11 @@ export interface PrefillReviewDraft {
     slug: string;
     url: string;
     date: string;
+    type: PrefillReviewType;
     summary: string;
     detailedSummary: string;
+    primaryCompanySlug?: string;
+    media?: PrefillReviewMedia;
     author: {
       name: string;
       socialProfiles: { label: string; url: string }[];
@@ -34,7 +60,7 @@ export interface PrefillReviewDraft {
   warnings: string[];
 }
 
-const SYSTEM_PROMPT = `You extract structured review data from an article about LLM tracking, GEO, AI visibility, or answer engine optimization tools.
+const SYSTEM_PROMPT = `You extract structured review data from an article, transcript, or video description about LLM tracking, GEO, AI visibility, or answer engine optimization tools.
 
 Return ONLY valid JSON with this exact shape:
 {
@@ -64,8 +90,8 @@ Rules:
 - Use empty string for unknown text fields rather than inventing values.
 - The summary should be concise, good for cards/tables.
 - The detailedSummary should be 1-2 short paragraphs.
-- score and maxScore should be null when the article does not give a numeric score.
-- Include only tools clearly discussed in the article.
+- score and maxScore should be null when the source does not give a numeric score.
+- Include only tools clearly discussed in the source.
 - Keep pros, cons, and noteworthy to at most 3 short items each.`;
 
 function slugify(value: string): string {
@@ -127,6 +153,16 @@ function isValidDate(value: unknown): value is string {
   return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
 }
 
+function firstNonEmpty(...values: (string | null | undefined)[]): string {
+  for (const value of values) {
+    if (typeof value === "string" && value.trim().length > 0) {
+      return value.trim();
+    }
+  }
+
+  return "";
+}
+
 function matchCompanySlug(name: string, companies: Company[]): string | null {
   const normalized = normalizeCompanyName(name);
 
@@ -154,6 +190,7 @@ export async function extractReviewPrefillWithLlm(
   pageUrl: string,
   pageText: string,
   companies: Company[],
+  options: ExtractReviewPrefillOptions = {},
 ): Promise<PrefillReviewDraft> {
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
@@ -168,7 +205,7 @@ export async function extractReviewPrefillWithLlm(
         { role: "system", content: SYSTEM_PROMPT },
         {
           role: "user",
-          content: `Extract review article data from this URL and content. URL: ${pageUrl}\n\n${pageText}`,
+          content: `Extract review data from this source URL and content. URL: ${pageUrl}\n\n${pageText}`,
         },
       ],
       temperature: 0,
@@ -229,7 +266,7 @@ export async function extractReviewPrefillWithLlm(
 
   if (companyRatings.length === 0) {
     warnings.push(
-      "No tracked companies were matched from this article. Review details were imported, but tool coverage must be added manually.",
+      `No tracked companies were matched from this ${options.reviewType === "video" ? "video" : "source"}. Review details were imported, but tool coverage must be added manually.`,
     );
   }
 
@@ -254,17 +291,54 @@ export async function extractReviewPrefillWithLlm(
         .filter((profile) => profile.label.length > 0 && profile.url.length > 0)
     : [];
 
+  const mergedSocialProfiles = [
+    ...socialProfiles,
+    ...(options.suggestedAuthorProfiles ?? []).filter(
+      (profile) =>
+        profile.label.trim().length > 0 &&
+        profile.url.trim().length > 0 &&
+        !socialProfiles.some(
+          (existing) =>
+            existing.label.toLowerCase() === profile.label.trim().toLowerCase() &&
+            existing.url === profile.url.trim(),
+        ),
+    ),
+  ];
+
+  const matchedPrimaryCompanySlug =
+    options.suggestedPrimaryCompanySlug ??
+    (companyRatings.length === 1 ? companyRatings[0]?.companySlug : null) ??
+    undefined;
+
   const review = {
-    name: typeof parsedJson.name === "string" ? parsedJson.name.trim() : "",
-    slug: deriveSlugFromUrl(pageUrl, typeof parsedJson.name === "string" ? parsedJson.name : ""),
+    name: firstNonEmpty(
+      typeof parsedJson.name === "string" ? parsedJson.name : null,
+      options.suggestedTitle,
+    ),
+    slug: deriveSlugFromUrl(
+      pageUrl,
+      firstNonEmpty(
+        typeof parsedJson.name === "string" ? parsedJson.name : null,
+        options.suggestedTitle,
+      ),
+    ),
     url: pageUrl,
-    date: isValidDate(parsedJson.date) ? parsedJson.date : "",
+    date: firstNonEmpty(
+      isValidDate(parsedJson.date) ? parsedJson.date : null,
+      isValidDate(options.suggestedDate) ? options.suggestedDate : null,
+    ),
+    type: options.reviewType ?? "article",
     summary: typeof parsedJson.summary === "string" ? parsedJson.summary.trim() : "",
     detailedSummary:
       typeof parsedJson.detailedSummary === "string" ? parsedJson.detailedSummary.trim() : "",
+    ...(matchedPrimaryCompanySlug ? { primaryCompanySlug: matchedPrimaryCompanySlug } : {}),
+    ...(options.media ? { media: options.media } : {}),
     author: {
-      name: typeof authorRecord?.name === "string" ? authorRecord.name.trim() : "",
-      socialProfiles,
+      name: firstNonEmpty(
+        typeof authorRecord?.name === "string" ? authorRecord.name : null,
+        options.suggestedAuthorName,
+      ),
+      socialProfiles: mergedSocialProfiles,
     },
   };
 

@@ -709,8 +709,15 @@ function CompanyPage() {
                     </Link>
                     <p className="mt-0.5 text-sm text-gray-500">
                       {review.author.name} &middot; {review.date} &middot;{" "}
-                      {review.companyRatings.length} tools rated
+                      {review.companyRatings.length === 1
+                        ? "Single-product review"
+                        : `${review.companyRatings.length} tools rated`}
                     </p>
+                    {review.type === "video" && review.media && (
+                      <p className="mt-1 text-xs font-medium uppercase tracking-wide text-blue-700">
+                        Video review
+                      </p>
+                    )}
                     <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-gray-600">
                       {rating.summary}
                     </p>
@@ -745,6 +752,16 @@ function CompanyPage() {
                         className="text-blue-600 hover:underline"
                       >
                         Source rating
+                      </a>
+                    )}
+                    {review.type === "video" && review.media && (
+                      <a
+                        href={review.media.watchUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
+                        Watch video
                       </a>
                     )}
                   </div>

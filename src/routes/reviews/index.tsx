@@ -68,6 +68,12 @@ function ReviewsIndexPage() {
       ) : (
         <div className="grid gap-6">
           {reviews.map((review) => {
+            const isSingleCompanyReview = review.companyRatings.length === 1;
+            const primaryCompanySlug =
+              review.primaryCompanySlug ?? review.companyRatings[0]?.companySlug;
+            const primaryCompany = primaryCompanySlug
+              ? getCompanyBySlug(primaryCompanySlug)
+              : undefined;
             const topRatings = [...review.companyRatings]
               .sort((a, b) => {
                 const aHasScore = a.score != null && a.maxScore != null;
@@ -112,7 +118,16 @@ function ReviewsIndexPage() {
                     <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500">
                       <span>By {review.author.name}</span>
                       <span>{review.date}</span>
-                      <span>{review.companyRatings.length} tools rated</span>
+                      <span>
+                        {isSingleCompanyReview
+                          ? `${primaryCompany?.name ?? "1 tool"} reviewed`
+                          : `${review.companyRatings.length} tools rated`}
+                      </span>
+                      {review.type === "video" && (
+                        <span className="rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">
+                          Video review
+                        </span>
+                      )}
                       {highlightCount > 0 && <span>{highlightCount} highlights</span>}
                       {isUnscoredRoundup && (
                         <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
@@ -133,7 +148,7 @@ function ReviewsIndexPage() {
                     rel="noopener noreferrer"
                     className="shrink-0 text-sm text-blue-600 hover:underline"
                   >
-                    Original article
+                    {review.type === "video" ? "Original video" : "Original article"}
                   </a>
                 </div>
 

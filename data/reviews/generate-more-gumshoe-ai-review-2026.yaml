@@ -1,0 +1,40 @@
+slug: generate-more-gumshoe-ai-review-2026
+name: "Gumshoe AI Review: Is It the Best AI Search Visibility Tool in 2026?"
+url: https://www.youtube.com/watch?v=ws0J4V-Afbk
+date: 2026-01-02
+type: video
+summary: A very positive video review that calls Gumshoe the best AI search visibility tool the reviewer has tested so far, mainly for UX, prompt analytics, and engine coverage.
+detailedSummary: |
+  The reviewer positions Gumshoe as one of the most complete tools in the category, emphasizing persona-level prompt analytics, strong documentation, fast setup, broad AI engine coverage, and a data collection approach that combines APIs with real web interfaces. They also praise the added GEO audit and content generation features, which make the platform feel broader than a simple monitoring dashboard.
+
+  The tradeoffs are that Gumshoe still lacks AI traffic analytics and sentiment tracking, and some generated outputs need editing before use. Pricing is described as flexible rather than cheap, but the reviewer still sees it as fair for the functionality, especially for teams that want deeper monitoring across many engines.
+author:
+  name: Generate More
+  socialProfiles:
+    - label: YouTube
+      url: https://www.youtube.com/channel/UC-Kk27cwqPfz6giFWO8Lw0A
+primaryCompanySlug: gumshoe-ai
+media:
+  provider: youtube
+  videoId: ws0J4V-Afbk
+  watchUrl: https://www.youtube.com/watch?v=ws0J4V-Afbk
+  thumbnailUrl: https://i.ytimg.com/vi/ws0J4V-Afbk/hqdefault.jpg
+  title: "Gumshoe AI Review: Is It the Best AI Search Visibility Tool in 2026?"
+  creator: Generate More
+  creatorUrl: https://www.youtube.com/channel/UC-Kk27cwqPfz6giFWO8Lw0A
+  durationSeconds: 512
+companyRatings:
+  - companySlug: gumshoe-ai
+    summary: Strongly positive; described as the best tool tested so far thanks to standout UX, transparency, and broad monitoring depth.
+    pros:
+      - Excellent user experience and clear documentation.
+      - Granular persona-based prompt analytics.
+      - Broad engine coverage plus useful content-generation features.
+    cons:
+      - No AI traffic analytics.
+      - No sentiment tracking.
+      - Some generated content still needs manual refinement.
+    noteworthy:
+      - Reviewer says only Google AI Mode was notably missing from coverage.
+      - First three reports are free, then pricing shifts to per-conversation usage.
+      - Reviewer explicitly says it is the best AI visibility tool they have tested so far.

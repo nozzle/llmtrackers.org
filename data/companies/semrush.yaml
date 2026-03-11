@@ -1,0 +1,37 @@
+slug: semrush
+name: Semrush
+group: Semrush
+website: https://www.semrush.com/
+description: Broad marketing platform with AI visibility reporting, prompt monitoring, and geo-aware brand tracking inside a larger SEO suite.
+plans:
+  - name: Semrush One
+    slug: semrush-one
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Pricing varies by workspace, seats, and AI visibility usage.
+    pricePer1000Responses: null
+    aiResponsesMonthly: null
+    includedLlmModels: null
+    schedule: daily
+    locationSupport: global
+    personaSupport: unlimited
+    contentGeneration: AI content tooling included
+    contentOptimization: AI visibility recommendations and optimization included
+    integrations:
+      - Google Analytics
+      - Google Search Console
+      - Looker Studio
+    llmSupport:
+      aiMode: false
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      grok: false
+      llama: false
+      claude: true
+tweets: []
+pricingUrl: https://www.semrush.com/pricing/
+featuresUrl: https://www.semrush.com/features/

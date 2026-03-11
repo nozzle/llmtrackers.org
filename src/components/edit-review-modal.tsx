@@ -10,8 +10,20 @@ interface EditReviewModalProps {
     name: string;
     url: string;
     date: string;
+    type?: "article" | "video";
     summary: string;
     detailedSummary: string;
+    primaryCompanySlug?: string;
+    media?: {
+      provider: "youtube" | "wistia" | "loom";
+      videoId: string;
+      watchUrl: string;
+      thumbnailUrl: string;
+      title: string;
+      creator: string;
+      creatorUrl?: string;
+      durationSeconds?: number;
+    };
     author: {
       name: string;
       socialProfiles: { label: string; url: string }[];
@@ -35,8 +47,20 @@ interface ReviewChanges {
   name?: string;
   url?: string;
   date?: string;
+  type?: "article" | "video";
   summary?: string;
   detailedSummary?: string;
+  primaryCompanySlug?: string | null;
+  media?: {
+    provider: "youtube" | "wistia" | "loom";
+    videoId: string;
+    watchUrl: string;
+    thumbnailUrl: string;
+    title: string;
+    creator: string;
+    creatorUrl?: string;
+    durationSeconds?: number;
+  } | null;
   author?: {
     name?: string;
     socialProfiles?: { label: string; url: string }[];
@@ -199,8 +223,20 @@ interface FormState {
   name: string;
   url: string;
   date: string;
+  type: "article" | "video";
   summary: string;
   detailedSummary: string;
+  primaryCompanySlug: string;
+  media?: {
+    provider: "youtube" | "wistia" | "loom";
+    videoId: string;
+    watchUrl: string;
+    thumbnailUrl: string;
+    title: string;
+    creator: string;
+    creatorUrl?: string;
+    durationSeconds?: number;
+  };
   authorName: string;
   socialProfiles: SocialProfileFormState[];
   companyRatings: CompanyRatingFormState[];
@@ -229,8 +265,11 @@ function reviewToFormState(review: EditReviewModalProps["review"]): FormState {
     name: review.name,
     url: review.url,
     date: review.date,
+    type: review.type ?? "article",
     summary: review.summary,
     detailedSummary: review.detailedSummary,
+    primaryCompanySlug: review.primaryCompanySlug ?? review.companyRatings.at(0)?.companySlug ?? "",
+    media: review.media,
     authorName: review.author.name,
     socialProfiles: review.author.socialProfiles.map((sp) => ({
       id: generateSocialProfileId(),
@@ -298,6 +337,15 @@ function computeChangesAndDiff(
     });
   }
 
+  if (form.type !== (original.type ?? "article")) {
+    changes.type = form.type;
+    diff.push({
+      label: "Review Type",
+      oldValue: original.type ?? "article",
+      newValue: form.type,
+    });
+  }
+
   if (form.summary.trim() !== original.summary) {
     changes.summary = form.summary.trim();
     diff.push({
@@ -313,6 +361,38 @@ function computeChangesAndDiff(
       label: "Detailed Summary",
       oldValue: original.detailedSummary,
       newValue: form.detailedSummary.trim(),
+    });
+  }
+
+  const originalPrimaryCompanySlug = original.primaryCompanySlug ?? "";
+  if (form.primaryCompanySlug.trim() !== originalPrimaryCompanySlug) {
+    changes.primaryCompanySlug = form.primaryCompanySlug.trim() || null;
+    diff.push({
+      label: "Primary Company",
+      oldValue: originalPrimaryCompanySlug || "—",
+      newValue: form.primaryCompanySlug.trim() || "—",
+    });
+  }
+
+  const originalMediaSerialized = JSON.stringify(original.media ?? null);
+  const formMedia = form.media
+    ? {
+        provider: form.media.provider,
+        videoId: form.media.videoId.trim(),
+        watchUrl: form.media.watchUrl.trim(),
+        thumbnailUrl: form.media.thumbnailUrl.trim(),
+        title: form.media.title.trim(),
+        creator: form.media.creator.trim(),
+        ...(form.media.creatorUrl?.trim() ? { creatorUrl: form.media.creatorUrl.trim() } : {}),
+        ...(form.media.durationSeconds ? { durationSeconds: form.media.durationSeconds } : {}),
+      }
+    : null;
+  if (JSON.stringify(formMedia) !== originalMediaSerialized) {
+    changes.media = formMedia;
+    diff.push({
+      label: "Video Metadata",
+      oldValue: original.media?.title ?? "—",
+      newValue: formMedia?.title ?? "—",
     });
   }
 
@@ -573,6 +653,98 @@ function RatingFormSection({
         </div>
       )}
     </div>
+  );
+}
+
+function VideoMetadataSection({
+  form,
+  companies,
+  onUpdate,
+}: Readonly<{
+  form: FormState;
+  companies: { slug: string; name: string }[];
+  onUpdate: <K extends keyof FormState>(key: K, value: FormState[K]) => void;
+}>) {
+  if (form.type !== "video" || !form.media) return null;
+
+  const media = form.media;
+
+  return (
+    <fieldset>
+      <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
+        Video Metadata
+      </legend>
+      <div className="space-y-3">
+        <label className="block">
+          <span className="text-xs font-medium text-gray-600">Primary Company</span>
+          <select
+            value={form.primaryCompanySlug}
+            onChange={(e) => {
+              onUpdate("primaryCompanySlug", e.target.value);
+            }}
+            className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          >
+            <option value="">Select a company...</option>
+            {companies.map((company) => (
+              <option key={company.slug} value={company.slug}>
+                {company.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <div className="grid grid-cols-2 gap-3">
+          <label className="block">
+            <span className="text-xs font-medium text-gray-600">Video Title</span>
+            <input
+              type="text"
+              value={media.title}
+              onChange={(e) => {
+                onUpdate("media", { ...media, title: e.target.value });
+              }}
+              className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs font-medium text-gray-600">Creator</span>
+            <input
+              type="text"
+              value={media.creator}
+              onChange={(e) => {
+                onUpdate("media", { ...media, creator: e.target.value });
+              }}
+              className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </label>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <label className="block">
+            <span className="text-xs font-medium text-gray-600">Watch URL</span>
+            <input
+              type="url"
+              value={media.watchUrl}
+              onChange={(e) => {
+                onUpdate("media", { ...media, watchUrl: e.target.value });
+              }}
+              className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs font-medium text-gray-600">Channel URL</span>
+            <input
+              type="url"
+              value={media.creatorUrl ?? ""}
+              onChange={(e) => {
+                onUpdate("media", {
+                  ...media,
+                  creatorUrl: e.target.value.trim() ? e.target.value : undefined,
+                });
+              }}
+              className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </label>
+        </div>
+      </div>
+    </fieldset>
   );
 }
 
@@ -898,6 +1070,8 @@ export function EditReviewModal({ review, companies, onClose }: Readonly<EditRev
                   </label>
                 </div>
               </fieldset>
+
+              <VideoMetadataSection form={form} companies={companies} onUpdate={updateForm} />
 
               {/* Author */}
               <fieldset>

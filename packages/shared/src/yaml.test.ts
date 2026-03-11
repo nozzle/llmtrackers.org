@@ -126,6 +126,7 @@ const reviewYaml = `slug: test-review
 name: Test Review
 url: https://example.com/reviews/test-review
 date: 2026-03-07
+type: video
 summary: A concise summary of the overall article.
 detailedSummary: A longer summary that explains the review methodology and the kinds of teams the article is meant to help.
 author:
@@ -133,6 +134,16 @@ author:
   socialProfiles:
     - label: LinkedIn
       url: https://linkedin.com/in/reviewer
+primaryCompanySlug: test-company
+media:
+  provider: youtube
+  videoId: abc123xyz
+  watchUrl: https://www.youtube.com/watch?v=abc123xyz
+  thumbnailUrl: https://i.ytimg.com/vi/abc123xyz/hqdefault.jpg
+  title: Test Review Video
+  creator: Reviewer Channel
+  creatorUrl: https://www.youtube.com/@reviewer
+  durationSeconds: 487
 companyRatings:
   - companySlug: test-company
     score: 40
@@ -289,6 +300,10 @@ describe("yaml helpers", () => {
   it("parseReviewYaml parses review highlights", () => {
     const { review } = parseReviewYaml(reviewYaml);
 
+    expect(review.type).toBe("video");
+    expect(review.primaryCompanySlug).toBe("test-company");
+    expect(review.media?.provider).toBe("youtube");
+    expect(review.media?.durationSeconds).toBe(487);
     expect(review.companyRatings[0]?.pros).toEqual([
       "broad AI visibility coverage",
       "strong documentation",
@@ -306,12 +321,24 @@ describe("yaml helpers", () => {
       name: "Test Review",
       url: "https://example.com/reviews/test-review",
       date: "2026-03-07",
+      type: "video",
       summary: "A concise summary of the overall article.",
       detailedSummary:
         "A longer summary that explains the review methodology and the kinds of teams the article is meant to help.",
       author: {
         name: "Reviewer Name",
         socialProfiles: [],
+      },
+      primaryCompanySlug: "test-company",
+      media: {
+        provider: "youtube",
+        videoId: "abc123xyz",
+        watchUrl: "https://www.youtube.com/watch?v=abc123xyz",
+        thumbnailUrl: "https://i.ytimg.com/vi/abc123xyz/hqdefault.jpg",
+        title: "Test Review Video",
+        creator: "Reviewer Channel",
+        creatorUrl: "https://www.youtube.com/@reviewer",
+        durationSeconds: 487,
       },
       companyRatings: [
         {
@@ -330,8 +357,12 @@ describe("yaml helpers", () => {
     expect(yamlText).not.toMatch(/\n\s+pros:/);
     expect(yamlText).not.toMatch(/\n\s+cons:/);
     expect(yamlText).not.toMatch(/\n\s+noteworthy:/);
+    expect(yamlText).toMatch(/\ntype: video/);
+    expect(yamlText).toMatch(/\nmedia:/);
 
     const { review } = parseReviewYaml(yamlText);
+    expect(review.type).toBe("video");
+    expect(review.media?.videoId).toBe("abc123xyz");
     expect(review.companyRatings[0]?.pros).toEqual([]);
     expect(review.companyRatings[0]?.cons).toEqual([]);
     expect(review.companyRatings[0]?.noteworthy).toEqual([]);

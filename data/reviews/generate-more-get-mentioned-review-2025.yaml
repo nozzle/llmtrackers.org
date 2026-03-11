@@ -1,0 +1,42 @@
+slug: generate-more-get-mentioned-review-2025
+name: "How to Use Get Mentioned for AI Visibility — Full 2025 Review & Tutorial"
+url: https://www.youtube.com/watch?v=HAPSU4Yk-e4
+date: 2025-12-08
+type: video
+summary: A fair, mildly positive video review that sees Get Mentioned as a useful early-stage alternative for basic AI visibility tracking, but not yet strong enough for deeper analytics needs.
+detailedSummary: |
+  The reviewer says Get Mentioned covers the basics well: tracking visibility across major AI engines, comparing against competitors, and surfacing commonly cited sources that can inspire content ideas. They also call out unlimited competitor tracking and the use of real web interfaces instead of only API-based collection as meaningful advantages.
+
+  At the same time, the product is framed as early and somewhat lightweight. The reviewer says it is better for companies that want a simple interface and foundational metrics than for those needing richer analytics, sentiment tracking, or AI traffic measurement.
+author:
+  name: Generate More
+  socialProfiles:
+    - label: YouTube
+      url: https://www.youtube.com/channel/UC-Kk27cwqPfz6giFWO8Lw0A
+primaryCompanySlug: get-mentioned
+media:
+  provider: youtube
+  videoId: HAPSU4Yk-e4
+  watchUrl: https://www.youtube.com/watch?v=HAPSU4Yk-e4
+  thumbnailUrl: https://i.ytimg.com/vi/HAPSU4Yk-e4/hqdefault.jpg
+  title: "How to Use Get Mentioned for AI Visibility — Full 2025 Review & Tutorial"
+  creator: Generate More
+  creatorUrl: https://www.youtube.com/channel/UC-Kk27cwqPfz6giFWO8Lw0A
+  durationSeconds: 572
+companyRatings:
+  - companySlug: get-mentioned
+    score: 3.1
+    maxScore: 5
+    summary: Fair; a promising but still early product that works for basic monitoring, yet falls short on deeper analysis.
+    pros:
+      - Simple interface for core AI visibility tracking.
+      - Unlimited competitor monitoring is a notable differentiator.
+      - Source analysis can help generate content ideas.
+    cons:
+      - Lacks detailed analytics.
+      - No AI traffic analytics.
+      - No sentiment tracking.
+    noteworthy:
+      - Reviewer explicitly calls it a valuable alternative to better-known tools.
+      - Positioned as best for basic monitoring rather than advanced teams.
+      - Reviewer expects the product to improve over time.

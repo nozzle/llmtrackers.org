@@ -39,8 +39,20 @@ export interface NewReviewData {
   name: string;
   url: string;
   date: string;
+  type?: "article" | "video";
   summary: string;
   detailedSummary: string;
+  primaryCompanySlug?: string | null;
+  media?: {
+    provider: "youtube" | "wistia" | "loom";
+    videoId: string;
+    watchUrl: string;
+    thumbnailUrl: string;
+    title: string;
+    creator: string;
+    creatorUrl?: string;
+    durationSeconds?: number;
+  };
   author: {
     name: string;
     socialProfiles: { label: string; url: string }[];
@@ -152,6 +164,47 @@ function validateNewReviewData(
   if (typeof raw.detailedSummary !== "string" || raw.detailedSummary.trim().length === 0) {
     return { ok: false, error: "review.detailedSummary is required" };
   }
+  if (raw.type !== undefined && raw.type !== "article" && raw.type !== "video") {
+    return { ok: false, error: 'review.type must be "article" or "video"' };
+  }
+  if (
+    raw.primaryCompanySlug !== undefined &&
+    raw.primaryCompanySlug !== null &&
+    (typeof raw.primaryCompanySlug !== "string" || raw.primaryCompanySlug.trim().length === 0)
+  ) {
+    return { ok: false, error: "review.primaryCompanySlug must be a non-empty string or null" };
+  }
+  if (raw.media !== undefined) {
+    if (!raw.media || typeof raw.media !== "object") {
+      return { ok: false, error: "review.media must be an object" };
+    }
+    const media = raw.media as Record<string, unknown>;
+    if (media.provider !== "youtube" && media.provider !== "wistia" && media.provider !== "loom") {
+      return { ok: false, error: 'review.media.provider must be "youtube", "wistia", or "loom"' };
+    }
+    for (const field of ["videoId", "watchUrl", "thumbnailUrl", "title", "creator"] as const) {
+      if (typeof media[field] !== "string" || media[field].trim().length === 0) {
+        return { ok: false, error: `review.media.${field} is required` };
+      }
+    }
+    for (const field of ["watchUrl", "thumbnailUrl", "creatorUrl"] as const) {
+      if (media[field] === undefined) continue;
+      if (typeof media[field] !== "string") {
+        return { ok: false, error: `review.media.${field} must be a string` };
+      }
+      try {
+        new URL(media[field]);
+      } catch {
+        return { ok: false, error: `review.media.${field} must be a valid URL` };
+      }
+    }
+    if (
+      media.durationSeconds !== undefined &&
+      (typeof media.durationSeconds !== "number" || media.durationSeconds <= 0)
+    ) {
+      return { ok: false, error: "review.media.durationSeconds must be a positive number" };
+    }
+  }
 
   // Author
   if (!raw.author || typeof raw.author !== "object") {
@@ -220,8 +273,33 @@ function validateNewReviewData(
       name: raw.name.trim(),
       url: raw.url.trim(),
       date: raw.date.trim(),
+      type: raw.type === "video" ? "video" : "article",
       summary: raw.summary.trim(),
       detailedSummary: raw.detailedSummary.trim(),
+      primaryCompanySlug:
+        typeof raw.primaryCompanySlug === "string" ? raw.primaryCompanySlug.trim() : null,
+      media:
+        raw.media && typeof raw.media === "object"
+          ? {
+              provider: (raw.media as Record<string, unknown>).provider as
+                | "youtube"
+                | "wistia"
+                | "loom",
+              videoId: (raw.media as Record<string, string>).videoId.trim(),
+              watchUrl: (raw.media as Record<string, string>).watchUrl.trim(),
+              thumbnailUrl: (raw.media as Record<string, string>).thumbnailUrl.trim(),
+              title: (raw.media as Record<string, string>).title.trim(),
+              creator: (raw.media as Record<string, string>).creator.trim(),
+              ...((raw.media as Record<string, unknown>).creatorUrl
+                ? { creatorUrl: String((raw.media as Record<string, unknown>).creatorUrl).trim() }
+                : {}),
+              ...((raw.media as Record<string, unknown>).durationSeconds
+                ? {
+                    durationSeconds: Number((raw.media as Record<string, unknown>).durationSeconds),
+                  }
+                : {}),
+            }
+          : undefined,
       author: {
         name: author.name.trim(),
         socialProfiles: (author.socialProfiles as { label: string; url: string }[]).map((sp) => ({
@@ -356,12 +434,17 @@ export async function handleAddReview(
     name: newData.name,
     url: newData.url,
     date: newData.date,
+    type: newData.type ?? "article",
     summary: newData.summary,
     detailedSummary: newData.detailedSummary,
     author: {
       name: newData.author.name,
       socialProfiles: newData.author.socialProfiles,
     },
+    ...(newData.primaryCompanySlug || newData.companyRatings.length === 1
+      ? { primaryCompanySlug: newData.primaryCompanySlug ?? newData.companyRatings[0]?.companySlug }
+      : {}),
+    ...(newData.media ? { media: newData.media } : {}),
     companyRatings: newData.companyRatings.map((cr) => ({
       companySlug: cr.companySlug,
       ...(cr.score !== null ? { score: cr.score } : {}),

@@ -1,0 +1,36 @@
+slug: scalenut
+name: Scalenut
+group: Scalenut
+website: https://www.scalenut.com/
+description: Budget-friendly GEO and AI visibility platform that pairs brand monitoring with content, Reddit sentiment, and optimization workflows.
+plans:
+  - name: AI Visibility
+    slug: ai-visibility
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Pricing scales with prompts, engines, and usage volume.
+    pricePer1000Responses: null
+    aiResponsesMonthly: null
+    includedLlmModels: null
+    schedule: daily
+    locationSupport: global
+    personaSupport: unlimited
+    contentGeneration: GEO content creation included
+    contentOptimization: GEO optimization workflows included
+    integrations:
+      - Cloudflare
+      - WordPress
+    llmSupport:
+      aiMode: false
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      grok: false
+      llama: false
+      claude: true
+tweets: []
+pricingUrl: https://www.scalenut.com/pricing
+featuresUrl: https://www.scalenut.com/

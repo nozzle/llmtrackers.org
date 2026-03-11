@@ -41,8 +41,20 @@ export interface ReviewChanges {
   name?: string;
   url?: string;
   date?: string;
+  type?: "article" | "video";
   summary?: string;
   detailedSummary?: string;
+  primaryCompanySlug?: string | null;
+  media?: {
+    provider: "youtube" | "wistia" | "loom";
+    videoId: string;
+    watchUrl: string;
+    thumbnailUrl: string;
+    title: string;
+    creator: string;
+    creatorUrl?: string;
+    durationSeconds?: number;
+  } | null;
   author?: {
     name?: string;
     socialProfiles?: { label: string; url: string }[];
@@ -173,6 +185,80 @@ function validateReviewChanges(
       return { ok: false, error: "changes.detailedSummary must be a non-empty string" };
     }
     changes.detailedSummary = raw.detailedSummary.trim();
+  }
+
+  if (raw.type !== undefined) {
+    if (raw.type !== "article" && raw.type !== "video") {
+      return { ok: false, error: 'changes.type must be "article" or "video"' };
+    }
+    changes.type = raw.type;
+  }
+
+  if (raw.primaryCompanySlug !== undefined) {
+    if (
+      raw.primaryCompanySlug !== null &&
+      (typeof raw.primaryCompanySlug !== "string" || raw.primaryCompanySlug.trim().length === 0)
+    ) {
+      return { ok: false, error: "changes.primaryCompanySlug must be a non-empty string or null" };
+    }
+    changes.primaryCompanySlug =
+      typeof raw.primaryCompanySlug === "string" ? raw.primaryCompanySlug.trim() : null;
+  }
+
+  if (raw.media !== undefined) {
+    if (raw.media === null) {
+      changes.media = null;
+    } else if (typeof raw.media !== "object") {
+      return { ok: false, error: "changes.media must be an object or null" };
+    } else {
+      const media = raw.media as Record<string, unknown>;
+      if (
+        media.provider !== "youtube" &&
+        media.provider !== "wistia" &&
+        media.provider !== "loom"
+      ) {
+        return {
+          ok: false,
+          error: 'changes.media.provider must be "youtube", "wistia", or "loom"',
+        };
+      }
+      for (const field of ["videoId", "watchUrl", "thumbnailUrl", "title", "creator"] as const) {
+        if (typeof media[field] !== "string" || media[field].trim().length === 0) {
+          return { ok: false, error: `changes.media.${field} is required` };
+        }
+      }
+      for (const field of ["watchUrl", "thumbnailUrl", "creatorUrl"] as const) {
+        if (media[field] === undefined) continue;
+        if (typeof media[field] !== "string") {
+          return { ok: false, error: `changes.media.${field} must be a string` };
+        }
+        try {
+          new URL(media[field]);
+        } catch {
+          return { ok: false, error: `changes.media.${field} must be a valid URL` };
+        }
+      }
+      if (
+        media.durationSeconds !== undefined &&
+        (typeof media.durationSeconds !== "number" || media.durationSeconds <= 0)
+      ) {
+        return { ok: false, error: "changes.media.durationSeconds must be a positive number" };
+      }
+      changes.media = {
+        provider: media.provider,
+        videoId: String(media.videoId).trim(),
+        watchUrl: String(media.watchUrl).trim(),
+        thumbnailUrl: String(media.thumbnailUrl).trim(),
+        title: String(media.title).trim(),
+        creator: String(media.creator).trim(),
+        ...(typeof media.creatorUrl === "string" && media.creatorUrl.trim().length > 0
+          ? { creatorUrl: media.creatorUrl.trim() }
+          : {}),
+        ...(typeof media.durationSeconds === "number"
+          ? { durationSeconds: media.durationSeconds }
+          : {}),
+      };
+    }
   }
 
   if (raw.author !== undefined) {
@@ -388,9 +474,24 @@ export async function handleEditReview(
   if (changes.name !== undefined) updatedReview.name = changes.name;
   if (changes.url !== undefined) updatedReview.url = changes.url;
   if (changes.date !== undefined) updatedReview.date = changes.date;
+  if (changes.type !== undefined) updatedReview.type = changes.type;
   if (changes.summary !== undefined) updatedReview.summary = changes.summary;
   if (changes.detailedSummary !== undefined)
     updatedReview.detailedSummary = changes.detailedSummary;
+  if (changes.primaryCompanySlug !== undefined) {
+    if (changes.primaryCompanySlug === null) {
+      delete updatedReview.primaryCompanySlug;
+    } else {
+      updatedReview.primaryCompanySlug = changes.primaryCompanySlug;
+    }
+  }
+  if (changes.media !== undefined) {
+    if (changes.media === null) {
+      delete updatedReview.media;
+    } else {
+      updatedReview.media = changes.media;
+    }
+  }
   if (changes.author !== undefined) {
     updatedReview.author = {
       ...review.author,
@@ -476,6 +577,9 @@ function buildReviewDiffTable(
   if (changes.date !== undefined) {
     rows.push(["Date", formatValue(original.date), formatValue(updated.date)]);
   }
+  if (changes.type !== undefined) {
+    rows.push(["Review Type", formatValue(original.type), formatValue(updated.type)]);
+  }
   if (changes.summary !== undefined) {
     rows.push(["Summary", formatValue(original.summary), formatValue(updated.summary)]);
   }
@@ -484,6 +588,20 @@ function buildReviewDiffTable(
       "Detailed Summary",
       formatValue(original.detailedSummary),
       formatValue(updated.detailedSummary),
+    ]);
+  }
+  if (changes.primaryCompanySlug !== undefined) {
+    rows.push([
+      "Primary Company",
+      formatValue(original.primaryCompanySlug),
+      formatValue(updated.primaryCompanySlug),
+    ]);
+  }
+  if (changes.media !== undefined) {
+    rows.push([
+      "Video Metadata",
+      formatValue(original.media?.title),
+      formatValue(updated.media?.title),
     ]);
   }
   if (changes.author?.name !== undefined) {

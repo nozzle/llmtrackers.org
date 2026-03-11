@@ -33,10 +33,114 @@ interface ReviewFormState {
   autoSlug: boolean;
   url: string;
   date: string;
+  type: "article" | "video";
   summary: string;
   detailedSummary: string;
+  primaryCompanySlug: string;
+  media?: {
+    provider: "youtube" | "wistia" | "loom";
+    videoId: string;
+    watchUrl: string;
+    thumbnailUrl: string;
+    title: string;
+    creator: string;
+    creatorUrl?: string;
+    durationSeconds?: number;
+  };
   authorName: string;
   socialProfiles: SocialProfileFormState[];
+}
+
+function VideoMetadataFields({
+  form,
+  companies,
+  onUpdate,
+}: Readonly<{
+  form: ReviewFormState;
+  companies: { slug: string; name: string }[];
+  onUpdate: <K extends keyof ReviewFormState>(key: K, value: ReviewFormState[K]) => void;
+}>) {
+  if (form.type !== "video" || !form.media) return null;
+
+  const media = form.media;
+
+  return (
+    <fieldset>
+      <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
+        Video Metadata
+      </legend>
+      <div className="space-y-3">
+        <label className="block">
+          <span className="text-xs font-medium text-gray-600">Primary Company</span>
+          <select
+            value={form.primaryCompanySlug}
+            onChange={(e) => {
+              onUpdate("primaryCompanySlug", e.target.value);
+            }}
+            className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          >
+            <option value="">Select a company...</option>
+            {companies.map((company) => (
+              <option key={company.slug} value={company.slug}>
+                {company.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <div className="grid grid-cols-2 gap-3">
+          <label className="block">
+            <span className="text-xs font-medium text-gray-600">Video Title</span>
+            <input
+              type="text"
+              value={media.title}
+              onChange={(e) => {
+                onUpdate("media", { ...media, title: e.target.value });
+              }}
+              className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs font-medium text-gray-600">Creator</span>
+            <input
+              type="text"
+              value={media.creator}
+              onChange={(e) => {
+                onUpdate("media", { ...media, creator: e.target.value });
+              }}
+              className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </label>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <label className="block">
+            <span className="text-xs font-medium text-gray-600">Watch URL</span>
+            <input
+              type="url"
+              value={media.watchUrl}
+              onChange={(e) => {
+                onUpdate("media", { ...media, watchUrl: e.target.value });
+              }}
+              className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs font-medium text-gray-600">Channel URL</span>
+            <input
+              type="url"
+              value={media.creatorUrl ?? ""}
+              onChange={(e) => {
+                onUpdate("media", {
+                  ...media,
+                  creatorUrl: e.target.value.trim() ? e.target.value : undefined,
+                });
+              }}
+              className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </label>
+        </div>
+      </div>
+    </fieldset>
+  );
 }
 
 interface PrMutationSuccess {
@@ -55,8 +159,20 @@ interface PrefillResponse {
       slug: string;
       url: string;
       date: string;
+      type: "article" | "video";
       summary: string;
       detailedSummary: string;
+      primaryCompanySlug?: string;
+      media?: {
+        provider: "youtube" | "wistia" | "loom";
+        videoId: string;
+        watchUrl: string;
+        thumbnailUrl: string;
+        title: string;
+        creator: string;
+        creatorUrl?: string;
+        durationSeconds?: number;
+      };
       author: {
         name: string;
         socialProfiles: { label: string; url: string }[];
@@ -205,8 +321,11 @@ function defaultReviewState(): ReviewFormState {
     autoSlug: true,
     url: "",
     date: "",
+    type: "article",
     summary: "",
     detailedSummary: "",
+    primaryCompanySlug: "",
+    media: undefined,
     authorName: "",
     socialProfiles: [],
   };
@@ -231,6 +350,7 @@ function computeReviewPreview(
   if (review.slug.trim()) entries.push({ label: "Slug", value: review.slug.trim() });
   if (review.url.trim()) entries.push({ label: "URL", value: review.url.trim() });
   if (review.date.trim()) entries.push({ label: "Date", value: review.date.trim() });
+  entries.push({ label: "Type", value: review.type });
   if (review.summary.trim()) entries.push({ label: "Summary", value: review.summary.trim() });
   if (review.detailedSummary.trim()) {
     entries.push({ label: "Detailed Summary", value: review.detailedSummary.trim() });
@@ -286,6 +406,7 @@ function validateReviewForm(
   if (!review.summary.trim()) return "Review summary is required";
   if (!review.detailedSummary.trim()) return "Detailed review summary is required";
   if (!review.authorName.trim()) return "Author name is required";
+  if (review.type === "video" && !review.media) return "Video reviews need media metadata";
 
   if (ratings.length === 0) return "At least one company rating is required";
 
@@ -323,13 +444,21 @@ function validateReviewForm(
 // ---------------------------------------------------------------------------
 
 function buildPayload(review: ReviewFormState, ratings: CompanyRatingFormState[]) {
+  const primaryCompanySlug =
+    review.primaryCompanySlug.trim() ||
+    (ratings.length === 1 ? ratings[0]?.companySlug.trim() : "") ||
+    null;
+
   return {
     slug: review.slug.trim(),
     name: review.name.trim(),
     url: review.url.trim(),
     date: review.date.trim(),
+    type: review.type,
     summary: review.summary.trim(),
     detailedSummary: review.detailedSummary.trim(),
+    ...(primaryCompanySlug ? { primaryCompanySlug } : {}),
+    ...(review.media ? { media: review.media } : {}),
     author: {
       name: review.authorName.trim(),
       socialProfiles: review.socialProfiles
@@ -745,8 +874,12 @@ export function AddReviewModal({ companies, onClose }: Readonly<AddReviewModalPr
       autoSlug: false,
       url: draft.review.url,
       date: draft.review.date,
+      type: draft.review.type,
       summary: draft.review.summary,
       detailedSummary: draft.review.detailedSummary,
+      primaryCompanySlug:
+        draft.review.primaryCompanySlug ?? draft.companyRatings.at(0)?.companySlug ?? "",
+      media: draft.review.media,
       authorName: draft.review.author.name,
       socialProfiles: draft.review.author.socialProfiles.map((profile) => ({
         id: createEmptySocialProfile().id,
@@ -947,27 +1080,27 @@ export function AddReviewModal({ companies, onClose }: Readonly<AddReviewModalPr
             <div className="flex flex-1 items-center justify-center px-6 py-10">
               <div className="w-full max-w-xl rounded-xl border border-gray-200 bg-gray-50 p-6">
                 <h3 className="text-base font-semibold text-gray-900">
-                  Start with the article URL
+                  Start with an article or YouTube URL
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-gray-600">
-                  We&apos;ll fetch the article, extract review details, and prefill the submission
+                  We&apos;ll fetch the source, extract review details, and prefill the submission
                   form so you can edit instead of starting from scratch.
                 </p>
                 <label className="mt-5 block">
-                  <span className="text-xs font-medium text-gray-600">Article URL</span>
+                  <span className="text-xs font-medium text-gray-600">Source URL</span>
                   <input
                     type="url"
                     value={importUrl}
                     onChange={(e) => {
                       setImportUrl(e.target.value);
                     }}
-                    placeholder="https://example.com/review-article"
+                    placeholder="https://example.com/review-article or https://www.youtube.com/watch?v=..."
                     className="mt-1 block w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </label>
                 <label className="mt-4 block">
                   <span className="text-xs font-medium text-gray-600">
-                    Paste article text if browser extraction fails (optional)
+                    Paste article text or transcript if automatic extraction fails (optional)
                   </span>
                   <textarea
                     value={pastedText}
@@ -975,7 +1108,7 @@ export function AddReviewModal({ companies, onClose }: Readonly<AddReviewModalPr
                       setPastedText(e.target.value);
                     }}
                     rows={6}
-                    placeholder="Paste the article body here if the page is blocked or hard to extract"
+                    placeholder="Paste the article body or video transcript here if the source is blocked or hard to extract"
                     className="mt-1 block w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </label>
@@ -1022,7 +1155,8 @@ export function AddReviewModal({ companies, onClose }: Readonly<AddReviewModalPr
               <div className="flex-1 space-y-5 overflow-y-auto px-6 py-4">
                 {wasPrefilled && (
                   <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
-                    We prefilled this from the article. Please verify all fields before submitting.
+                    We prefilled this from the source URL. Please verify all fields before
+                    submitting.
                   </div>
                 )}
                 {importWarnings.length > 0 && (
@@ -1079,7 +1213,7 @@ export function AddReviewModal({ companies, onClose }: Readonly<AddReviewModalPr
                         onChange={(e) => {
                           updateForm("url", e.target.value);
                         }}
-                        placeholder="https://example.com/review-article"
+                        placeholder="https://example.com/review-article or https://www.youtube.com/watch?v=..."
                         className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                     </label>
@@ -1142,12 +1276,14 @@ export function AddReviewModal({ companies, onClose }: Readonly<AddReviewModalPr
                           updateForm("detailedSummary", e.target.value);
                         }}
                         rows={6}
-                        placeholder="Longer article recap, one or two paragraphs"
+                        placeholder="Longer article or video recap, one or two paragraphs"
                         className="mt-1 block w-full rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                     </label>
                   </div>
                 </fieldset>
+
+                <VideoMetadataFields form={form} companies={companies} onUpdate={updateForm} />
 
                 {/* Author Social Profiles */}
                 <fieldset>

@@ -424,6 +424,7 @@ function sortReviewKeys(review: ReviewYamlValue): ReviewYamlValue {
     name: review.name,
     url: review.url,
     date: review.date,
+    ...(review.type !== "article" ? { type: review.type } : {}),
     summary: review.summary,
     detailedSummary: review.detailedSummary,
     author: {
@@ -433,6 +434,23 @@ function sortReviewKeys(review: ReviewYamlValue): ReviewYamlValue {
         url: sp.url,
       })),
     },
+    ...(review.primaryCompanySlug ? { primaryCompanySlug: review.primaryCompanySlug } : {}),
+    ...(review.media
+      ? {
+          media: {
+            provider: review.media.provider,
+            videoId: review.media.videoId,
+            watchUrl: review.media.watchUrl,
+            thumbnailUrl: review.media.thumbnailUrl,
+            title: review.media.title,
+            creator: review.media.creator,
+            ...(review.media.creatorUrl ? { creatorUrl: review.media.creatorUrl } : {}),
+            ...(review.media.durationSeconds
+              ? { durationSeconds: review.media.durationSeconds }
+              : {}),
+          },
+        }
+      : {}),
     companyRatings: review.companyRatings.map((cr) => ({
       companySlug: cr.companySlug,
       score: cr.score,

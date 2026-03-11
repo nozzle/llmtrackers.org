@@ -4,6 +4,12 @@ import { getReviewBySlug, getCompanyBySlug, getAllCompanies } from "~/data";
 import { CompanyMark } from "~/components/company-mark";
 import { EditReviewModal } from "~/components/edit-review-modal";
 
+function formatDuration(durationSeconds: number) {
+  const minutes = Math.floor(durationSeconds / 60);
+  const seconds = durationSeconds % 60;
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
 function HighlightList({
   title,
   items,
@@ -43,8 +49,11 @@ export const Route = createFileRoute("/reviews/$slug")({
   head: ({ params }) => {
     const review = getReviewBySlug(params.slug);
     const title = review ? `${review.name} - LLM Trackers` : "Review Not Found";
+    const primaryCompany = review?.primaryCompanySlug
+      ? getCompanyBySlug(review.primaryCompanySlug)
+      : undefined;
     const description = review
-      ? `Review by ${review.author.name} covering ${review.companyRatings.length} tools. Published ${review.date}.`
+      ? `${review.type === "video" ? "Video review" : "Review"} by ${review.author.name}${primaryCompany ? ` covering ${primaryCompany.name}` : ` covering ${review.companyRatings.length} tools`}. Published ${review.date}.`
       : "";
 
     return {
@@ -91,6 +100,10 @@ function ReviewPage() {
     (rating) => rating.score != null && rating.maxScore != null,
   ).length;
   const isUnscoredRoundup = scoredCount === 0;
+  const isSingleCompanyReview = review.companyRatings.length === 1;
+  const primaryCompanySlug = review.primaryCompanySlug ?? review.companyRatings[0]?.companySlug;
+  const primaryCompany = primaryCompanySlug ? getCompanyBySlug(primaryCompanySlug) : undefined;
+  const media = review.type === "video" ? review.media : undefined;
 
   return (
     <div>
@@ -131,6 +144,20 @@ function ReviewPage() {
             By <span className="font-medium text-gray-900">{review.author.name}</span>
           </span>
           <span>{review.date}</span>
+          {review.type === "video" && (
+            <span className="rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">
+              Video review
+            </span>
+          )}
+          {isSingleCompanyReview && primaryCompany && (
+            <Link
+              to="/companies/$slug"
+              params={{ slug: primaryCompany.slug }}
+              className="text-blue-600 hover:underline"
+            >
+              {primaryCompany.name}
+            </Link>
+          )}
           {isUnscoredRoundup && (
             <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
               Unscored roundup
@@ -156,7 +183,7 @@ function ReviewPage() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:underline"
           >
-            Read the original article
+            {review.type === "video" ? "Watch the original video" : "Read the original article"}
             <svg
               className="h-4 w-4"
               fill="none"
@@ -173,9 +200,69 @@ function ReviewPage() {
           </a>
         </div>
 
+        {media && (
+          <div className="mt-5 space-y-4">
+            <div className="overflow-hidden rounded-xl border border-gray-200 bg-black shadow-sm">
+              <div className="aspect-video">
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${media.videoId}`}
+                  title={media.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                  className="h-full w-full"
+                />
+              </div>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-gray-800 bg-gray-950 px-4 py-3 text-sm text-gray-300">
+                <span className="font-medium text-white">{media.creator}</span>
+                {media.durationSeconds && <span>{formatDuration(media.durationSeconds)}</span>}
+                {media.creatorUrl && (
+                  <a
+                    href={media.creatorUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-300 hover:underline"
+                  >
+                    Channel
+                  </a>
+                )}
+              </div>
+            </div>
+
+            <div className="grid gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  Review Type
+                </p>
+                <p className="mt-1 text-sm font-medium text-gray-900">Video review</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  Primary Company
+                </p>
+                <p className="mt-1 text-sm font-medium text-gray-900">
+                  {primaryCompany ? primaryCompany.name : "Not linked"}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  Video Title
+                </p>
+                <p className="mt-1 line-clamp-2 text-sm font-medium text-gray-900">{media.title}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  Source
+                </p>
+                <p className="mt-1 text-sm font-medium text-gray-900">{media.provider}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="mt-5 max-w-3xl rounded-xl border border-gray-200 bg-gray-50 px-5 py-4">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-            Article Summary
+            {review.type === "video" ? "Video Summary" : "Article Summary"}
           </h2>
           <p className="mt-2 text-sm font-medium leading-6 text-gray-700">{review.summary}</p>
           <div className="mt-3 space-y-4 text-sm leading-7 text-gray-700">
@@ -188,14 +275,20 @@ function ReviewPage() {
 
       {/* Ratings summary */}
       <section>
-        <h2 className="mb-1 text-xl font-semibold text-gray-900">Company Ratings</h2>
+        <h2 className="mb-1 text-xl font-semibold text-gray-900">
+          {isSingleCompanyReview ? "Review Verdict" : "Company Ratings"}
+        </h2>
         <p className="mb-6 text-sm text-gray-600">
-          {scoredCount > 0
-            ? `${sortedRatings.length} tools covered, with ${scoredCount} scored and ranked first.`
-            : `${sortedRatings.length} tools covered in this review.`}
+          {isSingleCompanyReview && primaryCompany
+            ? `Editorial take on ${primaryCompany.name}, including key strengths, tradeoffs, and notable takeaways.`
+            : scoredCount > 0
+              ? `${sortedRatings.length} tools covered, with ${scoredCount} scored and ranked first.`
+              : `${sortedRatings.length} tools covered in this review.`}
         </p>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div
+          className={`grid gap-4 ${isSingleCompanyReview ? "max-w-3xl" : "sm:grid-cols-2 lg:grid-cols-3"}`}
+        >
           {sortedRatings.map((rating, index) => {
             const company = getCompanyBySlug(rating.companySlug);
             const hasScore = rating.score != null && rating.maxScore != null;

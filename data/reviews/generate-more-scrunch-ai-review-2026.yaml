@@ -1,0 +1,39 @@
+slug: generate-more-scrunch-ai-review-2026
+name: "Scrunch AI Review: How to Track Visibility in ChatGPT & Perplexity"
+url: https://www.youtube.com/watch?v=lgsAtNdr_Ns
+date: 2026-01-19
+type: video
+summary: A strongly positive video review that places Scrunch among the reviewer's top AI visibility tools, especially for ease of use and generally reliable data.
+detailedSummary: |
+  The reviewer presents Scrunch as one of the stronger AI search visibility platforms currently available, based on testing across multiple SaaS and B2B consulting cases. They highlight its modern, easy-to-configure interface, reliable-enough analytics, influence and source discovery views, and early content optimization support.
+
+  The main limitation is depth: the reviewer wanted better drill-down on brand mentions and more clarity on how competitive prompts surface specific brands. Even with that gap, the overall verdict is clearly favorable, with Scrunch described as a top-three option in the category.
+author:
+  name: Generate More
+  socialProfiles:
+    - label: YouTube
+      url: https://www.youtube.com/channel/UC-Kk27cwqPfz6giFWO8Lw0A
+primaryCompanySlug: scrunch-ai
+media:
+  provider: youtube
+  videoId: lgsAtNdr_Ns
+  watchUrl: https://www.youtube.com/watch?v=lgsAtNdr_Ns
+  thumbnailUrl: https://i.ytimg.com/vi/lgsAtNdr_Ns/hqdefault.jpg
+  title: "Scrunch AI Review: How to Track Visibility in ChatGPT & Perplexity"
+  creator: Generate More
+  creatorUrl: https://www.youtube.com/channel/UC-Kk27cwqPfz6giFWO8Lw0A
+  durationSeconds: 332
+companyRatings:
+  - companySlug: scrunch-ai
+    summary: Positive; viewed as a top-tier AI visibility tool with a clean UX, good traction, and mostly reliable data, but still missing deeper mention-level analysis.
+    pros:
+      - Simple, modern interface with low learning curve.
+      - Generally reliable visibility and source analytics.
+      - Includes helpful influence and content optimization features.
+    cons:
+      - Brand-mention drill-down is not detailed enough.
+      - Competitive prompt analysis could be stronger.
+    noteworthy:
+      - Reviewer says many SEOs already recommend Scrunch.
+      - Mentions strong market traction and recent funding.
+      - Tested across several real client scenarios.
