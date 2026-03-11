@@ -25,6 +25,11 @@ import { NewspaperDesign } from "~/components/designs/newspaper";
 import { BlueprintDesign } from "~/components/designs/blueprint";
 import { TimelineDesign } from "~/components/designs/timeline";
 import { DashboardDesign } from "~/components/designs/dashboard";
+import { RetroOsDesign } from "~/components/designs/retro-os";
+import { MinimalDesign } from "~/components/designs/minimal";
+import { ScientificDesign } from "~/components/designs/scientific";
+import { DarkDesign } from "~/components/designs/dark";
+import { RankedDesign } from "~/components/designs/ranked";
 
 // ---------------------------------------------------------------------------
 // Search schema — URL is the source of truth for filters, sort, columns
@@ -47,6 +52,11 @@ const homeSearchSchema = z.object({
       "blueprint",
       "timeline",
       "dashboard",
+      "retroOs",
+      "minimal",
+      "scientific",
+      "dark",
+      "ranked",
     ])
     .optional()
     .catch(undefined),
@@ -200,6 +210,11 @@ const DESIGN_COMPONENTS: Record<
   blueprint: BlueprintDesign,
   timeline: TimelineDesign,
   dashboard: DashboardDesign,
+  retroOs: RetroOsDesign,
+  minimal: MinimalDesign,
+  scientific: ScientificDesign,
+  dark: DarkDesign,
+  ranked: RankedDesign,
 };
 
 // ---------------------------------------------------------------------------

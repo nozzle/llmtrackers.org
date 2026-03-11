@@ -68,6 +68,11 @@ export const DESIGN_KEYS = [
   "blueprint",
   "timeline",
   "dashboard",
+  "retroOs",
+  "minimal",
+  "scientific",
+  "dark",
+  "ranked",
 ] as const;
 
 export type DesignKey = (typeof DESIGN_KEYS)[number];
@@ -84,6 +89,11 @@ export const DESIGN_LABELS: Record<DesignKey, string> = {
   blueprint: "Blueprint",
   timeline: "Timeline",
   dashboard: "Dashboard",
+  retroOs: "Retro OS",
+  minimal: "Minimal",
+  scientific: "Scientific",
+  dark: "Dark",
+  ranked: "Ranked",
 };
 
 // ---------------------------------------------------------------------------
