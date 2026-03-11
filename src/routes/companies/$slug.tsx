@@ -69,6 +69,7 @@ function CompanyPage() {
   const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
   const [editingCompany, setEditingCompany] = useState(false);
   const [addingPlan, setAddingPlan] = useState(false);
+  const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
 
   if (!company) {
     return (
@@ -83,6 +84,8 @@ function CompanyPage() {
   }
 
   const relatedReviews = getReviewsForCompanySlug(slug);
+  const activeVideo = company.videos.find((video) => video.id === activeVideoId) ?? null;
+  const displayedVideo = activeVideo ?? company.videos[0];
 
   return (
     <div>
@@ -389,6 +392,134 @@ function CompanyPage() {
           </div>
         </section>
       )}
+
+      {company.videos.length > 0 ? (
+        <section className="mb-12">
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold text-gray-900">Videos & Demos</h2>
+            <p className="mt-1 text-sm text-gray-600">
+              Curated product walkthroughs and demos for {company.name}, playable without leaving
+              the page.
+            </p>
+          </div>
+
+          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+            <div className="aspect-video bg-gray-950">
+              <iframe
+                key={displayedVideo.id}
+                src={getVideoEmbedUrl(displayedVideo.provider, displayedVideo.videoId)}
+                title={displayedVideo.title}
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                referrerPolicy="strict-origin-when-cross-origin"
+                className="h-full w-full border-0"
+              />
+            </div>
+
+            <div className="border-t border-gray-200 p-5">
+              <div className="flex flex-wrap items-center gap-2">
+                {displayedVideo.kind && (
+                  <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-medium text-red-700">
+                    {displayedVideo.kind}
+                  </span>
+                )}
+                <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
+                  {displayedVideo.sourceType}
+                </span>
+                <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                  {displayedVideo.provider}
+                </span>
+              </div>
+
+              <h3 className="mt-3 text-lg font-semibold text-gray-900">{displayedVideo.title}</h3>
+              <p className="mt-1 text-sm text-gray-600">
+                {displayedVideo.creatorUrl ? (
+                  <a
+                    href={displayedVideo.creatorUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                  >
+                    {displayedVideo.creator}
+                  </a>
+                ) : (
+                  displayedVideo.creator
+                )}
+                {" · "}
+                Added {new Date(displayedVideo.collectedAt).toLocaleDateString()}
+              </p>
+              {displayedVideo.description && (
+                <p className="mt-3 max-w-3xl text-sm leading-6 text-gray-700">
+                  {displayedVideo.description}
+                </p>
+              )}
+
+              <div className="mt-4 flex flex-wrap gap-3 text-sm">
+                <a
+                  href={displayedVideo.watchUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-blue-600 hover:underline"
+                >
+                  Watch on YouTube
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {company.videos.map((video) => {
+              const isActive = video.id === displayedVideo.id;
+
+              return (
+                <button
+                  key={video.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveVideoId(video.id);
+                  }}
+                  className={`overflow-hidden rounded-2xl border bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${
+                    isActive ? "border-blue-400 ring-2 ring-blue-100" : "border-gray-200"
+                  }`}
+                >
+                  <div className="relative aspect-video bg-gray-100">
+                    <img
+                      src={video.thumbnailUrl}
+                      alt={video.title}
+                      loading="lazy"
+                      className="h-full w-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent" />
+                    <div className="absolute bottom-3 left-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-gray-900 shadow-sm">
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="ml-0.5 h-5 w-5">
+                        <path d="M8 5.14v13.72a1 1 0 001.53.85l10.3-6.86a1 1 0 000-1.7L9.53 4.29A1 1 0 008 5.14z" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 p-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                      {video.kind && (
+                        <span className="rounded-full bg-red-50 px-2 py-0.5 text-xs font-medium text-red-700">
+                          {video.kind}
+                        </span>
+                      )}
+                      <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+                        {video.sourceType}
+                      </span>
+                    </div>
+                    <h3 className="line-clamp-2 text-sm font-semibold text-gray-900">
+                      {video.title}
+                    </h3>
+                    <p className="text-xs text-gray-500">{video.creator}</p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
 
       {REVIEW_SITE_PLATFORMS.some((platform) => company.reviewSites[platform]) && (
         <section className="mb-12">
@@ -712,4 +843,20 @@ function CompanyPage() {
       )}
     </div>
   );
+}
+
+function getVideoEmbedUrl(provider: string, videoId: string): string {
+  if (provider === "youtube") {
+    return `https://www.youtube-nocookie.com/embed/${videoId}`;
+  }
+
+  if (provider === "wistia") {
+    return `https://fast.wistia.net/embed/iframe/${videoId}`;
+  }
+
+  if (provider === "loom") {
+    return `https://www.loom.com/embed/${videoId}`;
+  }
+
+  return "";
 }

@@ -65,4 +65,17 @@ screenshots:
     tags:
       - dashboard
       - tracking
+videos:
+  - id: ai-search-traffic-explodes-80k-monthly-visits
+    provider: youtube
+    videoId: rwISAyuucdQ
+    watchUrl: https://www.youtube.com/watch?v=rwISAyuucdQ
+    title: "AI Search Traffic Explodes: 80K Monthly Visits!"
+    creator: OtterlyAI - AI Search Monitoring
+    creatorUrl: https://www.youtube.com/@Otterly-AI
+    thumbnailUrl: https://i.ytimg.com/vi/rwISAyuucdQ/hqdefault.jpg
+    kind: demo
+    sourceType: third-party
+    collectedAt: 2026-03-11T17:50:22.290Z
+    description: Product-led demo showing Otterly's AI search monitoring and traffic tracking workflow.
 lastChecked: 2025-07-29

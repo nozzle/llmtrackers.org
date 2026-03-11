@@ -70,4 +70,17 @@ screenshots:
         Knowatoa - AI Brand Monitoring
     tags:
       - dashboard
+videos:
+  - id: knowatoa-tracks-response-of-a-prompt-on-your-site
+    provider: youtube
+    videoId: rJvjOMlbwsc
+    watchUrl: https://www.youtube.com/watch?v=rJvjOMlbwsc
+    title: Knowatoa, tracks response of a prompt on your site
+    creator: Twinning Strategy
+    creatorUrl: https://www.youtube.com/@TwinningStrategy
+    thumbnailUrl: https://i.ytimg.com/vi/rJvjOMlbwsc/hqdefault.jpg
+    kind: demo
+    sourceType: third-party
+    collectedAt: 2026-03-11T17:50:22.937Z
+    description: Interview and product overview covering how Knowatoa tracks prompt responses and AI search visibility.
 lastChecked: 2025-07-29

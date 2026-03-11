@@ -4,6 +4,7 @@ import type {
   Company,
   CompanyScreenshot,
   CompanyScreenshotSource,
+  CompanyVideo,
   CompanyYamlValue,
   LlmModelKey,
   Plan,
@@ -278,6 +279,7 @@ function sortCompanyKeys(company: CompanyYamlValue): CompanyYamlValue {
   const hasReviewSites = Object.keys(company.reviewSites).length > 0;
   const hasScreenshotSources = company.screenshotSources.length > 0;
   const hasScreenshots = company.screenshots.length > 0;
+  const hasVideos = company.videos.length > 0;
 
   return {
     slug: company.slug,
@@ -298,6 +300,11 @@ function sortCompanyKeys(company: CompanyYamlValue): CompanyYamlValue {
     ...(hasScreenshots
       ? {
           screenshots: company.screenshots.map(sortScreenshotKeys),
+        }
+      : {}),
+    ...(hasVideos
+      ? {
+          videos: company.videos.map(sortVideoKeys),
         }
       : {}),
     ...(company.lastChecked !== undefined ? { lastChecked: company.lastChecked } : {}),
@@ -328,6 +335,23 @@ function sortScreenshotKeys(screenshot: CompanyScreenshot): CompanyScreenshot {
     ...(screenshot.width ? { width: screenshot.width } : {}),
     ...(screenshot.height ? { height: screenshot.height } : {}),
     tags: screenshot.tags,
+  };
+}
+
+function sortVideoKeys(video: CompanyVideo): CompanyVideo {
+  return {
+    id: video.id,
+    provider: video.provider,
+    videoId: video.videoId,
+    watchUrl: video.watchUrl,
+    title: video.title,
+    creator: video.creator,
+    ...(video.creatorUrl ? { creatorUrl: video.creatorUrl } : {}),
+    thumbnailUrl: video.thumbnailUrl,
+    ...(video.kind ? { kind: video.kind } : {}),
+    sourceType: video.sourceType,
+    collectedAt: video.collectedAt,
+    ...(video.description ? { description: video.description } : {}),
   };
 }
 

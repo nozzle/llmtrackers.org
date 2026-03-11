@@ -95,6 +95,25 @@ export const CompanyScreenshotSchema = z.object({
   tags: z.array(z.string().min(1)).default([]),
 });
 
+export const CompanyVideoProviderSchema = z.enum(["youtube", "wistia", "loom"]);
+
+export const CompanyVideoSourceTypeSchema = z.enum(["first-party", "third-party"]);
+
+export const CompanyVideoSchema = z.object({
+  id: z.string().min(1),
+  provider: CompanyVideoProviderSchema,
+  videoId: z.string().min(1),
+  watchUrl: z.url(),
+  title: z.string().min(1),
+  creator: z.string().min(1),
+  creatorUrl: z.url().optional(),
+  thumbnailUrl: z.url(),
+  kind: z.string().min(1).optional(),
+  sourceType: CompanyVideoSourceTypeSchema,
+  collectedAt: z.string().min(1),
+  description: z.string().min(1).optional(),
+});
+
 // --- Tweet ---
 export const TweetSchema = z.object({
   author: z.string(),
@@ -151,6 +170,7 @@ export const CompanySchema = z.object({
   featuresUrl: z.url().nullable().optional(),
   screenshotSources: z.array(CompanyScreenshotSourceSchema).default([]),
   screenshots: z.array(CompanyScreenshotSchema).default([]),
+  videos: z.array(CompanyVideoSchema).default([]),
   lastChecked: z.string().nullable().optional(),
 });
 

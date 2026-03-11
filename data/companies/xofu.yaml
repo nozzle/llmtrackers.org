@@ -1,9 +1,8 @@
 slug: xofu
-name: "(X)OFU"
-group: "(X)OFU"
+name: (X)OFU
+group: (X)OFU
 website: https://xofu.com/
-description: "BOFU tracking is ideal for conversion-focused brands in ChatGPT-style answers."
-
+description: BOFU tracking is ideal for conversion-focused brands in ChatGPT-style answers.
 plans:
   - name: Pro
     slug: pro
@@ -23,16 +22,15 @@ plans:
     integrations:
       - Custom API
     llmSupport:
-      aiMode: true
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: true
-      grok: false
-      llama: false
       claude: false
-
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: true
 tweets: []
 pricingUrl: https://xofu.com/pricing
 featuresUrl: https://xofu.com/features
-lastChecked: "2025-07-29"
+lastChecked: 2025-07-29

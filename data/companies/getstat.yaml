@@ -90,4 +90,17 @@ screenshots:
     tags:
       - dashboard
       - tracking
+videos:
+  - id: stat-testimonial-video-2024
+    provider: wistia
+    videoId: tpkxurb4h4
+    watchUrl: https://fast.wistia.net/embed/iframe/tpkxurb4h4
+    title: STAT Testimonial Video 2024 - red
+    creator: Moz
+    creatorUrl: https://getstat.com/
+    thumbnailUrl: https://embed-ssl.wistia.com/deliveries/86b1d3ce0761c6b76cc9af2fa4a309de.jpg?image_crop_resized=960x540
+    kind: testimonial
+    sourceType: first-party
+    collectedAt: 2026-03-11T18:18:00.000Z
+    description: Customer testimonial video focused on why enterprise SEO teams use STAT for granular rank tracking and competitive visibility analysis.
 lastChecked: 2025-07-29

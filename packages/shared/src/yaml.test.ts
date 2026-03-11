@@ -219,12 +219,13 @@ describe("yaml helpers", () => {
     expect(prepared.company.reviewSites.trustpilot?.reviews[0]?.excerpt).toBe("Helpful tool");
   });
 
-  it("stringifyCompanyYaml preserves screenshot metadata and omits empty arrays", () => {
+  it("stringifyCompanyYaml preserves screenshot and video metadata and omits empty arrays", () => {
     const { company } = parseCompanyYaml(baseYaml);
 
     const yamlWithoutScreenshots = stringifyCompanyYaml(company);
     expect(yamlWithoutScreenshots).not.toMatch(/\nscreenshotSources:/);
     expect(yamlWithoutScreenshots).not.toMatch(/\nscreenshots:/);
+    expect(yamlWithoutScreenshots).not.toMatch(/\nvideos:/);
 
     const yamlWithScreenshots = stringifyCompanyYaml({
       ...company,
@@ -253,10 +254,27 @@ describe("yaml helpers", () => {
           tags: ["dashboard", "analytics"],
         },
       ],
+      videos: [
+        {
+          id: "product-demo",
+          provider: "youtube",
+          videoId: "abc123xyz",
+          watchUrl: "https://www.youtube.com/watch?v=abc123xyz",
+          title: "Test Company Product Demo",
+          creator: "Demo Channel",
+          creatorUrl: "https://www.youtube.com/@demo-channel",
+          thumbnailUrl: "https://i.ytimg.com/vi/abc123xyz/hqdefault.jpg",
+          kind: "demo",
+          sourceType: "third-party",
+          collectedAt: "2026-03-11T19:10:00.000Z",
+          description: "Ten minute walkthrough of the platform.",
+        },
+      ],
     });
 
     expect(yamlWithScreenshots).toMatch(/screenshotSources:/);
     expect(yamlWithScreenshots).toMatch(/screenshots:/);
+    expect(yamlWithScreenshots).toMatch(/videos:/);
 
     const reparsed = parseCompanyYaml(yamlWithScreenshots);
     expect(reparsed.company.screenshotSources[0]?.label).toBe("Features page");
@@ -264,6 +282,8 @@ describe("yaml helpers", () => {
       "/company-assets/test-company/screenshots/dashboard-overview.png",
     );
     expect(reparsed.company.screenshots[0]?.tags).toEqual(["dashboard", "analytics"]);
+    expect(reparsed.company.videos[0]?.videoId).toBe("abc123xyz");
+    expect(reparsed.company.videos[0]?.sourceType).toBe("third-party");
   });
 
   it("parseReviewYaml parses review highlights", () => {

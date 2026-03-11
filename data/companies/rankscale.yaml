@@ -80,4 +80,29 @@ screenshots:
     tags:
       - dashboard
       - tracking
+videos:
+  - id: getting-started-with-rankscale-ai-track-your-ai-visibility-and-llm-citations
+    provider: youtube
+    videoId: Dzdw7YZyD6k
+    watchUrl: https://www.youtube.com/watch?v=Dzdw7YZyD6k
+    title: Getting Started with Rankscale.ai - Track Your AI Visibility & LLM Citations
+    creator: Rankscale AI
+    creatorUrl: https://www.youtube.com/@rankscaleAI
+    thumbnailUrl: https://i.ytimg.com/vi/Dzdw7YZyD6k/hqdefault.jpg
+    kind: demo
+    sourceType: third-party
+    collectedAt: 2026-03-11T17:50:15.576Z
+    description: Overview walkthrough showing how to get started with Rankscale and monitor AI visibility.
+  - id: website-analysis-with-rankscale
+    provider: youtube
+    videoId: m8GYDM2x_xs
+    watchUrl: https://www.youtube.com/watch?v=m8GYDM2x_xs
+    title: Website Analysis with Rankscale
+    creator: Rankscale AI
+    creatorUrl: https://www.youtube.com/@rankscaleAI
+    thumbnailUrl: https://i.ytimg.com/vi/m8GYDM2x_xs/hqdefault.jpg
+    kind: walkthrough
+    sourceType: third-party
+    collectedAt: 2026-03-11T17:50:16.211Z
+    description: Step-by-step walkthrough of Rankscale's website analysis and setup workflow.
 lastChecked: 2025-07-29

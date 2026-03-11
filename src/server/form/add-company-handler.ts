@@ -414,6 +414,7 @@ export async function handleAddCompany(
     ...(newData.featuresUrl ? { featuresUrl: newData.featuresUrl } : {}),
     screenshotSources: [],
     screenshots: [],
+    videos: [],
   };
 
   // 4. Validate

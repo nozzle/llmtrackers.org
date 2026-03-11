@@ -112,4 +112,29 @@ screenshotSources:
   - url: https://www.conductor.com/academy/
     type: docs
     label: Academy
+videos:
+  - id: how-to-track-ai-search-visibility-and-prompts-the-right-way
+    provider: youtube
+    videoId: JfcbV50nd4Y
+    watchUrl: https://www.youtube.com/watch?v=JfcbV50nd4Y
+    title: How to Track AI Search Visibility & Prompts (The Right Way)
+    creator: Conductor
+    creatorUrl: https://www.youtube.com/@ConductorInc
+    thumbnailUrl: https://i.ytimg.com/vi/JfcbV50nd4Y/hqdefault.jpg
+    kind: demo
+    sourceType: first-party
+    collectedAt: 2026-03-11T17:59:01.902Z
+    description: Conductor walkthrough explaining how to track AI search visibility, mentions, citations, and persona-driven prompts.
+  - id: optimize-content-for-ai-search-engines-conductor-demo-desk
+    provider: youtube
+    videoId: IpydZDWlBDc
+    watchUrl: https://www.youtube.com/watch?v=IpydZDWlBDc
+    title: Optimize Content for AI Search Engines | Conductor Demo Desk
+    creator: Conductor
+    creatorUrl: https://www.youtube.com/@ConductorInc
+    thumbnailUrl: https://i.ytimg.com/vi/IpydZDWlBDc/hqdefault.jpg
+    kind: walkthrough
+    sourceType: first-party
+    collectedAt: 2026-03-11T17:59:02.696Z
+    description: Product demo of Conductor's AI writing assistant and content optimization workflow for AI search.
 lastChecked: 2025-07-29

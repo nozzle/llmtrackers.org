@@ -146,4 +146,29 @@ screenshots:
     height: 1080
     tags:
       - dashboard
+videos:
+  - id: profound-b2b-demo
+    provider: youtube
+    videoId: YXbaTz0OAgM
+    watchUrl: https://www.youtube.com/watch?v=YXbaTz0OAgM
+    title: A Demo of Profound for B2B Marketers with Hana Hajebian
+    creator: Airfleet
+    creatorUrl: https://www.youtube.com/@Airfleet
+    thumbnailUrl: https://i.ytimg.com/vi/YXbaTz0OAgM/hqdefault.jpg
+    kind: demo
+    sourceType: third-party
+    collectedAt: 2026-03-11T17:35:00.000Z
+    description: B2B-focused walkthrough of Profound's platform and AI search monitoring capabilities.
+  - id: profound-insights-future-of-aeo
+    provider: youtube
+    videoId: BKLmGho59tk
+    watchUrl: https://www.youtube.com/watch?v=BKLmGho59tk
+    title: Profound Insights, Future of AEO and Product Demo
+    creator: Edgar Allan
+    creatorUrl: https://www.youtube.com/@EdgarAllan
+    thumbnailUrl: https://i.ytimg.com/vi/BKLmGho59tk/hqdefault.jpg
+    kind: demo
+    sourceType: third-party
+    collectedAt: 2026-03-11T17:36:00.000Z
+    description: Interview-style product demo focused on Profound's AEO perspective and platform walkthrough.
 lastChecked: 2025-07-29

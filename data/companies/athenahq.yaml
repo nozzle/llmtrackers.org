@@ -100,4 +100,17 @@ screenshots:
     height: 1000
     tags:
       - tracking
+videos:
+  - id: product-demo-showcase
+    provider: youtube
+    videoId: sQtKWPRWreo
+    watchUrl: https://www.youtube.com/watch?v=sQtKWPRWreo
+    title: "AthenaHQ Product Demo Showcase: Generative Engine Optimization (GEO) for AI Search"
+    creator: SourceForge
+    creatorUrl: https://www.youtube.com/@SourceForge-net
+    thumbnailUrl: https://i.ytimg.com/vi/sQtKWPRWreo/hqdefault.jpg
+    kind: demo
+    sourceType: third-party
+    collectedAt: 2026-03-11T17:35:00.000Z
+    description: Product showcase and walkthrough covering AthenaHQ's GEO monitoring workflow.
 lastChecked: 2025-07-29

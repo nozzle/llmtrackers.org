@@ -102,4 +102,29 @@ reviewSites:
 tweets: []
 pricingUrl: https://writesonic.com/pricing
 featuresUrl: https://writesonic.com/features
+videos:
+  - id: ai-search-visibility-what-to-track-what-to-fix-and-how-to-win
+    provider: youtube
+    videoId: eupxkznIZDI
+    watchUrl: https://www.youtube.com/watch?v=eupxkznIZDI
+    title: "AI Search Visibility: What to Track, What to Fix, and How to Win"
+    creator: Writesonic
+    creatorUrl: https://www.youtube.com/@WritesonicAI
+    thumbnailUrl: https://i.ytimg.com/vi/eupxkznIZDI/hqdefault.jpg
+    kind: walkthrough
+    sourceType: first-party
+    collectedAt: 2026-03-11T18:12:35.311Z
+    description: Product-oriented session covering what to track, what to fix, and how to improve AI search visibility using Writesonic.
+  - id: want-to-track-your-brand-in-chatgpt-gemini-and-perplexity-watch-this-now
+    provider: youtube
+    videoId: CT_y4FSpXuU
+    watchUrl: https://www.youtube.com/watch?v=CT_y4FSpXuU
+    title: Want to Track Your Brand in ChatGPT, Gemini, and Perplexity? Watch This Now!
+    creator: Writesonic
+    creatorUrl: https://www.youtube.com/@WritesonicAI
+    thumbnailUrl: https://i.ytimg.com/vi/CT_y4FSpXuU/hqdefault.jpg
+    kind: demo
+    sourceType: first-party
+    collectedAt: 2026-03-11T18:12:34.667Z
+    description: Writesonic walkthrough focused on tracking brand visibility across ChatGPT, Gemini, and Perplexity.
 lastChecked: 2025-07-29

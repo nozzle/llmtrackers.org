@@ -13,6 +13,9 @@ import {
   type ScreenshotSourceTypeSchema,
   type CompanyScreenshotSourceSchema,
   type CompanyScreenshotSchema,
+  type CompanyVideoProviderSchema,
+  type CompanyVideoSourceTypeSchema,
+  type CompanyVideoSchema,
   type TweetSchema,
   type ReviewAuthorSocialProfileSchema,
   type ReviewAuthorSchema,
@@ -33,6 +36,9 @@ export type ReviewSitePlatform = z.infer<typeof ReviewSitePlatformSchema>;
 export type ScreenshotSourceType = z.infer<typeof ScreenshotSourceTypeSchema>;
 export type CompanyScreenshotSource = z.infer<typeof CompanyScreenshotSourceSchema>;
 export type CompanyScreenshot = z.infer<typeof CompanyScreenshotSchema>;
+export type CompanyVideoProvider = z.infer<typeof CompanyVideoProviderSchema>;
+export type CompanyVideoSourceType = z.infer<typeof CompanyVideoSourceTypeSchema>;
+export type CompanyVideo = z.infer<typeof CompanyVideoSchema>;
 export type Tweet = z.infer<typeof TweetSchema>;
 export type ReviewAuthorSocialProfile = z.infer<typeof ReviewAuthorSocialProfileSchema>;
 export type ReviewAuthor = z.infer<typeof ReviewAuthorSchema>;

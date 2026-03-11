@@ -42,4 +42,29 @@ reviewSites:
 tweets: []
 pricingUrl: https://www.airops.com/pricing
 featuresUrl: https://www.airops.com/features
+videos:
+  - id: airops-cohort-demo-day-march-2026
+    provider: youtube
+    videoId: DN-Fy4YoU_U
+    watchUrl: https://www.youtube.com/watch?v=DN-Fy4YoU_U
+    title: AirOps Cohort Demo Day - March 2026
+    creator: AirOps | Craft content that wins AI search
+    creatorUrl: https://www.youtube.com/@AirOpsHQ
+    thumbnailUrl: https://i.ytimg.com/vi/DN-Fy4YoU_U/hqdefault.jpg
+    kind: demo
+    sourceType: first-party
+    collectedAt: 2026-03-11T17:59:01.156Z
+    description: Demo day session showcasing how teams use AirOps to systematize content operations and AI search workflows.
+  - id: mcp-building-session-claude-code-in-action-airops-and-noah-learner
+    provider: youtube
+    videoId: Lnv4aRte2uk
+    watchUrl: https://www.youtube.com/watch?v=Lnv4aRte2uk
+    title: "MCP Building Session: Claude Code in Action | AirOps and Noah Learner"
+    creator: AirOps | Craft content that wins AI search
+    creatorUrl: https://www.youtube.com/@AirOpsHQ
+    thumbnailUrl: https://i.ytimg.com/vi/Lnv4aRte2uk/hqdefault.jpg
+    kind: demo
+    sourceType: first-party
+    collectedAt: 2026-03-11T17:59:00.413Z
+    description: Live product session showing how AirOps combines AI search data, content workflows, and Claude Code-driven MCP tooling.
 lastChecked: 2025-07-29

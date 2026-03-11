@@ -105,4 +105,29 @@ screenshots:
     tags:
       - dashboard
       - tracking
+videos:
+  - id: how-b2b-marketers-can-act-on-geo-insights-with-peec-ai-demo-by-malte-landwehr
+    provider: youtube
+    videoId: TxhmjcNlvPY
+    watchUrl: https://www.youtube.com/watch?v=TxhmjcNlvPY
+    title: How B2B Marketers Can Act on GEO Insights with Peec AI | Demo by Malte Landwehr
+    creator: Airfleet
+    creatorUrl: https://www.youtube.com/@Airfleet
+    thumbnailUrl: https://i.ytimg.com/vi/TxhmjcNlvPY/hqdefault.jpg
+    kind: demo
+    sourceType: third-party
+    collectedAt: 2026-03-11T17:50:16.843Z
+    description: Demo focused on how B2B teams can turn Peec AI insights into concrete GEO actions.
+  - id: how-to-track-ai-search-visibility-using-peec-ai-complete-guide
+    provider: youtube
+    videoId: 0xw4xCxpXYg
+    watchUrl: https://www.youtube.com/watch?v=0xw4xCxpXYg
+    title: How to Track AI Search Visibility Using Peec AI (Complete Guide)
+    creator: Seahawk Media
+    creatorUrl: https://www.youtube.com/@seahawkmedia
+    thumbnailUrl: https://i.ytimg.com/vi/0xw4xCxpXYg/hqdefault.jpg
+    kind: guide
+    sourceType: third-party
+    collectedAt: 2026-03-11T17:50:17.472Z
+    description: Complete guide to Peec AI's workflow for tracking AI search visibility.
 lastChecked: 2025-07-29

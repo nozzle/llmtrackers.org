@@ -249,6 +249,46 @@ pnpm screenshots:ingest -- ahrefs-brand-radar --pick brand-radar-dashboard-showi
 
 Use `--force` to replace an existing screenshot with the same id.
 
+## Video Collection
+
+Curated demo videos live directly in each company YAML under `videos`.
+
+- supported providers: YouTube, Wistia, and Loom
+- store provider, title, creator, thumbnail, and provenance metadata in `data/companies/*.yaml`
+- the company page renders an inline player plus selectable thumbnails
+
+Generate a YAML-ready entry from a video URL:
+
+```bash
+pnpm videos:inspect -- "https://www.youtube.com/watch?v=BKLmGho59tk"
+pnpm videos:inspect -- --url "https://www.youtube.com/watch?v=sQtKWPRWreo" --description "Product walkthrough"
+pnpm videos:inspect -- "https://fast.wistia.net/embed/iframe/tpkxurb4h4"
+pnpm videos:inspect -- "https://www.loom.com/share/1234567890abcdef1234567890abcdef"
+```
+
+The helper fetches provider metadata when available and prints a `videos:` block you can paste into a company YAML file.
+
+Add a video directly to a company YAML file:
+
+```bash
+pnpm videos:add -- --company peec-ai --url "https://www.youtube.com/watch?v=TxhmjcNlvPY" --description "B2B GEO demo"
+```
+
+Use `--force` to replace an existing video with the same `id`.
+
+Suggest likely longform demo candidates from a YouTube channel feed:
+
+```bash
+pnpm videos:suggest -- --feed "https://www.youtube.com/feeds/videos.xml?channel_id=UCH6wm0DVcFUlW916UcGneTQ"
+```
+
+This ranks recent feed entries and pushes longform demo-style videos above shorts, general announcements, and less product-focused uploads.
+
+Notes:
+
+- `videos:suggest` is YouTube-only because it relies on channel feeds
+- `videos:inspect` and `videos:add` support YouTube, Wistia, and Loom URLs
+
 ## Testing
 
 - shared YAML tests live in `packages/shared/src/*.test.ts`
