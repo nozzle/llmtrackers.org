@@ -1,11 +1,11 @@
 import type { Company } from "@llm-tracker/shared";
 
 interface OpenAiChatCompletionResponse {
-  choices: Array<{
+  choices: {
     message?: {
       content?: string | null;
     };
-  }>;
+  }[];
 }
 
 export interface PrefillReviewDraft {
@@ -18,10 +18,10 @@ export interface PrefillReviewDraft {
     detailedSummary: string;
     author: {
       name: string;
-      socialProfiles: Array<{ label: string; url: string }>;
+      socialProfiles: { label: string; url: string }[];
     };
   };
-  companyRatings: Array<{
+  companyRatings: {
     companySlug: string;
     score: number | null;
     maxScore: number | null;
@@ -30,7 +30,7 @@ export interface PrefillReviewDraft {
     pros: string[];
     cons: string[];
     noteworthy: string[];
-  }>;
+  }[];
   warnings: string[];
 }
 
@@ -76,19 +76,22 @@ function slugify(value: string): string {
 }
 
 const COMPANY_ALIASES: Record<string, string> = {
-  "otterly": "otterly-ai",
+  otterly: "otterly-ai",
   "otterly ai": "otterly-ai",
-  "scrunch": "scrunch-ai",
-  "peec": "peec-ai",
+  scrunch: "scrunch-ai",
+  peec: "peec-ai",
   "rankscale ai": "rankscale",
   "athena hq": "athenahq",
-  "athenahq": "athenahq",
+  athenahq: "athenahq",
   "waikay by inlinks": "waikay",
   "profound ai": "profound",
 };
 
 function normalizeCompanyName(value: string): string {
-  return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
 }
 
 export function deriveSlugFromUrl(url: string, title: string): string {
@@ -139,7 +142,9 @@ function matchCompanySlug(name: string, companies: Company[]): string | null {
   if (exactName) return exactName.slug;
 
   const aliasMatch = companies.find(
-    (company) => normalizeCompanyName(company.name).includes(normalized) || normalized.includes(normalizeCompanyName(company.name)),
+    (company) =>
+      normalizeCompanyName(company.name).includes(normalized) ||
+      normalized.includes(normalizeCompanyName(company.name)),
   );
   return aliasMatch?.slug ?? null;
 }
@@ -206,7 +211,8 @@ export async function extractReviewPrefillWithLlm(
         score,
         maxScore,
         summary: typeof t.summary === "string" ? t.summary.trim() : "",
-        directLink: typeof t.directLink === "string" && t.directLink.trim() ? t.directLink.trim() : null,
+        directLink:
+          typeof t.directLink === "string" && t.directLink.trim() ? t.directLink.trim() : null,
         pros: clampHighlights(t.pros),
         cons: clampHighlights(t.cons),
         noteworthy: clampHighlights(t.noteworthy),
@@ -216,11 +222,15 @@ export async function extractReviewPrefillWithLlm(
     .filter((tool) => tool.summary.length > 0);
 
   if (skippedTools.length > 0) {
-    warnings.push(`Skipped ${skippedTools.length} unmatched tool${skippedTools.length === 1 ? "" : "s"}: ${skippedTools.join(", ")}`);
+    warnings.push(
+      `Skipped ${skippedTools.length} unmatched tool${skippedTools.length === 1 ? "" : "s"}: ${skippedTools.join(", ")}`,
+    );
   }
 
   if (companyRatings.length === 0) {
-    warnings.push("No tracked companies were matched from this article. Review details were imported, but tool coverage must be added manually.");
+    warnings.push(
+      "No tracked companies were matched from this article. Review details were imported, but tool coverage must be added manually.",
+    );
   }
 
   const authorRecord =

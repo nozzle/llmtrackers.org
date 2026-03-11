@@ -61,7 +61,10 @@ export function RetroOsDesign(props: DesignProps) {
   } = props;
 
   return (
-    <div className="-mx-4 -my-8 min-h-screen bg-[#008080] px-4 py-6 sm:-mx-6 lg:-mx-8" style={{ fontFamily: "'MS Sans Serif', 'Segoe UI', Tahoma, sans-serif" }}>
+    <div
+      className="-mx-4 -my-8 min-h-screen bg-[#008080] px-4 py-6 sm:-mx-6 lg:-mx-8"
+      style={{ fontFamily: "'MS Sans Serif', 'Segoe UI', Tahoma, sans-serif" }}
+    >
       <div className="mx-auto max-w-[1500px]">
         {/* ---- Window chrome ---- */}
         <div className={`border-2 ${BEVEL_OUT} bg-[#c0c0c0]`}>
@@ -69,9 +72,21 @@ export function RetroOsDesign(props: DesignProps) {
           <div className="flex items-center bg-gradient-to-r from-[#000080] to-[#1084d0] px-2 py-1">
             <span className="text-sm font-bold text-white">📊 LLM Trackers - Comparison Tool</span>
             <div className="ml-auto flex gap-1">
-              <div className={`border ${BEVEL_OUT} h-4 w-4 bg-[#c0c0c0] text-center text-[10px] font-bold leading-4`}>_</div>
-              <div className={`border ${BEVEL_OUT} h-4 w-4 bg-[#c0c0c0] text-center text-[10px] font-bold leading-4`}>□</div>
-              <div className={`border ${BEVEL_OUT} h-4 w-4 bg-[#c0c0c0] text-center text-[10px] font-bold leading-4`}>✕</div>
+              <div
+                className={`border ${BEVEL_OUT} h-4 w-4 bg-[#c0c0c0] text-center text-[10px] font-bold leading-4`}
+              >
+                _
+              </div>
+              <div
+                className={`border ${BEVEL_OUT} h-4 w-4 bg-[#c0c0c0] text-center text-[10px] font-bold leading-4`}
+              >
+                □
+              </div>
+              <div
+                className={`border ${BEVEL_OUT} h-4 w-4 bg-[#c0c0c0] text-center text-[10px] font-bold leading-4`}
+              >
+                ✕
+              </div>
             </div>
           </div>
 
@@ -132,9 +147,7 @@ export function RetroOsDesign(props: DesignProps) {
                     updateSearch({ llms: next.length > 0 ? next : undefined });
                   }}
                   className={`cursor-pointer border-2 px-1.5 py-0 text-[10px] ${
-                    active
-                      ? `${BEVEL_IN} bg-[#e0e0e0] font-bold`
-                      : `${BEVEL_OUT} bg-[#c0c0c0]`
+                    active ? `${BEVEL_IN} bg-[#e0e0e0] font-bold` : `${BEVEL_OUT} bg-[#c0c0c0]`
                   }`}
                 >
                   {LLM_MODEL_LABELS[key]}
@@ -147,14 +160,23 @@ export function RetroOsDesign(props: DesignProps) {
                 type="button"
                 onClick={() => {
                   updateSearch({
-                    q: undefined, schedule: undefined, llms: undefined,
-                    priceMin: undefined, priceMax: undefined,
-                    costMin: undefined, costMax: undefined,
-                    responsesMin: undefined, responsesMax: undefined,
-                    g2Min: undefined, g2Max: undefined,
-                    trustpilotMin: undefined, trustpilotMax: undefined,
-                    trustradiusMin: undefined, trustradiusMax: undefined,
-                    capterraMin: undefined, capterraMax: undefined,
+                    q: undefined,
+                    schedule: undefined,
+                    llms: undefined,
+                    priceMin: undefined,
+                    priceMax: undefined,
+                    costMin: undefined,
+                    costMax: undefined,
+                    responsesMin: undefined,
+                    responsesMax: undefined,
+                    g2Min: undefined,
+                    g2Max: undefined,
+                    trustpilotMin: undefined,
+                    trustpilotMax: undefined,
+                    trustradiusMin: undefined,
+                    trustradiusMax: undefined,
+                    capterraMin: undefined,
+                    capterraMax: undefined,
                     locationType: undefined,
                   });
                 }}
@@ -171,7 +193,10 @@ export function RetroOsDesign(props: DesignProps) {
               <thead>
                 <tr>
                   {/* Checkbox col */}
-                  <th className={`border-r border-b border-[#808080] bg-[#c0c0c0] px-1 py-1 ${BEVEL_OUT} border-2`} style={{ width: 28 }}>
+                  <th
+                    className={`border-r border-b border-[#808080] bg-[#c0c0c0] px-1 py-1 ${BEVEL_OUT} border-2`}
+                    style={{ width: 28 }}
+                  >
                     ☐
                   </th>
                   {SORTABLE_COLS.map((col) => {
@@ -179,12 +204,21 @@ export function RetroOsDesign(props: DesignProps) {
                     return (
                       <th
                         key={col.id}
-                        onClick={canSort ? () => { onToggleSort(col.id); } : undefined}
+                        onClick={
+                          canSort
+                            ? () => {
+                                onToggleSort(col.id);
+                              }
+                            : undefined
+                        }
                         className={`border-2 ${BEVEL_OUT} bg-[#c0c0c0] px-2 py-1 ${col.align} text-[11px] font-bold ${
-                          canSort ? "cursor-pointer hover:bg-[#d4d0c8] active:border-t-[#808080] active:border-l-[#808080] active:border-b-[#fff] active:border-r-[#fff]" : ""
+                          canSort
+                            ? "cursor-pointer hover:bg-[#d4d0c8] active:border-t-[#808080] active:border-l-[#808080] active:border-b-[#fff] active:border-r-[#fff]"
+                            : ""
                         }`}
                       >
-                        {col.label}{canSort ? sortArrow(sortBy, sortDir, col.id) : ""}
+                        {col.label}
+                        {canSort ? sortArrow(sortBy, sortDir, col.id) : ""}
                       </th>
                     );
                   })}
@@ -202,7 +236,9 @@ export function RetroOsDesign(props: DesignProps) {
                   return (
                     <tr
                       key={key}
-                      onClick={() => { onTogglePlan(key); }}
+                      onClick={() => {
+                        onTogglePlan(key);
+                      }}
                       className={`cursor-pointer ${isSelected ? "bg-[#000080] text-white" : "hover:bg-[#e0e0e0]"}`}
                     >
                       <td className="border-r border-b border-[#c0c0c0] px-1 py-0.5 text-center">
@@ -214,26 +250,48 @@ export function RetroOsDesign(props: DesignProps) {
                           <Link
                             to="/companies/$slug"
                             params={{ slug: plan.companySlug }}
-                            className={isSelected ? "text-[#ffff00] underline" : "text-[#0000ff] underline"}
-                            onClick={(e) => { e.stopPropagation(); }}
+                            className={
+                              isSelected ? "text-[#ffff00] underline" : "text-[#0000ff] underline"
+                            }
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
                           >
                             {plan.companyName}
                           </Link>
                         </div>
                       </td>
-                      <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5">{plan.name}</td>
-                      <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5 text-right">{formatPrice(plan)}</td>
-                      <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5 text-right">
-                        {plan.pricePer1000Responses != null ? `$${plan.pricePer1000Responses.toFixed(2)}` : "—"}
+                      <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5">
+                        {plan.name}
                       </td>
                       <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5 text-right">
-                        {plan.aiResponsesMonthly != null ? plan.aiResponsesMonthly.toLocaleString() : "—"}
+                        {formatPrice(plan)}
                       </td>
-                      <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5 text-center">{g2 != null ? g2.toFixed(1) : "—"}</td>
-                      <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5 text-center">{tp != null ? tp.toFixed(1) : "—"}</td>
-                      <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5 text-center">{tr != null ? tr.toFixed(1) : "—"}</td>
-                      <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5 text-center">{cap != null ? cap.toFixed(1) : "—"}</td>
-                      <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5 text-center">{plan.schedule}</td>
+                      <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5 text-right">
+                        {plan.pricePer1000Responses != null
+                          ? `$${plan.pricePer1000Responses.toFixed(2)}`
+                          : "—"}
+                      </td>
+                      <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5 text-right">
+                        {plan.aiResponsesMonthly != null
+                          ? plan.aiResponsesMonthly.toLocaleString()
+                          : "—"}
+                      </td>
+                      <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5 text-center">
+                        {g2 != null ? g2.toFixed(1) : "—"}
+                      </td>
+                      <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5 text-center">
+                        {tp != null ? tp.toFixed(1) : "—"}
+                      </td>
+                      <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5 text-center">
+                        {tr != null ? tr.toFixed(1) : "—"}
+                      </td>
+                      <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5 text-center">
+                        {cap != null ? cap.toFixed(1) : "—"}
+                      </td>
+                      <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5 text-center">
+                        {plan.schedule}
+                      </td>
                       <td className="border-r border-b border-[#c0c0c0] px-2 py-0.5">
                         <div className="flex flex-wrap gap-0.5">
                           {LLM_KEYS.filter((k) => plan.llmSupport[k]).map((k) => (
@@ -241,7 +299,9 @@ export function RetroOsDesign(props: DesignProps) {
                           ))}
                         </div>
                       </td>
-                      <td className="border-b border-[#c0c0c0] px-2 py-0.5 text-center text-[10px]">{formatLocation(plan.locationSupport)}</td>
+                      <td className="border-b border-[#c0c0c0] px-2 py-0.5 text-center text-[10px]">
+                        {formatLocation(plan.locationSupport)}
+                      </td>
                     </tr>
                   );
                 })}

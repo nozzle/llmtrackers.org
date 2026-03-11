@@ -58,7 +58,10 @@ export function ScientificDesign(props: DesignProps) {
   return (
     <div
       className="-mx-4 -my-8 min-h-screen bg-[#fffff8] px-6 py-10 text-[#1a1a1a] sm:-mx-6 lg:-mx-8"
-      style={{ fontFamily: "'Computer Modern Serif', 'Latin Modern Roman', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif" }}
+      style={{
+        fontFamily:
+          "'Computer Modern Serif', 'Latin Modern Roman', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif",
+      }}
     >
       <div className="mx-auto max-w-[1200px]">
         {/* Title block (like a paper title) */}
@@ -66,9 +69,7 @@ export function ScientificDesign(props: DesignProps) {
           <h1 className="text-2xl font-bold italic">
             A Comparative Analysis of LLM Search Visibility Tracking Platforms
           </h1>
-          <p className="mt-2 text-sm">
-            LLMTrackers.org Consortium
-          </p>
+          <p className="mt-2 text-sm">LLMTrackers.org Consortium</p>
           <p className="mt-1 text-xs italic text-neutral-500">
             Dataset: {allPlans.length} plans, {companies.length} vendors — Updated 2025
           </p>
@@ -78,10 +79,9 @@ export function ScientificDesign(props: DesignProps) {
         <div className="mx-auto mb-8 max-w-[700px] border-t border-b border-neutral-300 py-4">
           <p className="text-center text-xs font-bold uppercase tracking-widest">Abstract</p>
           <p className="mt-2 text-justify text-sm leading-relaxed">
-            This document presents a structured comparison of AI search visibility and LLM
-            tracking tools. Data is presented in tabular form below. Column headers marked
-            with ▲/▼ may be clicked to re-sort. Use the query controls in §1 to constrain
-            the result set.
+            This document presents a structured comparison of AI search visibility and LLM tracking
+            tools. Data is presented in tabular form below. Column headers marked with ▲/▼ may be
+            clicked to re-sort. Use the query controls in §1 to constrain the result set.
           </p>
         </div>
 
@@ -140,14 +140,23 @@ export function ScientificDesign(props: DesignProps) {
                   type="button"
                   onClick={() => {
                     updateSearch({
-                      q: undefined, schedule: undefined, llms: undefined,
-                      priceMin: undefined, priceMax: undefined,
-                      costMin: undefined, costMax: undefined,
-                      responsesMin: undefined, responsesMax: undefined,
-                      g2Min: undefined, g2Max: undefined,
-                      trustpilotMin: undefined, trustpilotMax: undefined,
-                      trustradiusMin: undefined, trustradiusMax: undefined,
-                      capterraMin: undefined, capterraMax: undefined,
+                      q: undefined,
+                      schedule: undefined,
+                      llms: undefined,
+                      priceMin: undefined,
+                      priceMax: undefined,
+                      costMin: undefined,
+                      costMax: undefined,
+                      responsesMin: undefined,
+                      responsesMax: undefined,
+                      g2Min: undefined,
+                      g2Max: undefined,
+                      trustpilotMin: undefined,
+                      trustpilotMax: undefined,
+                      trustradiusMin: undefined,
+                      trustradiusMax: undefined,
+                      capterraMin: undefined,
+                      capterraMax: undefined,
                       locationType: undefined,
                     });
                   }}
@@ -200,12 +209,19 @@ export function ScientificDesign(props: DesignProps) {
                   return (
                     <th
                       key={col.id}
-                      onClick={canSort ? () => { onToggleSort(col.id); } : undefined}
+                      onClick={
+                        canSort
+                          ? () => {
+                              onToggleSort(col.id);
+                            }
+                          : undefined
+                      }
                       className={`py-2 px-2 text-xs font-bold ${col.align} ${
                         canSort ? "cursor-pointer select-none hover:bg-[#f0f0e8]" : ""
                       }`}
                     >
-                      {col.label}{canSort ? sortMark(sortBy, sortDir, col.id) : ""}
+                      {col.label}
+                      {canSort ? sortMark(sortBy, sortDir, col.id) : ""}
                     </th>
                   );
                 })}
@@ -227,7 +243,9 @@ export function ScientificDesign(props: DesignProps) {
                 return (
                   <tr
                     key={key}
-                    onClick={() => { onTogglePlan(key); }}
+                    onClick={() => {
+                      onTogglePlan(key);
+                    }}
                     className={`cursor-pointer border-b border-neutral-200 transition-colors ${
                       isSelected ? "bg-[#fffde0]" : "hover:bg-[#f8f8f0]"
                     }`}
@@ -241,7 +259,9 @@ export function ScientificDesign(props: DesignProps) {
                           to="/companies/$slug"
                           params={{ slug: plan.companySlug }}
                           className="text-sm text-blue-800 underline"
-                          onClick={(e) => { e.stopPropagation(); }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
                         >
                           {plan.companyName}
                         </Link>
@@ -249,17 +269,31 @@ export function ScientificDesign(props: DesignProps) {
                       </div>
                     </td>
                     <td className="px-2 py-1.5 text-sm italic text-neutral-600">{plan.name}</td>
-                    <td className="px-2 py-1.5 text-right text-sm tabular-nums">{formatPrice(plan)}</td>
-                    <td className="px-2 py-1.5 text-right text-sm tabular-nums text-neutral-600">
-                      {plan.pricePer1000Responses != null ? `$${plan.pricePer1000Responses.toFixed(2)}` : "—"}
+                    <td className="px-2 py-1.5 text-right text-sm tabular-nums">
+                      {formatPrice(plan)}
                     </td>
                     <td className="px-2 py-1.5 text-right text-sm tabular-nums text-neutral-600">
-                      {plan.aiResponsesMonthly != null ? plan.aiResponsesMonthly.toLocaleString() : "—"}
+                      {plan.pricePer1000Responses != null
+                        ? `$${plan.pricePer1000Responses.toFixed(2)}`
+                        : "—"}
                     </td>
-                    <td className="px-2 py-1.5 text-center text-sm tabular-nums">{g2 != null ? g2.toFixed(1) : "—"}</td>
-                    <td className="px-2 py-1.5 text-center text-sm tabular-nums">{tp != null ? tp.toFixed(1) : "—"}</td>
-                    <td className="px-2 py-1.5 text-center text-sm tabular-nums">{tr != null ? tr.toFixed(1) : "—"}</td>
-                    <td className="px-2 py-1.5 text-center text-sm tabular-nums">{cap != null ? cap.toFixed(1) : "—"}</td>
+                    <td className="px-2 py-1.5 text-right text-sm tabular-nums text-neutral-600">
+                      {plan.aiResponsesMonthly != null
+                        ? plan.aiResponsesMonthly.toLocaleString()
+                        : "—"}
+                    </td>
+                    <td className="px-2 py-1.5 text-center text-sm tabular-nums">
+                      {g2 != null ? g2.toFixed(1) : "—"}
+                    </td>
+                    <td className="px-2 py-1.5 text-center text-sm tabular-nums">
+                      {tp != null ? tp.toFixed(1) : "—"}
+                    </td>
+                    <td className="px-2 py-1.5 text-center text-sm tabular-nums">
+                      {tr != null ? tr.toFixed(1) : "—"}
+                    </td>
+                    <td className="px-2 py-1.5 text-center text-sm tabular-nums">
+                      {cap != null ? cap.toFixed(1) : "—"}
+                    </td>
                     <td className="px-2 py-1.5 text-center text-xs">{plan.schedule}</td>
                     <td className="px-2 py-1.5">
                       <div className="flex flex-wrap gap-0.5">
@@ -268,7 +302,9 @@ export function ScientificDesign(props: DesignProps) {
                         ))}
                       </div>
                     </td>
-                    <td className="px-2 py-1.5 text-center text-xs">{formatLocation(plan.locationSupport)}</td>
+                    <td className="px-2 py-1.5 text-center text-xs">
+                      {formatLocation(plan.locationSupport)}
+                    </td>
                   </tr>
                 );
               })}
@@ -294,9 +330,8 @@ export function ScientificDesign(props: DesignProps) {
         {/* Footnotes */}
         <div className="mt-6 border-t border-neutral-200 pt-4">
           <p className="text-xs text-neutral-500">
-            <sup>†</sup> Prices marked with * include usage-based notes.
-            Review scores sourced from respective platforms.
-            n = {plans.length} (of {allPlans.length} total).
+            <sup>†</sup> Prices marked with * include usage-based notes. Review scores sourced from
+            respective platforms. n = {plans.length} (of {allPlans.length} total).
           </p>
         </div>
       </div>

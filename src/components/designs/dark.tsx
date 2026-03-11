@@ -36,13 +36,25 @@ const SORTABLE_COLS: readonly { id: string; label: string; align: string; sortab
 function SortIcon({ active, dir }: { active: boolean; dir: string }) {
   if (!active) {
     return (
-      <svg className="ml-1 inline h-3 w-3 text-neutral-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+      <svg
+        className="ml-1 inline h-3 w-3 text-neutral-600"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
         <path d="M8 9l4-4 4 4M8 15l4 4 4-4" />
       </svg>
     );
   }
   return (
-    <svg className="ml-1 inline h-3 w-3 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+    <svg
+      className="ml-1 inline h-3 w-3 text-violet-400"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2.5}
+    >
       {dir === "asc" ? <path d="M8 15l4-4 4 4" /> : <path d="M8 9l4 4 4-4" />}
     </svg>
   );
@@ -51,8 +63,7 @@ function SortIcon({ active, dir }: { active: boolean; dir: string }) {
 function ScorePill({ value, max }: { value: number | null; max: number }) {
   if (value == null) return <span className="text-neutral-600">—</span>;
   const pct = Math.min((value / max) * 100, 100);
-  const color =
-    pct >= 80 ? "text-emerald-400" : pct >= 60 ? "text-amber-400" : "text-red-400";
+  const color = pct >= 80 ? "text-emerald-400" : pct >= 60 ? "text-amber-400" : "text-red-400";
   return <span className={`tabular-nums ${color}`}>{value.toFixed(1)}</span>;
 }
 
@@ -76,15 +87,15 @@ export function DarkDesign(props: DesignProps) {
   return (
     <div
       className="-mx-4 -my-8 min-h-screen bg-[#0f0f13] px-4 py-8 text-neutral-200 sm:-mx-6 lg:-mx-8"
-      style={{ fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif" }}
+      style={{
+        fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
+      }}
     >
       <div className="mx-auto max-w-[1500px]">
         {/* Header */}
         <div className="mb-8 flex items-end justify-between">
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight text-white">
-              LLM Trackers
-            </h1>
+            <h1 className="text-3xl font-semibold tracking-tight text-white">LLM Trackers</h1>
             <p className="mt-1 text-sm text-neutral-500">
               {plans.length} of {allPlans.length} plans &middot; {companies.length} companies
             </p>
@@ -113,7 +124,13 @@ export function DarkDesign(props: DesignProps) {
         <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-neutral-800 bg-[#16161d] p-4">
           {/* Search */}
           <div className="relative">
-            <svg className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg
+              className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
               <circle cx="11" cy="11" r="8" />
               <path d="M21 21l-4.35-4.35" />
             </svg>
@@ -165,14 +182,23 @@ export function DarkDesign(props: DesignProps) {
                 type="button"
                 onClick={() => {
                   updateSearch({
-                    q: undefined, schedule: undefined, llms: undefined,
-                    priceMin: undefined, priceMax: undefined,
-                    costMin: undefined, costMax: undefined,
-                    responsesMin: undefined, responsesMax: undefined,
-                    g2Min: undefined, g2Max: undefined,
-                    trustpilotMin: undefined, trustpilotMax: undefined,
-                    trustradiusMin: undefined, trustradiusMax: undefined,
-                    capterraMin: undefined, capterraMax: undefined,
+                    q: undefined,
+                    schedule: undefined,
+                    llms: undefined,
+                    priceMin: undefined,
+                    priceMax: undefined,
+                    costMin: undefined,
+                    costMax: undefined,
+                    responsesMin: undefined,
+                    responsesMax: undefined,
+                    g2Min: undefined,
+                    g2Max: undefined,
+                    trustpilotMin: undefined,
+                    trustpilotMax: undefined,
+                    trustradiusMin: undefined,
+                    trustradiusMax: undefined,
+                    capterraMin: undefined,
+                    capterraMax: undefined,
                     locationType: undefined,
                   });
                 }}
@@ -198,7 +224,13 @@ export function DarkDesign(props: DesignProps) {
                   return (
                     <th
                       key={col.id}
-                      onClick={canSort ? () => { onToggleSort(col.id); } : undefined}
+                      onClick={
+                        canSort
+                          ? () => {
+                              onToggleSort(col.id);
+                            }
+                          : undefined
+                      }
                       className={`py-3 px-3 text-xs font-medium uppercase tracking-wider ${col.align} ${
                         isActive ? "text-violet-400" : "text-neutral-500"
                       } ${canSort ? "cursor-pointer select-none transition-colors hover:text-neutral-300" : ""}`}
@@ -222,11 +254,11 @@ export function DarkDesign(props: DesignProps) {
                 return (
                   <tr
                     key={key}
-                    onClick={() => { onTogglePlan(key); }}
+                    onClick={() => {
+                      onTogglePlan(key);
+                    }}
                     className={`cursor-pointer border-b border-neutral-800/50 transition-colors ${
-                      isSelected
-                        ? "bg-violet-600/10"
-                        : "hover:bg-[#1c1c26]"
+                      isSelected ? "bg-violet-600/10" : "hover:bg-[#1c1c26]"
                     }`}
                   >
                     {/* Checkbox */}
@@ -239,7 +271,13 @@ export function DarkDesign(props: DesignProps) {
                         }`}
                       >
                         {isSelected && (
-                          <svg className="h-2.5 w-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <svg
+                            className="h-2.5 w-2.5 text-white"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={3}
+                          >
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
                         )}
@@ -253,7 +291,9 @@ export function DarkDesign(props: DesignProps) {
                           to="/companies/$slug"
                           params={{ slug: plan.companySlug }}
                           className="text-sm font-medium text-white hover:text-violet-400"
-                          onClick={(e) => { e.stopPropagation(); }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
                         >
                           {plan.companyName}
                         </Link>
@@ -267,11 +307,15 @@ export function DarkDesign(props: DesignProps) {
                     </td>
                     {/* Cost Efficiency */}
                     <td className="px-3 py-3 text-right text-sm tabular-nums text-neutral-400">
-                      {plan.pricePer1000Responses != null ? `$${plan.pricePer1000Responses.toFixed(2)}` : "—"}
+                      {plan.pricePer1000Responses != null
+                        ? `$${plan.pricePer1000Responses.toFixed(2)}`
+                        : "—"}
                     </td>
                     {/* Responses */}
                     <td className="px-3 py-3 text-right text-sm tabular-nums text-neutral-400">
-                      {plan.aiResponsesMonthly != null ? plan.aiResponsesMonthly.toLocaleString() : "—"}
+                      {plan.aiResponsesMonthly != null
+                        ? plan.aiResponsesMonthly.toLocaleString()
+                        : "—"}
                     </td>
                     {/* Review scores */}
                     <td className="px-3 py-3 text-center text-sm">
@@ -287,7 +331,9 @@ export function DarkDesign(props: DesignProps) {
                       <ScorePill value={cap} max={5} />
                     </td>
                     {/* Schedule */}
-                    <td className="px-3 py-3 text-center text-xs text-neutral-500">{plan.schedule}</td>
+                    <td className="px-3 py-3 text-center text-xs text-neutral-500">
+                      {plan.schedule}
+                    </td>
                     {/* LLMs */}
                     <td className="px-3 py-3">
                       <div className="flex flex-wrap gap-1">

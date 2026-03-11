@@ -6,6 +6,7 @@ const EXTRACT_TIMEOUT_MS = 45_000;
 const MAX_TEXT_LENGTH = 60_000;
 
 async function runtimeImport<T>(specifier: string): Promise<T> {
+  // eslint-disable-next-line @typescript-eslint/no-implied-eval
   const importer = new Function("s", "return import(s)") as (s: string) => Promise<T>;
   return importer(specifier);
 }
@@ -67,6 +68,7 @@ async function extractFromPage(page: PageLike, url: string): Promise<PageExtract
 
   const result = await page.evaluate(
     ({ maxTextLength }) => {
+      // eslint-disable-next-line @typescript-eslint/no-implied-eval
       const runner = new Function(
         "maxTextLength",
         `
@@ -133,7 +135,7 @@ async function extractFromPage(page: PageLike, url: string): Promise<PageExtract
 
           const html = document.documentElement.outerHTML;
           const challengeDetected =
-            /captcha-delivery\.com/i.test(html) ||
+            /captcha-delivery[.]com/i.test(html) ||
             /DataDome CAPTCHA/i.test(html) ||
             /cf-challenge|challenge-platform/i.test(html) ||
             /verify you are human|checking your browser/i.test(text);
@@ -179,7 +181,9 @@ async function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T
     return await Promise.race([
       promise,
       new Promise<T>((_, reject) => {
-        timer = setTimeout(() => { reject(new Error("Browser extraction timed out")); }, timeoutMs);
+        timer = setTimeout(() => {
+          reject(new Error("Browser extraction timed out"));
+        }, timeoutMs);
       }),
     ]);
   } finally {
@@ -193,13 +197,15 @@ async function extractWithCloudflareBrowser(
 ): Promise<ExtractedPageContent | null> {
   if (!env.BROWSER) return null;
 
-  const { launch: launchCloudflareBrowser } = await runtimeImport<{
+  const cfPlaywright = await runtimeImport<{
     launch(browser: Fetcher): Promise<{
-      newContext(options: unknown): Promise<{ newPage(): Promise<PageLike>; close(): Promise<unknown> }>;
+      newContext(
+        options: unknown,
+      ): Promise<{ newPage(): Promise<PageLike>; close(): Promise<unknown> }>;
       close(): Promise<unknown>;
     }>;
   }>("@cloudflare/playwright");
-  const browser = await launchCloudflareBrowser(env.BROWSER);
+  const browser = await cfPlaywright.launch(env.BROWSER);
 
   try {
     const context = await browser.newContext({

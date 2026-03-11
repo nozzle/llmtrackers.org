@@ -82,12 +82,14 @@ function ReviewPage() {
     const aHasScore = a.score != null && a.maxScore != null;
     const bHasScore = b.score != null && b.maxScore != null;
 
-    if (aHasScore && bHasScore) return (b.score as number) - (a.score as number);
+    if (aHasScore && bHasScore) return (b.score ?? 0) - (a.score ?? 0);
     if (aHasScore) return -1;
     if (bHasScore) return 1;
     return 0;
   });
-  const scoredCount = sortedRatings.filter((rating) => rating.score != null && rating.maxScore != null).length;
+  const scoredCount = sortedRatings.filter(
+    (rating) => rating.score != null && rating.maxScore != null,
+  ).length;
   const isUnscoredRoundup = scoredCount === 0;
 
   return (
@@ -126,8 +128,7 @@ function ReviewPage() {
 
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600">
           <span>
-            By{" "}
-            <span className="font-medium text-gray-900">{review.author.name}</span>
+            By <span className="font-medium text-gray-900">{review.author.name}</span>
           </span>
           <span>{review.date}</span>
           {isUnscoredRoundup && (
@@ -156,8 +157,18 @@ function ReviewPage() {
             className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:underline"
           >
             Read the original article
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+              />
             </svg>
           </a>
         </div>
@@ -188,7 +199,7 @@ function ReviewPage() {
           {sortedRatings.map((rating, index) => {
             const company = getCompanyBySlug(rating.companySlug);
             const hasScore = rating.score != null && rating.maxScore != null;
-            const pct = hasScore ? ((rating.score as number) / (rating.maxScore as number)) * 100 : 0;
+            const pct = hasScore ? ((rating.score ?? 0) / (rating.maxScore ?? 1)) * 100 : 0;
 
             return (
               <article
@@ -241,15 +252,13 @@ function ReviewPage() {
                 {/* Summary */}
                 <p className="mt-3 text-sm leading-relaxed text-gray-700">{rating.summary}</p>
 
-                {(rating.pros.length > 0 || rating.cons.length > 0 || rating.noteworthy.length > 0) && (
+                {(rating.pros.length > 0 ||
+                  rating.cons.length > 0 ||
+                  rating.noteworthy.length > 0) && (
                   <div className="mt-4 space-y-3 border-t border-gray-100 pt-4">
                     <HighlightList title="Pros" items={rating.pros} tone="green" />
                     <HighlightList title="Cons" items={rating.cons} tone="red" />
-                    <HighlightList
-                      title="Noteworthy"
-                      items={rating.noteworthy}
-                      tone="blue"
-                    />
+                    <HighlightList title="Noteworthy" items={rating.noteworthy} tone="blue" />
                   </div>
                 )}
 

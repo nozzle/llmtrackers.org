@@ -10,12 +10,7 @@ export default defineConfig(() => ({
     port: 3000,
   },
   optimizeDeps: {
-    exclude: [
-      "playwright",
-      "playwright-core",
-      "@cloudflare/playwright",
-      "chromium-bidi",
-    ],
+    exclude: ["playwright", "playwright-core", "@cloudflare/playwright", "chromium-bidi"],
   },
   plugins: [
     tsConfigPaths(),

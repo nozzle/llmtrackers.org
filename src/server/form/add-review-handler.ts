@@ -43,9 +43,9 @@ export interface NewReviewData {
   detailedSummary: string;
   author: {
     name: string;
-    socialProfiles: Array<{ label: string; url: string }>;
+    socialProfiles: { label: string; url: string }[];
   };
-  companyRatings: Array<{
+  companyRatings: {
     companySlug: string;
     score?: number | null;
     maxScore?: number | null;
@@ -54,7 +54,7 @@ export interface NewReviewData {
     pros?: string[];
     cons?: string[];
     noteworthy?: string[];
-  }>;
+  }[];
 }
 
 interface GitHubEnv {
@@ -165,19 +165,21 @@ function validateNewReviewData(
     if (!Array.isArray(author.socialProfiles)) {
       return { ok: false, error: "review.author.socialProfiles must be an array" };
     }
-    for (let i = 0; i < author.socialProfiles.length; i++) {
-      const sp = author.socialProfiles[i];
+    const socialProfiles = author.socialProfiles as unknown[];
+    for (let i = 0; i < socialProfiles.length; i++) {
+      const sp = socialProfiles[i];
       if (!sp || typeof sp !== "object") {
         return { ok: false, error: `review.author.socialProfiles[${i}] must be an object` };
       }
-      if (typeof sp.label !== "string" || sp.label.trim().length === 0) {
+      const spObj = sp as Record<string, unknown>;
+      if (typeof spObj.label !== "string" || spObj.label.trim().length === 0) {
         return { ok: false, error: `review.author.socialProfiles[${i}].label is required` };
       }
-      if (typeof sp.url !== "string" || sp.url.trim().length === 0) {
+      if (typeof spObj.url !== "string" || spObj.url.trim().length === 0) {
         return { ok: false, error: `review.author.socialProfiles[${i}].url is required` };
       }
       try {
-        new URL(sp.url);
+        new URL(spObj.url);
       } catch {
         return {
           ok: false,
@@ -193,7 +195,7 @@ function validateNewReviewData(
   }
   const companyRatings: NewReviewData["companyRatings"] = [];
   for (let i = 0; i < raw.companyRatings.length; i++) {
-    const cr = raw.companyRatings[i];
+    const cr = (raw.companyRatings as unknown[])[i];
     if (!cr || typeof cr !== "object") {
       return { ok: false, error: `review.companyRatings[${i}] must be an object` };
     }
@@ -222,9 +224,7 @@ function validateNewReviewData(
       detailedSummary: raw.detailedSummary.trim(),
       author: {
         name: author.name.trim(),
-        socialProfiles: (
-          (author.socialProfiles as Array<{ label: string; url: string }>) ?? []
-        ).map((sp) => ({
+        socialProfiles: (author.socialProfiles as { label: string; url: string }[]).map((sp) => ({
           label: sp.label.trim(),
           url: sp.url.trim(),
         })),
@@ -246,7 +246,10 @@ function validateCompanyRating(
   const hasScore = raw.score !== undefined && raw.score !== null;
   const hasMaxScore = raw.maxScore !== undefined && raw.maxScore !== null;
   if (hasScore !== hasMaxScore) {
-    return { ok: false, error: `${prefix}.score and ${prefix}.maxScore must both be provided or both be null` };
+    return {
+      ok: false,
+      error: `${prefix}.score and ${prefix}.maxScore must both be provided or both be null`,
+    };
   }
   if (hasScore && (typeof raw.score !== "number" || raw.score < 0)) {
     return { ok: false, error: `${prefix}.score must be a non-negative number` };
@@ -254,7 +257,7 @@ function validateCompanyRating(
   if (hasMaxScore && (typeof raw.maxScore !== "number" || raw.maxScore <= 0)) {
     return { ok: false, error: `${prefix}.maxScore must be a positive number` };
   }
-  if (hasScore && hasMaxScore && (raw.score as number) > (raw.maxScore as number)) {
+  if (hasScore && hasMaxScore && Number(raw.score) > Number(raw.maxScore)) {
     return { ok: false, error: `${prefix}.score cannot exceed maxScore` };
   }
   if (typeof raw.summary !== "string" || raw.summary.trim().length === 0) {
@@ -281,12 +284,12 @@ function validateCompanyRating(
     ok: true,
     value: {
       companySlug: raw.companySlug.trim(),
-      score: hasScore ? (raw.score as number) : null,
-      maxScore: hasMaxScore ? (raw.maxScore as number) : null,
+      score: hasScore ? Number(raw.score) : null,
+      maxScore: hasMaxScore ? Number(raw.maxScore) : null,
       summary: raw.summary.trim(),
       directLink:
         raw.directLink !== undefined && raw.directLink !== null
-          ? (raw.directLink as string).trim() || null
+          ? raw.directLink.trim() || null
           : null,
       pros: prosResult.value,
       cons: consResult.value,
@@ -313,7 +316,7 @@ function validateHighlightList(
 
   const items: string[] = [];
   for (let i = 0; i < raw.length; i++) {
-    const item = raw[i];
+    const item: unknown = raw[i];
     if (typeof item !== "string" || item.trim().length === 0) {
       return { ok: false, error: `${fieldPath}[${i}] must be a non-empty string` };
     }
@@ -396,7 +399,12 @@ export async function handleAddReview(
 
   const summaryTable = buildReviewSummaryTable(reviewObj);
   const prTitle = `[Suggestion] Add new review: ${newData.name}`;
-  const prBody = buildAddReviewPrBody(newData.name, summaryTable, reviewObj.companyRatings, contributor);
+  const prBody = buildAddReviewPrBody(
+    newData.name,
+    summaryTable,
+    reviewObj.companyRatings,
+    contributor,
+  );
 
   const pr = await createPullRequest(
     token,
@@ -444,7 +452,12 @@ function buildReviewSummaryTable(review: ReviewYamlValue): string {
 function buildRatingTable(rating: ReviewYamlValue["companyRatings"][number]): string {
   const rows: [string, string][] = [
     ["Company Slug", rating.companySlug],
-    ["Score", rating.score != null && rating.maxScore != null ? `${rating.score} / ${rating.maxScore}` : "Not scored"],
+    [
+      "Score",
+      rating.score != null && rating.maxScore != null
+        ? `${rating.score} / ${rating.maxScore}`
+        : "Not scored",
+    ],
     ["Summary", rating.summary],
   ];
   if (rating.directLink) {

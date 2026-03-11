@@ -14,9 +14,9 @@ interface EditReviewModalProps {
     detailedSummary: string;
     author: {
       name: string;
-      socialProfiles: Array<{ label: string; url: string }>;
+      socialProfiles: { label: string; url: string }[];
     };
-    companyRatings: Array<{
+    companyRatings: {
       companySlug: string;
       score?: number | null;
       maxScore?: number | null;
@@ -25,9 +25,9 @@ interface EditReviewModalProps {
       pros: string[];
       cons: string[];
       noteworthy: string[];
-    }>;
+    }[];
   };
-  companies: Array<{ slug: string; name: string }>;
+  companies: { slug: string; name: string }[];
   onClose: () => void;
 }
 
@@ -39,9 +39,9 @@ interface ReviewChanges {
   detailedSummary?: string;
   author?: {
     name?: string;
-    socialProfiles?: Array<{ label: string; url: string }>;
+    socialProfiles?: { label: string; url: string }[];
   };
-  companyRatings?: Array<{
+  companyRatings?: {
     companySlug: string;
     score?: number | null;
     maxScore?: number | null;
@@ -50,7 +50,7 @@ interface ReviewChanges {
     pros: string[];
     cons: string[];
     noteworthy: string[];
-  }>;
+  }[];
 }
 
 interface PrMutationSuccess {
@@ -125,7 +125,7 @@ function TurnstileWidget({
 // Helpers
 // ---------------------------------------------------------------------------
 
-function formatDisplayValue(value: unknown): string {
+function _formatDisplayValue(value: unknown): string {
   if (value === null || value === undefined || value === "") return "—";
   return typeof value === "string" ? value : JSON.stringify(value);
 }
@@ -409,13 +409,16 @@ function RatingFormSection({
   rating: CompanyRatingFormState;
   index: number;
   canRemove: boolean;
-  companies: Array<{ slug: string; name: string }>;
+  companies: { slug: string; name: string }[];
   onUpdate: (updated: CompanyRatingFormState) => void;
   onRemove: () => void;
 }>) {
   const [expanded, setExpanded] = useState(true);
 
-  function update<K extends keyof CompanyRatingFormState>(key: K, value: CompanyRatingFormState[K]) {
+  function update<K extends keyof CompanyRatingFormState>(
+    key: K,
+    value: CompanyRatingFormState[K],
+  ) {
     onUpdate({ ...rating, [key]: value });
   }
 
@@ -430,7 +433,7 @@ function RatingFormSection({
   }
 
   const companyLabel =
-    companies.find((c) => c.slug === rating.companySlug)?.name || rating.companySlug;
+    companies.find((c) => c.slug === rating.companySlug)?.name ?? rating.companySlug;
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white">
@@ -577,11 +580,7 @@ function RatingFormSection({
 // EditReviewModal
 // ---------------------------------------------------------------------------
 
-export function EditReviewModal({
-  review,
-  companies,
-  onClose,
-}: Readonly<EditReviewModalProps>) {
+export function EditReviewModal({ review, companies, onClose }: Readonly<EditReviewModalProps>) {
   const [form, setForm] = useState<FormState>(() => reviewToFormState(review));
   const [contributor, setContributor] = useState({
     name: "",
@@ -595,10 +594,7 @@ export function EditReviewModal({
 
   const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "";
 
-  const { changes, diff } = useMemo(
-    () => computeChangesAndDiff(review, form),
-    [review, form],
-  );
+  const { changes, diff } = useMemo(() => computeChangesAndDiff(review, form), [review, form]);
 
   const hasChanges = diff.length > 0;
 

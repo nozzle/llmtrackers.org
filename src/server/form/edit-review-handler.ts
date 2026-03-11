@@ -45,9 +45,9 @@ export interface ReviewChanges {
   detailedSummary?: string;
   author?: {
     name?: string;
-    socialProfiles?: Array<{ label: string; url: string }>;
+    socialProfiles?: { label: string; url: string }[];
   };
-  companyRatings?: Array<{
+  companyRatings?: {
     companySlug: string;
     score?: number | null;
     maxScore?: number | null;
@@ -56,7 +56,7 @@ export interface ReviewChanges {
     pros: string[];
     cons: string[];
     noteworthy: string[];
-  }>;
+  }[];
 }
 
 interface GitHubEnv {
@@ -193,19 +193,21 @@ function validateReviewChanges(
       if (!Array.isArray(author.socialProfiles)) {
         return { ok: false, error: "changes.author.socialProfiles must be an array" };
       }
-      for (let i = 0; i < author.socialProfiles.length; i++) {
-        const sp = author.socialProfiles[i];
+      const socialProfiles = author.socialProfiles as unknown[];
+      for (let i = 0; i < socialProfiles.length; i++) {
+        const sp = socialProfiles[i];
         if (!sp || typeof sp !== "object") {
           return { ok: false, error: `changes.author.socialProfiles[${i}] must be an object` };
         }
-        if (typeof sp.label !== "string" || sp.label.trim().length === 0) {
+        const spObj = sp as Record<string, unknown>;
+        if (typeof spObj.label !== "string" || spObj.label.trim().length === 0) {
           return { ok: false, error: `changes.author.socialProfiles[${i}].label is required` };
         }
-        if (typeof sp.url !== "string" || sp.url.trim().length === 0) {
+        if (typeof spObj.url !== "string" || spObj.url.trim().length === 0) {
           return { ok: false, error: `changes.author.socialProfiles[${i}].url is required` };
         }
         try {
-          new URL(sp.url);
+          new URL(spObj.url);
         } catch {
           return {
             ok: false,
@@ -232,7 +234,7 @@ function validateReviewChanges(
     }
     const ratings: ReviewChanges["companyRatings"] = [];
     for (let i = 0; i < raw.companyRatings.length; i++) {
-      const cr = raw.companyRatings[i];
+      const cr = (raw.companyRatings as unknown[])[i];
       if (!cr || typeof cr !== "object") {
         return { ok: false, error: `changes.companyRatings[${i}] must be an object` };
       }
@@ -260,7 +262,7 @@ function validateReviewChanges(
           error: `changes.companyRatings[${i}].maxScore must be a positive number`,
         };
       }
-      if (hasScore && hasMaxScore && (r.score as number) > (r.maxScore as number)) {
+      if (hasScore && hasMaxScore && Number(r.score) > Number(r.maxScore)) {
         return {
           ok: false,
           error: `changes.companyRatings[${i}].score cannot exceed maxScore`,
@@ -290,13 +292,11 @@ function validateReviewChanges(
 
       ratings.push({
         companySlug: r.companySlug.trim(),
-        score: hasScore ? (r.score as number) : null,
-        maxScore: hasMaxScore ? (r.maxScore as number) : null,
+        score: hasScore ? Number(r.score) : null,
+        maxScore: hasMaxScore ? Number(r.maxScore) : null,
         summary: r.summary.trim(),
         directLink:
-          r.directLink !== undefined && r.directLink !== null
-            ? (r.directLink as string).trim() || null
-            : null,
+          r.directLink !== undefined && r.directLink !== null ? r.directLink.trim() || null : null,
         pros: prosResult.value,
         cons: consResult.value,
         noteworthy: noteworthyResult.value,
@@ -336,7 +336,7 @@ function validateHighlightList(
 
   const items: string[] = [];
   for (let i = 0; i < raw.length; i++) {
-    const item = raw[i];
+    const item: unknown = raw[i];
     if (typeof item !== "string" || item.trim().length === 0) {
       return { ok: false, error: `${fieldPath}[${i}] must be a non-empty string` };
     }
@@ -389,7 +389,8 @@ export async function handleEditReview(
   if (changes.url !== undefined) updatedReview.url = changes.url;
   if (changes.date !== undefined) updatedReview.date = changes.date;
   if (changes.summary !== undefined) updatedReview.summary = changes.summary;
-  if (changes.detailedSummary !== undefined) updatedReview.detailedSummary = changes.detailedSummary;
+  if (changes.detailedSummary !== undefined)
+    updatedReview.detailedSummary = changes.detailedSummary;
   if (changes.author !== undefined) {
     updatedReview.author = {
       ...review.author,
@@ -489,7 +490,8 @@ function buildReviewDiffTable(
     rows.push(["Author Name", formatValue(original.author.name), formatValue(updated.author.name)]);
   }
   if (changes.author?.socialProfiles !== undefined) {
-    const origProfiles = original.author.socialProfiles.map((sp) => sp.label).join(", ") || "*none*";
+    const origProfiles =
+      original.author.socialProfiles.map((sp) => sp.label).join(", ") || "*none*";
     const newProfiles = updated.author.socialProfiles.map((sp) => sp.label).join(", ") || "*none*";
     rows.push(["Social Profiles", origProfiles, newProfiles]);
   }

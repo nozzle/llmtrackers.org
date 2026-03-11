@@ -7,9 +7,13 @@ import { readdirSync, statSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const DEFAULT_SITE_URL = "https://llmtrackers.org";
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/prefer-nullish-coalescing -- env var types are auto-generated and don't reflect runtime nullability */
 const CANONICAL_SITE_URL = normalizeSiteUrl(
-  process.env.VITE_SITE_URL ?? process.env.SITE_URL ?? DEFAULT_SITE_URL,
+  (process.env.VITE_SITE_URL as string | undefined) ||
+    (process.env.SITE_URL as string | undefined) ||
+    DEFAULT_SITE_URL,
 );
+/* eslint-enable @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/prefer-nullish-coalescing */
 const DIST_DIR = join(import.meta.dirname, "../dist/client");
 
 function findHtmlFiles(dir: string, files: string[] = []): string[] {

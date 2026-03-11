@@ -105,9 +105,7 @@ export function RankedDesign(props: DesignProps) {
               🏆
             </div>
             <div>
-              <h1 className="text-2xl font-black uppercase tracking-wider">
-                Leaderboard
-              </h1>
+              <h1 className="text-2xl font-black uppercase tracking-wider">Leaderboard</h1>
               <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
                 Season 2025 &middot; {plans.length} contenders &middot; {companies.length} orgs
               </p>
@@ -180,14 +178,23 @@ export function RankedDesign(props: DesignProps) {
                 type="button"
                 onClick={() => {
                   updateSearch({
-                    q: undefined, schedule: undefined, llms: undefined,
-                    priceMin: undefined, priceMax: undefined,
-                    costMin: undefined, costMax: undefined,
-                    responsesMin: undefined, responsesMax: undefined,
-                    g2Min: undefined, g2Max: undefined,
-                    trustpilotMin: undefined, trustpilotMax: undefined,
-                    trustradiusMin: undefined, trustradiusMax: undefined,
-                    capterraMin: undefined, capterraMax: undefined,
+                    q: undefined,
+                    schedule: undefined,
+                    llms: undefined,
+                    priceMin: undefined,
+                    priceMax: undefined,
+                    costMin: undefined,
+                    costMax: undefined,
+                    responsesMin: undefined,
+                    responsesMax: undefined,
+                    g2Min: undefined,
+                    g2Max: undefined,
+                    trustpilotMin: undefined,
+                    trustpilotMax: undefined,
+                    trustradiusMin: undefined,
+                    trustradiusMax: undefined,
+                    capterraMin: undefined,
+                    capterraMax: undefined,
                     locationType: undefined,
                   });
                 }}
@@ -214,7 +221,13 @@ export function RankedDesign(props: DesignProps) {
                   return (
                     <th
                       key={col.id}
-                      onClick={canSort ? () => { onToggleSort(col.id); } : undefined}
+                      onClick={
+                        canSort
+                          ? () => {
+                              onToggleSort(col.id);
+                            }
+                          : undefined
+                      }
                       className={`py-3 px-3 text-[10px] font-bold uppercase tracking-widest ${col.align} ${
                         isActive ? "text-amber-400" : "text-neutral-600"
                       } ${canSort ? "cursor-pointer select-none transition-colors hover:text-neutral-300" : ""}`}
@@ -241,7 +254,9 @@ export function RankedDesign(props: DesignProps) {
                 return (
                   <tr
                     key={key}
-                    onClick={() => { onTogglePlan(key); }}
+                    onClick={() => {
+                      onTogglePlan(key);
+                    }}
                     className={`cursor-pointer border-b border-neutral-800/30 transition-colors ${
                       isSelected
                         ? "bg-amber-500/10"
@@ -264,7 +279,13 @@ export function RankedDesign(props: DesignProps) {
                         }`}
                       >
                         {isSelected && (
-                          <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <svg
+                            className="h-3 w-3"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={3}
+                          >
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
                         )}
@@ -280,7 +301,9 @@ export function RankedDesign(props: DesignProps) {
                           className={`text-sm font-semibold ${
                             rank <= 3 ? "text-white" : "text-neutral-200"
                           } hover:text-amber-400`}
-                          onClick={(e) => { e.stopPropagation(); }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
                         >
                           {plan.companyName}
                         </Link>
@@ -294,11 +317,15 @@ export function RankedDesign(props: DesignProps) {
                     </td>
                     {/* Cost Efficiency */}
                     <td className="px-3 py-2.5 text-right text-xs tabular-nums text-neutral-400">
-                      {plan.pricePer1000Responses != null ? `$${plan.pricePer1000Responses.toFixed(2)}` : "—"}
+                      {plan.pricePer1000Responses != null
+                        ? `$${plan.pricePer1000Responses.toFixed(2)}`
+                        : "—"}
                     </td>
                     {/* Responses */}
                     <td className="px-3 py-2.5 text-right text-xs tabular-nums text-neutral-400">
-                      {plan.aiResponsesMonthly != null ? plan.aiResponsesMonthly.toLocaleString() : "—"}
+                      {plan.aiResponsesMonthly != null
+                        ? plan.aiResponsesMonthly.toLocaleString()
+                        : "—"}
                     </td>
                     {/* Review scores with progress bars */}
                     <td className="px-3 py-2.5">
@@ -314,7 +341,9 @@ export function RankedDesign(props: DesignProps) {
                       <ScoreBar value={cap} max={5} color="bg-orange-500" />
                     </td>
                     {/* Schedule */}
-                    <td className="px-3 py-2.5 text-center text-xs text-neutral-500">{plan.schedule}</td>
+                    <td className="px-3 py-2.5 text-center text-xs text-neutral-500">
+                      {plan.schedule}
+                    </td>
                     {/* LLMs */}
                     <td className="px-3 py-2.5">
                       <div className="flex flex-wrap gap-0.5">
@@ -346,7 +375,9 @@ export function RankedDesign(props: DesignProps) {
             {plans.length} of {allPlans.length} ranked
           </span>
           <span>
-            {selectedPlans.size > 0 ? `${selectedPlans.size} selected for comparison` : "Click rows to select for head-to-head"}
+            {selectedPlans.size > 0
+              ? `${selectedPlans.size} selected for comparison`
+              : "Click rows to select for head-to-head"}
           </span>
         </div>
       </div>

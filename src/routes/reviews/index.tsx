@@ -73,7 +73,7 @@ function ReviewsIndexPage() {
                 const aHasScore = a.score != null && a.maxScore != null;
                 const bHasScore = b.score != null && b.maxScore != null;
 
-                if (aHasScore && bHasScore) return (b.score as number) - (a.score as number);
+                if (aHasScore && bHasScore) return (b.score ?? 0) - (a.score ?? 0);
                 if (aHasScore) return -1;
                 if (bHasScore) return 1;
                 return 0;

@@ -35,11 +35,7 @@ const SORTABLE_COLS: readonly { id: string; label: string; align: string; sortab
 
 function sortIndicator(sortBy: string, sortDir: string, col: string): React.ReactNode {
   if (sortBy !== col) return null;
-  return (
-    <span className="ml-1 text-black">
-      {sortDir === "asc" ? "↑" : "↓"}
-    </span>
-  );
+  return <span className="ml-1 text-black">{sortDir === "asc" ? "↑" : "↓"}</span>;
 }
 
 export function MinimalDesign(props: DesignProps) {
@@ -67,9 +63,7 @@ export function MinimalDesign(props: DesignProps) {
       <div className="mx-auto max-w-[1440px]">
         {/* Header */}
         <header className="mb-12">
-          <h1 className="text-4xl font-light tracking-tight text-black">
-            LLM Trackers
-          </h1>
+          <h1 className="text-4xl font-light tracking-tight text-black">LLM Trackers</h1>
           <p className="mt-2 text-sm font-light text-neutral-400">
             {allPlans.length} plans across {companies.length} companies
           </p>
@@ -124,14 +118,23 @@ export function MinimalDesign(props: DesignProps) {
                 type="button"
                 onClick={() => {
                   updateSearch({
-                    q: undefined, schedule: undefined, llms: undefined,
-                    priceMin: undefined, priceMax: undefined,
-                    costMin: undefined, costMax: undefined,
-                    responsesMin: undefined, responsesMax: undefined,
-                    g2Min: undefined, g2Max: undefined,
-                    trustpilotMin: undefined, trustpilotMax: undefined,
-                    trustradiusMin: undefined, trustradiusMax: undefined,
-                    capterraMin: undefined, capterraMax: undefined,
+                    q: undefined,
+                    schedule: undefined,
+                    llms: undefined,
+                    priceMin: undefined,
+                    priceMax: undefined,
+                    costMin: undefined,
+                    costMax: undefined,
+                    responsesMin: undefined,
+                    responsesMax: undefined,
+                    g2Min: undefined,
+                    g2Max: undefined,
+                    trustpilotMin: undefined,
+                    trustpilotMax: undefined,
+                    trustradiusMin: undefined,
+                    trustradiusMax: undefined,
+                    capterraMin: undefined,
+                    capterraMax: undefined,
                     locationType: undefined,
                   });
                 }}
@@ -170,9 +173,17 @@ export function MinimalDesign(props: DesignProps) {
                   return (
                     <th
                       key={col.id}
-                      onClick={canSort ? () => { onToggleSort(col.id); } : undefined}
+                      onClick={
+                        canSort
+                          ? () => {
+                              onToggleSort(col.id);
+                            }
+                          : undefined
+                      }
                       className={`py-3 px-3 text-[11px] font-normal uppercase tracking-widest text-neutral-400 ${col.align} ${
-                        canSort ? "cursor-pointer select-none transition-colors hover:text-black" : ""
+                        canSort
+                          ? "cursor-pointer select-none transition-colors hover:text-black"
+                          : ""
                       }`}
                     >
                       {col.label}
@@ -194,7 +205,9 @@ export function MinimalDesign(props: DesignProps) {
                 return (
                   <tr
                     key={key}
-                    onClick={() => { onTogglePlan(key); }}
+                    onClick={() => {
+                      onTogglePlan(key);
+                    }}
                     className={`cursor-pointer border-b border-neutral-50 transition-colors ${
                       isSelected ? "bg-neutral-50" : "hover:bg-neutral-50/50"
                     }`}
@@ -203,13 +216,17 @@ export function MinimalDesign(props: DesignProps) {
                     <td className="py-3 pl-1">
                       <div
                         className={`flex h-4 w-4 items-center justify-center border transition-colors ${
-                          isSelected
-                            ? "border-black bg-black text-white"
-                            : "border-neutral-200"
+                          isSelected ? "border-black bg-black text-white" : "border-neutral-200"
                         }`}
                       >
                         {isSelected && (
-                          <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <svg
+                            className="h-2.5 w-2.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={3}
+                          >
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
                         )}
@@ -223,7 +240,9 @@ export function MinimalDesign(props: DesignProps) {
                           to="/companies/$slug"
                           params={{ slug: plan.companySlug }}
                           className="text-sm text-black underline-offset-2 hover:underline"
-                          onClick={(e) => { e.stopPropagation(); }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
                         >
                           {plan.companyName}
                         </Link>
@@ -232,14 +251,20 @@ export function MinimalDesign(props: DesignProps) {
                     {/* Plan */}
                     <td className="px-3 py-3 text-sm text-neutral-500">{plan.name}</td>
                     {/* Price */}
-                    <td className="px-3 py-3 text-right text-sm tabular-nums">{formatPrice(plan)}</td>
+                    <td className="px-3 py-3 text-right text-sm tabular-nums">
+                      {formatPrice(plan)}
+                    </td>
                     {/* Cost */}
                     <td className="px-3 py-3 text-right text-sm tabular-nums text-neutral-500">
-                      {plan.pricePer1000Responses != null ? `$${plan.pricePer1000Responses.toFixed(2)}` : "—"}
+                      {plan.pricePer1000Responses != null
+                        ? `$${plan.pricePer1000Responses.toFixed(2)}`
+                        : "—"}
                     </td>
                     {/* Responses */}
                     <td className="px-3 py-3 text-right text-sm tabular-nums text-neutral-500">
-                      {plan.aiResponsesMonthly != null ? plan.aiResponsesMonthly.toLocaleString() : "—"}
+                      {plan.aiResponsesMonthly != null
+                        ? plan.aiResponsesMonthly.toLocaleString()
+                        : "—"}
                     </td>
                     {/* Review scores */}
                     <td className="px-3 py-3 text-center text-sm tabular-nums text-neutral-500">
@@ -255,7 +280,9 @@ export function MinimalDesign(props: DesignProps) {
                       {cap != null ? cap.toFixed(1) : "—"}
                     </td>
                     {/* Schedule */}
-                    <td className="px-3 py-3 text-center text-sm text-neutral-500">{plan.schedule}</td>
+                    <td className="px-3 py-3 text-center text-sm text-neutral-500">
+                      {plan.schedule}
+                    </td>
                     {/* LLMs */}
                     <td className="px-3 py-3">
                       <div className="flex flex-wrap gap-1">
@@ -276,9 +303,7 @@ export function MinimalDesign(props: DesignProps) {
         </div>
 
         {plans.length === 0 && (
-          <div className="py-20 text-center text-sm text-neutral-300">
-            No results found.
-          </div>
+          <div className="py-20 text-center text-sm text-neutral-300">No results found.</div>
         )}
 
         {/* Footer */}
