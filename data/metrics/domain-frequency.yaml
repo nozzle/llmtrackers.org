@@ -1,0 +1,5 @@
+id: domain-frequency
+description: Shows how often specific domains and URLs are cited as primary sources.
+supportedBy:
+  - companySlug: rankscale
+    planSlug: pro

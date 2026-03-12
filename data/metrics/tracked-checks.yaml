@@ -1,0 +1,5 @@
+id: tracked-checks
+description: Usage unit for custom prompt tracking, where one check equals one prompt run on one model in one location.
+supportedBy:
+  - companySlug: ahrefs-brand-radar
+    planSlug: brand-radar

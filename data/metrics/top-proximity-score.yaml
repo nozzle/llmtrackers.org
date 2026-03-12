@@ -1,0 +1,5 @@
+id: top-proximity-score
+description: Earlier mentions receive higher scores because the first brand appearance happens closer to the top of the response.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom

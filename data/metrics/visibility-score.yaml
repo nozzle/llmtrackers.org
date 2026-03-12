@@ -1,0 +1,17 @@
+id: visibility-score
+description: Composite score summarizing how visible a brand is across tracked AI surfaces.
+supportedBy:
+  - companySlug: otterly-ai
+    planSlug: starter
+    vendorName: Brand Visibility Index
+    caveats: Vendor combines coverage and position into a composite visibility score.
+  - companySlug: profound
+    planSlug: enterprise
+  - companySlug: profound
+    planSlug: growth
+  - companySlug: scalenut
+    planSlug: ai-visibility
+    vendorName: AI Visibility Score
+    caveats: Vendor uses AI visibility score terminology for a composite visibility metric.
+  - companySlug: xofu
+    planSlug: pro

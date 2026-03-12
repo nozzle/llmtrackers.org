@@ -1,0 +1,5 @@
+id: knowledge-sources
+description: Topic-level citations that reflect how AI systems understand your expertise.
+supportedBy:
+  - companySlug: waikay
+    planSlug: smb

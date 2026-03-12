@@ -15,8 +15,8 @@ export {
   CompanyVideoProviderSchema,
   CompanyVideoSourceTypeSchema,
   CompanyVideoSchema,
-  MetricDefinitionStatusSchema,
-  MetricDefinitionSchema,
+  MetricSupportSchema,
+  MetricSchema,
   TweetSchema,
   ReviewAuthorSocialProfileSchema,
   ReviewAuthorSchema,
@@ -44,8 +44,8 @@ export type {
   CompanyVideoProvider,
   CompanyVideoSourceType,
   CompanyVideo,
-  MetricDefinitionStatus,
-  MetricDefinition,
+  MetricSupport,
+  Metric,
   Tweet,
   ReviewAuthorSocialProfile,
   ReviewAuthor,
@@ -65,7 +65,14 @@ export {
   mergeCompanyWithReviewSites,
   prepareUpdatedCompanyYaml,
   prepareUpdatedCompanyReviewSitesYaml,
+  parseMetricYaml,
+  stringifyMetricYaml,
   parseReviewYaml,
   stringifyReviewYaml,
 } from "./yaml.js";
-export type { ExtractedPlanLike, PreparedCompanyYaml, ReviewYamlValue } from "./yaml.js";
+export type {
+  ExtractedPlanLike,
+  PreparedCompanyYaml,
+  MetricYamlValue,
+  ReviewYamlValue,
+} from "./yaml.js";

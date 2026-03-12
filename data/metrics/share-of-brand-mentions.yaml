@@ -1,0 +1,6 @@
+id: share-of-brand-mentions
+description: Shows how often the brand is mentioned relative to competitors inside the selected prompt set.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom
+    vendorName: Share of Brand Mentions

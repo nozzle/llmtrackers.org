@@ -1,0 +1,5 @@
+id: impact-scoring
+description: Prioritizes questions and experiments based on likely business impact.
+supportedBy:
+  - companySlug: xfunnel
+    planSlug: pro

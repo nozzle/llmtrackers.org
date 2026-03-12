@@ -1,0 +1,5 @@
+id: domain-coverage
+description: Percentage of tracked prompts that cite the domain.
+supportedBy:
+  - companySlug: otterly-ai
+    planSlug: starter

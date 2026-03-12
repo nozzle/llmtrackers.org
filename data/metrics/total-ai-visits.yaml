@@ -1,0 +1,5 @@
+id: total-ai-visits
+description: Tracks the volume of AI crawler and AI-originated traffic touching your site.
+supportedBy:
+  - companySlug: writesonic-geo
+    planSlug: starter

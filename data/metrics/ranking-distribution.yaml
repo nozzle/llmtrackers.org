@@ -1,0 +1,5 @@
+id: ranking-distribution
+description: Helps show how the overall quality of rankings changes over time, not just the average.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom

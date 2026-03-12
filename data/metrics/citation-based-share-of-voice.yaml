@@ -1,0 +1,6 @@
+id: citation-based-share-of-voice
+description: Share of voice based on how often your brand is cited as an authority versus competitors.
+supportedBy:
+  - companySlug: conductor
+    planSlug: enterprise
+    vendorName: Citation-Based Share of Voice

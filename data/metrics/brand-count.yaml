@@ -1,0 +1,5 @@
+id: brand-count
+description: Brand counts can differ from simple mention totals because repeated mentions of the same brand are deduplicated.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom

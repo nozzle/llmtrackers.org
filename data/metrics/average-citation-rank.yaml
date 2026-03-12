@@ -1,0 +1,5 @@
+id: average-citation-rank
+description: This is source ranking, not brand ranking, and focuses strictly on citation order.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom

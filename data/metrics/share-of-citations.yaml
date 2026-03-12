@@ -1,0 +1,6 @@
+id: share-of-citations
+description: Designed for competitor comparison over time rather than raw citation totals alone.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom
+    vendorName: Share of Citations

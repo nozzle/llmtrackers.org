@@ -1,0 +1,5 @@
+id: brand-coverage
+description: Percentage of tracked prompts that mention the brand.
+supportedBy:
+  - companySlug: otterly-ai
+    planSlug: starter

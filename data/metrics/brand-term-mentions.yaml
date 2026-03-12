@@ -1,0 +1,5 @@
+id: brand-term-mentions
+description: Separate from Presence because a single response can mention more than one tracked brand term.
+supportedBy:
+  - companySlug: getstat
+    planSlug: pro

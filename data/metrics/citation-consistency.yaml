@@ -1,0 +1,7 @@
+id: citation-consistency
+description: Number of responses citing a source divided by total responses in scope.
+supportedBy:
+  - companySlug: scrunch-ai
+    planSlug: enterprise
+  - companySlug: scrunch-ai
+    planSlug: growth

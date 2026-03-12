@@ -16,8 +16,8 @@ import {
   type CompanyVideoProviderSchema,
   type CompanyVideoSourceTypeSchema,
   type CompanyVideoSchema,
-  type MetricDefinitionStatusSchema,
-  type MetricDefinitionSchema,
+  type MetricSupportSchema,
+  type MetricSchema,
   type TweetSchema,
   type ReviewAuthorSocialProfileSchema,
   type ReviewAuthorSchema,
@@ -43,8 +43,8 @@ export type CompanyScreenshot = z.infer<typeof CompanyScreenshotSchema>;
 export type CompanyVideoProvider = z.infer<typeof CompanyVideoProviderSchema>;
 export type CompanyVideoSourceType = z.infer<typeof CompanyVideoSourceTypeSchema>;
 export type CompanyVideo = z.infer<typeof CompanyVideoSchema>;
-export type MetricDefinitionStatus = z.infer<typeof MetricDefinitionStatusSchema>;
-export type MetricDefinition = z.infer<typeof MetricDefinitionSchema>;
+export type MetricSupport = z.infer<typeof MetricSupportSchema>;
+export type Metric = z.infer<typeof MetricSchema>;
 export type Tweet = z.infer<typeof TweetSchema>;
 export type ReviewAuthorSocialProfile = z.infer<typeof ReviewAuthorSocialProfileSchema>;
 export type ReviewAuthor = z.infer<typeof ReviewAuthorSchema>;

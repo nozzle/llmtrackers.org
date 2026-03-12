@@ -2,8 +2,7 @@ slug: xfunnel
 name: XFunnel
 group: XFunnel
 website: https://www.xfunnel.ai/
-description: "Offers funnel visibility, segmentation, hallucination detection, and experimentation playbooks."
-
+description: Offers funnel visibility, segmentation, hallucination detection, and experimentation playbooks.
 plans:
   - name: Pro
     slug: pro
@@ -23,15 +22,14 @@ plans:
     integrations:
       - Full Stack
     llmSupport:
-      aiMode: true
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: true
-      grok: true
-      llama: true
       claude: true
-
+      llama: true
+      grok: true
+      aiOverviews: true
+      aiMode: true
 reviewSites:
   trustpilot:
     url: https://www.trustpilot.com/review/xfunnel.ai
@@ -40,8 +38,7 @@ reviewSites:
     reviewCount: 0
     ratingDistribution: []
     reviews: []
-
 tweets: []
 pricingUrl: https://www.xfunnel.ai/pricing
 featuresUrl: https://www.xfunnel.ai/features
-lastChecked: "2025-07-29"
+lastChecked: 2025-07-29

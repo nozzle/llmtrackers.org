@@ -1,0 +1,5 @@
+id: reddit-citation-rate
+description: Percentage of AI responses that cite Reddit content for the tracked topic set.
+supportedBy:
+  - companySlug: airops
+    planSlug: solo-plan

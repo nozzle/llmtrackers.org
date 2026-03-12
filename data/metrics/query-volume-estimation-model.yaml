@@ -1,0 +1,5 @@
+id: query-volume-estimation-model
+description: AthenaHQ's proprietary estimate of how often tracked prompts are likely being asked across AI search.
+supportedBy:
+  - companySlug: athenahq
+    planSlug: growth

@@ -1,0 +1,6 @@
+id: share-of-model
+description: Your brand mentions as a share of all tracked competitor mentions for the prompt set.
+supportedBy:
+  - companySlug: waikay
+    planSlug: smb
+    vendorName: Share of Model

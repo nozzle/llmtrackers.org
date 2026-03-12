@@ -1,0 +1,5 @@
+id: relevance-scoring
+description: Scores topics and prompts by their relevance to your category and brand.
+supportedBy:
+  - companySlug: xfunnel
+    planSlug: pro

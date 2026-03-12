@@ -1,0 +1,5 @@
+id: source-count
+description: Engine-level counts do not necessarily sum to the aggregate because the same source can appear across multiple responses.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom

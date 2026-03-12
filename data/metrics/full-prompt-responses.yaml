@@ -1,0 +1,5 @@
+id: full-prompt-responses
+description: Gives teams the full generated output instead of only charted aggregates.
+supportedBy:
+  - companySlug: getstat
+    planSlug: pro

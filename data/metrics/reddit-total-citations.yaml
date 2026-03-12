@@ -1,0 +1,5 @@
+id: reddit-total-citations
+description: Total number of Reddit citations captured across tracked responses.
+supportedBy:
+  - companySlug: airops
+    planSlug: solo-plan

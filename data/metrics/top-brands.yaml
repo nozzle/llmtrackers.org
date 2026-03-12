@@ -1,0 +1,5 @@
+id: top-brands
+description: Clicking through exposes the top five ranked brands per engine for that prompt.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom

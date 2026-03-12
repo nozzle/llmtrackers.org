@@ -1,0 +1,5 @@
+id: prompt-gaps
+description: Identifies prompts and opportunities where your brand is missing from AI answers.
+supportedBy:
+  - companySlug: scalenut
+    planSlug: ai-visibility

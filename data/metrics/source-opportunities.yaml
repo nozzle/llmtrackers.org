@@ -1,0 +1,5 @@
+id: source-opportunities
+description: Frequently cited sources mentioning competitors but not your brand.
+supportedBy:
+  - companySlug: semrush
+    planSlug: semrush-one

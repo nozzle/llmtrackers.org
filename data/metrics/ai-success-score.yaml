@@ -1,0 +1,5 @@
+id: ai-success-score
+description: Query-prioritization score used to identify which prompts to optimize first.
+supportedBy:
+  - companySlug: ziptie-dev
+    planSlug: basic

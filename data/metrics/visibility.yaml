@@ -1,0 +1,29 @@
+id: visibility
+description: How often a brand appears across a tracked set of AI prompts, responses, or engines.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom
+  - companySlug: gumshoe-ai
+    planSlug: premium
+    vendorName: Brand Visibility
+    caveats: Vendor frames this as brand visibility across AI engines or topics.
+  - companySlug: peec-ai
+    planSlug: agency
+  - companySlug: peec-ai
+    planSlug: starter
+  - companySlug: rankscale
+    planSlug: pro
+    vendorName: Brand Visibility
+    caveats: Vendor frames this as brand visibility across AI engines or topics.
+  - companySlug: scalenut
+    planSlug: ai-visibility
+    vendorName: AI Visibility
+    caveats: Vendor uses AI visibility terminology rather than a generic visibility label.
+  - companySlug: semrush
+    planSlug: semrush-one
+    vendorName: AI Visibility
+    caveats: Vendor uses AI visibility terminology rather than a generic visibility label.
+  - companySlug: xfunnel
+    planSlug: pro
+    vendorName: Brand Visibility
+    caveats: Vendor frames this as brand visibility across AI engines or topics.

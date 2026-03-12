@@ -1,0 +1,5 @@
+id: top-sources
+description: The first cited source receives citation rank 1, and deeper views expose the top five cited sources per engine.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom

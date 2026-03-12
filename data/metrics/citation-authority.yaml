@@ -1,0 +1,7 @@
+id: citation-authority
+description: Identifies which websites most influence AI-generated answers about your brand.
+supportedBy:
+  - companySlug: profound
+    planSlug: enterprise
+  - companySlug: profound
+    planSlug: growth

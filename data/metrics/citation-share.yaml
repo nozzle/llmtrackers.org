@@ -1,0 +1,5 @@
+id: citation-share
+description: Share of all tracked citations attributed to a source, page, or domain.
+supportedBy:
+  - companySlug: airops
+    planSlug: solo-plan

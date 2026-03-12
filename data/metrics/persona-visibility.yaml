@@ -1,0 +1,5 @@
+id: persona-visibility
+description: Breaks down brand performance by tracked buyer persona.
+supportedBy:
+  - companySlug: gumshoe-ai
+    planSlug: premium

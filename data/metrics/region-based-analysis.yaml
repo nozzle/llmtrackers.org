@@ -1,0 +1,6 @@
+id: region-based-analysis
+description: Breaks down AI search behavior and visibility by geographic market.
+supportedBy:
+  - companySlug: athenahq
+    planSlug: growth
+    vendorName: Region-Based Analysis

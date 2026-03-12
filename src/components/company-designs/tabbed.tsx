@@ -20,6 +20,7 @@ interface TabDef {
 
 export function TabbedLayout({
   company,
+  companyMetrics,
   relatedReviews,
   onEditPlan,
   onAddPlan,
@@ -32,8 +33,8 @@ export function TabbedLayout({
 
   const tabs: TabDef[] = [
     { id: "plans", label: "Plans", count: company.plans.length },
-    ...(company.metricDefinitions.length > 0
-      ? [{ id: "metrics", label: "Metrics", count: company.metricDefinitions.length }]
+    ...(companyMetrics.length > 0
+      ? [{ id: "metrics", label: "Metrics", count: companyMetrics.length }]
       : []),
     ...(mediaCount > 0 ? [{ id: "media", label: "Media", count: mediaCount }] : []),
     ...(ratingsCount > 0 ? [{ id: "reviews", label: "Reviews", count: ratingsCount }] : []),
@@ -84,7 +85,7 @@ export function TabbedLayout({
       )}
 
       {activeTab === "metrics" && (
-        <MetricDefinitionsSection company={company} onOpenMedia={onOpenMedia} />
+        <MetricDefinitionsSection company={company} companyMetrics={companyMetrics} />
       )}
 
       {activeTab === "media" && (

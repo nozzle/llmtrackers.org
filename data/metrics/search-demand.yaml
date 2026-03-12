@@ -1,0 +1,5 @@
+id: search-demand
+description: Branded search demand trend showing whether people are actively searching for your brand.
+supportedBy:
+  - companySlug: ahrefs-brand-radar
+    planSlug: brand-radar

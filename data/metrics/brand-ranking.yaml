@@ -1,0 +1,5 @@
+id: brand-ranking
+description: Rank based on total brand mentions within the selected time period.
+supportedBy:
+  - companySlug: otterly-ai
+    planSlug: starter

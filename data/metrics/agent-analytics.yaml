@@ -1,0 +1,15 @@
+id: agent-analytics
+description: Measurement of AI bot, crawler, or agent activity related to a site or brand.
+supportedBy:
+  - companySlug: profound
+    planSlug: enterprise
+  - companySlug: profound
+    planSlug: growth
+  - companySlug: scrunch-ai
+    planSlug: enterprise
+    vendorName: Agent Traffic
+    caveats: Vendor emphasizes AI bot traffic rather than a broader analytics suite.
+  - companySlug: scrunch-ai
+    planSlug: growth
+    vendorName: Agent Traffic
+    caveats: Vendor emphasizes AI bot traffic rather than a broader analytics suite.

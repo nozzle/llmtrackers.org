@@ -1,0 +1,5 @@
+id: prominence-score
+description: Estimates how prominently your brand appears within AI outputs.
+supportedBy:
+  - companySlug: xfunnel
+    planSlug: pro

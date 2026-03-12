@@ -1,0 +1,17 @@
+id: citations
+description: Occurrences where a source, site, or domain is cited in tracked AI responses.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom
+  - companySlug: conductor
+    planSlug: enterprise
+    vendorName: AI Citation
+    caveats: Vendor defines this around citations of your owned site or content.
+  - companySlug: demandsphere
+    planSlug: agency
+  - companySlug: otterly-ai
+    planSlug: starter
+    vendorName: Domain Citation
+    caveats: Vendor scopes this citation metric to a specific domain.
+  - companySlug: rankscale
+    planSlug: pro

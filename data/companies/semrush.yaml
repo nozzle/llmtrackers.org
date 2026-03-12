@@ -24,14 +24,14 @@ plans:
       - Google Search Console
       - Looker Studio
     llmSupport:
-      aiMode: false
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: true
-      grok: false
-      llama: false
       claude: true
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: false
 tweets: []
 pricingUrl: https://www.semrush.com/pricing/
 featuresUrl: https://www.semrush.com/features/

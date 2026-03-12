@@ -1,0 +1,5 @@
+id: ai-search-volume-data
+description: Demand estimate for AI prompts and topics.
+supportedBy:
+  - companySlug: writesonic-geo
+    planSlug: starter

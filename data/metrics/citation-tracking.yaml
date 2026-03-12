@@ -1,0 +1,9 @@
+id: citation-tracking
+description: Tracks which sources AI systems cite when discussing your brand or topics.
+supportedBy:
+  - companySlug: athenahq
+    planSlug: growth
+  - companySlug: waikay
+    planSlug: smb
+  - companySlug: ziptie-dev
+    planSlug: basic

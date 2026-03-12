@@ -5,6 +5,7 @@ import type {
   LlmModelKey,
   ReviewSitePlatform,
 } from "@llm-tracker/shared";
+import type { CompanyMetric } from "~/data";
 
 // ---------------------------------------------------------------------------
 // Layout keys & labels
@@ -34,6 +35,7 @@ export const COMPANY_LAYOUT_LABELS: Record<CompanyLayoutKey, string> = {
 
 export interface CompanyDesignProps {
   company: Company;
+  companyMetrics: CompanyMetric[];
   relatedReviews: PublishedReview[];
   onEditPlan: (plan: Plan) => void;
   onEditCompany: () => void;

@@ -1,0 +1,51 @@
+id: sentiment
+description: Measure of how positively, neutrally, or negatively AI systems describe a brand.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom
+  - companySlug: airops
+    planSlug: solo-plan
+    vendorName: Sentiment Score
+    caveats: Vendor uses a weighted scoring formula rather than only categorical sentiment labels.
+  - companySlug: brandlight-ai
+    planSlug: basic
+    vendorName: Sentiment Analysis
+    caveats: Vendor frames this as an analysis workflow rather than a single scalar score.
+  - companySlug: brandlight-ai
+    planSlug: pro
+    vendorName: Sentiment Analysis
+    caveats: Vendor frames this as an analysis workflow rather than a single scalar score.
+  - companySlug: conductor
+    planSlug: enterprise
+    vendorName: AI Brand Sentiment Analysis
+    caveats: Vendor frames this specifically as brand-focused sentiment analysis.
+  - companySlug: knowatoa
+    planSlug: agency
+  - companySlug: peec-ai
+    planSlug: agency
+  - companySlug: peec-ai
+    planSlug: starter
+  - companySlug: profound
+    planSlug: enterprise
+  - companySlug: profound
+    planSlug: growth
+  - companySlug: rankscale
+    planSlug: pro
+    vendorName: Average Sentiment Score
+    caveats: Vendor reports an average sentiment score rather than a simple categorical label.
+  - companySlug: scrunch-ai
+    planSlug: enterprise
+  - companySlug: scrunch-ai
+    planSlug: growth
+  - companySlug: semrush
+    planSlug: semrush-one
+    vendorName: Overall Sentiment
+    caveats: Vendor presents this as an aggregate sentiment summary.
+  - companySlug: writesonic-geo
+    planSlug: starter
+  - companySlug: xfunnel
+    planSlug: pro
+  - companySlug: ziptie-dev
+    planSlug: basic
+    vendorName: Sentiment Analysis
+    caveats: Vendor frames this as an analysis workflow rather than a single scalar score.

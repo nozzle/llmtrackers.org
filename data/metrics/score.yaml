@@ -1,0 +1,5 @@
+id: score
+description: Generic BOFU performance score shown in public product materials, though the exact methodology is not publicly explained.
+supportedBy:
+  - companySlug: xofu
+    planSlug: pro

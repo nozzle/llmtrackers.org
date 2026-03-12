@@ -1,0 +1,5 @@
+id: intent-volume
+description: Estimated monthly demand for a topic or prompt in AI search.
+supportedBy:
+  - companySlug: otterly-ai
+    planSlug: starter

@@ -1,0 +1,5 @@
+id: prompt-research
+description: Researches prompt patterns and behavioral signals to identify AI search opportunities.
+supportedBy:
+  - companySlug: demandsphere
+    planSlug: agency

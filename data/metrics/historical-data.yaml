@@ -1,0 +1,7 @@
+id: historical-data
+description: Extends current daily tracking with longer-term metric history across AI responses.
+supportedBy:
+  - companySlug: getstat
+    planSlug: pro
+    vendorName: Historical Data
+    caveats: Vendor describes longer-term metric history rather than a point-in-time KPI.

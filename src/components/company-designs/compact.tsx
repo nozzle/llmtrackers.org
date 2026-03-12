@@ -20,6 +20,7 @@ interface AccordionEntry {
 
 export function CompactLayout({
   company,
+  companyMetrics,
   relatedReviews,
   onEditPlan,
   onAddPlan,
@@ -29,7 +30,7 @@ export function CompactLayout({
 
   const sections: AccordionEntry[] = [
     { id: "plans", label: "Plans", count: company.plans.length },
-    { id: "metrics", label: "Metric Definitions", count: company.metricDefinitions.length },
+    { id: "metrics", label: "Metric Definitions", count: companyMetrics.length },
     { id: "screenshots", label: "Screenshots", count: company.screenshots.length },
     { id: "videos", label: "Videos", count: company.videos.length },
     { id: "ratings", label: "Ratings", count: ratingsCount },
@@ -123,6 +124,7 @@ export function CompactLayout({
                 <AccordionContent
                   id={s.id}
                   company={company}
+                  companyMetrics={companyMetrics}
                   relatedReviews={relatedReviews}
                   onEditPlan={onEditPlan}
                   onAddPlan={onAddPlan}
@@ -140,6 +142,7 @@ export function CompactLayout({
 function AccordionContent({
   id,
   company,
+  companyMetrics,
   relatedReviews,
   onEditPlan,
   onAddPlan,
@@ -156,7 +159,9 @@ function AccordionContent({
         />
       );
     case "metrics":
-      return <MetricDefinitionsSection company={company} onOpenMedia={onOpenMedia} className="" />;
+      return (
+        <MetricDefinitionsSection company={company} companyMetrics={companyMetrics} className="" />
+      );
     case "screenshots":
       return <ScreenshotsSection company={company} onOpenMedia={onOpenMedia} className="" />;
     case "videos":

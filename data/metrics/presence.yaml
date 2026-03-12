@@ -1,0 +1,5 @@
+id: presence
+description: Calculated per response, so multiple appearances within one response are only counted once.
+supportedBy:
+  - companySlug: getstat
+    planSlug: pro

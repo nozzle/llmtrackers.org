@@ -1,0 +1,5 @@
+id: missing-prompts
+description: Highlights prompts where competitors appear but your brand does not.
+supportedBy:
+  - companySlug: writesonic-geo
+    planSlug: starter

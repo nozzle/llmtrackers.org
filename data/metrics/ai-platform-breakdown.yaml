@@ -1,0 +1,5 @@
+id: ai-platform-breakdown
+description: Splits AI visits by platform such as ChatGPT, Gemini, and Perplexity.
+supportedBy:
+  - companySlug: writesonic-geo
+    planSlug: starter

@@ -1,8 +1,9 @@
 import { Document, parseDocument } from "yaml";
-import { CompanySchema, PublishedReviewSchema } from "./schema.js";
+import { CompanySchema, MetricSchema, PublishedReviewSchema } from "./schema.js";
 import type {
   Company,
-  MetricDefinition,
+  Metric,
+  MetricSupport,
   CompanyScreenshot,
   CompanyScreenshotSource,
   CompanyVideo,
@@ -277,7 +278,6 @@ function mergeReviewSiteData(
 }
 
 function sortCompanyKeys(company: CompanyYamlValue): CompanyYamlValue {
-  const hasMetricDefinitions = company.metricDefinitions.length > 0;
   const hasReviewSites = Object.keys(company.reviewSites).length > 0;
   const hasScreenshotSources = company.screenshotSources.length > 0;
   const hasScreenshots = company.screenshots.length > 0;
@@ -290,11 +290,6 @@ function sortCompanyKeys(company: CompanyYamlValue): CompanyYamlValue {
     website: company.website,
     description: company.description,
     plans: company.plans.map(sortPlanKeys),
-    ...(hasMetricDefinitions
-      ? {
-          metricDefinitions: company.metricDefinitions.map(sortMetricDefinitionKeys),
-        }
-      : {}),
     ...(hasReviewSites ? { reviewSites: company.reviewSites } : {}),
     tweets: company.tweets,
     ...(company.pricingUrl !== undefined ? { pricingUrl: company.pricingUrl } : {}),
@@ -316,20 +311,6 @@ function sortCompanyKeys(company: CompanyYamlValue): CompanyYamlValue {
       : {}),
     ...(company.lastChecked !== undefined ? { lastChecked: company.lastChecked } : {}),
   } as CompanyYamlValue;
-}
-
-function sortMetricDefinitionKeys(metric: MetricDefinition): MetricDefinition {
-  return {
-    slug: metric.slug,
-    name: metric.name,
-    summary: metric.summary,
-    ...(metric.description ? { description: metric.description } : {}),
-    aliases: metric.aliases,
-    sourceUrls: metric.sourceUrls,
-    screenshotIds: metric.screenshotIds,
-    status: metric.status,
-    lastUpdated: metric.lastUpdated,
-  };
 }
 
 function sortScreenshotSourceKeys(source: CompanyScreenshotSource): CompanyScreenshotSource {
@@ -413,6 +394,47 @@ function slugify(value: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+// ---- Metric YAML ----
+
+export type MetricYamlValue = Metric & Record<string, unknown>;
+
+export function parseMetricYaml(yamlText: string): {
+  metric: MetricYamlValue;
+  document: Document.Parsed;
+} {
+  const document = parseDocument(yamlText);
+  if (document.errors.length > 0) {
+    throw new Error(document.errors.map((error) => error.message).join("; "));
+  }
+
+  const parsed = document.toJS({ maxAliasCount: -1 }) as unknown;
+  const metric = MetricSchema.parse(parsed) as MetricYamlValue;
+  return { metric, document };
+}
+
+export function stringifyMetricYaml(metric: MetricYamlValue): string {
+  const validated = MetricSchema.parse(metric);
+  const document = new Document(sortMetricKeys(validated as MetricYamlValue));
+  return document.toString({ indent: 2, lineWidth: 0 });
+}
+
+function sortMetricKeys(metric: MetricYamlValue): MetricYamlValue {
+  return {
+    id: metric.id,
+    description: metric.description,
+    supportedBy: metric.supportedBy.map(sortMetricSupportKeys),
+  } as MetricYamlValue;
+}
+
+function sortMetricSupportKeys(support: MetricSupport): MetricSupport {
+  return {
+    companySlug: support.companySlug,
+    planSlug: support.planSlug,
+    ...(support.vendorName ? { vendorName: support.vendorName } : {}),
+    ...(support.caveats ? { caveats: support.caveats } : {}),
+  };
 }
 
 // ---- Review YAML ----

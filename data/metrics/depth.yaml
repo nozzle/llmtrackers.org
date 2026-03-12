@@ -1,0 +1,5 @@
+id: depth
+description: Lower values are better because they mean the brand appears earlier in the response.
+supportedBy:
+  - companySlug: getstat
+    planSlug: pro

@@ -1,0 +1,13 @@
+id: rank
+description: Ranking metric showing how a brand performs against competitors in tracked AI results.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom
+  - companySlug: gumshoe-ai
+    planSlug: premium
+    vendorName: Competitive Rank
+    caveats: Vendor frames this as a competitor-relative ranking metric.
+  - companySlug: xfunnel
+    planSlug: pro
+    vendorName: Rank Score
+    caveats: Vendor presents this as a ranking score rather than a plain ordinal rank.

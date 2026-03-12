@@ -1,0 +1,5 @@
+id: topic-difficulty
+description: Competitiveness estimate for appearing in AI results for a topic.
+supportedBy:
+  - companySlug: semrush
+    planSlug: semrush-one

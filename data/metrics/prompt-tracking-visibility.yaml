@@ -1,0 +1,5 @@
+id: prompt-tracking-visibility
+description: Overall progress metric for how well you appear in top citations across tracked prompts.
+supportedBy:
+  - companySlug: semrush
+    planSlug: semrush-one

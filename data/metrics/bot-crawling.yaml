@@ -1,0 +1,5 @@
+id: bot-crawling
+description: Tracks which AI bots are crawling your website.
+supportedBy:
+  - companySlug: scalenut
+    planSlug: ai-visibility

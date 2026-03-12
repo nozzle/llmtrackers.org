@@ -1,0 +1,5 @@
+id: prompt-coverage
+description: Tracks the prompts and questions where your brand appears in AI outputs.
+supportedBy:
+  - companySlug: scalenut
+    planSlug: ai-visibility

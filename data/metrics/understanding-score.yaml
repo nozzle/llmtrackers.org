@@ -1,0 +1,5 @@
+id: understanding-score
+description: Weighted score out of 100 for how well AI understands your brand compared with entities extracted from your site.
+supportedBy:
+  - companySlug: waikay
+    planSlug: smb

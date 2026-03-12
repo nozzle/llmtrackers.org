@@ -1,0 +1,7 @@
+id: brand-term-presence
+description: Uses the same per-response counting logic as Presence, but broken out by individual brand term.
+supportedBy:
+  - companySlug: getstat
+    planSlug: pro
+    vendorName: Individual Brand Term Presence
+    caveats: Vendor breaks presence out by tracked brand term.

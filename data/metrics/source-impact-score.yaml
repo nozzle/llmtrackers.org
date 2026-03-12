@@ -1,0 +1,7 @@
+id: source-impact-score
+description: Estimates how strongly specific websites influence the way AI talks about your brand.
+supportedBy:
+  - companySlug: brandlight-ai
+    planSlug: basic
+  - companySlug: brandlight-ai
+    planSlug: pro

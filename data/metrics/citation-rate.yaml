@@ -1,0 +1,9 @@
+id: citation-rate
+description: Rate at which a source or domain earns citations across tracked AI responses.
+supportedBy:
+  - companySlug: airops
+    planSlug: solo-plan
+  - companySlug: xfunnel
+    planSlug: pro
+    vendorName: Citation Frequency
+    caveats: Vendor focuses on how often citations occur rather than a formally documented rate formula.

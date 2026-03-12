@@ -1,0 +1,5 @@
+id: mention-rate
+description: Percentage of AI answers that mention your brand out of total tracked answers.
+supportedBy:
+  - companySlug: airops
+    planSlug: solo-plan

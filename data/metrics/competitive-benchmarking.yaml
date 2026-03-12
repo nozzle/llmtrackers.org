@@ -1,0 +1,13 @@
+id: competitive-benchmarking
+description: Comparison of brand performance against competitors across tracked AI metrics.
+supportedBy:
+  - companySlug: profound
+    planSlug: enterprise
+  - companySlug: profound
+    planSlug: growth
+  - companySlug: rankscale
+    planSlug: pro
+    vendorName: Competitor Visibility
+    caveats: Vendor focuses on competitive visibility comparisons.
+  - companySlug: ziptie-dev
+    planSlug: basic

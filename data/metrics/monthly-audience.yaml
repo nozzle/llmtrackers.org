@@ -1,0 +1,5 @@
+id: monthly-audience
+description: Estimated total query audience across topics where your brand appears.
+supportedBy:
+  - companySlug: semrush
+    planSlug: semrush-one

@@ -1,0 +1,6 @@
+id: cited-rate
+description: Calculated as unique prompts containing the source divided by the total number of prompts in scope.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom
+    vendorName: Cited

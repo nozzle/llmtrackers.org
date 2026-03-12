@@ -3,10 +3,12 @@ import {
   mergeCompanyWithExtractedPlans,
   mergeCompanyWithReviewSites,
   parseCompanyYaml,
+  parseMetricYaml,
   parseReviewYaml,
   prepareUpdatedCompanyYaml,
   prepareUpdatedCompanyReviewSitesYaml,
   stringifyCompanyYaml,
+  stringifyMetricYaml,
   stringifyReviewYaml,
   type ExtractedPlanLike,
 } from "./yaml.js";
@@ -234,26 +236,12 @@ describe("yaml helpers", () => {
     const { company } = parseCompanyYaml(baseYaml);
 
     const yamlWithoutScreenshots = stringifyCompanyYaml(company);
-    expect(yamlWithoutScreenshots).not.toMatch(/\nmetricDefinitions:/);
     expect(yamlWithoutScreenshots).not.toMatch(/\nscreenshotSources:/);
     expect(yamlWithoutScreenshots).not.toMatch(/\nscreenshots:/);
     expect(yamlWithoutScreenshots).not.toMatch(/\nvideos:/);
 
     const yamlWithScreenshots = stringifyCompanyYaml({
       ...company,
-      metricDefinitions: [
-        {
-          slug: "visibility",
-          name: "Visibility",
-          summary: "How often the brand appears across tracked responses.",
-          description: "Aggregated across supported engines.",
-          aliases: ["presence"],
-          sourceUrls: ["https://example.com/help/visibility"],
-          screenshotIds: ["dashboard-overview"],
-          status: "live",
-          lastUpdated: "2026-03-11",
-        },
-      ],
       screenshotSources: [
         {
           url: "https://example.com/features",
@@ -297,15 +285,11 @@ describe("yaml helpers", () => {
       ],
     });
 
-    expect(yamlWithScreenshots).toMatch(/metricDefinitions:/);
     expect(yamlWithScreenshots).toMatch(/screenshotSources:/);
     expect(yamlWithScreenshots).toMatch(/screenshots:/);
     expect(yamlWithScreenshots).toMatch(/videos:/);
 
     const reparsed = parseCompanyYaml(yamlWithScreenshots);
-    expect(reparsed.company.metricDefinitions[0]?.aliases).toEqual(["presence"]);
-    expect(reparsed.company.metricDefinitions[0]?.screenshotIds).toEqual(["dashboard-overview"]);
-    expect(reparsed.company.metricDefinitions[0]?.lastUpdated).toBe("2026-03-11");
     expect(reparsed.company.screenshotSources[0]?.label).toBe("Features page");
     expect(reparsed.company.screenshots[0]?.assetPath).toBe(
       "/company-assets/test-company/screenshots/dashboard-overview.png",
@@ -313,6 +297,35 @@ describe("yaml helpers", () => {
     expect(reparsed.company.screenshots[0]?.tags).toEqual(["dashboard", "analytics"]);
     expect(reparsed.company.videos[0]?.videoId).toBe("abc123xyz");
     expect(reparsed.company.videos[0]?.sourceType).toBe("third-party");
+  });
+
+  it("stringifyMetricYaml preserves support metadata and remains parseable", () => {
+    const yamlText = stringifyMetricYaml({
+      id: "share-of-voice",
+      description: "Relative brand visibility compared with competitors across tracked prompts.",
+      supportedBy: [
+        {
+          companySlug: "test-company",
+          planSlug: "starter",
+          vendorName: "Presence",
+          caveats: "Counts brand-term presence rather than a fully competitor-relative share.",
+        },
+        {
+          companySlug: "test-company",
+          planSlug: "enterprise",
+        },
+      ],
+    });
+
+    expect(yamlText).toMatch(/^id: share-of-voice/m);
+    expect(yamlText).toMatch(/\nsupportedBy:/);
+    expect(yamlText).toMatch(/vendorName: Presence/);
+    expect(yamlText).toMatch(/caveats:/);
+
+    const reparsed = parseMetricYaml(yamlText);
+    expect(reparsed.metric.supportedBy[0]?.vendorName).toBe("Presence");
+    expect(reparsed.metric.supportedBy[0]?.caveats).toMatch(/brand-term presence/);
+    expect(reparsed.metric.supportedBy[1]?.vendorName).toBeUndefined();
   });
 
   it("parseReviewYaml parses review highlights", () => {

@@ -1,0 +1,5 @@
+id: web-search-rate
+description: A 50 percent web search rate means half of the tracked prompts used web results in their answers during the selected period.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom

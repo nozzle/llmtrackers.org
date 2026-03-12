@@ -1,0 +1,5 @@
+id: topic-visibility
+description: Measures how visible your brand is across selected topic clusters.
+supportedBy:
+  - companySlug: gumshoe-ai
+    planSlug: premium

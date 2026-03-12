@@ -1,0 +1,5 @@
+id: citation-opportunities
+description: Surfaces sites citing competitors that you may want to influence or earn citations from.
+supportedBy:
+  - companySlug: writesonic-geo
+    planSlug: starter

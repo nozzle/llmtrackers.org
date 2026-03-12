@@ -1,0 +1,5 @@
+id: entity-mentions
+description: Tracks entities and attributes AI systems associate with each brand over time.
+supportedBy:
+  - companySlug: waikay
+    planSlug: smb

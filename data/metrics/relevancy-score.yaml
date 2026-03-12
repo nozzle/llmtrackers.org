@@ -1,0 +1,5 @@
+id: relevancy-score
+description: Measures how closely a query aligns with the brand, website, and industry context.
+supportedBy:
+  - companySlug: otterly-ai
+    planSlug: starter

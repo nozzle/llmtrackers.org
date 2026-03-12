@@ -1,0 +1,29 @@
+id: brand-mentions
+description: Occurrences where a brand is mentioned in tracked AI responses or prompts.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom
+    vendorName: Mentions
+    caveats: Vendor wording may refer to raw mention totals or prompts containing mentions rather than a single standardized count model.
+  - companySlug: conductor
+    planSlug: enterprise
+    vendorName: Brand Mention
+    caveats: Vendor documents this as mention events in response text.
+  - companySlug: demandsphere
+    planSlug: agency
+  - companySlug: knowatoa
+    planSlug: agency
+  - companySlug: otterly-ai
+    planSlug: starter
+  - companySlug: rankscale
+    planSlug: pro
+    vendorName: Mentions
+    caveats: Vendor wording may refer to raw mention totals or prompts containing mentions rather than a single standardized count model.
+  - companySlug: scalenut
+    planSlug: ai-visibility
+  - companySlug: semrush
+    planSlug: semrush-one
+    vendorName: Mentions
+    caveats: Vendor wording may refer to raw mention totals or prompts containing mentions rather than a single standardized count model.
+  - companySlug: ziptie-dev
+    planSlug: basic

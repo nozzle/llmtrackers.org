@@ -1,0 +1,5 @@
+id: conversions
+description: Tracks goal completions and pipeline outcomes driven by AI-sourced traffic.
+supportedBy:
+  - companySlug: conductor
+    planSlug: enterprise

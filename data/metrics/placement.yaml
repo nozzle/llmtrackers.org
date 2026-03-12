@@ -1,0 +1,7 @@
+id: placement
+description: Categorizes where your brand appears in the top, middle, or bottom portion of AI answers.
+supportedBy:
+  - companySlug: scrunch-ai
+    planSlug: enterprise
+  - companySlug: scrunch-ai
+    planSlug: growth

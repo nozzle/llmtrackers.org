@@ -1,0 +1,5 @@
+id: ai-overview-coverage
+description: Tracks whether AI-generated result features appear for your target queries.
+supportedBy:
+  - companySlug: ziptie-dev
+    planSlug: basic

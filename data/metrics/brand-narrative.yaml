@@ -1,0 +1,5 @@
+id: brand-narrative
+description: Captures factual statements AI systems make about your brand so teams can validate or fix them.
+supportedBy:
+  - companySlug: waikay
+    planSlug: smb

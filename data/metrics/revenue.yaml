@@ -1,0 +1,5 @@
+id: revenue
+description: Attributes revenue generated from visitors and conversions originating in AI search.
+supportedBy:
+  - companySlug: conductor
+    planSlug: enterprise

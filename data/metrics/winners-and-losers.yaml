@@ -1,0 +1,6 @@
+id: winners-and-losers
+description: Intended to surface fast-moving prompt opportunities and regressions.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom
+    vendorName: Winners and Losers

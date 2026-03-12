@@ -1,0 +1,5 @@
+id: narrative-drivers
+description: Highlights the prompts, topics, and sources shaping your AI reputation.
+supportedBy:
+  - companySlug: semrush
+    planSlug: semrush-one

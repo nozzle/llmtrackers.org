@@ -1,0 +1,17 @@
+id: prompt-volume
+description: Estimated demand or frequency for tracked AI prompts, topics, or questions.
+supportedBy:
+  - companySlug: airops
+    planSlug: solo-plan
+  - companySlug: profound
+    planSlug: enterprise
+    vendorName: Prompt Volumes
+    caveats: Vendor publishes this as prompt volumes rather than a single prompt-volume KPI.
+  - companySlug: profound
+    planSlug: growth
+    vendorName: Prompt Volumes
+    caveats: Vendor publishes this as prompt volumes rather than a single prompt-volume KPI.
+  - companySlug: semrush
+    planSlug: semrush-one
+    vendorName: AI Topic Volume
+    caveats: Vendor frames this as AI topic demand rather than a direct prompt count.

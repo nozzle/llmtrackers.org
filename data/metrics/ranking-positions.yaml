@@ -1,0 +1,5 @@
+id: ranking-positions
+description: Shows where your brand ranks inside AI recommendations and result sets.
+supportedBy:
+  - companySlug: knowatoa
+    planSlug: agency

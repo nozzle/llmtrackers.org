@@ -1,10 +1,21 @@
 import compiledData from "../packages/shared/compiled-data.json";
-import type { Company, CompiledData, PlanWithCompany, PublishedReview } from "@llm-tracker/shared";
+import type {
+  Company,
+  CompiledData,
+  Metric,
+  MetricSupport,
+  PlanWithCompany,
+  PublishedReview,
+} from "@llm-tracker/shared";
 
 const data = compiledData as unknown as CompiledData;
 
 type PlanWithCompanyMeta = PlanWithCompany & {
   companyReviewSites: Company["reviewSites"];
+};
+
+export type CompanyMetric = Metric & {
+  supportedBy: MetricSupport[];
 };
 
 export type ComparisonPlan = PlanWithCompanyMeta;
@@ -19,6 +30,31 @@ export function getCompanyBySlug(slug: string): Company | undefined {
 
 export function getAllReviews(): PublishedReview[] {
   return data.reviews;
+}
+
+export function getAllMetrics(): Metric[] {
+  return data.metrics;
+}
+
+export function getMetricById(id: string): Metric | undefined {
+  return data.metrics.find((metric) => metric.id === id);
+}
+
+export function getMetricsForCompanySlug(companySlug: string): CompanyMetric[] {
+  return data.metrics
+    .map((metric) => ({
+      ...metric,
+      supportedBy: metric.supportedBy.filter((support) => support.companySlug === companySlug),
+    }))
+    .filter((metric) => metric.supportedBy.length > 0);
+}
+
+export function getMetricsForPlan(companySlug: string, planSlug: string): Metric[] {
+  return data.metrics.filter((metric) =>
+    metric.supportedBy.some(
+      (support) => support.companySlug === companySlug && support.planSlug === planSlug,
+    ),
+  );
 }
 
 export function getReviewBySlug(slug: string): PublishedReview | undefined {

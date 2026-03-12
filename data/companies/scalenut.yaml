@@ -23,14 +23,14 @@ plans:
       - Cloudflare
       - WordPress
     llmSupport:
-      aiMode: false
-      aiOverviews: true
       chatgpt: true
       gemini: true
       perplexity: true
-      grok: false
-      llama: false
       claude: true
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: false
 tweets: []
 pricingUrl: https://www.scalenut.com/pricing
 featuresUrl: https://www.scalenut.com/

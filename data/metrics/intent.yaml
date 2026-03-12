@@ -1,0 +1,7 @@
+id: intent
+description: Classifies prompt demand by intent to show what kinds of questions matter most.
+supportedBy:
+  - companySlug: profound
+    planSlug: enterprise
+  - companySlug: profound
+    planSlug: growth

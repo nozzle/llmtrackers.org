@@ -1,0 +1,13 @@
+id: ai-referral-traffic
+description: Traffic or referrals arriving from AI platforms or AI-generated responses.
+supportedBy:
+  - companySlug: conductor
+    planSlug: enterprise
+  - companySlug: scrunch-ai
+    planSlug: enterprise
+    vendorName: AI Referrals
+    caveats: Vendor focuses on human referrals from AI platforms.
+  - companySlug: scrunch-ai
+    planSlug: growth
+    vendorName: AI Referrals
+    caveats: Vendor focuses on human referrals from AI platforms.

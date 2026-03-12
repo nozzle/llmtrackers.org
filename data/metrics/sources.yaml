@@ -1,0 +1,25 @@
+id: sources
+description: Tracked sources or domains that AI systems cite or rely on in responses.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom
+  - companySlug: gumshoe-ai
+    planSlug: premium
+    vendorName: Cited Sources
+    caveats: Vendor highlights cited sources connected to the brand.
+  - companySlug: scalenut
+    planSlug: ai-visibility
+    vendorName: Top Source Domains
+    caveats: Vendor reports domains most relied on by AI systems.
+  - companySlug: writesonic-geo
+    planSlug: starter
+    vendorName: Citation Sources
+    caveats: Vendor focuses on the sources AI systems cite rather than a raw citation total.
+  - companySlug: xofu
+    planSlug: pro
+    vendorName: Top Cited Domains
+    caveats: Vendor highlights the domains cited most often.
+  - companySlug: ziptie-dev
+    planSlug: basic
+    vendorName: Source Attribution
+    caveats: Vendor focuses on attributed source domains rather than a raw citation total.

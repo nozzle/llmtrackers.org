@@ -21,12 +21,12 @@ plans:
     contentOptimization: false
     integrations: []
     llmSupport:
-      aiMode: false
-      aiOverviews: false
       chatgpt: true
       gemini: true
       perplexity: true
-      grok: false
-      llama: false
       claude: false
+      llama: false
+      grok: false
+      aiOverviews: false
+      aiMode: false
 tweets: []

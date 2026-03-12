@@ -1,0 +1,5 @@
+id: response-length
+description: Listed as one of the prompt overview table metrics coming next in open beta.
+supportedBy:
+  - companySlug: getstat
+    planSlug: pro

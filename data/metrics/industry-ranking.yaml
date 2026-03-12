@@ -1,0 +1,5 @@
+id: industry-ranking
+description: Shows your standing relative to other brands in your category.
+supportedBy:
+  - companySlug: scalenut
+    planSlug: ai-visibility

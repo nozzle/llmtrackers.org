@@ -1,0 +1,15 @@
+id: mention-frequency
+description: How frequently a brand is mentioned across tracked AI responses or prompts.
+supportedBy:
+  - companySlug: brandlight-ai
+    planSlug: basic
+    vendorName: Mention Frequency
+    caveats: Vendor emphasizes mention frequency over a single standardized mention-count definition.
+  - companySlug: brandlight-ai
+    planSlug: pro
+    vendorName: Mention Frequency
+    caveats: Vendor emphasizes mention frequency over a single standardized mention-count definition.
+  - companySlug: knowatoa
+    planSlug: agency
+    vendorName: Mention Frequency
+    caveats: Vendor emphasizes mention frequency over a single standardized mention-count definition.

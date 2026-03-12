@@ -1,0 +1,5 @@
+id: feature-familiarity
+description: Measures how deeply AI systems understand and describe your product features.
+supportedBy:
+  - companySlug: xfunnel
+    planSlug: pro

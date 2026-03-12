@@ -1,0 +1,7 @@
+id: influence-score
+description: Prioritization metric based on how often a source is cited across unique prompts.
+supportedBy:
+  - companySlug: scrunch-ai
+    planSlug: enterprise
+  - companySlug: scrunch-ai
+    planSlug: growth

@@ -1,0 +1,50 @@
+id: share-of-voice
+description: Relative visibility of a brand compared with competitors across a tracked set of prompts or responses.
+supportedBy:
+  - companySlug: ahrefs-brand-radar
+    planSlug: brand-radar
+    vendorName: AI Share of Voice
+    caveats: Vendor explicitly frames this as AI-response share of voice.
+  - companySlug: airops
+    planSlug: solo-plan
+    vendorName: Share of Voice
+  - companySlug: conductor
+    planSlug: enterprise
+    vendorName: Mention-Based Share of Voice
+    caveats: Vendor defines this share of voice from mentions rather than citations or a blended visibility metric.
+  - companySlug: demandsphere
+    planSlug: agency
+    vendorName: Share of Voice
+  - companySlug: knowatoa
+    planSlug: agency
+    vendorName: Share of Voice
+  - companySlug: otterly-ai
+    planSlug: starter
+    vendorName: Share of Voice
+  - companySlug: profound
+    planSlug: enterprise
+    vendorName: Share of Voice
+  - companySlug: profound
+    planSlug: growth
+    vendorName: Share of Voice
+  - companySlug: scalenut
+    planSlug: ai-visibility
+    vendorName: Share of Visibility
+    caveats: Vendor uses visibility terminology for a competitor-relative share metric.
+  - companySlug: scrunch-ai
+    planSlug: enterprise
+    vendorName: AI Share of Voice
+    caveats: Vendor explicitly frames this as AI-response share of voice.
+  - companySlug: scrunch-ai
+    planSlug: growth
+    vendorName: AI Share of Voice
+    caveats: Vendor explicitly frames this as AI-response share of voice.
+  - companySlug: semrush
+    planSlug: semrush-one
+    vendorName: Share of Voice
+  - companySlug: writesonic-geo
+    planSlug: starter
+    vendorName: Share of Voice
+  - companySlug: xfunnel
+    planSlug: pro
+    vendorName: Share of Voice

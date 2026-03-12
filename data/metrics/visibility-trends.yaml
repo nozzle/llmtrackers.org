@@ -1,0 +1,7 @@
+id: visibility-trends
+description: Shows how your brand's AI presence changes over time.
+supportedBy:
+  - companySlug: scalenut
+    planSlug: ai-visibility
+  - companySlug: writesonic-geo
+    planSlug: starter

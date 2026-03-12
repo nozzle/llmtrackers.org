@@ -1,0 +1,11 @@
+id: content-performance-tracking
+description: Measurement of which pages or assets perform best in AI discovery and citation workflows.
+supportedBy:
+  - companySlug: profound
+    planSlug: enterprise
+  - companySlug: profound
+    planSlug: growth
+  - companySlug: writesonic-geo
+    planSlug: starter
+    vendorName: Most Valuable Content
+    caveats: Vendor highlights content most accessed or cited by AI systems.

@@ -1,0 +1,9 @@
+id: attribution-and-traffic-insights
+description: Connects AI-driven discovery to downstream visits and conversions.
+supportedBy:
+  - companySlug: profound
+    planSlug: enterprise
+    vendorName: Attribution and Traffic Insights
+  - companySlug: profound
+    planSlug: growth
+    vendorName: Attribution and Traffic Insights

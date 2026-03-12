@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
-import { getCompanyBySlug, getReviewsForCompanySlug } from "~/data";
+import { getCompanyBySlug, getMetricsForCompanySlug, getReviewsForCompanySlug } from "~/data";
 import { EditPlanModal } from "~/components/edit-plan-modal";
 import { EditCompanyModal } from "~/components/edit-company-modal";
 import { AddPlanModal } from "~/components/add-plan-modal";
@@ -151,6 +151,7 @@ function CompanyPage() {
   }
 
   const relatedReviews = getReviewsForCompanySlug(slug);
+  const companyMetrics = getMetricsForCompanySlug(slug);
 
   // ---- Layout variant ----
   const activeLayout: CompanyLayoutKey = search.layout ?? "standard";
@@ -182,6 +183,7 @@ function CompanyPage() {
       {/* Active Layout */}
       <LayoutComponent
         company={company}
+        companyMetrics={companyMetrics}
         relatedReviews={relatedReviews}
         onEditPlan={(plan) => {
           setEditingPlan(plan);

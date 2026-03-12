@@ -18,6 +18,7 @@ interface NavEntry {
 
 export function SidebarNavLayout({
   company,
+  companyMetrics,
   relatedReviews,
   onEditPlan,
   onAddPlan,
@@ -27,9 +28,7 @@ export function SidebarNavLayout({
 
   const navItems: NavEntry[] = [
     { id: "plans", label: "Plans" },
-    ...(company.metricDefinitions.length > 0
-      ? [{ id: "metrics", label: "Metric Definitions" }]
-      : []),
+    ...(companyMetrics.length > 0 ? [{ id: "metrics", label: "Metric Definitions" }] : []),
     ...(company.screenshots.length > 0 ? [{ id: "screenshots", label: "Screenshots" }] : []),
     ...(company.videos.length > 0 ? [{ id: "videos", label: "Videos" }] : []),
     ...(ratingsCount > 0 ? [{ id: "ratings", label: "Ratings" }] : []),
@@ -98,12 +97,10 @@ export function SidebarNavLayout({
                   <span className="font-medium text-gray-900">{company.screenshots.length}</span>
                 </div>
               )}
-              {company.metricDefinitions.length > 0 && (
+              {companyMetrics.length > 0 && (
                 <div className="flex justify-between">
                   <span className="text-gray-500">Metrics</span>
-                  <span className="font-medium text-gray-900">
-                    {company.metricDefinitions.length}
-                  </span>
+                  <span className="font-medium text-gray-900">{companyMetrics.length}</span>
                 </div>
               )}
               {company.videos.length > 0 && (
@@ -167,7 +164,7 @@ export function SidebarNavLayout({
           <PlansSection company={company} onEditPlan={onEditPlan} onAddPlan={onAddPlan} />
         </div>
         <div id="metrics">
-          <MetricDefinitionsSection company={company} onOpenMedia={onOpenMedia} />
+          <MetricDefinitionsSection company={company} companyMetrics={companyMetrics} />
         </div>
         <div id="screenshots">
           <ScreenshotsSection company={company} onOpenMedia={onOpenMedia} />

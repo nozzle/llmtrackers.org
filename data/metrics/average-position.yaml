@@ -1,0 +1,19 @@
+id: average-position
+description: Average placement of a brand, citation, or response element within tracked AI answers.
+supportedBy:
+  - companySlug: airops
+    planSlug: solo-plan
+  - companySlug: otterly-ai
+    planSlug: starter
+    vendorName: Average Brand Position
+    caveats: Vendor scopes this position metric to brand placement within answers.
+  - companySlug: peec-ai
+    planSlug: agency
+    vendorName: Position
+    caveats: Vendor documents position generally, without always specifying an averaging formula.
+  - companySlug: peec-ai
+    planSlug: starter
+    vendorName: Position
+    caveats: Vendor documents position generally, without always specifying an averaging formula.
+  - companySlug: semrush
+    planSlug: semrush-one

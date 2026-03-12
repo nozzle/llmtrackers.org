@@ -1,0 +1,5 @@
+id: model-visibility
+description: Compares how often individual AI models mention your brand.
+supportedBy:
+  - companySlug: gumshoe-ai
+    planSlug: premium

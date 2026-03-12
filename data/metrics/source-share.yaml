@@ -1,0 +1,5 @@
+id: source-share
+description: Trend metric showing how much of the cited source footprint your brand captures over time.
+supportedBy:
+  - companySlug: xofu
+    planSlug: pro

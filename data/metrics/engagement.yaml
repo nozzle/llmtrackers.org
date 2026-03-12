@@ -1,0 +1,5 @@
+id: engagement
+description: Measures the quality of on-site behavior from visitors arriving via AI search referrals.
+supportedBy:
+  - companySlug: conductor
+    planSlug: enterprise

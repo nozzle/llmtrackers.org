@@ -1,0 +1,5 @@
+id: domain-ranking
+description: Rank based on total citations earned by a domain.
+supportedBy:
+  - companySlug: otterly-ai
+    planSlug: starter

@@ -1,0 +1,7 @@
+id: direct-bias-score
+description: Indicates whether AI responses show systematic bias for or against the brand.
+supportedBy:
+  - companySlug: brandlight-ai
+    planSlug: basic
+  - companySlug: brandlight-ai
+    planSlug: pro

@@ -1,0 +1,5 @@
+id: source-landing-pages
+description: Also shows how many prompts cited each landing page so teams can identify the URLs earning the most AI citations.
+supportedBy:
+  - companySlug: accuranker
+    planSlug: custom

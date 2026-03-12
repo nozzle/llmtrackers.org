@@ -1,0 +1,5 @@
+id: competitor-monitoring
+description: Compares your brand's AI search presence and perception against competitors.
+supportedBy:
+  - companySlug: athenahq
+    planSlug: growth

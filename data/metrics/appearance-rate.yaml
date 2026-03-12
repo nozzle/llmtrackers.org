@@ -1,0 +1,5 @@
+id: appearance-rate
+description: Measures how often your brand appears in AI search responses.
+supportedBy:
+  - companySlug: xfunnel
+    planSlug: pro

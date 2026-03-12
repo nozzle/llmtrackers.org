@@ -1,0 +1,5 @@
+id: sessions
+description: Counts analytics sessions attributed to AI-sourced traffic.
+supportedBy:
+  - companySlug: conductor
+    planSlug: enterprise

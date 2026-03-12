@@ -1,0 +1,5 @@
+id: citation-count
+description: Raw count of citations earned in tracked AI responses.
+supportedBy:
+  - companySlug: airops
+    planSlug: solo-plan
