@@ -11,10 +11,23 @@ plans:
       currency: USD
       period: monthly
       note: Enterprise pricing
+    pricePer1000Responses: null
+    aiResponsesMonthly: null
+    includedLlmModels: null
+    schedule: daily
+    locationSupport: 5
+    personaSupport: 1
+    contentGeneration: false
+    contentOptimization: false
+    integrations: []
     llmSupport:
       chatgpt: true
       gemini: true
       perplexity: true
+      claude: false
+      llama: false
+      grok: false
+      aiOverviews: false
       aiMode: true
 tweets: []
 pricingUrl: https://www.azoma.ai/enterprise

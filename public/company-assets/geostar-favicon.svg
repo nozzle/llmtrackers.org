@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Favicon</title>
+    <g id="Favicon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval" fill="#C3F349" cx="32" cy="32" r="32"></circle>
+        <path d="M39.5808133,38.3347237 C39.0017426,38.5455764 38.5455764,39.0017426 38.3347237,39.5808133 L32,57 L25.6652763,39.5808133 C25.4544236,39.0017426 24.9982574,38.5455764 24.4191867,38.3347237 L7,32 L24.4191867,25.6652763 C24.9982574,25.4544236 25.4544236,24.9982574 25.6652763,24.4191867 L32,7 L38.3347237,24.4191867 C38.5455764,24.9982574 39.0017426,25.4544236 39.5808133,25.6652763 L57,32 L39.5808133,38.3347237 Z" id="Path" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

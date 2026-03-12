@@ -1,8 +1,8 @@
 slug: scrunch-ai
 name: Scrunch AI
 group: Scrunch AI
-website: https://scrunch.ai/
-description: Mid-tier prompt benchmarking.
+website: https://scrunch.com/
+description: AI customer experience platform for monitoring brand visibility in AI search, analyzing citations and prompt performance, and improving agent-facing website experiences.
 plans:
   - name: Growth
     slug: growth
@@ -80,8 +80,8 @@ reviewSites:
         count: 0
     reviews: []
 tweets: []
-pricingUrl: https://scrunch.ai/pricing
-featuresUrl: https://scrunch.ai/features
+pricingUrl: https://scrunch.com/pricing/
+featuresUrl: https://scrunch.com/platform/monitoring-insights/
 fundraising:
   totalRaised:
     amount: 19000000
@@ -95,4 +95,4 @@ fundraising:
         - name: Decibel
           website: https://www.decibel.vc/
           lead: true
-lastChecked: 2025-07-29
+lastChecked: 2026-03-12

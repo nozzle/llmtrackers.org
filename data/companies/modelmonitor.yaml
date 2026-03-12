@@ -1,6 +1,7 @@
 slug: modelmonitor
 name: ModelMonitor
 group: ModelMonitor
+defunct: true
 website: https://modelmonitor.ai/
 description: ModelMonitor is listed by Graphite as an AEO and AI visibility tracking platform.
 plans:
@@ -11,9 +12,24 @@ plans:
       currency: USD
       period: monthly
       note: Site returned errors during collection
+    pricePer1000Responses: null
+    aiResponsesMonthly: null
+    includedLlmModels: null
+    schedule: daily
+    locationSupport: 5
+    personaSupport: 1
+    contentGeneration: false
+    contentOptimization: false
+    integrations: []
     llmSupport:
       chatgpt: true
       gemini: true
+      perplexity: false
+      claude: false
+      llama: false
+      grok: false
+      aiOverviews: false
+      aiMode: false
 tweets: []
 pricingUrl: https://modelmonitor.ai/
 featuresUrl: https://modelmonitor.ai/

@@ -405,6 +405,7 @@ export async function handleAddCompany(
   const companyObj: CompanyYamlValue = {
     slug: newData.slug,
     name: newData.name,
+    defunct: false,
     website: newData.website,
     description: newData.description,
     plans,

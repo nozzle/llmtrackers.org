@@ -213,6 +213,7 @@ export const CompanySchema = z.object({
   slug: z.string(),
   name: z.string(),
   group: z.string().optional(),
+  defunct: z.boolean().default(false),
   website: z.url(),
   description: z.string(),
   plans: z.array(PlanSchema).min(1),

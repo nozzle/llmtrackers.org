@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Base circle -->
+  <circle cx="16" cy="16" r="16" fill="#4F46E5"/>
+  <!-- Eye shape -->
+  <path d="M6 16C6 16 10 8 16 8C22 8 26 16 26 16C26 16 22 24 16 24C10 24 6 16 6 16Z" fill="white"/>
+  <!-- Pupil with AI indicator -->
+  <circle cx="16" cy="16" r="4" fill="#4F46E5"/>
+  <!-- AI pulse rings -->
+  <circle cx="16" cy="16" r="6" stroke="white" stroke-width="1" stroke-opacity="0.5" fill="none"/>
+  <circle cx="16" cy="16" r="8" stroke="white" stroke-width="1" stroke-opacity="0.3" fill="none"/>
+</svg>

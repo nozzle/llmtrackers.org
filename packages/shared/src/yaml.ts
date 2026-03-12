@@ -287,6 +287,7 @@ function sortCompanyKeys(company: CompanyYamlValue): CompanyYamlValue {
     slug: company.slug,
     name: company.name,
     ...(company.group ? { group: company.group } : {}),
+    ...(company.defunct ? { defunct: company.defunct } : {}),
     website: company.website,
     description: company.description,
     plans: company.plans.map(sortPlanKeys),
@@ -309,6 +310,7 @@ function sortCompanyKeys(company: CompanyYamlValue): CompanyYamlValue {
           videos: company.videos.map(sortVideoKeys),
         }
       : {}),
+    ...(company.fundraising ? { fundraising: company.fundraising } : {}),
     ...(company.lastChecked !== undefined ? { lastChecked: company.lastChecked } : {}),
   } as CompanyYamlValue;
 }

@@ -11,10 +11,24 @@ plans:
       currency: USD
       period: monthly
       note: Backed by customers, not venture capital
+    pricePer1000Responses: null
+    aiResponsesMonthly: null
+    includedLlmModels: null
+    schedule: daily
+    locationSupport: 5
+    personaSupport: 1
+    contentGeneration: false
+    contentOptimization: false
+    integrations: []
     llmSupport:
       chatgpt: true
       gemini: true
       perplexity: true
+      claude: false
+      llama: false
+      grok: false
+      aiOverviews: false
+      aiMode: false
 tweets: []
 pricingUrl: https://www.openforge.ai/
 featuresUrl: https://www.openforge.ai/

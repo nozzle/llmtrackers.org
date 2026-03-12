@@ -11,11 +11,13 @@ plans:
       currency: USD
       period: monthly
       note: 14-day free trial available
+    pricePer1000Responses: null
     aiResponsesMonthly: 1000
     includedLlmModels: 9
     schedule: daily
     locationSupport: global
     personaSupport: 1
+    contentGeneration: false
     contentOptimization: Content engine and visibility activation
     integrations:
       - PDF export

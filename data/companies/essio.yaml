@@ -11,12 +11,24 @@ plans:
       currency: USD
       period: monthly
       note: Contact sales
+    pricePer1000Responses: null
+    aiResponsesMonthly: null
+    includedLlmModels: null
+    schedule: daily
+    locationSupport: 5
+    personaSupport: 1
+    contentGeneration: false
+    contentOptimization: false
+    integrations: []
     llmSupport:
       chatgpt: true
       gemini: true
       perplexity: true
       claude: true
+      llama: false
       grok: true
+      aiOverviews: false
+      aiMode: false
 tweets: []
 pricingUrl: https://essio.ai/
 featuresUrl: https://essio.ai/
