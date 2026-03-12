@@ -1,0 +1,53 @@
+slug: brandi-ai
+name: Brandi AI
+group: Brandi
+website: https://mybrandi.ai/
+description: Brandi AI is a GEO platform for measuring, monitoring, and optimizing brand presence in AI answers.
+plans:
+  - name: Custom
+    slug: custom
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Demo-led pricing
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+tweets: []
+pricingUrl: https://mybrandi.ai/request-a-generative-engine-optimization-demo/
+featuresUrl: https://mybrandi.ai/
+screenshotSources:
+  - url: https://mybrandi.ai/
+    type: marketing
+    label: Home
+screenshots:
+  - id: awareness-screenshot
+    assetPath: /company-assets/brandi-ai/screenshots/awareness-screenshot.png
+    sourcePageUrl: https://mybrandi.ai/
+    sourceImageUrl: https://i0.wp.com/mybrandi.ai/wp-content/uploads/2025/08/awareness-screenshot-mac.png?fit=443%2C390&ssl=1
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:25:00.000Z
+    alt: Awareness dashboard screenshot
+    kind: dashboard
+    caption: Awareness dashboard for measuring AI brand visibility and recommendation coverage.
+    pageTitle: Brandi AI
+    tags:
+      - dashboard
+      - tracking
+  - id: cited-domains-screenshot
+    assetPath: /company-assets/brandi-ai/screenshots/cited-domains-screenshot.png
+    sourcePageUrl: https://mybrandi.ai/
+    sourceImageUrl: https://i0.wp.com/mybrandi.ai/wp-content/uploads/2025/08/cited-domains-screenshot-mac.png?fit=290%2C300&ssl=1
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:25:00.000Z
+    alt: Cited domains screenshot
+    kind: citations
+    caption: Cited-domain analysis for seeing which websites AI systems rely on when mentioning a brand.
+    pageTitle: Brandi AI
+    tags:
+      - citations
+      - analytics
+lastChecked: 2026-03-12

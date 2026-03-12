@@ -171,4 +171,17 @@ videos:
     sourceType: third-party
     collectedAt: 2026-03-11T17:36:00.000Z
     description: Interview-style product demo focused on Profound's AEO perspective and platform walkthrough.
+fundraising:
+  totalRaised:
+    amount: 59000000
+    currency: USD
+  rounds:
+    - roundType: Series B
+      amountRaised:
+        amount: 59000000
+        currency: USD
+      investors:
+        - name: Sequoia Capital
+          website: https://www.sequoiacap.com/
+          lead: true
 lastChecked: 2025-07-29

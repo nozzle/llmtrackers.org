@@ -1,0 +1,21 @@
+slug: quno
+name: Quno
+group: Quno
+website: https://quno.ai/
+description: Quno monitors how brands appear and are described across AI search and chatbot results.
+plans:
+  - name: Custom
+    slug: custom
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Contact sales
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+tweets: []
+pricingUrl: https://quno.ai/
+featuresUrl: https://quno.ai/
+lastChecked: 2026-03-12

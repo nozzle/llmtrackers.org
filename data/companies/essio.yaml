@@ -1,0 +1,23 @@
+slug: essio
+name: Essio
+group: Essio
+website: https://essio.ai/
+description: Essio is an AI-search optimization platform and service for managing visibility, branding, and ads across major AI assistants.
+plans:
+  - name: Custom
+    slug: custom
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Contact sales
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+      grok: true
+tweets: []
+pricingUrl: https://essio.ai/
+featuresUrl: https://essio.ai/
+lastChecked: 2026-03-12

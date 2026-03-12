@@ -1,0 +1,22 @@
+slug: ansehn
+name: Ansehn
+group: Ansehn
+website: https://www.ansehn.com/
+description: Ansehn is an AI search optimization platform for monitoring brand visibility and reputation in AI search and generating content actions.
+plans:
+  - name: Custom
+    slug: custom
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Sign-up flow available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+tweets: []
+pricingUrl: https://www.ansehn.com/sign-up
+featuresUrl: https://www.ansehn.com/
+lastChecked: 2026-03-12

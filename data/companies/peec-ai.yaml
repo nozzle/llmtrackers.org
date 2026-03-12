@@ -130,4 +130,17 @@ videos:
     sourceType: third-party
     collectedAt: 2026-03-11T17:50:17.472Z
     description: Complete guide to Peec AI's workflow for tracking AI search visibility.
+fundraising:
+  totalRaised:
+    amount: 29000000
+    currency: USD
+  rounds:
+    - roundType: Series A
+      amountRaised:
+        amount: 29000000
+        currency: USD
+      investors:
+        - name: Singular
+          website: https://www.singular.vc/
+          lead: true
 lastChecked: 2025-07-29

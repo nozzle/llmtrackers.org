@@ -1,0 +1,37 @@
+slug: meridian
+name: Meridian
+group: Meridian
+website: https://trymeridian.com/
+description: Meridian turns AI search visibility into revenue through monitoring, content execution, and hands-on optimization.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      aiOverviews: true
+    integrations:
+      - Managed service
+tweets: []
+pricingUrl: https://trymeridian.com/pricing
+featuresUrl: https://trymeridian.com/
+fundraising:
+  totalRaised:
+    amount: 2000000
+    currency: USD
+  rounds:
+    - roundType: Pre-Seed
+      amountRaised:
+        amount: 2000000
+        currency: USD
+      investors:
+        - name: Topology.vc
+          website: https://www.topology.vc/
+          lead: true
+lastChecked: 2026-03-12

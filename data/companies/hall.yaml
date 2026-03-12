@@ -1,0 +1,76 @@
+slug: hall
+name: Hall
+group: Hall
+website: https://usehall.com/
+description: Hall monitors brand mentions, website citations, agent activity, and conversational commerce performance across major AI platforms.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+      aiOverviews: true
+tweets: []
+pricingUrl: https://usehall.com/pricing
+featuresUrl: https://usehall.com/
+screenshots:
+  - id: generative-answer-insights
+    assetPath: /company-assets/hall/screenshots/generative-answer-insights.png
+    sourcePageUrl: https://usehall.com/
+    sourceImageUrl: https://usehall.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fbento-answers.5c7195ac.png&w=3840&q=75
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:10:00.000Z
+    alt: Chart showing brand presence across conversational AI
+    kind: dashboard
+    caption: Generative answer insights for measuring brand presence, share of voice, and sentiment across AI conversations.
+    pageTitle: "Hall: AI visibility platform for GEO/AEO and LLM optimization"
+    tags:
+      - dashboard
+      - tracking
+  - id: website-citation-insights
+    assetPath: /company-assets/hall/screenshots/website-citation-insights.png
+    sourcePageUrl: https://usehall.com/
+    sourceImageUrl: https://usehall.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fbento-citations.0549102b.png&w=3840&q=75
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:10:00.000Z
+    alt: Chart showing top cited domains in conversational AI
+    kind: dashboard
+    caption: Website citation insights for seeing which pages and sources AI systems cite when answering prompts.
+    pageTitle: "Hall: AI visibility platform for GEO/AEO and LLM optimization"
+    tags:
+      - dashboard
+      - citations
+  - id: agent-analytics
+    assetPath: /company-assets/hall/screenshots/agent-analytics.png
+    sourcePageUrl: https://usehall.com/
+    sourceImageUrl: https://usehall.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fbento-analytics.996dde87.png&w=3840&q=75
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:10:00.000Z
+    alt: Dashboard showing analytics from AI agents and crawlers
+    kind: dashboard
+    caption: Agent analytics for observing how AI agents and crawlers browse a website and connect retrieval activity to conversation data.
+    pageTitle: "Hall: AI visibility platform for GEO/AEO and LLM optimization"
+    tags:
+      - dashboard
+      - analytics
+fundraising:
+  totalRaised:
+    amount: 2000000
+    currency: USD
+  rounds:
+    - roundType: Pre-Seed
+      amountRaised:
+        amount: 2000000
+        currency: USD
+      investors:
+        - name: Blackbird Ventures
+          website: https://www.blackbird.vc/
+          lead: true
+lastChecked: 2026-03-12

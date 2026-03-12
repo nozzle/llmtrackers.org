@@ -1,0 +1,49 @@
+slug: bluefish
+name: Bluefish AI
+group: Bluefish
+website: https://www.bluefishai.com/
+description: Bluefish AI gives enterprise marketers visibility and influence across AI channels through monitoring, optimization, measurement, and commerce tools.
+plans:
+  - name: Enterprise
+    slug: enterprise
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Contact sales
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+      aiOverviews: true
+tweets: []
+pricingUrl: https://www.bluefishai.com/contact/sales
+featuresUrl: https://www.bluefishai.com/
+fundraising:
+  totalRaised:
+    amount: 24000000
+    currency: USD
+  rounds:
+    - roundType: Series A
+      amountRaised:
+        amount: 20000000
+        currency: USD
+      announcedOn: 2025-09-01
+      investors:
+        - name: NEA
+          website: https://www.nea.com/
+          lead: true
+        - name: Salesforce Ventures
+          website: https://www.salesforceventures.com/
+          lead: false
+        - name: Crane Venture Partners
+          website: https://www.crane.vc/
+          lead: false
+        - name: Swift Ventures
+          website: https://swift.vc/
+          lead: false
+        - name: Bloomberg Beta
+          website: https://www.bloombergbeta.com/
+          lead: false
+lastChecked: 2026-03-12

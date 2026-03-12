@@ -1,0 +1,22 @@
+slug: ai-brand-track
+name: AI Brand Track
+group: AI Brand Track
+website: https://www.aibrandtrack.com/
+description: AI Brand Track monitors how AI platforms rank a brand and provides recommendations for improving visibility.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public plans page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+tweets: []
+pricingUrl: https://www.aibrandtrack.com/plans
+featuresUrl: https://www.aibrandtrack.com/
+lastChecked: 2026-03-12

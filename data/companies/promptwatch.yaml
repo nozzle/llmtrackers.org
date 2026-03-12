@@ -1,0 +1,22 @@
+slug: promptwatch
+name: Promptwatch
+group: Promptwatch
+website: https://promptwatch.com/
+description: Promptwatch tracks and optimizes brand visibility in ChatGPT, Gemini, Claude, Perplexity, and other AI search engines.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+tweets: []
+pricingUrl: https://promptwatch.com/pricing
+featuresUrl: https://promptwatch.com/
+lastChecked: 2026-03-12

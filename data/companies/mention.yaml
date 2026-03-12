@@ -1,0 +1,21 @@
+slug: mention
+name: Mention
+group: Mention
+website: https://mention.com/
+description: Mention is a social listening and media monitoring platform for tracking online mentions, sentiment, share of voice, and competitive activity.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: false
+      gemini: false
+      perplexity: false
+tweets: []
+pricingUrl: https://mention.com/en/pricing/
+featuresUrl: https://mention.com/
+lastChecked: 2026-03-12

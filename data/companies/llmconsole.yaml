@@ -1,0 +1,22 @@
+slug: llmconsole
+name: LLMConsole
+group: LLMConsole
+website: https://llmconsole.com/
+description: LLMConsole compares how likely LLMs are to recommend your brand or product versus competitors for a target audience.
+plans:
+  - name: Free Analysis
+    slug: free-analysis
+    price:
+      amount: 0
+      currency: USD
+      period: one-time
+      note: Free no-sign-up analysis flow
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+tweets: []
+pricingUrl: https://llmconsole.com/
+featuresUrl: https://llmconsole.com/
+lastChecked: 2026-03-12

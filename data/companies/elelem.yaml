@@ -1,0 +1,20 @@
+slug: elelem
+name: Elelem
+group: Elelem
+website: https://elelem.ai/
+description: Elelem turns a website into a ChatGPT-style answer engine and includes AI visibility and answer-engineering features for marketers.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+tweets: []
+pricingUrl: https://elelem.ai/pricing
+featuresUrl: https://elelem.ai/
+lastChecked: 2026-03-12

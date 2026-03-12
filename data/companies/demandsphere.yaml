@@ -74,4 +74,23 @@ screenshots:
       - dashboard
       - analytics
       - tracking
+fundraising:
+  totalRaised:
+    amount: 1700000
+    currency: USD
+  rounds:
+    - roundType: Seed
+      amountRaised:
+        amount: 1700000
+        currency: USD
+      investors:
+        - name: 500 Global
+          website: https://500.co/
+          lead: true
+        - name: Y Combinator
+          website: https://www.ycombinator.com/
+          lead: false
+        - name: Hinge Capital
+          website: https://www.hingecap.com/
+          lead: false
 lastChecked: 2025-07-29

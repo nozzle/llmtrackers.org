@@ -16,6 +16,10 @@ import {
   type CompanyVideoProviderSchema,
   type CompanyVideoSourceTypeSchema,
   type CompanyVideoSchema,
+  type FundraisingAmountSchema,
+  type FundraisingInvestorSchema,
+  type FundraisingRoundSchema,
+  type FundraisingSchema,
   type MetricSupportSchema,
   type MetricSchema,
   type TweetSchema,
@@ -43,6 +47,10 @@ export type CompanyScreenshot = z.infer<typeof CompanyScreenshotSchema>;
 export type CompanyVideoProvider = z.infer<typeof CompanyVideoProviderSchema>;
 export type CompanyVideoSourceType = z.infer<typeof CompanyVideoSourceTypeSchema>;
 export type CompanyVideo = z.infer<typeof CompanyVideoSchema>;
+export type FundraisingAmount = z.infer<typeof FundraisingAmountSchema>;
+export type FundraisingInvestor = z.infer<typeof FundraisingInvestorSchema>;
+export type FundraisingRound = z.infer<typeof FundraisingRoundSchema>;
+export type Fundraising = z.infer<typeof FundraisingSchema>;
 export type MetricSupport = z.infer<typeof MetricSupportSchema>;
 export type Metric = z.infer<typeof MetricSchema>;
 export type Tweet = z.infer<typeof TweetSchema>;

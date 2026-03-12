@@ -1,0 +1,22 @@
+slug: xlr8-ai
+name: XLR8 AI
+group: XLR8
+website: https://tryxlr8.ai/
+description: XLR8 AI is an enterprise GEO platform that combines visibility tracking, sentiment analysis, action recommendations, and managed execution.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      aiOverviews: true
+tweets: []
+pricingUrl: https://tryxlr8.ai/pricing
+featuresUrl: https://tryxlr8.ai/
+lastChecked: 2026-03-12

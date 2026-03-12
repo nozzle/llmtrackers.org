@@ -1,0 +1,59 @@
+slug: gauge
+name: Gauge
+group: Gauge
+website: https://www.withgauge.com/
+description: Gauge tracks, analyzes, and improves how brands appear across ChatGPT, Gemini, Perplexity, Copilot, AI Mode, and AI Overviews.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    pricePer1000Responses: null
+    aiResponsesMonthly: null
+    includedLlmModels: null
+    schedule: daily
+    locationSupport: 5
+    personaSupport: 1
+    contentGeneration: false
+    contentOptimization: false
+    integrations: []
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: false
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: true
+tweets: []
+pricingUrl: https://withgauge.com/pricing
+featuresUrl: https://www.withgauge.com/
+screenshots:
+  - id: 692595f829954647a4ed19a5-hero-20graphic-p-500
+    assetPath: /company-assets/gauge/screenshots/692595f829954647a4ed19a5-hero-20graphic-p-500.webp
+    sourcePageUrl: https://www.withgauge.com/
+    sourceImageUrl: https://cdn.prod.website-files.com/692561c9449d06759bc7e337/692595f829954647a4ed19a5_Hero%20Graphic-p-500.webp
+    sourceType: other
+    collectedAt: 2026-03-12T11:59:03.473Z
+    alt: 692595f829954647a4ed19a5 Hero 20graphic P 500
+    kind: analytics
+    pageTitle: Gauge | AI Visibility Platform & Analytics for Generative Engine Optimization
+    tags:
+      - analytics
+  - id: the-complete-toolkit-for-ai-search
+    assetPath: /company-assets/gauge/screenshots/the-complete-toolkit-for-ai-search.png
+    sourcePageUrl: https://www.withgauge.com/
+    sourceImageUrl: https://cdn.prod.website-files.com/692561c9449d06759bc7e337/69259ce5a9a9acddb5f985e6_e755dc89e253007552d1140d5629c04f_AI%20SEARCHING-p-500.png
+    sourceType: other
+    collectedAt: 2026-03-12T11:59:03.849Z
+    alt: The Complete Toolkit for AI Search
+    kind: tracking
+    contextHeading: The Complete Toolkit for AI Search
+    pageTitle: Gauge | AI Visibility Platform & Analytics for Generative Engine Optimization
+    tags:
+      - tracking
+lastChecked: 2026-03-12

@@ -1,0 +1,49 @@
+slug: geostar
+name: Geostar
+group: Geostar
+website: https://geostar.ai/
+description: Geostar monitors AI visibility, citation sources, competitor gaps, bot activity, sentiment, and share of voice for AI search.
+plans:
+  - name: Lite
+    slug: lite
+    price:
+      amount: 249
+      currency: USD
+      period: monthly
+      note: Yearly billing discount available
+    aiResponsesMonthly: 6000
+    llmSupport:
+      chatgpt: true
+      perplexity: true
+      aiOverviews: true
+tweets: []
+pricingUrl: https://geostar.ai/pricing
+featuresUrl: https://geostar.ai/
+screenshots:
+  - id: overview-dashboard
+    assetPath: /company-assets/geostar/screenshots/overview-dashboard.webp
+    sourcePageUrl: https://geostar.ai/
+    sourceImageUrl: https://geostar.ai/_next/image?url=%2Fimages%2Foverview-nike.webp&w=3840&q=75
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:10:00.000Z
+    alt: Geostar overview page showing Nike
+    kind: dashboard
+    caption: Overview dashboard for monitoring AI visibility, citations, competitor gaps, and search performance.
+    pageTitle: Generative Engine Optimization Platform - Geostar AI Visibility Tool
+    tags:
+      - dashboard
+      - tracking
+  - id: citation-optimization-dashboard
+    assetPath: /company-assets/geostar/screenshots/citation-optimization-dashboard.webp
+    sourcePageUrl: https://geostar.ai/
+    sourceImageUrl: https://geostar.ai/images/featureshot-1.webp
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:10:00.000Z
+    alt: Citation optimization dashboard
+    kind: dashboard
+    caption: Citation optimization dashboard for identifying trusted sources and improving AI recommendation coverage.
+    pageTitle: Generative Engine Optimization Platform - Geostar AI Visibility Tool
+    tags:
+      - dashboard
+      - citations
+lastChecked: 2026-03-12

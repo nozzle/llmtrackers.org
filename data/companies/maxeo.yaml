@@ -1,0 +1,22 @@
+slug: maxeo
+name: Maxeo
+group: Maxeo
+website: https://maxeo.ai/
+description: Maxeo helps brands track where they appear in AI answers, identify source and coverage gaps, and act on recommendations to improve visibility.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      aiOverviews: true
+tweets: []
+pricingUrl: https://maxeo.ai/pricing
+featuresUrl: https://maxeo.ai/
+lastChecked: 2026-03-12

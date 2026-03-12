@@ -106,4 +106,27 @@ screenshots:
     pageTitle: Know where your brand stands in AI search | Botify AI Visibility
     tags:
       - dashboard
+fundraising:
+  totalRaised:
+    amount: 82000000
+    currency: USD
+  rounds:
+    - roundType: Series C
+      amountRaised:
+        amount: 55000000
+        currency: USD
+      announcedOn: 2021-09-02
+      investors:
+        - name: InfraVia Growth
+          website: https://www.infraviagroup.com/
+          lead: true
+        - name: Bpifrance Large Venture
+          website: https://www.bpifrance.com/
+          lead: false
+        - name: Eurazeo
+          website: https://www.eurazeo.com/
+          lead: false
+        - name: Ventech
+          website: https://www.ventechvc.com/
+          lead: false
 lastChecked: 2026-03-12

@@ -113,4 +113,17 @@ videos:
     sourceType: third-party
     collectedAt: 2026-03-11T17:35:00.000Z
     description: Product showcase and walkthrough covering AthenaHQ's GEO monitoring workflow.
+fundraising:
+  totalRaised:
+    amount: 2700000
+    currency: USD
+  rounds:
+    - roundType: Seed
+      amountRaised:
+        amount: 2700000
+        currency: USD
+      investors:
+        - name: FundersClub
+          website: https://fundersclub.com/
+          lead: true
 lastChecked: 2025-07-29

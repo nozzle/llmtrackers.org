@@ -1,0 +1,22 @@
+slug: trackerly
+name: Trackerly
+group: Trackerly
+website: https://trackerly.ai/
+description: Trackerly is a credit-based AI brand visibility and citation tracking platform that monitors mentions, sentiment, and share of voice across major LLMs.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+tweets: []
+pricingUrl: https://trackerly.ai/pricing
+featuresUrl: https://trackerly.ai/
+lastChecked: 2026-03-12

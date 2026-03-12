@@ -1,0 +1,22 @@
+slug: anvil
+name: Anvil
+group: Anvil
+website: https://joinanvil.com/
+description: Anvil is an SEO platform for the AI era that monitors how a brand appears across AI platforms and helps optimize for more traffic.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      aiOverviews: true
+tweets: []
+pricingUrl: https://joinanvil.com/pricing
+featuresUrl: https://joinanvil.com/
+lastChecked: 2026-03-12

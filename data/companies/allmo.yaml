@@ -1,0 +1,22 @@
+slug: allmo
+name: ALLMO
+group: ALLMO
+website: https://www.allmo.ai/
+description: ALLMO is an actionable AI search analytics platform for measuring, analyzing, and optimizing brand visibility across leading AI models.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+tweets: []
+pricingUrl: https://www.allmo.ai/pricing
+featuresUrl: https://www.allmo.ai/
+lastChecked: 2026-03-12

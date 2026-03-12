@@ -63,4 +63,17 @@ screenshots:
     height: 1171
     tags:
       - tracking
+fundraising:
+  totalRaised:
+    amount: 2000000
+    currency: USD
+  rounds:
+    - roundType: Pre-Seed
+      amountRaised:
+        amount: 2000000
+        currency: USD
+      investors:
+        - name: Pioneer Square Labs
+          website: https://www.psl.com/
+          lead: true
 lastChecked: 2025-07-29

@@ -90,4 +90,20 @@ screenshots:
       - dashboard
       - analytics
       - tracking
+fundraising:
+  totalRaised:
+    amount: 5800000
+    currency: USD
+  rounds:
+    - roundType: Seed
+      amountRaised:
+        amount: 5800000
+        currency: USD
+      investors:
+        - name: G20 Ventures
+          website: https://g20vc.com/
+          lead: true
+        - name: Cardumen Capital
+          website: https://www.cardumen.com/
+          lead: true
 lastChecked: 2025-07-29

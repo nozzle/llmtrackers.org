@@ -125,4 +125,17 @@ videos:
     sourceType: first-party
     collectedAt: 2026-03-11T17:59:00.413Z
     description: Live product session showing how AirOps combines AI search data, content workflows, and Claude Code-driven MCP tooling.
+fundraising:
+  totalRaised:
+    amount: 60000000
+    currency: USD
+  rounds:
+    - roundType: Series B
+      amountRaised:
+        amount: 60000000
+        currency: USD
+      investors:
+        - name: Greylock
+          website: https://greylock.com/
+          lead: true
 lastChecked: 2025-07-29

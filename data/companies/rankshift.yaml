@@ -1,0 +1,22 @@
+slug: rankshift
+name: Rankshift
+group: Rankshift
+website: https://www.rankshift.ai/
+description: Rankshift measures brand mentions, citations, sentiment, and competitor performance across major LLMs and AI search engines.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+tweets: []
+pricingUrl: https://www.rankshift.ai/pricing/
+featuresUrl: https://www.rankshift.ai/
+lastChecked: 2026-03-12

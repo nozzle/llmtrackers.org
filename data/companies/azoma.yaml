@@ -1,0 +1,48 @@
+slug: azoma
+name: Azoma
+group: Azoma
+website: https://www.azoma.ai/
+description: Azoma offers agentic commerce optimization software to make products visible, recommended, and purchasable by AI shopping agents.
+plans:
+  - name: Enterprise
+    slug: enterprise
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Enterprise pricing
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      aiMode: true
+tweets: []
+pricingUrl: https://www.azoma.ai/enterprise
+featuresUrl: https://www.azoma.ai/
+fundraising:
+  totalRaised:
+    amount: 4000000
+    currency: USD
+  rounds:
+    - roundType: Pre-Series A
+      amountRaised:
+        amount: 4000000
+        currency: USD
+      announcedOn: 2025-12-01
+      investors:
+        - name: Ignite Ventures
+          website: https://igniteventures.com/
+          lead: true
+        - name: Rank Ventures
+          website: null
+          lead: false
+        - name: eBay Ventures x Techstars
+          website: https://www.ebayventures.com/
+          lead: false
+        - name: Twinpath
+          website: null
+          lead: false
+        - name: MaRS IAF
+          website: https://www.marsiaf.com/
+          lead: false
+lastChecked: 2026-03-12

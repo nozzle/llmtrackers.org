@@ -1,0 +1,52 @@
+slug: chatrank
+name: ChatRank
+group: ChatRank
+website: https://chatrank.ai/
+description: ChatRank is an AI toolkit for tracking and improving brand visibility in ChatGPT and Google Answers.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      aiOverviews: true
+tweets: []
+pricingUrl: https://chatrank.ai/pricing
+featuresUrl: https://chatrank.ai/
+screenshotSources:
+  - url: https://chatrank.ai/
+    type: marketing
+    label: Home
+screenshots:
+  - id: monitoring-bg-image
+    assetPath: /company-assets/chatrank/screenshots/monitoring-bg-image.webp
+    sourcePageUrl: https://chatrank.ai/
+    sourceImageUrl: https://chatrank.ai/img/screenshots/monitoring-bg-image.webp
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:25:00.000Z
+    alt: Monitoring dashboard screenshot
+    kind: dashboard
+    caption: Monitoring dashboard for tracking brand appearances and prompt outcomes across AI systems.
+    pageTitle: ChatRank
+    tags:
+      - dashboard
+      - tracking
+  - id: charts-image
+    assetPath: /company-assets/chatrank/screenshots/charts-image.webp
+    sourcePageUrl: https://chatrank.ai/
+    sourceImageUrl: https://chatrank.ai/img/screenshots/charts-image.webp
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:25:00.000Z
+    alt: Charts image screenshot
+    kind: analytics
+    caption: Chart-heavy analytics view for benchmarking AI search visibility and trends.
+    pageTitle: ChatRank
+    tags:
+      - analytics
+      - tracking
+lastChecked: 2026-03-12

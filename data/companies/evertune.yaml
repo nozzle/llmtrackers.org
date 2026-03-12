@@ -126,4 +126,17 @@ screenshots:
     contextHeading: AI Retargeting
     pageTitle: Evertune | Improve Your Brand’s Visibility in AI Search
     tags: []
+fundraising:
+  totalRaised:
+    amount: 19000000
+    currency: USD
+  rounds:
+    - roundType: Seed
+      amountRaised:
+        amount: 19000000
+        currency: USD
+      investors:
+        - name: Felicis Ventures
+          website: https://www.felicis.com/
+          lead: true
 lastChecked: 2026-03-12

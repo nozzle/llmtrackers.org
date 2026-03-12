@@ -1,0 +1,20 @@
+slug: promptization
+name: Promptization
+group: Promptization
+website: https://promptization.com/
+description: Promptization is listed by Graphite as an AEO tool, but the website was unreachable during collection.
+plans:
+  - name: Custom
+    slug: custom
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Site unreachable during collection
+    llmSupport:
+      chatgpt: true
+      gemini: true
+tweets: []
+pricingUrl: https://promptization.com/
+featuresUrl: https://promptization.com/
+lastChecked: 2026-03-12

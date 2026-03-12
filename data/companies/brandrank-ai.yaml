@@ -1,0 +1,53 @@
+slug: brandrank-ai
+name: BrandRank.AI
+group: BrandRank
+website: https://www.brandrank.ai/
+description: BrandRank.AI tracks critical prompts daily to measure AI search visibility, content readiness, and brand vulnerability.
+plans:
+  - name: Custom
+    slug: custom
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Contact sales
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      aiOverviews: true
+tweets: []
+pricingUrl: https://www.brandrank.ai/what-we-do-ft
+featuresUrl: https://www.brandrank.ai/
+screenshotSources:
+  - url: https://www.brandrank.ai/
+    type: marketing
+    label: Home
+screenshots:
+  - id: ai-search
+    assetPath: /company-assets/brandrank-ai/screenshots/ai-search.png
+    sourcePageUrl: https://www.brandrank.ai/what-we-do-ft
+    sourceImageUrl: https://www.brandrank.ai/hs-fs/hubfs/32990f1f9_AISearch.png?width=680&height=432&name=32990f1f9_AISearch.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:25:00.000Z
+    alt: AI search dashboard
+    kind: dashboard
+    caption: AI search visibility dashboard for tracking prompts, rankings, and brand appearance risk.
+    pageTitle: BrandRank.AI
+    tags:
+      - dashboard
+      - tracking
+  - id: brand-vulnerability
+    assetPath: /company-assets/brandrank-ai/screenshots/brand-vulnerability.png
+    sourcePageUrl: https://www.brandrank.ai/what-we-do-ft
+    sourceImageUrl: https://www.brandrank.ai/hs-fs/hubfs/57dddcb2f_BrandVulnerability.png?width=680&height=432&name=57dddcb2f_BrandVulnerability.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:25:00.000Z
+    alt: Brand vulnerability analysis
+    kind: analytics
+    caption: Brand vulnerability analysis highlighting weak spots in AI visibility and recommendation coverage.
+    pageTitle: BrandRank.AI
+    tags:
+      - analytics
+      - tracking
+lastChecked: 2026-03-12

@@ -1,0 +1,21 @@
+slug: aeo-checker
+name: AEO Checker
+group: AEO Checker
+website: https://www.aeochecker.ai/
+description: AEO Checker analyzes and optimizes web content visibility for AI chatbots, LLM search engines, and answer engines.
+plans:
+  - name: Custom
+    slug: custom
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Demo-led pricing
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+tweets: []
+pricingUrl: https://www.aeochecker.ai/pricing
+featuresUrl: https://www.aeochecker.ai/
+lastChecked: 2026-03-12

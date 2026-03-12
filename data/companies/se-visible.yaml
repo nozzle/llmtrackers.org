@@ -1,0 +1,23 @@
+slug: se-visible
+name: SE Visible
+group: SE Ranking
+website: https://visible.seranking.com/
+description: SE Visible monitors brands, sentiment, competitors, and sources across ChatGPT, Perplexity, Gemini, AI Overviews, and AI Mode.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing information is embedded in the product site
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      aiOverviews: true
+      aiMode: true
+tweets: []
+pricingUrl: https://visible.seranking.com/
+featuresUrl: https://visible.seranking.com/
+lastChecked: 2026-03-12

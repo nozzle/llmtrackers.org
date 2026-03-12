@@ -1,0 +1,21 @@
+slug: llm-seo-monitor
+name: LLM SEO Monitor
+group: Findable
+website: https://llmseomonitor.com/
+description: LLM SEO Monitor tracks and improves rankings in ChatGPT, Claude, and Gemini as part of the broader Findable answer engine optimization platform.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      claude: true
+tweets: []
+pricingUrl: https://llmseomonitor.com/pricing
+featuresUrl: https://llmseomonitor.com/
+lastChecked: 2026-03-12

@@ -1,0 +1,21 @@
+slug: ai-visibility
+name: AI Visibility
+group: AI Visibility
+website: https://www.aivisibility.io/
+description: AI Visibility is an AI visibility optimization platform that has evolved into the FactSentry product line.
+plans:
+  - name: Custom
+    slug: custom
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Migrated product line
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+tweets: []
+pricingUrl: https://factsentry.ai/pricing?ref=aivisibility_migration
+featuresUrl: https://www.aivisibility.io/
+lastChecked: 2026-03-12

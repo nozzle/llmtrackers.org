@@ -1,0 +1,52 @@
+slug: yosa
+name: YOSA
+group: YOSA
+website: https://yosa.ai/
+description: YOSA is an AI SEO agent that creates and optimizes content, analyzes AI Overviews and keywords, and automates SEO workflows through a chat-style interface.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing section available
+    llmSupport:
+      aiOverviews: true
+      chatgpt: true
+      gemini: true
+tweets: []
+pricingUrl: https://yosa.ai/#pricing
+featuresUrl: https://yosa.ai/
+screenshotSources:
+  - url: https://yosa.ai/
+    type: marketing
+    label: Home
+screenshots:
+  - id: header-visual
+    assetPath: /company-assets/yosa/screenshots/header-visual.png
+    sourcePageUrl: https://yosa.ai/
+    sourceImageUrl: https://yosa.ai/content/images/size/w1600/2025/09/header-visual@2x.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:25:00.000Z
+    alt: Header visual screenshot
+    kind: dashboard
+    caption: Hero workflow showing YOSA's AI SEO agent interface and visibility automation experience.
+    pageTitle: YOSA
+    tags:
+      - dashboard
+      - automation
+  - id: workflow-1
+    assetPath: /company-assets/yosa/screenshots/workflow-1.png
+    sourcePageUrl: https://yosa.ai/
+    sourceImageUrl: https://yosa.ai/content/images/size/w1600/2025/09/11-2.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:25:00.000Z
+    alt: Workflow screenshot
+    kind: workflow
+    caption: Workflow view for generating, optimizing, and analyzing AI search content and prompt coverage.
+    pageTitle: YOSA
+    tags:
+      - workflow
+      - automation
+lastChecked: 2026-03-12

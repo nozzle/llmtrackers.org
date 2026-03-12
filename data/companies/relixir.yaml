@@ -1,0 +1,21 @@
+slug: relixir
+name: Relixir
+group: Relixir
+website: https://relixir.ai/
+description: Relixir appears in Graphite's AEO roundup, though its public site emphasizes recursive agent runtimes rather than a traditional AI visibility dashboard.
+plans:
+  - name: Custom
+    slug: custom
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Contact sales
+    llmSupport:
+      chatgpt: false
+      gemini: false
+      perplexity: false
+tweets: []
+pricingUrl: https://relixir.ai/
+featuresUrl: https://relixir.ai/
+lastChecked: 2026-03-12

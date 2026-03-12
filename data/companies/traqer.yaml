@@ -1,0 +1,20 @@
+slug: traqer
+name: Traqer
+group: Traqer
+website: https://traqer.ai/
+description: Traqer is listed by Graphite as an AEO tool for AI visibility and tracking, but its public site required JavaScript-only access during collection.
+plans:
+  - name: Custom
+    slug: custom
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Site required JavaScript during collection
+    llmSupport:
+      chatgpt: true
+      gemini: true
+tweets: []
+pricingUrl: https://traqer.ai/
+featuresUrl: https://traqer.ai/
+lastChecked: 2026-03-12

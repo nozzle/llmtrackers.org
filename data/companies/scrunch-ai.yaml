@@ -82,4 +82,17 @@ reviewSites:
 tweets: []
 pricingUrl: https://scrunch.ai/pricing
 featuresUrl: https://scrunch.ai/features
+fundraising:
+  totalRaised:
+    amount: 19000000
+    currency: USD
+  rounds:
+    - roundType: Series A
+      amountRaised:
+        amount: 19000000
+        currency: USD
+      investors:
+        - name: Decibel
+          website: https://www.decibel.vc/
+          lead: true
 lastChecked: 2025-07-29

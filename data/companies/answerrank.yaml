@@ -1,0 +1,21 @@
+slug: answerrank
+name: AnswerRank
+group: AnswerRank
+website: https://answerrank.ai/
+description: AnswerRank helps brands understand how they show up in AI-generated answers from systems like ChatGPT and Gemini.
+plans:
+  - name: Custom
+    slug: custom
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Pricing available on request
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      aiOverviews: true
+tweets: []
+pricingUrl: https://answerrank.ai/pricing
+featuresUrl: https://answerrank.ai/
+lastChecked: 2026-03-12

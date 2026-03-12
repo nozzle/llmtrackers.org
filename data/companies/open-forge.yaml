@@ -1,0 +1,21 @@
+slug: open-forge
+name: Open Forge
+group: Open Forge
+website: https://www.openforge.ai/
+description: Open Forge helps brands track AI visibility, analyze competitors, and execute fixes to improve visibility in ChatGPT and other AI search engines.
+plans:
+  - name: Bootstrapped
+    slug: bootstrapped
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Backed by customers, not venture capital
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+tweets: []
+pricingUrl: https://www.openforge.ai/
+featuresUrl: https://www.openforge.ai/
+lastChecked: 2026-03-12

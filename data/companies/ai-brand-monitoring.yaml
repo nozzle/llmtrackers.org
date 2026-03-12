@@ -1,0 +1,22 @@
+slug: ai-brand-monitoring
+name: AI Brand Monitoring
+group: AI Brand Monitoring
+website: https://www.aibrandmonitoring.com/
+description: AI Brand Monitoring helps companies monitor how brands appear in AI tools and improve visibility in LLM-generated answers.
+plans:
+  - name: Custom
+    slug: custom
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Report-request workflow
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+tweets: []
+pricingUrl: https://www.aibrandmonitoring.com/#report-form
+featuresUrl: https://www.aibrandmonitoring.com/
+lastChecked: 2026-03-12

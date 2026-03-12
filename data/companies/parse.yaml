@@ -1,0 +1,20 @@
+slug: parse
+name: Parse
+group: Parse
+website: https://www.parse.gl/
+description: Parse tracks brand performance in ChatGPT and Google AI Overviews and turns ranking and citation changes into recommended actions.
+plans:
+  - name: Custom
+    slug: custom
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Pricing available on request
+    llmSupport:
+      chatgpt: true
+      aiOverviews: true
+tweets: []
+pricingUrl: https://www.parse.gl/pricing
+featuresUrl: https://www.parse.gl/
+lastChecked: 2026-03-12

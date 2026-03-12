@@ -1,0 +1,53 @@
+slug: spotlight
+name: Spotlight
+group: Spotlight
+website: https://www.get-spotlight.com/
+description: Spotlight tracks brand mentions, citations, sentiment, prompt demand, and content opportunities across major AI chatbots.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing section available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+tweets: []
+pricingUrl: https://www.get-spotlight.com/#pricing
+featuresUrl: https://www.get-spotlight.com/
+screenshotSources:
+  - url: https://www.get-spotlight.com/
+    type: marketing
+    label: Home
+screenshots:
+  - id: prompt-volume
+    assetPath: /company-assets/spotlight/screenshots/prompt-volume.jpg
+    sourcePageUrl: https://www.get-spotlight.com/
+    sourceImageUrl: https://www.get-spotlight.com/images/screenshots/prompt-volume-screnshot.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:25:00.000Z
+    alt: Prompt volume screenshot
+    kind: dashboard
+    caption: Prompt volume and demand view for prioritizing high-value AI questions.
+    pageTitle: Spotlight
+    tags:
+      - dashboard
+      - tracking
+  - id: action-items
+    assetPath: /company-assets/spotlight/screenshots/action-items.jpg
+    sourcePageUrl: https://www.get-spotlight.com/
+    sourceImageUrl: https://www.get-spotlight.com/images/screenshots/action-items-screenshot.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:25:00.000Z
+    alt: Action items screenshot
+    kind: analytics
+    caption: Action-items workflow for turning AI visibility findings into concrete optimization tasks.
+    pageTitle: Spotlight
+    tags:
+      - analytics
+      - optimization
+lastChecked: 2026-03-12

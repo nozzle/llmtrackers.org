@@ -1,0 +1,22 @@
+slug: share-of-model
+name: Share of Model
+group: Share of Model
+website: https://shareofmodel.ai/
+description: Share of Model tracks brand perception, search visibility, creative asset performance, and campaign activation across LLM-driven channels.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+tweets: []
+pricingUrl: https://shareofmodel.ai/pricing
+featuresUrl: https://shareofmodel.ai/
+lastChecked: 2026-03-12

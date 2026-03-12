@@ -1,0 +1,21 @@
+slug: scope
+name: Scope
+group: Scope for AI
+website: https://www.scopeforai.com/
+description: Scope tracks brand visibility, mentions, rankings, and competitor performance across AI search platforms.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+tweets: []
+pricingUrl: https://www.scopeforai.com/pricing
+featuresUrl: https://www.scopeforai.com/
+lastChecked: 2026-03-12

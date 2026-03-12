@@ -1,0 +1,32 @@
+slug: cognizo
+name: Cognizo
+group: Cognizo
+website: https://www.cognizo.ai/
+description: Cognizo helps marketers monitor and improve brand visibility in AI answer engines, create AI-optimized content, and measure AI-driven traffic.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+tweets: []
+pricingUrl: https://www.cognizo.ai/pricing
+featuresUrl: https://www.cognizo.ai/
+fundraising:
+  totalRaised:
+    amount: 1800000
+    currency: USD
+  rounds:
+    - roundType: Seed
+      amountRaised:
+        amount: 1800000
+        currency: USD
+      investors: []
+lastChecked: 2026-03-12

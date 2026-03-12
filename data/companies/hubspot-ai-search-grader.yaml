@@ -1,0 +1,21 @@
+slug: hubspot-ai-search-grader
+name: HubSpot AI Search Grader
+group: HubSpot
+website: https://www.hubspot.com/ai-search-grader
+description: HubSpot's AI Search Grader analyzes a brand's AI visibility, sentiment, and competitive positioning across GPT-4o, Perplexity, and Gemini.
+plans:
+  - name: Free
+    slug: free
+    price:
+      amount: 0
+      currency: USD
+      period: one-time
+      note: Free grader tool
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+tweets: []
+pricingUrl: https://www.hubspot.com/ai-search-grader
+featuresUrl: https://www.hubspot.com/ai-search-grader
+lastChecked: 2026-03-12

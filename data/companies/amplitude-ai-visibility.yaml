@@ -1,0 +1,46 @@
+slug: amplitude-ai-visibility
+name: Amplitude AI Visibility
+group: Amplitude
+website: https://amplitude.com/ai-visibility
+description: Amplitude AI Visibility tracks AI visibility score, competitor rankings, and revenue impact inside the Amplitude platform.
+plans:
+  - name: Platform Add-on
+    slug: platform-add-on
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Contact sales
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      aiOverviews: true
+      aiMode: true
+tweets: []
+pricingUrl: https://amplitude.com/ai-visibility
+featuresUrl: https://amplitude.com/ai-visibility
+fundraising:
+  totalRaised:
+    amount: 336000000
+    currency: USD
+  rounds:
+    - roundType: Series F
+      amountRaised:
+        amount: 150000000
+        currency: USD
+      announcedOn: 2021-06-22
+      investors:
+        - name: Sequoia Capital
+          website: https://www.sequoiacap.com/
+          lead: true
+        - name: GIC
+          website: https://www.gic.com.sg/
+          lead: false
+        - name: Battery Ventures
+          website: https://www.battery.com/
+          lead: false
+        - name: IVP
+          website: https://www.ivp.com/
+          lead: false
+lastChecked: 2026-03-12

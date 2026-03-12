@@ -1,0 +1,21 @@
+slug: engenius
+name: EnGenius
+group: EnGenius
+website: https://engenius.one/
+description: EnGenius is an AI-powered generative engine optimization platform listed by Graphite for AEO monitoring and optimization.
+plans:
+  - name: Custom
+    slug: custom
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Pricing not publicly listed
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+tweets: []
+pricingUrl: https://engenius.one/
+featuresUrl: https://engenius.one/
+lastChecked: 2026-03-12

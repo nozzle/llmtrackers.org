@@ -1,0 +1,53 @@
+slug: tesseract
+name: Tesseract
+group: AdLift
+website: https://tesseract.adlift.com/
+description: Tesseract is AdLift's AI brand visibility platform for tracking and optimizing presence across ChatGPT, Gemini, Perplexity, and Google AI Overviews.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      aiOverviews: true
+tweets: []
+pricingUrl: https://tesseract.adlift.com/pricing
+featuresUrl: https://tesseract.adlift.com/
+screenshotSources:
+  - url: https://tesseract.adlift.com/
+    type: marketing
+    label: Home
+screenshots:
+  - id: project-view
+    assetPath: /company-assets/tesseract/screenshots/project-view.png
+    sourcePageUrl: https://tesseract.adlift.com/
+    sourceImageUrl: https://tesseract.adlift.com/assets/project-view.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:25:00.000Z
+    alt: Project view screenshot
+    kind: dashboard
+    caption: Project-level monitoring view for managing brand visibility and optimization workflows across AI engines.
+    pageTitle: Tesseract
+    tags:
+      - dashboard
+      - tracking
+  - id: keywords-view
+    assetPath: /company-assets/tesseract/screenshots/keywords-view.png
+    sourcePageUrl: https://tesseract.adlift.com/
+    sourceImageUrl: https://tesseract.adlift.com/assets/keywords-view.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:25:00.000Z
+    alt: Keywords view screenshot
+    kind: analytics
+    caption: Keyword and prompt view for auditing factual alignment, query coverage, and AI visibility performance.
+    pageTitle: Tesseract
+    tags:
+      - analytics
+      - tracking
+lastChecked: 2026-03-12

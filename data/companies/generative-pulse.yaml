@@ -1,0 +1,21 @@
+slug: generative-pulse
+name: Generative Pulse
+group: Muck Rack
+website: https://generativepulse.ai/
+description: Generative Pulse is a PR-focused AI visibility platform from Muck Rack that shows which journalists, outlets, and sources shape how LLMs talk about a brand.
+plans:
+  - name: Enterprise
+    slug: enterprise
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Contact sales
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+tweets: []
+pricingUrl: https://generativepulse.ai/capabilities
+featuresUrl: https://generativepulse.ai/
+lastChecked: 2026-03-12

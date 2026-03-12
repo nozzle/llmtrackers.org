@@ -1,0 +1,34 @@
+slug: telepathic
+name: Telepathic
+group: Telepathic
+website: https://itstelepathic.com/
+description: Telepathic is an AI search and SEO visibility platform plus managed service for health-focused ecommerce brands.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing section available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      aiOverviews: true
+tweets: []
+pricingUrl: https://itstelepathic.com/#pricing
+featuresUrl: https://itstelepathic.com/
+fundraising:
+  totalRaised:
+    amount: 1100000
+    currency: USD
+  rounds:
+    - roundType: Pre-Seed
+      amountRaised:
+        amount: 1100000
+        currency: USD
+      investors:
+        - name: S16.vc
+          website: https://www.s16vc.com/
+          lead: true
+lastChecked: 2026-03-12

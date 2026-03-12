@@ -114,6 +114,29 @@ export const CompanyVideoSchema = z.object({
   description: z.string().min(1).optional(),
 });
 
+export const FundraisingAmountSchema = z.object({
+  amount: z.number().nonnegative(),
+  currency: z.string().default("USD"),
+});
+
+export const FundraisingInvestorSchema = z.object({
+  name: z.string().min(1),
+  website: z.url().nullable().optional(),
+  lead: z.boolean().default(false),
+});
+
+export const FundraisingRoundSchema = z.object({
+  roundType: z.string().min(1),
+  amountRaised: FundraisingAmountSchema,
+  announcedOn: z.string().nullable().optional(),
+  investors: z.array(FundraisingInvestorSchema).default([]),
+});
+
+export const FundraisingSchema = z.object({
+  totalRaised: FundraisingAmountSchema,
+  rounds: z.array(FundraisingRoundSchema).default([]),
+});
+
 export const MetricSupportSchema = z.object({
   companySlug: z.string().min(1),
   planSlug: z.string().min(1),
@@ -200,6 +223,7 @@ export const CompanySchema = z.object({
   screenshotSources: z.array(CompanyScreenshotSourceSchema).default([]),
   screenshots: z.array(CompanyScreenshotSchema).default([]),
   videos: z.array(CompanyVideoSchema).default([]),
+  fundraising: FundraisingSchema.optional(),
   lastChecked: z.string().nullable().optional(),
 });
 

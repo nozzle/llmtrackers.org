@@ -1,0 +1,22 @@
+slug: gptrends
+name: Siteline
+group: GPTrends
+website: https://siteline.ai/
+description: Siteline turns AI agent and bot traffic into recommendations, visibility tracking, and citation insights.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing section available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      aiOverviews: true
+tweets: []
+pricingUrl: https://siteline.ai/#pricing
+featuresUrl: https://siteline.ai/
+lastChecked: 2026-03-12

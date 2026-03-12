@@ -1,0 +1,21 @@
+slug: local-falcon
+name: Local Falcon
+group: Local Falcon
+website: https://www.localfalcon.com/
+description: Local Falcon is a local SEO and AI search visibility platform that tracks business-listing visibility across Google, ChatGPT, Apple Maps, and other platforms.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+      aiOverviews: true
+      aiMode: true
+tweets: []
+pricingUrl: https://www.localfalcon.com/pricing
+featuresUrl: https://www.localfalcon.com/
+lastChecked: 2026-03-12

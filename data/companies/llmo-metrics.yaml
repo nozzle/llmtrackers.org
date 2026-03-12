@@ -1,0 +1,23 @@
+slug: llmo-metrics
+name: GEO Metrics
+group: LLMO Metrics
+website: https://geometrics.app/
+description: GEO Metrics helps brands measure, compare, and improve visibility in AI-generated answers across major AI engines.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Pricing available on site
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+      aiOverviews: true
+tweets: []
+pricingUrl: https://geometrics.app/
+featuresUrl: https://geometrics.app/
+lastChecked: 2026-03-12

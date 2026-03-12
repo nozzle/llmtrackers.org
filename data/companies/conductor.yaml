@@ -137,4 +137,54 @@ videos:
     sourceType: first-party
     collectedAt: 2026-03-11T17:59:02.696Z
     description: Product demo of Conductor's AI writing assistant and content optimization workflow for AI search.
+fundraising:
+  totalRaised:
+    amount: 197000000
+    currency: USD
+  rounds:
+    - roundType: Series C
+      amountRaised:
+        amount: 20000000
+        currency: USD
+      announcedOn: 2012-10-30
+      investors:
+        - name: Investor Growth Capital
+          website: https://www.investorgrowthcapital.com/
+          lead: true
+        - name: FirstMark Capital
+          website: https://firstmark.com/
+          lead: false
+        - name: Matrix Partners
+          website: https://www.matrixpartners.com/
+          lead: false
+    - roundType: Series D
+      amountRaised:
+        amount: 27000000
+        currency: USD
+      announcedOn: 2015-02-12
+      investors:
+        - name: Catalyst Investors
+          website: https://www.catalyst.com/
+          lead: true
+        - name: FirstMark Capital
+          website: https://firstmark.com/
+          lead: false
+        - name: Matrix Partners
+          website: https://www.matrixpartners.com/
+          lead: false
+        - name: Investor Growth Capital
+          website: https://www.investorgrowthcapital.com/
+          lead: false
+        - name: Blue Cloud Ventures
+          website: https://bluecloudventures.com/
+          lead: false
+    - roundType: Series A
+      amountRaised:
+        amount: 150000000
+        currency: USD
+      announcedOn: 2021-11-17
+      investors:
+        - name: Bregal Sagemount
+          website: https://www.sagemount.com/
+          lead: true
 lastChecked: 2025-07-29

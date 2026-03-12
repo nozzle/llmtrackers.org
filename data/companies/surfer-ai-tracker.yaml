@@ -1,0 +1,23 @@
+slug: surfer-ai-tracker
+name: Surfer AI Tracker
+group: SurferSEO
+website: https://surferseo.com/ai-tracker/
+description: Surfer AI Tracker monitors how brands appear in Gemini, ChatGPT, Google AI Overviews, AI Mode, and Perplexity.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      aiOverviews: true
+      aiMode: true
+tweets: []
+pricingUrl: https://surferseo.com/pricing/
+featuresUrl: https://surferseo.com/ai-tracker/
+lastChecked: 2026-03-12

@@ -1,0 +1,19 @@
+slug: morningscore-chatgpt-rank-tracker
+name: Morningscore ChatGPT Rank Tracker
+group: Morningscore
+website: https://morningscore.io/chatgpt-rank-tracker/
+description: Morningscore's ChatGPT Rank Tracker monitors specific prompts for brand mentions, citations, and competitor visibility in ChatGPT responses.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public pricing page available
+    llmSupport:
+      chatgpt: true
+tweets: []
+pricingUrl: https://morningscore.io/pricing/
+featuresUrl: https://morningscore.io/chatgpt-rank-tracker/
+lastChecked: 2026-03-12

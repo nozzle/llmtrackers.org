@@ -1,0 +1,54 @@
+slug: aeo-vision
+name: AEO Vision
+group: AEO Vision
+website: https://aeovision.ai/
+description: AEO Vision tracks brand presence across ChatGPT, Perplexity, Gemini, Claude, and Google AI Mode.
+plans:
+  - name: Self-serve
+    slug: self-serve
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Public plans page available
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+      aiMode: true
+tweets: []
+pricingUrl: https://aeovision.ai/plans/
+featuresUrl: https://aeovision.ai/
+screenshotSources:
+  - url: https://aeovision.ai/
+    type: marketing
+    label: Home
+screenshots:
+  - id: tesla-prompts
+    assetPath: /company-assets/aeo-vision/screenshots/tesla-prompts.png
+    sourcePageUrl: https://aeovision.ai/
+    sourceImageUrl: https://aeovision.ai/images/tesla%20prompts.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:25:00.000Z
+    alt: Tesla prompts analysis
+    kind: dashboard
+    caption: Prompt-level dashboard showing brand visibility and question coverage across tracked AI prompts.
+    pageTitle: AEO Vision
+    tags:
+      - dashboard
+      - tracking
+  - id: competitor-share
+    assetPath: /company-assets/aeo-vision/screenshots/competitor-share.png
+    sourcePageUrl: https://aeovision.ai/
+    sourceImageUrl: https://aeovision.ai/images/tesla%20comp%20share.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:25:00.000Z
+    alt: Competitor share chart
+    kind: analytics
+    caption: Competitor share and comparison view for tracking how often rival brands appear in AI answers.
+    pageTitle: AEO Vision
+    tags:
+      - analytics
+      - tracking
+lastChecked: 2026-03-12
