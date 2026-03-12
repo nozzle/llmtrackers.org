@@ -21,6 +21,37 @@ plans:
 tweets: []
 pricingUrl: https://trymeridian.com/pricing
 featuresUrl: https://trymeridian.com/
+screenshotSources:
+  - url: https://trymeridian.com/
+    type: marketing
+    label: Home
+screenshots:
+  - id: card-0111
+    assetPath: /company-assets/meridian/screenshots/card-0111.avif
+    sourcePageUrl: https://trymeridian.com/
+    sourceImageUrl: https://cdn.prod.website-files.com/687d383c5c43a806fd4cd9cd/687f2a6fd507d618e39028a2_faeb666cc9af076a60dda825c037ff90_card-0111.avif
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:45:00.000Z
+    alt: Meridian card view
+    kind: dashboard
+    caption: Dashboard-style card view showing Meridian's AI search monitoring and execution workflow.
+    pageTitle: Meridian
+    tags:
+      - dashboard
+      - tracking
+  - id: wrapper-11
+    assetPath: /company-assets/meridian/screenshots/wrapper-11.avif
+    sourcePageUrl: https://trymeridian.com/
+    sourceImageUrl: https://cdn.prod.website-files.com/687d383c5c43a806fd4cd9cd/687f2a6ff37450052ca462f7_e7557737a45aa08d3060f31696df0ae1_wrapper-11.avif
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:45:00.000Z
+    alt: Meridian workflow screenshot
+    kind: workflow
+    caption: Workflow visual for turning AI search visibility findings into content and growth execution.
+    pageTitle: Meridian
+    tags:
+      - workflow
+      - optimization
 fundraising:
   totalRaised:
     amount: 2000000

@@ -18,4 +18,35 @@ plans:
 tweets: []
 pricingUrl: https://www.openforge.ai/
 featuresUrl: https://www.openforge.ai/
+screenshotSources:
+  - url: https://www.openforge.ai/
+    type: marketing
+    label: Home
+screenshots:
+  - id: overview
+    assetPath: /company-assets/open-forge/screenshots/overview.webp
+    sourcePageUrl: https://www.openforge.ai/
+    sourceImageUrl: https://www.openforge.ai/_next/static/media/overview.63f81984.webp
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:45:00.000Z
+    alt: Open Forge overview screenshot
+    kind: dashboard
+    caption: Overview screen for AI search monitoring, brand visibility, and issue discovery.
+    pageTitle: Open Forge
+    tags:
+      - dashboard
+      - tracking
+  - id: helix-agent-screen
+    assetPath: /company-assets/open-forge/screenshots/helix-agent-screen.webp
+    sourcePageUrl: https://www.openforge.ai/
+    sourceImageUrl: https://www.openforge.ai/images/agents-product-screens/helix-agent-screen.webp
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:45:00.000Z
+    alt: Helix agent screen
+    kind: workflow
+    caption: Agent workflow screen showing how Open Forge turns findings into guided remediation steps.
+    pageTitle: Open Forge
+    tags:
+      - workflow
+      - optimization
 lastChecked: 2026-03-12

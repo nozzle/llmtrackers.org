@@ -19,4 +19,35 @@ plans:
 tweets: []
 pricingUrl: https://www.allmo.ai/pricing
 featuresUrl: https://www.allmo.ai/
+screenshotSources:
+  - url: https://www.allmo.ai/
+    type: marketing
+    label: Home
+screenshots:
+  - id: ai-search-analytics
+    assetPath: /company-assets/allmo/screenshots/ai-search-analytics.png
+    sourcePageUrl: https://www.allmo.ai/
+    sourceImageUrl: https://framerusercontent.com/images/fTp4pZ6yz4BqFmgdad5K1HCpYM.png?width=1254&height=588
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:45:00.000Z
+    alt: AI search analytics dashboard
+    kind: dashboard
+    caption: Analytics view for monitoring how a brand appears across AI models and search experiences.
+    pageTitle: ALLMO
+    tags:
+      - dashboard
+      - tracking
+  - id: source-analysis
+    assetPath: /company-assets/allmo/screenshots/source-analysis.png
+    sourcePageUrl: https://www.allmo.ai/
+    sourceImageUrl: https://framerusercontent.com/images/n3Q8LYp4pCBJLkT2bCRzBSCuIY.png?width=2122&height=960
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:45:00.000Z
+    alt: Source analysis screenshot
+    kind: citations
+    caption: Source and citation analysis for understanding why AI systems choose certain domains and references.
+    pageTitle: ALLMO
+    tags:
+      - citations
+      - analytics
 lastChecked: 2026-03-12

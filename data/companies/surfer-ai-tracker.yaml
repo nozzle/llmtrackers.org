@@ -20,4 +20,35 @@ plans:
 tweets: []
 pricingUrl: https://surferseo.com/pricing/
 featuresUrl: https://surferseo.com/ai-tracker/
+screenshotSources:
+  - url: https://surferseo.com/ai-tracker/
+    type: marketing
+    label: AI Tracker
+screenshots:
+  - id: how-it-works-2
+    assetPath: /company-assets/surfer-ai-tracker/screenshots/how-it-works-2.avif
+    sourcePageUrl: https://surferseo.com/ai-tracker/
+    sourceImageUrl: https://marketing-assets.surferseo.art/wf-cdn/62666115cfab458794bd512f/68c9776487a9bd9c95adf9c6_dd94e582d7d9dad8dde6a425a15f37ca_AI%20Tracker%20How%20it%20Works%2002.avif
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:45:00.000Z
+    alt: Surfer AI Tracker how it works screenshot
+    kind: dashboard
+    caption: How-it-works view for monitoring AI answers, rankings, and brand appearance across major engines.
+    pageTitle: Surfer AI Tracker
+    tags:
+      - dashboard
+      - tracking
+  - id: advantages-prompts
+    assetPath: /company-assets/surfer-ai-tracker/screenshots/advantages-prompts.avif
+    sourcePageUrl: https://surferseo.com/ai-tracker/
+    sourceImageUrl: https://marketing-assets.surferseo.art/wf-cdn/62666115cfab458794bd512f/699729d3e38b015c5b25c17a_AI%20Tracker%20Advantages%20Prompts.avif
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:45:00.000Z
+    alt: Prompt advantages screenshot
+    kind: analytics
+    caption: Prompt-centric analysis showing where AI visibility expands or falls short across tracked questions.
+    pageTitle: Surfer AI Tracker
+    tags:
+      - analytics
+      - tracking
 lastChecked: 2026-03-12

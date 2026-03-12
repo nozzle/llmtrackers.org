@@ -96,4 +96,9 @@ screenshots:
       - dashboard
       - analytics
       - tracking
+fundraising:
+  totalRaised:
+    amount: 0
+    currency: USD
+  rounds: []
 lastChecked: 2025-07-29

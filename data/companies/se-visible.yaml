@@ -20,4 +20,35 @@ plans:
 tweets: []
 pricingUrl: https://visible.seranking.com/
 featuresUrl: https://visible.seranking.com/
+screenshotSources:
+  - url: https://visible.seranking.com/
+    type: marketing
+    label: Home
+screenshots:
+  - id: screen-desk
+    assetPath: /company-assets/se-visible/screenshots/screen-desk.png
+    sourcePageUrl: https://visible.seranking.com/
+    sourceImageUrl: https://visible.seranking.com/wp-content/uploads/2025/09/xScreen-desk-min-1-scaled.png.pagespeed.ic.6ZkmGuo6aR.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:45:00.000Z
+    alt: SE Visible desktop screenshot
+    kind: dashboard
+    caption: Desktop dashboard for tracking AI visibility, brand mentions, and source coverage across answer engines.
+    pageTitle: SE Visible
+    tags:
+      - dashboard
+      - tracking
+  - id: screenshot-6-columns
+    assetPath: /company-assets/se-visible/screenshots/screenshot-6-columns.png
+    sourcePageUrl: https://visible.seranking.com/
+    sourceImageUrl: https://visible.seranking.com/wp-content/uploads/2026/01/xScreenshot-6-columns.png.pagespeed.ic.4L7WINNqjF.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:45:00.000Z
+    alt: Six-column comparison screenshot
+    kind: analytics
+    caption: Multi-column comparison layout for seeing answer-engine differences and competitor coverage side by side.
+    pageTitle: SE Visible
+    tags:
+      - analytics
+      - tracking
 lastChecked: 2026-03-12

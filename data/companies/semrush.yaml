@@ -35,3 +35,20 @@ plans:
 tweets: []
 pricingUrl: https://www.semrush.com/pricing/
 featuresUrl: https://www.semrush.com/features/
+fundraising:
+  totalRaised:
+    amount: 40000000
+    currency: USD
+  rounds:
+    - roundType: Series B
+      amountRaised:
+        amount: 40000000
+        currency: USD
+      announcedOn: 2018-04-24
+      investors:
+        - name: Greycroft
+          website: https://www.greycroft.com/
+          lead: true
+        - name: Siguler Guff
+          website: https://sigulerguff.com/
+          lead: true

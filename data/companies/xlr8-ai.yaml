@@ -19,4 +19,35 @@ plans:
 tweets: []
 pricingUrl: https://tryxlr8.ai/pricing
 featuresUrl: https://tryxlr8.ai/
+screenshotSources:
+  - url: https://tryxlr8.ai/
+    type: marketing
+    label: Home
+screenshots:
+  - id: overview
+    assetPath: /company-assets/xlr8-ai/screenshots/overview.png
+    sourcePageUrl: https://tryxlr8.ai/
+    sourceImageUrl: https://framerusercontent.com/images/mRe1Bkyp7AMvh9OYfcUziXWmZHM.png?width=3456&height=1985
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:45:00.000Z
+    alt: XLR8 overview screenshot
+    kind: dashboard
+    caption: Executive overview for AI visibility, coverage, and competitive benchmarking.
+    pageTitle: XLR8 AI
+    tags:
+      - dashboard
+      - tracking
+  - id: action-recommendations
+    assetPath: /company-assets/xlr8-ai/screenshots/action-recommendations.png
+    sourcePageUrl: https://tryxlr8.ai/
+    sourceImageUrl: https://framerusercontent.com/images/aOSzIuHJcSRzOKDbJFtnb1UIqg.png?width=1677&height=1275
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:45:00.000Z
+    alt: Action recommendations screenshot
+    kind: analytics
+    caption: Recommended next actions for improving AI presence, sentiment, and citation share.
+    pageTitle: XLR8 AI
+    tags:
+      - analytics
+      - optimization
 lastChecked: 2026-03-12

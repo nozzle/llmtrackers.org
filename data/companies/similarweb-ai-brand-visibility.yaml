@@ -104,7 +104,7 @@ screenshots:
       - tracking
 fundraising:
   totalRaised:
-    amount: 321500000
+    amount: 240000000
     currency: USD
   rounds:
     - roundType: Series B Extension
@@ -113,24 +113,30 @@ fundraising:
         currency: USD
       announcedOn: 2013-09-24
       investors:
-        - name: Lord David Alliance
-          website: null
-          lead: true
         - name: Docor International
           website: https://www.docor.com
           lead: false
-        - name: Moshe Lichtman
-          website: null
-          lead: false
-    - roundType: Series C
+    - roundType: Growth
       amountRaised:
-        amount: 18000000
+        amount: 25000000
         currency: USD
-      announcedOn: 2014-02-24
+      announcedOn: 2015-10-26
       investors:
         - name: Naspers
           website: https://www.naspers.com
           lead: true
+    - roundType: Growth
+      amountRaised:
+        amount: 47000000
+        currency: USD
+      announcedOn: 2017-07-25
+      investors:
+        - name: Viola Growth
+          website: https://www.viola-group.com/viola-growth/
+          lead: true
+        - name: Saban Ventures
+          website: https://www.sabanventures.com
+          lead: false
     - roundType: Growth
       amountRaised:
         amount: 120000000
@@ -141,12 +147,6 @@ fundraising:
           website: https://ioncp.com
           lead: true
         - name: Viola Growth
-          website: https://www.viola-group.com/viola-growth
+          website: https://www.viola-group.com/viola-growth/
           lead: true
-    - roundType: IPO
-      amountRaised:
-        amount: 180000000
-        currency: USD
-      announcedOn: 2021-05-12
-      investors: []
 lastChecked: 2026-03-12
