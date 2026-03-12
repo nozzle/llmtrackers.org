@@ -1,0 +1,112 @@
+slug: am-i-on-ai
+name: Am I On AI?
+group: Mindshare AI
+website: https://www.amionai.com/
+description: AI visibility monitoring platform with source analysis, competitor benchmarking, weekly recommendations, and action-plan style AEO guidance.
+plans:
+  - name: Single
+    slug: single
+    price:
+      amount: 100
+      currency: USD
+      period: monthly
+      note: 7-day trial available
+    pricePer1000Responses: null
+    aiResponsesMonthly: 100
+    includedLlmModels: 1
+    schedule: weekly
+    locationSupport: global
+    personaSupport: 1
+    contentGeneration: false
+    contentOptimization: Personalized recommendations and weekly action plans
+    integrations:
+      - API
+    llmSupport:
+      chatgpt: true
+      gemini: false
+      perplexity: false
+      claude: false
+      llama: false
+      grok: false
+      aiOverviews: false
+      aiMode: false
+tweets: []
+pricingUrl: https://www.amionai.com/pricing
+featuresUrl: https://www.amionai.com/product
+screenshotSources:
+  - url: https://www.amionai.com/
+    type: marketing
+    label: Home
+  - url: https://www.amionai.com/pricing
+    type: marketing
+    label: Pricing
+  - url: https://www.amionai.com/product
+    type: marketing
+    label: Product
+screenshots:
+  - id: ai-recommendations-dashboard
+    assetPath: /company-assets/am-i-on-ai/screenshots/ai-recommendations-dashboard.jpg
+    sourcePageUrl: https://www.amionai.com/product
+    sourceImageUrl: https://www.amionai.com/img/product-screenshots/amionai_2_prompts.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:25:15.202Z
+    alt: AI Recommendations Dashboard
+    kind: dashboard
+    pageTitle: Product Features - Am I on AI?
+    tags:
+      - dashboard
+      - tracking
+  - id: brand-monitoring-dashboard
+    assetPath: /company-assets/am-i-on-ai/screenshots/brand-monitoring-dashboard.jpg
+    sourcePageUrl: https://www.amionai.com/product
+    sourceImageUrl: https://www.amionai.com/img/product-screenshots/visibility_score.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:25:15.089Z
+    alt: Brand Monitoring Dashboard
+    kind: dashboard
+    caption: Track how often and in what context AI platforms mention your brand. This indicates what % of prompts mention you as an answer. This is helpful to track on a regular basis to act as a north star KPI.
+    pageTitle: Product Features - Am I on AI?
+    tags:
+      - dashboard
+      - tracking
+  - id: growth-tracking-dashboard
+    assetPath: /company-assets/am-i-on-ai/screenshots/growth-tracking-dashboard.jpg
+    sourcePageUrl: https://www.amionai.com/product
+    sourceImageUrl: https://www.amionai.com/img/product-screenshots/growth_chart.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:25:15.004Z
+    alt: Growth Tracking Dashboard
+    kind: dashboard
+    caption: AI platforms are dynamic and their rankings change daily. We provide a weekly scan of your brand's AI visibility score to see trends over time
+    contextHeading: Track Growth
+    pageTitle: Product Features - Am I on AI?
+    tags:
+      - dashboard
+      - analytics
+      - tracking
+  - id: prompt-tracking-dashboard
+    assetPath: /company-assets/am-i-on-ai/screenshots/prompt-tracking-dashboard.jpg
+    sourcePageUrl: https://www.amionai.com/product
+    sourceImageUrl: https://www.amionai.com/img/product-screenshots/prompt_tracking.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:25:15.129Z
+    alt: Prompt Tracking Dashboard
+    kind: dashboard
+    pageTitle: Product Features - Am I on AI?
+    tags:
+      - dashboard
+      - tracking
+  - id: source-analysis-dashboard
+    assetPath: /company-assets/am-i-on-ai/screenshots/source-analysis-dashboard.jpg
+    sourcePageUrl: https://www.amionai.com/product
+    sourceImageUrl: https://www.amionai.com/img/product-screenshots/source_citations.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:25:15.165Z
+    alt: Source Analysis Dashboard
+    kind: dashboard
+    contextHeading: Source Analysis
+    pageTitle: Product Features - Am I on AI?
+    tags:
+      - dashboard
+      - tracking
+lastChecked: 2026-03-12

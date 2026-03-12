@@ -1,0 +1,103 @@
+slug: first-answer
+name: First Answer
+group: First Answer AI
+website: https://firstanswer.ai/
+description: GEO platform centered on prompt monitoring, competitor comparison, source analysis, and action plans for AI answer visibility.
+plans:
+  - name: Pro
+    slug: pro
+    price:
+      amount: 370
+      currency: USD
+      period: monthly
+      note: Monthly plan with free trial
+    pricePer1000Responses: null
+    aiResponsesMonthly: 12400
+    includedLlmModels: 4
+    schedule: daily
+    locationSupport: 5
+    personaSupport: 1
+    contentGeneration: 2 AI-generated contents per month
+    contentOptimization: Action plans with crawler logs
+    integrations:
+      - CSV export
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: false
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: false
+tweets: []
+pricingUrl: https://firstanswer.ai/pricing-plans/
+featuresUrl: https://firstanswer.ai/
+screenshotSources:
+  - url: https://firstanswer.ai/
+    type: marketing
+    label: Home
+  - url: https://firstanswer.ai/pricing-plans/
+    type: marketing
+    label: Pricing
+screenshots:
+  - id: compare-your-visibility-with-competitors
+    assetPath: /company-assets/first-answer/screenshots/compare-your-visibility-with-competitors.png
+    sourcePageUrl: https://firstanswer.ai/
+    sourceImageUrl: https://firstanswer.ai/wp-content/uploads/2025/08/monitored-prompts-img-1.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T05:29:11.010Z
+    alt: Compare your visibility with competitors
+    kind: dashboard
+    caption: First Answer lets you track how your brand appears in responses from the leading AI platforms such as ChatGPT, Google AI Overviews, Copilot, and others.
+    contextHeading: Compare your visibility with competitors
+    pageTitle: AI Search Visibility Platform for Brands - First Answer AI
+    width: 1139
+    height: 795
+    tags:
+      - dashboard
+      - tracking
+  - id: first-answer-evaluates-your-brand-s-ai-brand-vis
+    assetPath: /company-assets/first-answer/screenshots/first-answer-evaluates-your-brand-s-ai-brand-vis.png
+    sourcePageUrl: https://firstanswer.ai/
+    sourceImageUrl: https://firstanswer.ai/wp-content/uploads/2025/07/search-trend-1.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T05:29:10.881Z
+    alt: First Answer Evaluates Your Brand S Ai Brand Vis
+    kind: dashboard
+    caption: First Answer evaluates your brand's AI Brand Visibility, compares your presence against competitors, and delivers recommendations to guide GEO strategies and expand your visibility in this new era.
+    pageTitle: AI Search Visibility Platform for Brands - First Answer AI
+    width: 575
+    height: 529
+    tags:
+      - dashboard
+      - analytics
+      - tracking
+  - id: prompt-analysis
+    assetPath: /company-assets/first-answer/screenshots/prompt-analysis.png
+    sourcePageUrl: https://firstanswer.ai/
+    sourceImageUrl: https://firstanswer.ai/wp-content/uploads/2025/09/action-plan-2.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T05:29:11.196Z
+    alt: Prompt Analysis
+    kind: tracking
+    contextHeading: Prompt Analysis
+    pageTitle: AI Search Visibility Platform for Brands - First Answer AI
+    width: 1165
+    height: 843
+    tags:
+      - tracking
+videos:
+  - id: get-your-brand-mentioned-by-chatgpt-first-answer-ai-geo-tool
+    provider: youtube
+    videoId: lSxPzFjUfxA
+    watchUrl: https://www.youtube.com/watch?v=lSxPzFjUfxA
+    title: "Get Your Brand Mentioned by ChatGPT: First Answer AI GEO Tool"
+    creator: First Answer
+    creatorUrl: https://www.youtube.com/@FirstAnswerAI
+    thumbnailUrl: https://i.ytimg.com/vi/lSxPzFjUfxA/hqdefault.jpg
+    kind: demo
+    sourceType: first-party
+    collectedAt: 2026-03-12T05:29:37.601Z
+    description: Product overview focused on improving brand visibility in ChatGPT, Perplexity, and AI search.
+lastChecked: 2026-03-12

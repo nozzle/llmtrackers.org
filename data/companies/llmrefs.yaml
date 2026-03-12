@@ -1,0 +1,57 @@
+slug: llmrefs
+name: LLMrefs
+group: LLMrefs
+website: https://llmrefs.com/
+description: Keyword-first AI search analytics platform with broad model coverage, citation tracking, geo targeting, and agency-friendly project management.
+plans:
+  - name: All in One
+    slug: all-in-one
+    price:
+      amount: 79
+      currency: USD
+      period: monthly
+      note: Limited-time monthly price
+    pricePer1000Responses: null
+    aiResponsesMonthly: 500
+    includedLlmModels: 10
+    schedule: weekly
+    locationSupport: global
+    personaSupport: unlimited
+    contentGeneration: false
+    contentOptimization: AI content optimizer and crawlability tools
+    integrations:
+      - API
+      - CSV export
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+      llama: false
+      grok: true
+      aiOverviews: true
+      aiMode: true
+tweets: []
+pricingUrl: https://llmrefs.com/#pricing
+featuresUrl: https://llmrefs.com/ai-search-visibility
+screenshotSources:
+  - url: https://llmrefs.com/
+    type: marketing
+    label: Home
+  - url: https://llmrefs.com/ai-search-visibility
+    type: marketing
+    label: AI Search Visibility
+videos:
+  - id: llmrefs-ai-seo-keyword-rank-tracker-for-llm-search-engines
+    provider: youtube
+    videoId: j7rYK6ivMI0
+    watchUrl: https://www.youtube.com/watch?v=j7rYK6ivMI0
+    title: LLMrefs - AI SEO Keyword Rank Tracker for LLM Search Engines
+    creator: LLMrefs AI SEO
+    creatorUrl: https://www.youtube.com/@LLMrefs
+    thumbnailUrl: https://i.ytimg.com/vi/j7rYK6ivMI0/hqdefault.jpg
+    kind: demo
+    sourceType: first-party
+    collectedAt: 2026-03-12T05:29:37.602Z
+    description: Homepage-style overview of the LLMrefs AI SEO keyword tracker and visibility workflow.
+lastChecked: 2026-03-12

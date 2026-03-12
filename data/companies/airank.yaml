@@ -1,0 +1,127 @@
+slug: airank
+name: AIRank by DEJAN AI
+group: DEJAN
+website: https://airank.dejan.ai/
+description: AI visibility tracking and selection-rate optimization platform from DEJAN that measures brand associations, citation preference, query fan-out, and AI search perception.
+plans:
+  - name: Agency Retainer
+    slug: agency-retainer
+    price:
+      amount: 5000
+      currency: USD
+      period: monthly
+      note: Typical ongoing engagements range from $5,000 to $20,000 per month
+    pricePer1000Responses: null
+    aiResponsesMonthly: null
+    includedLlmModels: 4
+    schedule: weekly
+    locationSupport: global
+    personaSupport: 1
+    contentGeneration: false
+    contentOptimization: Model steering, snippet optimization, selection-rate optimization, and query fan-out analysis
+    integrations:
+      - Hugging Face models
+      - Google Search Console
+      - Custom dashboards
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: false
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: true
+tweets: []
+pricingUrl: https://dejan.ai/call/
+featuresUrl: https://dejan.ai/ai-seo/
+screenshotSources:
+  - url: https://airank.dejan.ai/
+    type: other
+    label: AIRank App
+  - url: https://dejan.ai/ai-seo/
+    type: marketing
+    label: DEJAN AI SEO
+  - url: https://dejan.ai/sro/
+    type: marketing
+    label: Selection Rate Optimization
+screenshots:
+  - id: ai-visibility-optimization-cycle
+    assetPath: /company-assets/airank/screenshots/ai-visibility-optimization-cycle.png
+    sourcePageUrl: https://dejan.ai/ai-seo/
+    sourceImageUrl: https://dejan.ai/wp-content/uploads/2025/10/image-32-1024x439.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:30:00.000Z
+    alt: Dejan AI visibility optimization cycle
+    kind: analytics
+    caption: Overview of DEJAN's AI visibility optimization cycle spanning diagnosis, visibility tracking, and iterative optimization.
+    pageTitle: AI SEO by DEJAN - DEJAN
+    tags:
+      - analytics
+      - tracking
+  - id: selection-rate-overview
+    assetPath: /company-assets/airank/screenshots/selection-rate-overview.png
+    sourcePageUrl: https://dejan.ai/sro/
+    sourceImageUrl: https://dejan.ai/wp-content/uploads/2025/12/image-11.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:30:00.000Z
+    alt: Selection rate optimization overview
+    kind: analytics
+    caption: Diagram showing how selection rate optimization influences grounding-source selection in AI search systems.
+    pageTitle: Selection Rate Optimization - DEJAN
+    tags:
+      - analytics
+      - tracking
+  - id: snippet-optimization-pipeline
+    assetPath: /company-assets/airank/screenshots/snippet-optimization-pipeline.png
+    sourcePageUrl: https://dejan.ai/sro/
+    sourceImageUrl: https://dejan.ai/wp-content/uploads/2025/12/image-13-1024x554.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:30:00.000Z
+    alt: Grounding snippet optimization pipeline
+    kind: workflow
+    caption: Automated snippet optimization pipeline for reconstructing and improving grounding snippets used in AI search ranking decisions.
+    pageTitle: Selection Rate Optimization - DEJAN
+    tags:
+      - workflow
+      - optimization
+  - id: stage-1-token-shortlisting
+    assetPath: /company-assets/airank/screenshots/stage-1-token-shortlisting.png
+    sourcePageUrl: https://dejan.ai/sro/
+    sourceImageUrl: https://dejan.ai/wp-content/uploads/2025/12/image-17.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:30:00.000Z
+    alt: Stage 1 token shortlisting
+    kind: workflow
+    caption: Stage 1 of DEJAN's optimization loop, shortlisting candidate tokens most likely to improve ranking outcomes naturally.
+    pageTitle: Selection Rate Optimization - DEJAN
+    tags:
+      - workflow
+      - optimization
+  - id: stage-2-refinement
+    assetPath: /company-assets/airank/screenshots/stage-2-refinement.png
+    sourcePageUrl: https://dejan.ai/sro/
+    sourceImageUrl: https://dejan.ai/wp-content/uploads/2025/12/image-16.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:30:00.000Z
+    alt: Stage 2 refinement
+    kind: workflow
+    caption: Stage 2 of the optimization loop, testing candidate tokens against the model to balance ranking impact and naturalness.
+    pageTitle: Selection Rate Optimization - DEJAN
+    tags:
+      - workflow
+      - optimization
+videos:
+  - id: ai-seo-deep-dive-tom-critchlow-and-dan-petrovic-dejan-ai
+    provider: youtube
+    videoId: -f9QCqTqdTA
+    watchUrl: https://www.youtube.com/watch?v=-f9QCqTqdTA
+    title: AI SEO Deep Dive - Tom Critchlow and Dan Petrovic [DEJAN AI]
+    creator: DEJAN
+    creatorUrl: https://www.youtube.com/DejanSEO
+    thumbnailUrl: https://i.ytimg.com/vi/-f9QCqTqdTA/hqdefault.jpg
+    kind: demo
+    sourceType: first-party
+    collectedAt: 2026-03-12T12:30:00.000Z
+    description: Deep dive on AI SEO, grounding, citations, and how DEJAN approaches visibility tracking and optimization in AI search.
+lastChecked: 2026-03-12

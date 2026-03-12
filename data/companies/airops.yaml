@@ -42,6 +42,64 @@ reviewSites:
 tweets: []
 pricingUrl: https://www.airops.com/pricing
 featuresUrl: https://www.airops.com/features
+screenshotSources:
+  - url: https://www.airops.com/insights
+    type: marketing
+    label: Insights
+screenshots:
+  - id: complete-performance-picture
+    assetPath: /company-assets/airops/screenshots/complete-performance-picture.avif
+    sourcePageUrl: https://www.airops.com/insights
+    sourceImageUrl: https://cdn.prod.website-files.com/61fae48cb5979577435753f6/69196fa944e8b10312ea007b_See%20Your%20Complete%20Performance%20Picture.avif
+    sourceType: marketing
+    collectedAt: 2026-03-12T11:10:00.000Z
+    alt: See your complete performance picture
+    kind: dashboard
+    caption: Unified view for SEO, AI visibility, and on-site analytics to diagnose opportunities quickly.
+    pageTitle: AirOps Insights - Track Visibility. Win AI Search
+    tags:
+      - dashboard
+      - analytics
+      - tracking
+  - id: get-full-visibility-tracking
+    assetPath: /company-assets/airops/screenshots/get-full-visibility-tracking.avif
+    sourcePageUrl: https://www.airops.com/insights
+    sourceImageUrl: https://cdn.prod.website-files.com/61fae48cb5979577435753f6/691a0516af25dec68ec88234_Get%20Full%20Visibility%20Tracking.avif
+    sourceType: marketing
+    collectedAt: 2026-03-12T11:10:00.000Z
+    alt: Get full visibility tracking
+    kind: dashboard
+    caption: Visibility tracking module for seeing what is working, what is slipping, and where to focus across AI and traditional search.
+    pageTitle: AirOps Insights - Track Visibility. Win AI Search
+    tags:
+      - dashboard
+      - tracking
+  - id: insights-hero
+    assetPath: /company-assets/airops/screenshots/insights-hero.avif
+    sourcePageUrl: https://www.airops.com/insights
+    sourceImageUrl: https://cdn.prod.website-files.com/61fae48cb5979577435753f6/691a04612fa84bbebe621033_Insights%20Hero%20img.avif
+    sourceType: marketing
+    collectedAt: 2026-03-12T11:10:00.000Z
+    alt: AirOps insights hero
+    kind: dashboard
+    caption: Hero product visual for AirOps Insights with cross-search visibility and prioritization workflows.
+    pageTitle: AirOps Insights - Track Visibility. Win AI Search
+    tags:
+      - dashboard
+      - analytics
+  - id: prioritize-next-best-actions
+    assetPath: /company-assets/airops/screenshots/prioritize-next-best-actions.avif
+    sourcePageUrl: https://www.airops.com/insights
+    sourceImageUrl: https://cdn.prod.website-files.com/61fae48cb5979577435753f6/69196fa90aacb162b8329f7f_Prioritize%20Next%20Best%20Actions.avif
+    sourceType: marketing
+    collectedAt: 2026-03-12T11:10:00.000Z
+    alt: Prioritize next best actions
+    kind: analytics
+    caption: Action prioritization view that turns AI and SEO visibility into a roadmap of next best actions.
+    pageTitle: AirOps Insights - Track Visibility. Win AI Search
+    tags:
+      - analytics
+      - tracking
 videos:
   - id: airops-cohort-demo-day-march-2026
     provider: youtube

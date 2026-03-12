@@ -41,4 +41,61 @@ reviewSites:
 tweets: []
 pricingUrl: https://www.xfunnel.ai/pricing
 featuresUrl: https://www.xfunnel.ai/features
-lastChecked: 2025-07-29
+screenshotSources:
+  - url: https://www.xfunnel.ai/
+    type: marketing
+    label: Home
+screenshots:
+  - id: analyze-responses-and-sources
+    assetPath: /company-assets/xfunnel/screenshots/analyze-responses-and-sources.jpg
+    sourcePageUrl: https://www.xfunnel.ai/
+    sourceImageUrl: https://www.xfunnel.ai/_next/static/media/3.e8196d62.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:45:00.000Z
+    alt: Understand how you appear and why
+    kind: analytics
+    caption: Analyze responses, topics, and citations to understand what drives visibility and where to act.
+    pageTitle: Improve Conversion Across AI Platforms with XFunnel
+    tags:
+      - analytics
+      - tracking
+  - id: experiments
+    assetPath: /company-assets/xfunnel/screenshots/experiments.png
+    sourcePageUrl: https://www.xfunnel.ai/
+    sourceImageUrl: https://www.xfunnel.ai/_next/static/media/experimentssmall.5d3e25bc.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:45:00.000Z
+    alt: Citation analysis dashboard
+    kind: dashboard
+    caption: Experimentation dashboard for measuring the impact of AI visibility optimization playbooks.
+    pageTitle: Improve Conversion Across AI Platforms with XFunnel
+    tags:
+      - dashboard
+      - analytics
+  - id: measure-visibility
+    assetPath: /company-assets/xfunnel/screenshots/measure-visibility.jpg
+    sourcePageUrl: https://www.xfunnel.ai/
+    sourceImageUrl: https://www.xfunnel.ai/_next/static/media/2.e31b8c5b.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:45:00.000Z
+    alt: Track visibility across all major AI search engines
+    kind: dashboard
+    caption: Multi-model visibility tracking with ranking, share of voice, sentiment, and persona-level analysis.
+    pageTitle: Improve Conversion Across AI Platforms with XFunnel
+    tags:
+      - dashboard
+      - tracking
+  - id: queryanalytics
+    assetPath: /company-assets/xfunnel/screenshots/queryanalytics.png
+    sourcePageUrl: https://www.xfunnel.ai/
+    sourceImageUrl: https://www.xfunnel.ai/_next/static/media/queryanalytics.29714895.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:45:00.000Z
+    alt: Understand what users are asking
+    kind: research
+    caption: Query analytics and research questions view for segmenting demand by region, persona, product, and intent.
+    pageTitle: Improve Conversion Across AI Platforms with XFunnel
+    tags:
+      - research
+      - tracking
+lastChecked: 2026-03-12

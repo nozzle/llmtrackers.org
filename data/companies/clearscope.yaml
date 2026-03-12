@@ -1,0 +1,83 @@
+slug: clearscope
+name: Clearscope
+group: Clearscope
+website: https://www.clearscope.io/
+description: Content optimization platform that now pairs AI topic exploration, prompt tracking, and discoverability monitoring across Google and AI search.
+plans:
+  - name: Essentials
+    slug: essentials
+    price:
+      amount: 129
+      currency: USD
+      period: monthly
+      note: No contract monthly plan
+    pricePer1000Responses: null
+    aiResponsesMonthly: null
+    includedLlmModels: 2
+    schedule: daily
+    locationSupport: global
+    personaSupport: 1
+    contentGeneration: 20 monthly AI drafts
+    contentOptimization: AI tracked topics and content inventory
+    integrations:
+      - Unlimited sharing
+      - Exporting
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: false
+      claude: false
+      llama: false
+      grok: false
+      aiOverviews: false
+      aiMode: false
+tweets: []
+pricingUrl: https://www.clearscope.io/pricing
+featuresUrl: https://www.clearscope.io/
+screenshotSources:
+  - url: https://www.clearscope.io/
+    type: marketing
+    label: Home
+  - url: https://www.clearscope.io/pricing
+    type: marketing
+    label: Pricing
+screenshots:
+  - id: discover-your-next-high-impact-topic
+    assetPath: /company-assets/clearscope/screenshots/discover-your-next-high-impact-topic.webp
+    sourcePageUrl: https://www.clearscope.io/
+    sourceImageUrl: https://cdn.sanity.io/images/bmk0zfcx/production/5113d8173f86f529e6d54e7626a10a59f3746554-1500x950.webp?fit=crop
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:25:15.159Z
+    alt: Discover Your Next High-Impact Topic
+    caption: Get a complete picture of your discoverability on Google and AI-powered platforms like ChatGPT and Gemini. We turn on the lights, showing you exactly what sources LLMs are using to compile their answers.
+    contextHeading: Discover Your Next High-Impact Topic
+    pageTitle: Clearscope | Get Discovered on Google & AI Search
+    tags: []
+  - id: edit-and-optimize-content-with-confidence
+    assetPath: /company-assets/clearscope/screenshots/edit-and-optimize-content-with-confidence.webp
+    sourcePageUrl: https://www.clearscope.io/
+    sourceImageUrl: https://cdn.sanity.io/images/bmk0zfcx/production/b253a1a06506571bdcf0ee921d615fc1f45dc01c-1500x1157.webp?fit=crop
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:25:15.213Z
+    alt: Edit and Optimize Content with Confidence
+    kind: configuration
+    caption: Get help creating better content faster. Our AI drafting and editing workflow helps you accelerate your first pass, break through writer's block, and scale your entire content production process.
+    contextHeading: Edit and Optimize Content with Confidence
+    pageTitle: Clearscope | Get Discovered on Google & AI Search
+    tags:
+      - configuration
+  - id: people-like-you-crushing-it-with-clearscope
+    assetPath: /company-assets/clearscope/screenshots/people-like-you-crushing-it-with-clearscope.webp
+    sourcePageUrl: https://www.clearscope.io/
+    sourceImageUrl: https://cdn.sanity.io/images/bmk0zfcx/production/f7d9ec0f8263a553de715fe826ac8e0c8a9c15e2-1500x1106.webp?fit=crop
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:25:15.023Z
+    alt: People Like You, Crushing It With Clearscope
+    kind: dashboard
+    caption: Protect traffic with powerful content analytics for your entire site or individual pages. Use pre-built content views or custom ones for a deeper dive into your content's performance.
+    contextHeading: People Like You, Crushing It With Clearscope
+    pageTitle: Clearscope | Get Discovered on Google & AI Search
+    tags:
+      - dashboard
+      - analytics
+lastChecked: 2026-03-12

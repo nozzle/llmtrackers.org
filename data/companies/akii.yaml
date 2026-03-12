@@ -1,0 +1,58 @@
+slug: akii
+name: Akii
+group: Akii
+website: https://akii.com/
+description: AI visibility intelligence suite for growth teams with audit, competitor intelligence, search tracking, and prioritized actions.
+plans:
+  - name: Starter
+    slug: starter
+    price:
+      amount: 99
+      currency: USD
+      period: monthly
+      note: 14-day free trial available
+    aiResponsesMonthly: 1000
+    includedLlmModels: 9
+    schedule: daily
+    locationSupport: global
+    personaSupport: 1
+    contentOptimization: Content engine and visibility activation
+    integrations:
+      - PDF export
+      - CSV export
+      - Excel export
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+      llama: false
+      grok: true
+      aiOverviews: true
+      aiMode: true
+tweets: []
+pricingUrl: https://akii.com/pricing
+featuresUrl: https://akii.com/ai-search-tracker
+screenshotSources:
+  - url: https://akii.com/ai-search-tracker
+    type: marketing
+    label: AI Search Tracker
+  - url: https://akii.com/ai-brand-audit
+    type: marketing
+    label: AI Brand Audit
+  - url: https://akii.com/pricing
+    type: marketing
+    label: Pricing
+videos:
+  - id: ai-search-tracker-demo-track-your-brand-in-ai-search-engines
+    provider: youtube
+    videoId: yrnQRhl80Do
+    watchUrl: https://www.youtube.com/watch?v=yrnQRhl80Do
+    title: AI Search Tracker Demo - Track Your Brand in AI Search Engines
+    creator: Akii
+    thumbnailUrl: https://img.youtube.com/vi/yrnQRhl80Do/maxresdefault.jpg
+    kind: demo
+    sourceType: first-party
+    collectedAt: 2026-03-12T10:45:00.000Z
+    description: Demo of Akii's AI search tracker for monitoring mentions, citations, competitor benchmarks, and visibility shifts.
+lastChecked: 2026-03-12

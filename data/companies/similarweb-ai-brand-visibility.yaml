@@ -1,0 +1,105 @@
+slug: similarweb-ai-brand-visibility
+name: Similarweb AI Brand Visibility
+group: Similarweb
+website: https://www.similarweb.com/corp/search/gen-ai-intelligence/ai-brand-visibility/
+description: AI search intelligence product that tracks topic visibility, prompts, citations, and competitor share across AI search conversations.
+plans:
+  - name: AI Search Intelligence
+    slug: ai-search-intelligence
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Custom package via sales
+    pricePer1000Responses: null
+    aiResponsesMonthly: null
+    includedLlmModels: null
+    schedule: daily
+    locationSupport: global
+    personaSupport: 1
+    contentGeneration: false
+    contentOptimization: Prompt and citation analysis
+    integrations:
+      - API
+      - AI Studio
+    llmSupport:
+      chatgpt: true
+      gemini: false
+      perplexity: false
+      claude: false
+      llama: false
+      grok: false
+      aiOverviews: false
+      aiMode: false
+tweets: []
+pricingUrl: https://www.similarweb.com/packages/marketing/
+featuresUrl: https://www.similarweb.com/corp/search/gen-ai-intelligence/ai-brand-visibility/
+screenshotSources:
+  - url: https://www.similarweb.com/corp/search/gen-ai-intelligence/ai-brand-visibility/
+    type: marketing
+    label: AI Brand Visibility
+screenshots:
+  - id: brand-mentions-topics-in-gen-ai-answers
+    assetPath: /company-assets/similarweb-ai-brand-visibility/screenshots/brand-mentions-topics-in-gen-ai-answers.png
+    sourcePageUrl: https://www.similarweb.com/corp/search/gen-ai-intelligence/ai-brand-visibility/
+    sourceImageUrl: https://www.similarweb.com/corp/wp-content/uploads/2025/07/attachment-1.Track-your-visibility-with-ease-1024x643.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:25:15.183Z
+    alt: Brand mentions topics in Gen AI answers
+    kind: dashboard
+    caption: AI chatbots are answering questions your audience is asking. Are you showing up? Track your daily visibility in the topics you care about.
+    contextHeading: Users are searching in AI. Don’t be invisible.
+    pageTitle: Track AI Brand Visibility | Similarweb
+    width: 1024
+    height: 643
+    tags:
+      - dashboard
+      - tracking
+  - id: discover-competitors-brand-visibility-share-in-g
+    assetPath: /company-assets/similarweb-ai-brand-visibility/screenshots/discover-competitors-brand-visibility-share-in-g.png
+    sourcePageUrl: https://www.similarweb.com/corp/search/gen-ai-intelligence/ai-brand-visibility/
+    sourceImageUrl: https://www.similarweb.com/corp/wp-content/uploads/2025/07/attachment-3.Get-the-competitive-edge-early-1024x643.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:25:15.549Z
+    alt: Discover competitors brand visibility share in Gen AI
+    kind: dashboard
+    caption: See the relevant prompts behind topics you track to deepen your understanding of what your audience cares about, what they are searching for, and how AI search is answering.
+    contextHeading: Understand your audience, in a new way
+    pageTitle: Track AI Brand Visibility | Similarweb
+    width: 1024
+    height: 643
+    tags:
+      - dashboard
+      - tracking
+  - id: see-the-relevant-prompts-behind-topics-you-track
+    assetPath: /company-assets/similarweb-ai-brand-visibility/screenshots/see-the-relevant-prompts-behind-topics-you-track.png
+    sourcePageUrl: https://www.similarweb.com/corp/search/gen-ai-intelligence/ai-brand-visibility/
+    sourceImageUrl: https://www.similarweb.com/corp/wp-content/uploads/2025/07/attachment-2.Understand-your-audience-in-a-new-way-1024x643.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:25:15.446Z
+    alt: See the relevant prompts behind topics you track
+    kind: dashboard
+    caption: In this new search world, visibility is key. With Similarweb, track how often your brand shows up in AI search answers, which topics drive mentions, and if you're cited as a source, so you can stay ahead and optimize where it counts most.
+    pageTitle: Track AI Brand Visibility | Similarweb
+    width: 1024
+    height: 643
+    tags:
+      - dashboard
+      - tracking
+  - id: see-which-website-types-gen-ai-rely-on-as-source
+    assetPath: /company-assets/similarweb-ai-brand-visibility/screenshots/see-which-website-types-gen-ai-rely-on-as-source.png
+    sourcePageUrl: https://www.similarweb.com/corp/search/gen-ai-intelligence/ai-brand-visibility/
+    sourceImageUrl: https://www.similarweb.com/corp/wp-content/uploads/2025/07/attachment-4.The-full-picture_-from-prompt-to-source-1024x643.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:25:15.652Z
+    alt: See which website types Gen AI rely on as sources for prompts
+    kind: dashboard
+    caption: See the sources that influence the mentions for topics and prompts. Analyze the impact of domains and pinpoint the exact URLs used as sources, so you work on content optimization as well as offsite partnerships to boost visibility.
+    contextHeading: "The full picture: from prompt to source"
+    pageTitle: Track AI Brand Visibility | Similarweb
+    width: 1024
+    height: 643
+    tags:
+      - dashboard
+      - tracking
+lastChecked: 2026-03-12

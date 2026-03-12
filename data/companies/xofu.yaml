@@ -33,4 +33,99 @@ plans:
 tweets: []
 pricingUrl: https://xofu.com/pricing
 featuresUrl: https://xofu.com/features
-lastChecked: 2025-07-29
+screenshotSources:
+  - url: https://xofu.com/
+    type: marketing
+    label: Home
+screenshots:
+  - id: advanced-analytics
+    assetPath: /company-assets/xofu/screenshots/advanced-analytics.jpg
+    sourcePageUrl: https://xofu.com/
+    sourceImageUrl: https://xofu.com/advanced-analytics.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:45:00.000Z
+    alt: Advanced Analytics
+    kind: dashboard
+    caption: Bottom-of-funnel prompt tracking for the questions buyers use to shortlist vendors across AI platforms.
+    pageTitle: "Xofu: See When AI Recommends Your Brand to Buyers"
+    tags:
+      - dashboard
+      - tracking
+  - id: benchmarking
+    assetPath: /company-assets/xofu/screenshots/benchmarking.jpg
+    sourcePageUrl: https://xofu.com/
+    sourceImageUrl: https://xofu.com/benchmarking.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:45:00.000Z
+    alt: Citation gap analysis
+    kind: analytics
+    caption: Citation gap analysis showing which sources get cited when competitors show up and you do not.
+    pageTitle: "Xofu: See When AI Recommends Your Brand to Buyers"
+    tags:
+      - analytics
+      - tracking
+  - id: platform-monitoring
+    assetPath: /company-assets/xofu/screenshots/platform-monitoring.jpg
+    sourcePageUrl: https://xofu.com/
+    sourceImageUrl: https://xofu.com/platform-monitoring.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:45:00.000Z
+    alt: Multi-platform monitoring
+    kind: dashboard
+    caption: Multi-platform monitoring across ChatGPT, Perplexity, Claude, Gemini, and more for buyer-prompt reporting.
+    pageTitle: "Xofu: See When AI Recommends Your Brand to Buyers"
+    tags:
+      - dashboard
+      - tracking
+  - id: prompt-tracking
+    assetPath: /company-assets/xofu/screenshots/prompt-tracking.jpg
+    sourcePageUrl: https://xofu.com/
+    sourceImageUrl: https://xofu.com/prompt-tracking.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:45:00.000Z
+    alt: Competitive benchmarking
+    kind: analytics
+    caption: Competitive benchmarking across buyer prompts to compare how often your brand appears versus rivals.
+    pageTitle: "Xofu: See When AI Recommends Your Brand to Buyers"
+    tags:
+      - analytics
+      - tracking
+  - id: rank-score
+    assetPath: /company-assets/xofu/screenshots/rank-score.jpg
+    sourcePageUrl: https://xofu.com/
+    sourceImageUrl: https://xofu.com/rank-score.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:45:00.000Z
+    alt: Visibility Rank Score
+    kind: score
+    caption: Snapshot-style visibility rank score for checking whether AI assistants include your brand in BOFU prompts.
+    pageTitle: "Xofu: See When AI Recommends Your Brand to Buyers"
+    tags:
+      - score
+      - tracking
+  - id: share-of-voice
+    assetPath: /company-assets/xofu/screenshots/share-of-voice.jpg
+    sourcePageUrl: https://xofu.com/
+    sourceImageUrl: https://xofu.com/share-of-voice.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:45:00.000Z
+    alt: Share of Voice
+    kind: analytics
+    caption: Share-of-voice view for comparing AI recommendation coverage across tracked buyer prompts.
+    pageTitle: "Xofu: See When AI Recommends Your Brand to Buyers"
+    tags:
+      - analytics
+      - tracking
+videos:
+  - id: xofu-demo
+    provider: youtube
+    videoId: kzhFoSm0LXU
+    watchUrl: https://www.youtube.com/watch?v=kzhFoSm0LXU
+    title: Xofu Demo
+    creator: XOFU
+    thumbnailUrl: https://img.youtube.com/vi/kzhFoSm0LXU/hqdefault.jpg
+    kind: demo
+    sourceType: first-party
+    collectedAt: 2026-03-12T10:45:00.000Z
+    description: Product demo for tracking buyer-prompt visibility, competitor benchmarking, and citation gaps in AI answers.
+lastChecked: 2026-03-12

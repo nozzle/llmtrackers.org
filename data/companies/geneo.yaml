@@ -1,0 +1,70 @@
+slug: geneo
+name: Geneo
+group: Geneo
+website: https://geneo.app/
+description: GEO platform for brand mention tracking, citation analysis, share of voice, and white-label AI visibility reporting.
+plans:
+  - name: Pro
+    slug: pro
+    price:
+      amount: 39.9
+      currency: USD
+      period: monthly
+      note: 1,000 credits per month
+    pricePer1000Responses: null
+    aiResponsesMonthly: 1000
+    includedLlmModels: 3
+    schedule: daily
+    locationSupport: global
+    personaSupport: 1
+    contentGeneration: false
+    contentOptimization: GEO optimization and topic recommendations
+    integrations:
+      - White-label reports
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: false
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: false
+tweets: []
+pricingUrl: https://geneo.app/pricing
+featuresUrl: https://geneo.app/
+screenshotSources:
+  - url: https://geneo.app/
+    type: marketing
+    label: Home
+  - url: https://geneo.app/pricing
+    type: marketing
+    label: Pricing
+screenshots:
+  - id: brand-mention-tracking-demo
+    assetPath: /company-assets/geneo/screenshots/brand-mention-tracking-demo.jpg
+    sourcePageUrl: https://geneo.app/
+    sourceImageUrl: https://img.youtube.com/vi/pjDOzxX8ff8/maxresdefault.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:25:15.150Z
+    alt: Brand Mention Tracking Demo
+    kind: dashboard
+    caption: Discover how our rank tracking tool helps you monitor brand visibility and improve your presence in ChatGPT, Perplexity, and Google AI Overviews.
+    contextHeading: See How to Track Brand Mentions
+    pageTitle: Generative Engine Optimization for AI Visibility | Geneo
+    tags:
+      - dashboard
+      - tracking
+videos:
+  - id: geneo-real-time-ai-search-visibility-for-your-brand
+    provider: youtube
+    videoId: pjDOzxX8ff8
+    watchUrl: https://www.youtube.com/watch?v=pjDOzxX8ff8
+    title: "Geneo: Real-Time AI Search Visibility for Your Brand"
+    creator: Geneo
+    thumbnailUrl: https://i.ytimg.com/vi/pjDOzxX8ff8/hqdefault.jpg
+    kind: demo
+    sourceType: first-party
+    collectedAt: 2026-03-12T23:45:00.000Z
+    description: Product demo showing Geneo's real-time brand visibility monitoring across AI search answers.
+lastChecked: 2026-03-12

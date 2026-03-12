@@ -1,0 +1,58 @@
+slug: keyword-com
+name: Keyword.com AI Rank Tracker
+group: Keyword.com
+website: https://keyword.com/ai-search-visibility/
+description: Extends a rank-tracking stack into AI search with prompt monitoring, citation analysis, sentiment, and client-facing reporting.
+plans:
+  - name: AI Rank Tracker Add-on
+    slug: ai-rank-tracker
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Sold as an add-on alongside Keyword.com plans
+    pricePer1000Responses: null
+    aiResponsesMonthly: null
+    includedLlmModels: null
+    schedule: daily
+    locationSupport: global
+    personaSupport: 1
+    contentGeneration: false
+    contentOptimization: AI visibility and citation analysis
+    integrations:
+      - Reporting
+      - API
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: true
+tweets: []
+pricingUrl: https://keyword.com/pricing-ai-visibility/
+featuresUrl: https://keyword.com/ai-search-visibility/
+screenshotSources:
+  - url: https://keyword.com/ai-search-visibility/
+    type: marketing
+    label: AI Search Visibility
+  - url: https://keyword.com/pricing-ai-visibility/
+    type: marketing
+    label: Pricing
+screenshots:
+  - id: ai-search
+    assetPath: /company-assets/keyword-com/screenshots/ai-search.webp
+    sourcePageUrl: https://keyword.com/ai-search-visibility/
+    sourceImageUrl: https://keyword.com/wp-content/uploads/Container-45-987x1024.webp
+    sourceType: marketing
+    collectedAt: 2026-03-12T05:29:10.954Z
+    alt: ai search
+    kind: tracking
+    pageTitle: AI Brand Monitoring and Generative AI Tracking by Keyword.com
+    width: 800
+    height: 830
+    tags:
+      - tracking
+lastChecked: 2026-03-12

@@ -1,0 +1,100 @@
+slug: goodie-ai
+name: Goodie AI
+group: Goodie
+website: https://higoodie.com/
+description: Enterprise AEO platform focused on monitoring, optimization, traffic attribution, crawler analytics, and AI commerce visibility.
+plans:
+  - name: Starter
+    slug: starter
+    price:
+      amount: 295
+      currency: USD
+      period: monthly
+      note: Billed annually
+    pricePer1000Responses: null
+    aiResponsesMonthly: 15000
+    includedLlmModels: 5
+    schedule: daily
+    locationSupport: 1
+    personaSupport: 1
+    contentGeneration: AEO content writer
+    contentOptimization: Agentic AEO optimizations
+    integrations:
+      - Google Analytics
+      - Google Search Console
+      - Bing Search Console
+    llmSupport:
+      chatgpt: true
+      gemini: false
+      perplexity: true
+      claude: false
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: false
+tweets: []
+pricingUrl: https://higoodie.com/pricing
+featuresUrl: https://higoodie.com/features/ai-visibility-monitoring
+screenshotSources:
+  - url: https://higoodie.com/
+    type: marketing
+    label: Home
+  - url: https://higoodie.com/pricing
+    type: marketing
+    label: Pricing
+  - url: https://higoodie.com/features/ai-visibility-monitoring
+    type: marketing
+    label: AI Visibility Monitoring
+screenshots:
+  - id: brand-visibility
+    assetPath: /company-assets/goodie-ai/screenshots/brand-visibility.svg
+    sourcePageUrl: https://higoodie.com/features/ai-visibility-monitoring
+    sourceImageUrl: https://cdn.prod.website-files.com/666741f97a0451dfa349bbc9/67af6569851004df6848b974_2_YourBrandReputation.svg
+    sourceType: marketing
+    collectedAt: 2026-03-12T05:29:10.960Z
+    alt: brand visibility
+    kind: dashboard
+    pageTitle: AI Search Visibility Monitoring Tool | Goodie AI
+    tags:
+      - dashboard
+      - tracking
+  - id: screenshot-of-ai-content-writer-editor-page
+    assetPath: /company-assets/goodie-ai/screenshots/screenshot-of-ai-content-writer-editor-page.svg
+    sourcePageUrl: https://higoodie.com/features/ai-visibility-monitoring
+    sourceImageUrl: https://cdn.prod.website-files.com/666741f97a0451dfa349bbc9/67af6ada63d00983f7486cd6_1_Hero-Img-with-BG%20(1).svg
+    sourceType: marketing
+    collectedAt: 2026-03-12T05:29:10.856Z
+    alt: Screenshot of AI Content Writer editor page
+    kind: dashboard
+    contextHeading: Monitor Your Brand Visibility on AI Search
+    pageTitle: AI Search Visibility Monitoring Tool | Goodie AI
+    tags:
+      - dashboard
+      - tracking
+  - id: screenshot-of-goodie-home-dashboard-view
+    assetPath: /company-assets/goodie-ai/screenshots/screenshot-of-goodie-home-dashboard-view.svg
+    sourcePageUrl: https://higoodie.com/
+    sourceImageUrl: https://cdn.prod.website-files.com/666741f97a0451dfa349bbc9/67e3799717aefdd9a21a5e79_Goodie_Hero.svg
+    sourceType: marketing
+    collectedAt: 2026-03-12T05:29:10.925Z
+    alt: Screenshot of Goodie home dashboard view
+    kind: dashboard
+    contextHeading: Goodie is the pioneering AEO (Answer Engine Optimization) platform enabling teams to monitor visibility, optimize presence and measure growth across LLMs and AI search.
+    pageTitle: Answer Engine Optimization & AI Search SEO Platform | Goodie
+    tags:
+      - dashboard
+      - tracking
+videos:
+  - id: build-your-ai-search-strategy-for-seo-success
+    provider: youtube
+    videoId: t88MCgQGPQQ
+    watchUrl: https://www.youtube.com/watch?v=t88MCgQGPQQ
+    title: Build Your AI Search Strategy for SEO Success
+    creator: NoGood
+    creatorUrl: https://www.youtube.com/@NoGoodHQ
+    thumbnailUrl: https://i.ytimg.com/vi/t88MCgQGPQQ/hqdefault.jpg
+    kind: demo
+    sourceType: third-party
+    collectedAt: 2026-03-12T05:29:37.615Z
+    description: Founder-led walkthrough on building an AI search strategy with Goodie AI and AEO workflows.
+lastChecked: 2026-03-12

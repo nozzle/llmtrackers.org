@@ -1,0 +1,73 @@
+slug: aiso
+name: Aiso
+group: Aiso
+website: https://www.getaiso.com/
+description: AI search optimization platform focused on prompt fan-out analysis, real conversation intelligence, citation gaps, and competitor visibility in ChatGPT, Gemini, and Claude.
+plans:
+  - name: Agencies & Freelancers
+    slug: agencies-and-freelancers
+    price:
+      amount: 20
+      currency: USD
+      period: monthly
+      note: Free trial available, self-serve plan
+    pricePer1000Responses: null
+    aiResponsesMonthly: null
+    includedLlmModels: 3
+    schedule: daily
+    locationSupport: global
+    personaSupport: 1
+    contentGeneration: false
+    contentOptimization: Fan-out analysis and citation tracking
+    integrations:
+      - API
+      - Custom reports
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: false
+      claude: true
+      llama: false
+      grok: false
+      aiOverviews: false
+      aiMode: false
+tweets: []
+pricingUrl: https://www.getaiso.com/pricing
+featuresUrl: https://www.getaiso.com/
+screenshotSources:
+  - url: https://www.getaiso.com/
+    type: marketing
+    label: Home
+  - url: https://www.getaiso.com/pricing
+    type: marketing
+    label: Pricing
+screenshots:
+  - id: fan-out-details
+    assetPath: /company-assets/aiso/screenshots/fan-out-details.png
+    sourcePageUrl: https://www.getaiso.com/
+    sourceImageUrl: https://www.getaiso.com/images/features/fan-out-details.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:00:00.000Z
+    alt: Fan-Out Details showing sub-queries and competitor rankings
+    kind: dashboard
+    caption: Fan-out analysis view showing the hidden sub-queries AI systems research before citing brands.
+    pageTitle: Aiso - AI Search Optimization | Track ChatGPT Visibility
+    tags:
+      - dashboard
+      - tracking
+      - analytics
+  - id: conversation-intelligence
+    assetPath: /company-assets/aiso/screenshots/conversation-intelligence.png
+    sourcePageUrl: https://www.getaiso.com/
+    sourceImageUrl: https://www.getaiso.com/images/features/conversation-intelligence.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T12:00:00.000Z
+    alt: Conversation Intelligence showing topic clusters and user questions
+    kind: research
+    caption: Conversation intelligence view for analyzing real AI conversations, topic clusters, and brand mention gaps.
+    pageTitle: Aiso - AI Search Optimization | Track ChatGPT Visibility
+    tags:
+      - research
+      - analytics
+      - tracking
+lastChecked: 2026-03-12

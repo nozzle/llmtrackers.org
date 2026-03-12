@@ -1,0 +1,129 @@
+slug: evertune
+name: Evertune
+group: Evertune
+website: https://www.evertune.ai/
+description: Enterprise GEO platform focused on AI brand monitoring, website optimization, content strategy, retargeting, and statistically significant AI visibility measurement.
+plans:
+  - name: Enterprise
+    slug: enterprise
+    price:
+      amount: 3000
+      currency: USD
+      period: monthly
+      note: Pricing starts at $3,000 per month
+    pricePer1000Responses: null
+    aiResponsesMonthly: null
+    includedLlmModels: 8
+    schedule: daily
+    locationSupport: global
+    personaSupport: 1
+    contentGeneration: Data-driven content creation and messaging
+    contentOptimization: AI website optimization and source activation
+    integrations:
+      - Direct LLM integration
+      - EverPanel
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: true
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: true
+tweets: []
+pricingUrl: https://www.evertune.ai/pricing
+featuresUrl: https://www.evertune.ai/
+screenshotSources:
+  - url: https://www.evertune.ai/
+    type: marketing
+    label: Home
+  - url: https://www.evertune.ai/pricing
+    type: marketing
+    label: Pricing
+screenshots:
+  - id: ai-brand-index-for-luxury-suvs
+    assetPath: /company-assets/evertune/screenshots/ai-brand-index-for-luxury-suvs.jpg
+    sourcePageUrl: https://www.evertune.ai/
+    sourceImageUrl: https://cdn.prod.website-files.com/65fc8aa2e86478511b710078/68b9e0a403434b7c621ea684_1dca69323e716d5fb30ac1b88cfdbefb_product-01.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:42:10.000Z
+    alt: AI Brand Index for Luxury SUVs
+    kind: tracking
+    caption: Understand and improve your reputation in AI.
+    contextHeading: AI Website Optimization
+    pageTitle: Evertune | Improve Your Brand’s Visibility in AI Search
+    tags:
+      - tracking
+  - id: ai-brand-index-for-mobile
+    assetPath: /company-assets/evertune/screenshots/ai-brand-index-for-mobile.jpg
+    sourcePageUrl: https://www.evertune.ai/
+    sourceImageUrl: https://cdn.prod.website-files.com/65fc8aa2e86478511b710078/68d6db4dfe2fdb5afe446d0b_c4dd2b75da6086250a1b05b7e84e77b0_product-01-mobile.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:55:44.836Z
+    alt: AI Brand Index for mobile
+    kind: tracking
+    caption: Understand and improve your reputation in AI.
+    contextHeading: AI Website Optimization
+    pageTitle: Evertune | Improve Your Brand’s Visibility in AI Search
+    tags:
+      - tracking
+  - id: generative-engine-optimization-website-audit-exa
+    assetPath: /company-assets/evertune/screenshots/generative-engine-optimization-website-audit-exa.jpg
+    sourcePageUrl: https://www.evertune.ai/
+    sourceImageUrl: https://cdn.prod.website-files.com/65fc8aa2e86478511b710078/68b9e0a57ef9d0fd7705452f_7e41bf4e4a8fe65a48c39d02e4b22fa5_product-02.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:42:10.095Z
+    alt: Generative Engine Optimization website audit example
+    caption: Your site might look perfect to people, but AI crawlers need something else entirely.
+    contextHeading: AI Content Strategy
+    pageTitle: Evertune | Improve Your Brand’s Visibility in AI Search
+    tags: []
+  - id: increase-in-visibility-for-chatgpt-recommendatio
+    assetPath: /company-assets/evertune/screenshots/increase-in-visibility-for-chatgpt-recommendatio.jpg
+    sourcePageUrl: https://www.evertune.ai/pricing
+    sourceImageUrl: https://cdn.prod.website-files.com/65fc8aa2e86478511b710078/68e7fc439737c279f295fd50_89b4f3355a9894d32f20f96393bb6912_case-study-3.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:55:44.731Z
+    alt: Increase In Visibility For Chatgpt Recommendatio
+    kind: dashboard
+    caption: Increase in visibility for ChatGPT recommendations
+    pageTitle: Pricing - Evertune AI
+    tags:
+      - dashboard
+  - id: partner-connect-example
+    assetPath: /company-assets/evertune/screenshots/partner-connect-example.png
+    sourcePageUrl: https://www.evertune.ai/
+    sourceImageUrl: https://cdn.prod.website-files.com/65fc8aa2e86478511b710078/697bb73e0e38451aa934a973_Partner%20Connect_PartnerStack%20and%20Impact_UI%202.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:42:10.238Z
+    alt: Partner Connect example
+    kind: tracking
+    caption: We determine which sources have the most influence on AI’s perception of your brand and category.
+    contextHeading: AI Retargeting
+    pageTitle: Evertune | Improve Your Brand’s Visibility in AI Search
+    tags:
+      - tracking
+  - id: product-attributes-radar-map
+    assetPath: /company-assets/evertune/screenshots/product-attributes-radar-map.png
+    sourcePageUrl: https://www.evertune.ai/
+    sourceImageUrl: https://cdn.prod.website-files.com/65fc8aa2e86478511b710078/68b9ec80f1be2ec4bd828d19_57818ca272d330e0c046e6a4cfbcb853_Product-0301.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:42:10.136Z
+    alt: Product attributes radar map
+    caption: Actionable insights that influence AI.
+    contextHeading: AI Content Strategy
+    pageTitle: Evertune | Improve Your Brand’s Visibility in AI Search
+    tags: []
+  - id: sources-analysis-example
+    assetPath: /company-assets/evertune/screenshots/sources-analysis-example.png
+    sourcePageUrl: https://www.evertune.ai/
+    sourceImageUrl: https://cdn.prod.website-files.com/65fc8aa2e86478511b710078/68b9ec808261dca69f9fbc07_faa744ef30708723705708f43c19ca4e_Product-0303.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:42:10.175Z
+    alt: Sources analysis example
+    caption: We map which product attributes drive recommendations in your category.
+    contextHeading: AI Retargeting
+    pageTitle: Evertune | Improve Your Brand’s Visibility in AI Search
+    tags: []
+lastChecked: 2026-03-12

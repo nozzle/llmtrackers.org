@@ -1,0 +1,91 @@
+slug: rankprompt
+name: RankPrompt
+group: RankPrompt
+website: https://rankprompt.com/
+description: AI visibility platform that mixes prompt monitoring, citation analysis, article generation, and lightweight publishing workflows.
+plans:
+  - name: Pro
+    slug: pro
+    price:
+      amount: 89
+      currency: USD
+      period: monthly
+      note: 7-day free trial available
+    pricePer1000Responses: null
+    aiResponsesMonthly: 500
+    includedLlmModels: 3
+    schedule: daily
+    locationSupport: global
+    personaSupport: 1
+    contentGeneration: AI article generation
+    contentOptimization: SEO audits and citation optimization
+    integrations:
+      - WordPress
+      - Google Analytics 4
+      - Google Search Console
+    llmSupport:
+      chatgpt: true
+      gemini: false
+      perplexity: true
+      claude: false
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: false
+tweets: []
+pricingUrl: https://rankprompt.com/pricing/
+featuresUrl: https://rankprompt.com/features/ai-monitoring/
+screenshotSources:
+  - url: https://rankprompt.com/
+    type: marketing
+    label: Home
+  - url: https://rankprompt.com/pricing/
+    type: marketing
+    label: Pricing
+  - url: https://rankprompt.com/features/ai-monitoring/
+    type: marketing
+    label: AI Monitoring
+screenshots:
+  - id: identify-the-sources-that-llms-reference-for-the
+    assetPath: /company-assets/rankprompt/screenshots/identify-the-sources-that-llms-reference-for-the.jpg
+    sourcePageUrl: https://rankprompt.com/
+    sourceImageUrl: https://rankprompt.com/wp-content/uploads/2026/01/Wingstop-Screengrab-2-Large-1024x689.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T05:29:10.953Z
+    alt: Identify The Sources That Llms Reference For The
+    kind: tracking
+    caption: Identify the sources that LLMs reference for their answers and leverage that information to build a better backlink/citation building strategy.
+    pageTitle: Rank Prompt | AI Visibility & Monitoring Tool | LLM SEO Platform
+    width: 1024
+    height: 689
+    tags:
+      - tracking
+  - id: see-where-your-brand-appears-in-ai-answers-today
+    assetPath: /company-assets/rankprompt/screenshots/see-where-your-brand-appears-in-ai-answers-today.jpeg
+    sourcePageUrl: https://rankprompt.com/
+    sourceImageUrl: https://rankprompt.com/wp-content/uploads/2026/01/Wingstop-Screengrab-Large-1024x698.jpeg
+    sourceType: marketing
+    collectedAt: 2026-03-12T05:29:10.849Z
+    alt: See Where Your Brand Appears In Ai Answers Today
+    kind: dashboard
+    caption: See where your brand appears in AI answers today. Track mentions, rankings, sentiment, and competitors in clear, shareable reports.
+    pageTitle: Rank Prompt | AI Visibility & Monitoring Tool | LLM SEO Platform
+    width: 1024
+    height: 698
+    tags:
+      - dashboard
+      - tracking
+videos:
+  - id: are-you-chasing-leads-and-traffic-but-still-haven-t-checked-how-you-rank-in-ai
+    provider: youtube
+    videoId: RreZs_7SRf8
+    watchUrl: https://www.youtube.com/watch?v=RreZs_7SRf8
+    title: Are you chasing leads and traffic, but still haven't checked how you rank in AI?
+    creator: Rank Prompt
+    creatorUrl: https://www.youtube.com/@RankPrompt
+    thumbnailUrl: https://i.ytimg.com/vi/RreZs_7SRf8/hqdefault.jpg
+    kind: demo
+    sourceType: first-party
+    collectedAt: 2026-03-12T05:29:37.601Z
+    description: Short product demo showing how RankPrompt tracks brand visibility across AI search tools.
+lastChecked: 2026-03-12

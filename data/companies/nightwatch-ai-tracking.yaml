@@ -1,0 +1,177 @@
+slug: nightwatch-ai-tracking
+name: Nightwatch AI Tracking
+group: Nightwatch
+website: https://nightwatch.io/ai-tracking/
+description: SEO rank tracker extended with AI search and LLM tracking, adding prompt-level visibility, brand entities, citations, source matrix intelligence, and sentiment analysis.
+plans:
+  - name: AI Tracking Add-on
+    slug: ai-tracking-add-on
+    price:
+      amount: 99
+      currency: USD
+      period: monthly
+      note: Beta add-on for 100 prompts
+    pricePer1000Responses: null
+    aiResponsesMonthly: 100
+    includedLlmModels: 4
+    schedule: daily
+    locationSupport: global
+    personaSupport: 1
+    contentGeneration: false
+    contentOptimization: Prompt research and prompt engineering data
+    integrations:
+      - Looker Studio
+      - API
+      - White-label reports
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: false
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: true
+tweets: []
+pricingUrl: https://nightwatch.io/pricing/
+featuresUrl: https://nightwatch.io/ai-tracking/
+screenshotSources:
+  - url: https://nightwatch.io/ai-tracking/
+    type: marketing
+    label: AI Tracking
+  - url: https://nightwatch.io/pricing/
+    type: marketing
+    label: Pricing
+  - url: https://docs.nightwatch.io/en/articles/13842311-ai-llm-tracking-in-nightwatch
+    type: help
+    label: LLM Tracking Docs
+screenshots:
+  - id: choosing-the-right-prompts
+    assetPath: /company-assets/nightwatch-ai-tracking/screenshots/choosing-the-right-prompts.png
+    sourcePageUrl: https://docs.nightwatch.io/en/articles/13842311-ai-llm-tracking-in-nightwatch
+    sourceImageUrl: https://downloads.intercomcdn.com/i/o/yc6d7s0g/2098558949/0f05fc5df1b3d931b48366d2830e/Kapture%2B2025-11-05%2Bat%2B13_17_05.gif?expires=1773313200&signature=9548358dfed872151803da5cd7286363034eb0a3f51389486217699e1cc46514&req=diAuHsx7lYhbUPMW1HO4zYwpY%2F7BeGcnC0BlHaYrVG9W3o49OfJj8iULYL%2Bd%0AgpaV1%2BVnBuK3dAqwJWE%3D%0A
+    sourceType: help
+    collectedAt: 2026-03-12T10:31:35.729Z
+    alt: Choosing the right prompts
+    kind: dashboard
+    caption: For each prompt, Nightwatch shows visibility, mention count, position, number of entities detected, and when it was last refreshed.
+    contextHeading: Choosing the right prompts
+    pageTitle: AI/LLM Tracking in Nightwatch | Help Docs | Nightwatch
+    tags:
+      - dashboard
+      - tracking
+  - id: citation-dashboard
+    assetPath: /company-assets/nightwatch-ai-tracking/screenshots/citation-dashboard.png
+    sourcePageUrl: https://docs.nightwatch.io/en/articles/13842311-ai-llm-tracking-in-nightwatch
+    sourceImageUrl: https://downloads.intercomcdn.com/i/o/yc6d7s0g/2098569404/eb716b6a42a0332359c7ce3ff5c9/image.png?expires=1773313200&signature=b249628b008b0647bbc3a25d94206fc44422845b84d6b066f5449f200ddeaf63&req=diAuHsx4lIVfXfMW1HO4zUwSzTH1yXfZMT5DlvphRgZ%2FwM03FCd6OElkYWzP%0ATW5QZb%2B3uV8uVBVqMG4%3D%0A
+    sourceType: help
+    collectedAt: 2026-03-12T10:31:32.138Z
+    alt: citation dashboard
+    kind: dashboard
+    contextHeading: Source Matrix Intelligence
+    pageTitle: AI/LLM Tracking in Nightwatch | Help Docs | Nightwatch
+    width: 2860
+    height: 1226
+    tags:
+      - dashboard
+      - tracking
+  - id: citations
+    assetPath: /company-assets/nightwatch-ai-tracking/screenshots/citations.png
+    sourcePageUrl: https://docs.nightwatch.io/en/articles/13842311-ai-llm-tracking-in-nightwatch
+    sourceImageUrl: https://downloads.intercomcdn.com/i/o/yc6d7s0g/2098568200/6724060f889c39e6d1d08c625350/image.png?expires=1773313200&signature=e33a0fb4a9643caae6b0ee0f94e46884952fc3d6f723a398c8a6e9e7aeae4cde&req=diAuHsx4lYNfWfMW1HO4zVeBpgUx8I0BSk1mtkb95sU6NtACxzLM4GAMri53%0AzPiYF%2BFTKJ%2Fb0Y7OYcA%3D%0A
+    sourceType: help
+    collectedAt: 2026-03-12T10:31:31.883Z
+    alt: Citations
+    kind: dashboard
+    caption: This makes it easy to spot if a competitor is gaining ground in AI responses, or if your own visibility is shifting, before it becomes a problem.
+    contextHeading: Citations
+    pageTitle: AI/LLM Tracking in Nightwatch | Help Docs | Nightwatch
+    width: 2848
+    height: 1096
+    tags:
+      - dashboard
+      - tracking
+  - id: classifications
+    assetPath: /company-assets/nightwatch-ai-tracking/screenshots/classifications.png
+    sourcePageUrl: https://docs.nightwatch.io/en/articles/13842311-ai-llm-tracking-in-nightwatch
+    sourceImageUrl: https://downloads.intercomcdn.com/i/o/yc6d7s0g/2098563216/c0cea0734cdb50b81f3657dbad0a/image.png?expires=1773313200&signature=cbdf54611cff6085af7f8cc3a5b16d3c9f09d32e4a8cd6558ff1a1fb6c59088a&req=diAuHsx4noNeX%2FMW1HO4zcdmabZJbO%2FxOrsGLn2Hc43ZRv15fEcPMQMYo2g9%0AdwUet51daOO8r0V%2BNaw%3D%0A
+    sourceType: help
+    collectedAt: 2026-03-12T10:31:32.362Z
+    alt: Classifications
+    kind: dashboard
+    caption: This view works particularly well for agencies — it gives a clear, visual competitive picture that translates easily into client conversations and reporting.
+    contextHeading: Classifications
+    pageTitle: AI/LLM Tracking in Nightwatch | Help Docs | Nightwatch
+    width: 1655
+    height: 931
+    tags:
+      - dashboard
+  - id: detailed-charts
+    assetPath: /company-assets/nightwatch-ai-tracking/screenshots/detailed-charts.png
+    sourcePageUrl: https://docs.nightwatch.io/en/articles/13842311-ai-llm-tracking-in-nightwatch
+    sourceImageUrl: https://downloads.intercomcdn.com/i/o/yc6d7s0g/2098558109/4403edd91ba16886bffcd4bce948/Kapture%2B2025-11-05%2Bat%2B13_15_08.gif?expires=1773313200&signature=f7bbd30b506ac4e9494624be305f6428891f81ff5efab7ef7dcbc1cc447167d5&req=diAuHsx7lYBfUPMW1HO4zVTXDni1zTdRrTrjH0EEg8JIRfs8n0O6NO3bClbV%0AP2TzNW0Tglsq0A5Hrxg%3D%0A
+    sourceType: help
+    collectedAt: 2026-03-12T10:31:41.004Z
+    alt: Detailed Charts
+    kind: analytics
+    contextHeading: Detailed Charts
+    pageTitle: AI/LLM Tracking in Nightwatch | Help Docs | Nightwatch
+    tags:
+      - analytics
+  - id: overview-dashboard
+    assetPath: /company-assets/nightwatch-ai-tracking/screenshots/overview-dashboard.png
+    sourcePageUrl: https://docs.nightwatch.io/en/articles/13842311-ai-llm-tracking-in-nightwatch
+    sourceImageUrl: https://downloads.intercomcdn.com/i/o/yc6d7s0g/2098557218/e52c1aa20a2a7f354acdbb8b178c/Kapture%2B2025-11-05%2Bat%2B13_02_15.gif?expires=1773313200&signature=ff654efe898ea8512c76f48a5588cbb799b417354d4633e84edcc6896ebbb2a5&req=diAuHsx7moNeUfMW1HO4zePEOG%2BXOYUYsen6MJ5cRDXZ%2B6BpI4HjhhDkwAbE%0A%2FV0XUmUo1LntBOTY5MQ%3D%0A
+    sourceType: help
+    collectedAt: 2026-03-12T10:31:39.318Z
+    alt: Overview Dashboard
+    kind: dashboard
+    caption: Click the 👁️ icon next to any prompt to preview the full AI response and see exactly how your brand is being talked about.
+    contextHeading: Overview Dashboard
+    pageTitle: AI/LLM Tracking in Nightwatch | Help Docs | Nightwatch
+    tags:
+      - dashboard
+      - tracking
+  - id: prompts-dashboard
+    assetPath: /company-assets/nightwatch-ai-tracking/screenshots/prompts-dashboard.png
+    sourcePageUrl: https://docs.nightwatch.io/en/articles/13842311-ai-llm-tracking-in-nightwatch
+    sourceImageUrl: https://downloads.intercomcdn.com/i/o/yc6d7s0g/2098561391/e7852400d1e1b3f5e4c9a541da7a/image.png?expires=1773313200&signature=eaf2b0bbd681a6d193393f3b6c5bdd286d2528296dae17da257fd3f2fadf2823&req=diAuHsx4nIJWWPMW1HO4zbdsxXUjMftVDYbTsnev7EkdbNJzbiyR0OtA5GTn%0AfY2yFuLhI6Zp11jBMi8%3D%0A
+    sourceType: help
+    collectedAt: 2026-03-12T10:31:31.693Z
+    alt: Prompts Dashboard
+    kind: dashboard
+    caption: Top Citation Sources — the websites being cited most frequently in AI answers related to your tracked prompts.
+    contextHeading: Prompts Dashboard
+    pageTitle: AI/LLM Tracking in Nightwatch | Help Docs | Nightwatch
+    width: 2516
+    height: 1296
+    tags:
+      - dashboard
+      - tracking
+  - id: prompts-research
+    assetPath: /company-assets/nightwatch-ai-tracking/screenshots/prompts-research.png
+    sourcePageUrl: https://docs.nightwatch.io/en/articles/13842311-ai-llm-tracking-in-nightwatch
+    sourceImageUrl: https://downloads.intercomcdn.com/i/o/yc6d7s0g/2098552892/7414d944cdf2e0659c2abc7d7b04/image.png?expires=1773313200&signature=ccc33ccc228a22a05d2a6fff80803d861dbd17cf28909f3b001ff0f33cb443b7&req=diAuHsx7n4lWW%2FMW1HO4zUcu46Z16gxG%2BWUU4t%2BpblCPyfp8mfUY26W5TCDH%0A1K1joZb3M6YsuK649S0%3D%0A
+    sourceType: help
+    collectedAt: 2026-03-12T10:31:35.937Z
+    alt: prompts research
+    kind: tracking
+    caption: After clicking Execute, you'll be taken to the SEO Agent workspace where the research runs, and a list of suggested prompts is generated. You can then review and add them directly to LLM Tracking.
+    contextHeading: "Step 2: Add Prompts"
+    pageTitle: AI/LLM Tracking in Nightwatch | Help Docs | Nightwatch
+    tags:
+      - tracking
+  - id: step-3-view-results
+    assetPath: /company-assets/nightwatch-ai-tracking/screenshots/step-3-view-results.png
+    sourcePageUrl: https://docs.nightwatch.io/en/articles/13842311-ai-llm-tracking-in-nightwatch
+    sourceImageUrl: https://downloads.intercomcdn.com/i/o/yc6d7s0g/2098554425/53d22c591c8420128caa754467aa/Kapture%2B2025-11-05%2Bat%2B12_56_55.gif?expires=1773313200&signature=de2a30edfa5a6b1f73b205b7eae0bd0aa9cd5e8a5eaa0f50afc8f3fe19194d3e&req=diAuHsx7mYVdXPMW1HO4zQIlaY%2BGH4fA730tCW8F383OszlQXlzPt8%2FJW0bh%0AWKKk7%2F6WZRlLTHyZPVc%3D%0A
+    sourceType: help
+    collectedAt: 2026-03-12T10:31:36.949Z
+    alt: "Step 3: View Results"
+    kind: tracking
+    caption: Tag your prompts to segment by use case or project
+    contextHeading: "Step 3: View Results"
+    pageTitle: AI/LLM Tracking in Nightwatch | Help Docs | Nightwatch
+    tags:
+      - tracking
+lastChecked: 2026-03-12

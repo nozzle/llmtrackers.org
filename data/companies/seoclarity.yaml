@@ -1,0 +1,173 @@
+slug: seoclarity
+name: seoClarity
+group: seoClarity
+website: https://www.seoclarity.net/ai-seo/ai-search-engines
+description: Enterprise AI search optimization suite with visibility tracking, sentiment analysis, site analytics, and brand-accuracy auditing inside its Clarity ArcAI platform.
+plans:
+  - name: ArcAI Custom
+    slug: arcai-custom
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Custom pricing via demo
+    pricePer1000Responses: null
+    aiResponsesMonthly: null
+    includedLlmModels: 4
+    schedule: weekly
+    locationSupport: global
+    personaSupport: 1
+    contentGeneration: false
+    contentOptimization: AI content recommendations, topical gap analysis, and brand-accuracy remediation
+    integrations:
+      - Custom dashboards
+      - Site analytics
+      - Citation monitoring
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: false
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: true
+tweets: []
+pricingUrl: https://www.seoclarity.net/ai-seo/pricing
+featuresUrl: https://www.seoclarity.net/ai-seo/ai-search-engines
+screenshotSources:
+  - url: https://www.seoclarity.net/ai-seo/ai-search-engine-visibility
+    type: marketing
+    label: AI Search Visibility
+  - url: https://www.seoclarity.net/ai-seo/ai-sentiment-accuracy-analysis
+    type: marketing
+    label: AI Sentiment Accuracy Analysis
+  - url: https://www.seoclarity.net/ai-seo/ai-search-engine-site-analytics
+    type: marketing
+    label: AI Search Engine Site Analytics
+  - url: https://www.seoclarity.net/ai-seo/ai-search-accuracy-protection
+    type: marketing
+    label: AI Search Accuracy Protection
+screenshots:
+  - id: accuracy-less-detail-with-shadow
+    assetPath: /company-assets/seoclarity/screenshots/accuracy-less-detail-with-shadow.png
+    sourcePageUrl: https://www.seoclarity.net/ai-seo/ai-search-accuracy-protection
+    sourceImageUrl: https://www.seoclarity.net/hs-fs/hubfs/Accuracy%20Less%20Detail%20with%20Shadow.png?width=450&height=286&name=Accuracy%20Less%20Detail%20with%20Shadow.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:49:51.686Z
+    alt: Accuracy Less Detail with Shadow
+    kind: tracking
+    caption: Get actionable insights on how to fix misinformation fast, shape AI outputs, and keep your brand reputation intact.
+    contextHeading: Protect Brand Reputation
+    pageTitle: AI Search Accuracy & Auditing | Clarity ArcAI
+    width: 900
+    height: 572
+    tags:
+      - tracking
+  - id: ai-accuracy-prompts-2
+    assetPath: /company-assets/seoclarity/screenshots/ai-accuracy-prompts-2.png
+    sourcePageUrl: https://www.seoclarity.net/ai-seo/ai-search-accuracy-protection
+    sourceImageUrl: https://www.seoclarity.net/hs-fs/hubfs/Ai%20accuracy%20prompts%202.png?width=286&height=179&name=Ai%20accuracy%20prompts%202.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:49:51.992Z
+    alt: Ai accuracy prompts 2
+    kind: tracking
+    caption: AI engines are already telling your brand’s story for you, whether or not they get the facts right.
+    contextHeading: Is AI Search Misinformation Eroding Your Brand?
+    pageTitle: AI Search Accuracy & Auditing | Clarity ArcAI
+    width: 571
+    height: 357
+    tags:
+      - tracking
+  - id: ai-search-engine-referral-traffic-with-shadow
+    assetPath: /company-assets/seoclarity/screenshots/ai-search-engine-referral-traffic-with-shadow.jpg
+    sourcePageUrl: https://www.seoclarity.net/ai-seo/ai-search-engine-visibility
+    sourceImageUrl: https://www.seoclarity.net/hs-fs/hubfs/AI%20Search%20Engine%20Referral%20Traffic%20with%20shadow.jpg?width=286&height=172&name=AI%20Search%20Engine%20Referral%20Traffic%20with%20shadow.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:49:49.879Z
+    alt: AI Search Engine Referral Traffic with shadow
+    kind: dashboard
+    caption: Traffic from AI search engines like ChatGPT, Perplexity, and Gemini has surged, creating a valuable new opportunity.
+    contextHeading: The AI Search Visibility Challenge—And How To Solve It
+    pageTitle: Monitor AI Search Engine Visibility | seoClarity
+    width: 571
+    height: 344
+    tags:
+      - dashboard
+      - tracking
+  - id: ai-serach-sentiment
+    assetPath: /company-assets/seoclarity/screenshots/ai-serach-sentiment.png
+    sourcePageUrl: https://www.seoclarity.net/ai-seo/ai-sentiment-accuracy-analysis
+    sourceImageUrl: https://www.seoclarity.net/hs-fs/hubfs/AI%20serach%20sentiment.png?width=519&height=374&name=AI%20serach%20sentiment.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:49:50.853Z
+    alt: AI serach sentiment
+    kind: tracking
+    caption: Use actual AI responses and citation data to inform your content updates. Strengthen your site's authority or reach out to external publishers to reshape how your brand appears in AI search.
+    pageTitle: AI Search Sentiment Analysis | Clarity ArcAI
+    width: 1038
+    height: 748
+    tags:
+      - tracking
+  - id: saas-01
+    assetPath: /company-assets/seoclarity/screenshots/saas-01.png
+    sourcePageUrl: https://www.seoclarity.net/ai-seo/ai-sentiment-accuracy-analysis
+    sourceImageUrl: https://www.seoclarity.net/hs-fs/hubfs/saas-01.png?width=286&height=244&name=saas-01.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:49:51.292Z
+    alt: saas-01
+    kind: tracking
+    contextHeading: "Everything You Need to See and Shape Your AI Brand Reputation:"
+    pageTitle: AI Search Sentiment Analysis | Clarity ArcAI
+    width: 571
+    height: 488
+    tags:
+      - tracking
+  - id: screenshot-04-08-2025-at-14-44
+    assetPath: /company-assets/seoclarity/screenshots/screenshot-04-08-2025-at-14-44.png
+    sourcePageUrl: https://www.seoclarity.net/ai-seo/ai-search-engine-site-analytics
+    sourceImageUrl: https://www.seoclarity.net/hs-fs/hubfs/Screenshot%2004-08-2025%20at%2014.44.png?width=286&height=180&name=Screenshot%2004-08-2025%20at%2014.44.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:49:50.531Z
+    alt: Screenshot 04-08-2025 at 14.44
+    kind: tracking
+    caption: 'One of the big questions we keep hearing is: "How much of our traffic is actually coming from AI search engines?"'
+    contextHeading: The Full Picture of How AI-Driven Visitors Behave
+    pageTitle: Track AI Search Traffic & Performance | Clarity ArcAI
+    width: 571
+    height: 359
+    tags:
+      - tracking
+  - id: site-analytics
+    assetPath: /company-assets/seoclarity/screenshots/site-analytics.png
+    sourcePageUrl: https://www.seoclarity.net/ai-seo/ai-search-engine-site-analytics
+    sourceImageUrl: https://www.seoclarity.net/hs-fs/hubfs/site%20analytics.png?width=500&height=245&name=site%20analytics.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:49:50.201Z
+    alt: site analytics
+    kind: dashboard
+    contextHeading: Instantly know which pages, content, or experiences grow AI-driven traffic and conversions across ChatGPT, Perplexity, Gemini, and more.
+    pageTitle: Track AI Search Traffic & Performance | Clarity ArcAI
+    width: 1000
+    height: 490
+    tags:
+      - dashboard
+      - analytics
+  - id: site-analytics-sliced-performance-01
+    assetPath: /company-assets/seoclarity/screenshots/site-analytics-sliced-performance-01.png
+    sourcePageUrl: https://www.seoclarity.net/ai-seo/ai-search-engine-site-analytics
+    sourceImageUrl: https://www.seoclarity.net/hs-fs/hubfs/site-analytics-sliced-performance-01.png?width=286&height=229&name=site-analytics-sliced-performance-01.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:49:49.324Z
+    alt: site-analytics-sliced-performance-01
+    kind: dashboard
+    caption: Now you can answer your leadership’s toughest questions and adjust your AI search strategy with confidence.
+    contextHeading: Turn AI Traffic Insights Into Action
+    pageTitle: Track AI Search Traffic & Performance | Clarity ArcAI
+    width: 571
+    height: 457
+    tags:
+      - dashboard
+      - analytics
+      - tracking
+lastChecked: 2026-03-12

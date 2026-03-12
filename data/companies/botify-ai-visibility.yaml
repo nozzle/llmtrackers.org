@@ -1,0 +1,109 @@
+slug: botify-ai-visibility
+name: Botify AI Visibility
+group: Botify
+website: https://www.botify.com/platform/botify-analytics/ai-visibility
+description: Enterprise AI visibility analytics product that blends prompt-level monitoring, first-party search data, competitor share of voice, and action-oriented recommendations.
+plans:
+  - name: Enterprise Demo
+    slug: enterprise-demo
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: Demo-led enterprise pricing
+    pricePer1000Responses: null
+    aiResponsesMonthly: null
+    includedLlmModels: 5
+    schedule: weekly
+    locationSupport: global
+    personaSupport: 1
+    contentGeneration: false
+    contentOptimization: AI-powered recommendations and scaled deployment
+    integrations:
+      - Google Search Console
+      - Site crawl data
+      - Log files
+    llmSupport:
+      chatgpt: true
+      gemini: true
+      perplexity: true
+      claude: false
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: true
+tweets: []
+pricingUrl: https://www.botify.com/request-a-demo
+featuresUrl: https://www.botify.com/platform/botify-analytics/ai-visibility
+screenshotSources:
+  - url: https://www.botify.com/platform/botify-analytics/ai-visibility
+    type: marketing
+    label: AI Visibility
+screenshots:
+  - id: 68ee34a2a52f11be8c7b0247-ai-20visibility-visual-
+    assetPath: /company-assets/botify-ai-visibility/screenshots/68ee34a2a52f11be8c7b0247-ai-20visibility-visual-.png
+    sourcePageUrl: https://www.botify.com/platform/botify-analytics/ai-visibility
+    sourceImageUrl: https://cdn.prod.website-files.com/6639e9e213b495098391c3d1/68ee34a2a52f11be8c7b0247_AI%20Visibility-visual%20%231_Discover_Outlined-p-500.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:41:40.541Z
+    alt: 68ee34a2a52f11be8c7b0247 Ai 20visibility Visual
+    kind: dashboard
+    pageTitle: Know where your brand stands in AI search | Botify AI Visibility
+    tags:
+      - dashboard
+  - id: 68efaf813e08abb371792442-ai-20visibility-visual-
+    assetPath: /company-assets/botify-ai-visibility/screenshots/68efaf813e08abb371792442-ai-20visibility-visual-.png
+    sourcePageUrl: https://www.botify.com/platform/botify-analytics/ai-visibility
+    sourceImageUrl: https://cdn.prod.website-files.com/6639e9e213b495098391c3d1/68efaf813e08abb371792442_AI%20Visibility-visual%20%233_Compare_Outlined-p-500.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:41:40.908Z
+    alt: 68efaf813e08abb371792442 Ai 20visibility Visual
+    kind: dashboard
+    pageTitle: Know where your brand stands in AI search | Botify AI Visibility
+    tags:
+      - dashboard
+  - id: 699e1a1e16f62e58cbf9fc90-ai-20visibility-visual-
+    assetPath: /company-assets/botify-ai-visibility/screenshots/699e1a1e16f62e58cbf9fc90-ai-20visibility-visual-.jpg
+    sourcePageUrl: https://www.botify.com/platform/botify-analytics/ai-visibility
+    sourceImageUrl: https://cdn.prod.website-files.com/6639e9e213b495098391c3d1/699e1a1e16f62e58cbf9fc90_AI%20Visibility-Visual%20Header-p-500.jpg
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:41:40.035Z
+    alt: 699e1a1e16f62e58cbf9fc90 Ai 20visibility Visual
+    kind: dashboard
+    pageTitle: Know where your brand stands in AI search | Botify AI Visibility
+    tags:
+      - dashboard
+  - id: 699e1a4ba320d70c5d180735-ai-20visibility-visual-
+    assetPath: /company-assets/botify-ai-visibility/screenshots/699e1a4ba320d70c5d180735-ai-20visibility-visual-.png
+    sourcePageUrl: https://www.botify.com/platform/botify-analytics/ai-visibility
+    sourceImageUrl: https://cdn.prod.website-files.com/6639e9e213b495098391c3d1/699e1a4ba320d70c5d180735_AI%20Visibility-visual%20%232_Trust-p-500.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:41:40.760Z
+    alt: 699e1a4ba320d70c5d180735 Ai 20visibility Visual
+    kind: dashboard
+    pageTitle: Know where your brand stands in AI search | Botify AI Visibility
+    tags:
+      - dashboard
+  - id: 699e1a73b890649a45990e5b-ai-20visibility-visual-
+    assetPath: /company-assets/botify-ai-visibility/screenshots/699e1a73b890649a45990e5b-ai-20visibility-visual-.png
+    sourcePageUrl: https://www.botify.com/platform/botify-analytics/ai-visibility
+    sourceImageUrl: https://cdn.prod.website-files.com/6639e9e213b495098391c3d1/699e1a73b890649a45990e5b_AI%20Visibility-visual%20%234_Investigate-p-500.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:41:41.126Z
+    alt: 699e1a73b890649a45990e5b Ai 20visibility Visual
+    kind: dashboard
+    pageTitle: Know where your brand stands in AI search | Botify AI Visibility
+    tags:
+      - dashboard
+  - id: 699f064588ab3ccd9bde5986-ai-20visibility-visual-
+    assetPath: /company-assets/botify-ai-visibility/screenshots/699f064588ab3ccd9bde5986-ai-20visibility-visual-.png
+    sourcePageUrl: https://www.botify.com/platform/botify-analytics/ai-visibility
+    sourceImageUrl: https://cdn.prod.website-files.com/6639e9e213b495098391c3d1/699f064588ab3ccd9bde5986_AI%20Visibility-visual%20%235_Act-p-500.png
+    sourceType: marketing
+    collectedAt: 2026-03-12T10:41:41.244Z
+    alt: 699f064588ab3ccd9bde5986 Ai 20visibility Visual
+    kind: dashboard
+    pageTitle: Know where your brand stands in AI search | Botify AI Visibility
+    tags:
+      - dashboard
+lastChecked: 2026-03-12
