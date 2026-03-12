@@ -13,7 +13,9 @@ import { Route as SuggestRouteImport } from './routes/suggest'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ReviewsIndexRouteImport } from './routes/reviews/index'
+import { Route as MetricsIndexRouteImport } from './routes/metrics/index'
 import { Route as ReviewsSlugRouteImport } from './routes/reviews/$slug'
+import { Route as MetricsIdRouteImport } from './routes/metrics/$id'
 import { Route as CompaniesSlugRouteImport } from './routes/companies/$slug'
 
 const SuggestRoute = SuggestRouteImport.update({
@@ -36,9 +38,19 @@ const ReviewsIndexRoute = ReviewsIndexRouteImport.update({
   path: '/reviews/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MetricsIndexRoute = MetricsIndexRouteImport.update({
+  id: '/metrics/',
+  path: '/metrics/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReviewsSlugRoute = ReviewsSlugRouteImport.update({
   id: '/reviews/$slug',
   path: '/reviews/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MetricsIdRoute = MetricsIdRouteImport.update({
+  id: '/metrics/$id',
+  path: '/metrics/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompaniesSlugRoute = CompaniesSlugRouteImport.update({
@@ -52,7 +64,9 @@ export interface FileRoutesByFullPath {
   '/compare': typeof CompareRoute
   '/suggest': typeof SuggestRoute
   '/companies/$slug': typeof CompaniesSlugRoute
+  '/metrics/$id': typeof MetricsIdRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
+  '/metrics/': typeof MetricsIndexRoute
   '/reviews/': typeof ReviewsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -60,7 +74,9 @@ export interface FileRoutesByTo {
   '/compare': typeof CompareRoute
   '/suggest': typeof SuggestRoute
   '/companies/$slug': typeof CompaniesSlugRoute
+  '/metrics/$id': typeof MetricsIdRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
+  '/metrics': typeof MetricsIndexRoute
   '/reviews': typeof ReviewsIndexRoute
 }
 export interface FileRoutesById {
@@ -69,7 +85,9 @@ export interface FileRoutesById {
   '/compare': typeof CompareRoute
   '/suggest': typeof SuggestRoute
   '/companies/$slug': typeof CompaniesSlugRoute
+  '/metrics/$id': typeof MetricsIdRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
+  '/metrics/': typeof MetricsIndexRoute
   '/reviews/': typeof ReviewsIndexRoute
 }
 export interface FileRouteTypes {
@@ -79,7 +97,9 @@ export interface FileRouteTypes {
     | '/compare'
     | '/suggest'
     | '/companies/$slug'
+    | '/metrics/$id'
     | '/reviews/$slug'
+    | '/metrics/'
     | '/reviews/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -87,7 +107,9 @@ export interface FileRouteTypes {
     | '/compare'
     | '/suggest'
     | '/companies/$slug'
+    | '/metrics/$id'
     | '/reviews/$slug'
+    | '/metrics'
     | '/reviews'
   id:
     | '__root__'
@@ -95,7 +117,9 @@ export interface FileRouteTypes {
     | '/compare'
     | '/suggest'
     | '/companies/$slug'
+    | '/metrics/$id'
     | '/reviews/$slug'
+    | '/metrics/'
     | '/reviews/'
   fileRoutesById: FileRoutesById
 }
@@ -104,7 +128,9 @@ export interface RootRouteChildren {
   CompareRoute: typeof CompareRoute
   SuggestRoute: typeof SuggestRoute
   CompaniesSlugRoute: typeof CompaniesSlugRoute
+  MetricsIdRoute: typeof MetricsIdRoute
   ReviewsSlugRoute: typeof ReviewsSlugRoute
+  MetricsIndexRoute: typeof MetricsIndexRoute
   ReviewsIndexRoute: typeof ReviewsIndexRoute
 }
 
@@ -138,11 +164,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReviewsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/metrics/': {
+      id: '/metrics/'
+      path: '/metrics'
+      fullPath: '/metrics/'
+      preLoaderRoute: typeof MetricsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reviews/$slug': {
       id: '/reviews/$slug'
       path: '/reviews/$slug'
       fullPath: '/reviews/$slug'
       preLoaderRoute: typeof ReviewsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/metrics/$id': {
+      id: '/metrics/$id'
+      path: '/metrics/$id'
+      fullPath: '/metrics/$id'
+      preLoaderRoute: typeof MetricsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/companies/$slug': {
@@ -160,7 +200,9 @@ const rootRouteChildren: RootRouteChildren = {
   CompareRoute: CompareRoute,
   SuggestRoute: SuggestRoute,
   CompaniesSlugRoute: CompaniesSlugRoute,
+  MetricsIdRoute: MetricsIdRoute,
   ReviewsSlugRoute: ReviewsSlugRoute,
+  MetricsIndexRoute: MetricsIndexRoute,
   ReviewsIndexRoute: ReviewsIndexRoute,
 }
 export const routeTree = rootRouteImport
