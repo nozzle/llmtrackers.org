@@ -68,7 +68,8 @@ export const Route = createFileRoute("/reviews/$slug")({
 });
 
 function ReviewPage() {
-  const { slug } = Route.useParams();
+  const params = Route.useParams();
+  const { slug } = params;
   const review = getReviewBySlug(slug);
   const companies = getAllCompanies();
   const [editingReview, setEditingReview] = useState(false);

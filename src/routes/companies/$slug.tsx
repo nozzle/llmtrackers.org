@@ -129,7 +129,8 @@ function LayoutToggle({
 // ---------------------------------------------------------------------------
 
 function CompanyPage() {
-  const { slug } = Route.useParams();
+  const params = Route.useParams();
+  const { slug } = params;
   const search: CompanySearch = Route.useSearch();
   const navigate = useNavigate();
 

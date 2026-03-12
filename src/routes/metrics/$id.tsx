@@ -49,7 +49,8 @@ export const Route = createFileRoute("/metrics/$id")({
 });
 
 function MetricPage() {
-  const { id } = Route.useParams();
+  const params = Route.useParams();
+  const { id } = params;
   const metric = getMetricById(id);
 
   if (!metric) {

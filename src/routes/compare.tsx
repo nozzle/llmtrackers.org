@@ -10,6 +10,8 @@ const compareSearchSchema = z.object({
   plans: z.string().optional(),
 });
 
+type CompareSearch = z.infer<typeof compareSearchSchema>;
+
 export const Route = createFileRoute("/compare")({
   component: ComparePage,
   validateSearch: compareSearchSchema,
@@ -101,7 +103,8 @@ const ROWS: ComparisonRow[] = [
 ];
 
 function ComparePage() {
-  const { plans: plansParam } = Route.useSearch();
+  const search: CompareSearch = Route.useSearch();
+  const plansParam = search.plans;
 
   const planKeys = plansParam ? plansParam.split(",") : [];
   const plans = planKeys
