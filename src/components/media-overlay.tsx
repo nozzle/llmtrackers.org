@@ -1,10 +1,23 @@
 import { useEffect, useCallback } from "react";
-import type { CompanyScreenshot, CompanyVideo } from "@llm-tracker/shared";
+import { Link } from "@tanstack/react-router";
+import type { CompanyScreenshot, CompanyVideo, Metric } from "@llm-tracker/shared";
+import { CompanyMark } from "~/components/company-mark";
+import { formatMetricId } from "~/metrics";
+
+export interface ScreenshotCompanyContext {
+  companySlug: string;
+  companyName: string;
+  matchedMetrics: Metric[];
+}
 
 interface ScreenshotOverlay {
   type: "screenshot";
   items: CompanyScreenshot[];
   index: number;
+  /** Per-item company context. When provided, the overlay shows company info
+   *  and matched metrics alongside screenshot metadata. The array must be
+   *  the same length as `items`. */
+  companyContexts?: ScreenshotCompanyContext[];
 }
 
 interface VideoOverlay {
@@ -136,7 +149,10 @@ export function MediaOverlay(props: MediaOverlayProps) {
         {/* Metadata strip */}
         <div className="border-t border-white/10 px-5 py-4">
           {type === "screenshot" ? (
-            <ScreenshotMeta screenshot={items[index]} />
+            <ScreenshotMeta
+              screenshot={items[index]}
+              companyContext={props.companyContexts?.[index]}
+            />
           ) : (
             <VideoMeta video={items[index]} />
           )}
@@ -160,9 +176,36 @@ function ScreenshotContent({ screenshot }: { screenshot: CompanyScreenshot }) {
   );
 }
 
-function ScreenshotMeta({ screenshot }: { screenshot: CompanyScreenshot }) {
+function ScreenshotMeta({
+  screenshot,
+  companyContext,
+}: {
+  screenshot: CompanyScreenshot;
+  companyContext?: ScreenshotCompanyContext;
+}) {
   return (
     <div className="space-y-2">
+      {/* Company context (cross-company overlay) */}
+      {companyContext && (
+        <div className="flex flex-wrap items-center gap-2 pb-1">
+          <Link
+            to="/companies/$slug"
+            params={{ slug: companyContext.companySlug }}
+            className="flex items-center gap-2 text-sm font-semibold text-white hover:text-blue-300"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <CompanyMark
+              slug={companyContext.companySlug}
+              name={companyContext.companyName}
+              size="sm"
+            />
+            {companyContext.companyName}
+          </Link>
+        </div>
+      )}
+
       <div className="flex flex-wrap items-center gap-2">
         {screenshot.kind && (
           <span className="rounded-full bg-blue-500/20 px-2.5 py-0.5 text-xs font-medium text-blue-300">
@@ -187,6 +230,28 @@ function ScreenshotMeta({ screenshot }: { screenshot: CompanyScreenshot }) {
       </h3>
       {screenshot.caption && (
         <p className="text-sm leading-6 text-gray-400">{screenshot.caption}</p>
+      )}
+
+      {/* Matched metrics */}
+      {companyContext && companyContext.matchedMetrics.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          <span className="text-xs font-medium uppercase tracking-wide text-gray-500">
+            Matched metrics
+          </span>
+          {companyContext.matchedMetrics.map((metric) => (
+            <Link
+              key={metric.id}
+              to="/metrics/$id"
+              params={{ id: metric.id }}
+              className="rounded-full border border-purple-500/30 bg-purple-500/15 px-2.5 py-0.5 text-xs font-medium text-purple-300 transition hover:bg-purple-500/25"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              {formatMetricId(metric.id)}
+            </Link>
+          ))}
+        </div>
       )}
 
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500">

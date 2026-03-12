@@ -2,6 +2,7 @@ import compiledData from "../packages/shared/compiled-data.json";
 import type {
   Company,
   CompiledData,
+  CompanyScreenshot,
   Metric,
   MetricSupport,
   PlanWithCompany,
@@ -97,4 +98,69 @@ export function getPlanByKey(key: string): PlanWithCompanyMeta | undefined {
 
 export function getGeneratedAt(): string {
   return data.generatedAt;
+}
+
+// ---------------------------------------------------------------------------
+// Screenshots (cross-company)
+// ---------------------------------------------------------------------------
+
+export type ScreenshotWithCompany = CompanyScreenshot & {
+  companySlug: string;
+  companyName: string;
+};
+
+export function getAllScreenshotsWithCompany(): ScreenshotWithCompany[] {
+  return data.companies.flatMap((company) =>
+    company.screenshots.map((screenshot) => ({
+      ...screenshot,
+      companySlug: company.slug,
+      companyName: company.name,
+    })),
+  );
+}
+
+/**
+ * Fuzzy-match a screenshot to metrics supported by its company.
+ *
+ * Matching heuristic (any hit counts):
+ *  1. A screenshot tag exactly equals a word in a metric ID (split on `-`).
+ *  2. The screenshot `kind` exactly equals a word in a metric ID.
+ *  3. A metric-ID word (length > 3) appears in the screenshot caption,
+ *     contextHeading, or alt text.
+ */
+export function getMatchedMetricsForScreenshot(
+  screenshot: CompanyScreenshot,
+  companySlug: string,
+): CompanyMetric[] {
+  const companyMetrics = getMetricsForCompanySlug(companySlug);
+  if (companyMetrics.length === 0) return [];
+
+  // Collect lowercase search terms from the screenshot
+  const tagSet = new Set(screenshot.tags.map((t) => t.toLowerCase()));
+  const kindTerm = screenshot.kind?.toLowerCase() ?? "";
+
+  // Build a combined lowercase text blob for caption / heading / alt
+  const textBlob = [screenshot.caption, screenshot.contextHeading, screenshot.alt]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  return companyMetrics.filter((metric) => {
+    const idWords = metric.id.toLowerCase().split("-");
+
+    // 1. Tag matches a metric-ID word
+    for (const word of idWords) {
+      if (tagSet.has(word)) return true;
+    }
+
+    // 2. Kind matches a metric-ID word
+    if (kindTerm.length > 0 && idWords.includes(kindTerm)) return true;
+
+    // 3. Metric-ID word (> 3 chars) found in text blob
+    for (const word of idWords) {
+      if (word.length > 3 && textBlob.includes(word)) return true;
+    }
+
+    return false;
+  });
 }

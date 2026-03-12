@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SuggestRouteImport } from './routes/suggest'
+import { Route as ScreenshotsRouteImport } from './routes/screenshots'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ReviewsIndexRouteImport } from './routes/reviews/index'
@@ -21,6 +22,11 @@ import { Route as CompaniesSlugRouteImport } from './routes/companies/$slug'
 const SuggestRoute = SuggestRouteImport.update({
   id: '/suggest',
   path: '/suggest',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScreenshotsRoute = ScreenshotsRouteImport.update({
+  id: '/screenshots',
+  path: '/screenshots',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompareRoute = CompareRouteImport.update({
@@ -62,6 +68,7 @@ const CompaniesSlugRoute = CompaniesSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/screenshots': typeof ScreenshotsRoute
   '/suggest': typeof SuggestRoute
   '/companies/$slug': typeof CompaniesSlugRoute
   '/metrics/$id': typeof MetricsIdRoute
@@ -72,6 +79,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/screenshots': typeof ScreenshotsRoute
   '/suggest': typeof SuggestRoute
   '/companies/$slug': typeof CompaniesSlugRoute
   '/metrics/$id': typeof MetricsIdRoute
@@ -83,6 +91,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/screenshots': typeof ScreenshotsRoute
   '/suggest': typeof SuggestRoute
   '/companies/$slug': typeof CompaniesSlugRoute
   '/metrics/$id': typeof MetricsIdRoute
@@ -95,6 +104,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/compare'
+    | '/screenshots'
     | '/suggest'
     | '/companies/$slug'
     | '/metrics/$id'
@@ -105,6 +115,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/compare'
+    | '/screenshots'
     | '/suggest'
     | '/companies/$slug'
     | '/metrics/$id'
@@ -115,6 +126,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/compare'
+    | '/screenshots'
     | '/suggest'
     | '/companies/$slug'
     | '/metrics/$id'
@@ -126,6 +138,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CompareRoute: typeof CompareRoute
+  ScreenshotsRoute: typeof ScreenshotsRoute
   SuggestRoute: typeof SuggestRoute
   CompaniesSlugRoute: typeof CompaniesSlugRoute
   MetricsIdRoute: typeof MetricsIdRoute
@@ -141,6 +154,13 @@ declare module '@tanstack/react-router' {
       path: '/suggest'
       fullPath: '/suggest'
       preLoaderRoute: typeof SuggestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/screenshots': {
+      id: '/screenshots'
+      path: '/screenshots'
+      fullPath: '/screenshots'
+      preLoaderRoute: typeof ScreenshotsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/compare': {
@@ -198,6 +218,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompareRoute: CompareRoute,
+  ScreenshotsRoute: ScreenshotsRoute,
   SuggestRoute: SuggestRoute,
   CompaniesSlugRoute: CompaniesSlugRoute,
   MetricsIdRoute: MetricsIdRoute,
