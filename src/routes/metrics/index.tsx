@@ -1,16 +1,31 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { getAllMetrics, getCompanyBySlug } from "~/data";
+import { useMemo } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { z } from "zod";
+import { getAllCompanies, getAllMetrics, getCompanyBySlug } from "~/data";
 import { CompanyMark } from "~/components/company-mark";
+import { formatMetricId } from "~/metrics";
 
-function formatMetricName(id: string): string {
-  return id
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+const metricsSearchSchema = z.object({
+  q: z.string().optional().catch(undefined),
+  company: z.string().optional().catch(undefined),
+  order: z.enum(["name", "companies", "plans"]).optional().catch(undefined),
+});
+
+type MetricsSearch = z.infer<typeof metricsSearchSchema>;
+
+function normalizeSearchValue(value: string | undefined): string | undefined {
+  return value && value.length > 0 ? value : undefined;
+}
+
+function normalizeSortValue(
+  value: MetricsSearch["order"] | "" | undefined,
+): MetricsSearch["order"] | undefined {
+  return value && value.length > 0 ? value : undefined;
 }
 
 export const Route = createFileRoute("/metrics/")({
   component: MetricsIndexPage,
+  validateSearch: metricsSearchSchema,
   head: () => ({
     meta: [
       { title: "Metrics - LLM Trackers" },
@@ -31,6 +46,60 @@ export const Route = createFileRoute("/metrics/")({
 
 function MetricsIndexPage() {
   const metrics = getAllMetrics();
+  const companies = getAllCompanies();
+  const search: MetricsSearch = Route.useSearch();
+  const navigate = useNavigate();
+
+  const query = search.q ?? "";
+  const companyFilter = search.company ?? "";
+  const sortBy = search.order ?? "name";
+
+  const filteredMetrics = useMemo(() => {
+    const result = metrics.filter((metric) => {
+      const normalizedName = formatMetricId(metric.id).toLowerCase();
+      const normalizedDescription = metric.description.toLowerCase();
+      const matchesQuery =
+        query.length === 0 ||
+        normalizedName.includes(query.toLowerCase()) ||
+        metric.id.includes(query.toLowerCase()) ||
+        normalizedDescription.includes(query.toLowerCase());
+
+      const matchesCompany =
+        companyFilter.length === 0 ||
+        metric.supportedBy.some((support) => support.companySlug === companyFilter);
+
+      return matchesQuery && matchesCompany;
+    });
+
+    return result.sort((a, b) => {
+      if (sortBy === "companies") {
+        const companyCountA = new Set(a.supportedBy.map((support) => support.companySlug)).size;
+        const companyCountB = new Set(b.supportedBy.map((support) => support.companySlug)).size;
+        if (companyCountB !== companyCountA) return companyCountB - companyCountA;
+      }
+
+      if (sortBy === "plans") {
+        if (b.supportedBy.length !== a.supportedBy.length)
+          return b.supportedBy.length - a.supportedBy.length;
+      }
+
+      return formatMetricId(a.id).localeCompare(formatMetricId(b.id));
+    });
+  }, [companyFilter, metrics, query, sortBy]);
+
+  const filteredCount = filteredMetrics.length;
+
+  function updateSearch(patch: Partial<MetricsSearch> & { order?: MetricsSearch["order"] | "" }) {
+    void navigate({
+      to: "/metrics",
+      search: {
+        q: patch.q !== undefined ? normalizeSearchValue(patch.q) : search.q,
+        company: patch.company !== undefined ? normalizeSearchValue(patch.company) : search.company,
+        order: patch.order !== undefined ? normalizeSortValue(patch.order) : search.order,
+      },
+      replace: true,
+    });
+  }
 
   return (
     <div>
@@ -41,16 +110,144 @@ function MetricsIndexPage() {
         <div className="mt-4">
           <h1 className="text-3xl font-bold text-gray-900">Metrics</h1>
           <p className="mt-2 text-gray-600">
-            {metrics.length} normalized metrics tracked across AI search visibility tools.
+            {filteredCount === metrics.length
+              ? `${metrics.length} normalized metrics tracked across AI search visibility tools.`
+              : `${filteredCount} of ${metrics.length} normalized metrics match the current filters.`}
           </p>
         </div>
       </div>
 
-      {metrics.length === 0 ? (
-        <p className="text-gray-500">No metrics yet.</p>
+      <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px_180px_auto] lg:items-end">
+          <div>
+            <label
+              htmlFor="metrics-search"
+              className="text-xs font-semibold uppercase tracking-wide text-gray-500"
+            >
+              Search metrics
+            </label>
+            <input
+              id="metrics-search"
+              type="search"
+              value={query}
+              onChange={(event) => {
+                updateSearch({ q: event.target.value });
+              }}
+              placeholder="Search by name, id, or description"
+              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="metrics-company"
+              className="text-xs font-semibold uppercase tracking-wide text-gray-500"
+            >
+              Company
+            </label>
+            <select
+              id="metrics-company"
+              value={companyFilter}
+              onChange={(event) => {
+                updateSearch({ company: event.target.value });
+              }}
+              className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            >
+              <option value="">All companies</option>
+              {companies.map((company) => (
+                <option key={company.slug} value={company.slug}>
+                  {company.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label
+              htmlFor="metrics-sort"
+              className="text-xs font-semibold uppercase tracking-wide text-gray-500"
+            >
+              Sort by
+            </label>
+            <select
+              id="metrics-sort"
+              value={sortBy}
+              onChange={(event) => {
+                updateSearch({ order: event.target.value as MetricsSearch["order"] });
+              }}
+              className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            >
+              <option value="name">Name</option>
+              <option value="companies">Most companies</option>
+              <option value="plans">Most plans</option>
+            </select>
+          </div>
+
+          <div className="flex gap-2 lg:justify-end">
+            <button
+              type="button"
+              onClick={() => {
+                updateSearch({ q: "", company: "", order: "" as MetricsSearch["order"] });
+              }}
+              disabled={query.length === 0 && companyFilter.length === 0 && sortBy === "name"}
+              className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Clear filters
+            </button>
+          </div>
+        </div>
+
+        {(query.length > 0 || companyFilter.length > 0 || sortBy !== "name") && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {query.length > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  updateSearch({ q: "" });
+                }}
+                className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-100"
+              >
+                Search: {query} x
+              </button>
+            )}
+            {companyFilter.length > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  updateSearch({ company: "" });
+                }}
+                className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-100"
+              >
+                Company:{" "}
+                {companies.find((company) => company.slug === companyFilter)?.name ?? companyFilter}{" "}
+                x
+              </button>
+            )}
+            {sortBy !== "name" && (
+              <button
+                type="button"
+                onClick={() => {
+                  updateSearch({ order: "" as MetricsSearch["order"] });
+                }}
+                className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-100"
+              >
+                Sort: {sortBy === "companies" ? "Most companies" : "Most plans"} x
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+
+      {filteredMetrics.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 px-4 py-8 text-center">
+          <p className="text-sm font-medium text-gray-700">No metrics match the current filters.</p>
+          <p className="mt-1 text-sm text-gray-500">
+            Try a different search term, company, or sort.
+          </p>
+        </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {metrics.map((metric) => {
+          {filteredMetrics.map((metric) => {
             const uniqueCompanySlugs = [...new Set(metric.supportedBy.map((s) => s.companySlug))];
 
             return (
@@ -61,7 +258,7 @@ function MetricsIndexPage() {
                 className="group flex flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50/30"
               >
                 <h2 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600">
-                  {formatMetricName(metric.id)}
+                  {formatMetricId(metric.id)}
                 </h2>
                 <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-gray-600">
                   {metric.description}

@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { CompanyMark } from "~/components/company-mark";
 import {
@@ -9,18 +10,8 @@ import { getReviewSiteBranding } from "~/review-site-branding";
 import { LLM_MODEL_LABELS, REVIEW_SITE_PLATFORMS } from "@llm-tracker/shared";
 import type { Company, Plan, PublishedReview, ReviewSitePlatform } from "@llm-tracker/shared";
 import type { CompanyMetric } from "~/data";
+import { formatMetricId } from "~/metrics";
 import { LLM_KEYS, formatBucketLabel } from "./company-design-props";
-
-function formatMetricId(metricId: string): string {
-  return metricId
-    .split("-")
-    .map((part) => {
-      if (part === "ai") return "AI";
-      if (part === "llm") return "LLM";
-      return part.charAt(0).toUpperCase() + part.slice(1);
-    })
-    .join(" ");
-}
 
 // ---------------------------------------------------------------------------
 // Plans Section
@@ -199,6 +190,27 @@ export function MetricDefinitionsSection({
   companyMetrics: CompanyMetric[];
   className?: string;
 }) {
+  const [query, setQuery] = useState("");
+  const filteredMetrics = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    if (normalizedQuery.length === 0) return companyMetrics;
+
+    return companyMetrics.filter((metric) => {
+      const vendorNames = metric.supportedBy
+        .map((support) => support.vendorName)
+        .filter((vendorName): vendorName is string => Boolean(vendorName))
+        .join(" ")
+        .toLowerCase();
+
+      return (
+        metric.id.toLowerCase().includes(normalizedQuery) ||
+        formatMetricId(metric.id).toLowerCase().includes(normalizedQuery) ||
+        metric.description.toLowerCase().includes(normalizedQuery) ||
+        vendorNames.includes(normalizedQuery)
+      );
+    });
+  }, [companyMetrics, query]);
+
   if (companyMetrics.length === 0) return null;
 
   return (
@@ -211,76 +223,133 @@ export function MetricDefinitionsSection({
         </p>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        {companyMetrics.map((metric) => {
-          const vendorNames = Array.from(
-            new Set(
-              metric.supportedBy
-                .map((support) => support.vendorName)
-                .filter((vendorName): vendorName is string => Boolean(vendorName)),
-            ),
-          );
-          return (
-            <article
-              key={metric.id}
-              className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
-            >
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {formatMetricId(metric.id)}
-                  </h3>
-                  <div className="mt-1 font-mono text-xs text-gray-400">{metric.id}</div>
-                  <p className="mt-1 text-sm leading-6 text-gray-600">{metric.description}</p>
-                </div>
-                <div className="text-sm text-gray-500">
-                  {metric.supportedBy.length} supported plan
-                  {metric.supportedBy.length === 1 ? "" : "s"}
-                </div>
-              </div>
+      <div className="mb-4 flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0 flex-1">
+          <label
+            htmlFor={`metric-search-${company.slug}`}
+            className="text-xs font-semibold uppercase tracking-wide text-gray-500"
+          >
+            Search company metrics
+          </label>
+          <input
+            id={`metric-search-${company.slug}`}
+            type="search"
+            value={query}
+            onChange={(event) => {
+              setQuery(event.target.value);
+            }}
+            placeholder="Search by metric name, id, description, or vendor label"
+            className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          />
+        </div>
+        <div className="text-sm text-gray-500">
+          {filteredMetrics.length} of {companyMetrics.length} metrics
+        </div>
+      </div>
 
-              {vendorNames.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {vendorNames.map((vendorName) => (
-                    <span
-                      key={`${metric.id}-${vendorName}`}
-                      className="rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700"
+      {filteredMetrics.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 px-4 py-8 text-center text-sm text-gray-500">
+          No company metrics match that search.
+        </div>
+      ) : (
+        <div className="grid gap-4 lg:grid-cols-2">
+          {filteredMetrics.map((metric) => {
+            const vendorNames = Array.from(
+              new Set(
+                metric.supportedBy
+                  .map((support) => support.vendorName)
+                  .filter((vendorName): vendorName is string => Boolean(vendorName)),
+              ),
+            );
+            return (
+              <article
+                key={metric.id}
+                className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
+              >
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <Link
+                      to="/metrics/$id"
+                      params={{ id: metric.id }}
+                      className="text-lg font-semibold text-gray-900 hover:text-blue-600"
                     >
-                      {vendorName}
-                    </span>
-                  ))}
+                      {formatMetricId(metric.id)}
+                    </Link>
+                    <div className="mt-1 font-mono text-xs text-gray-400">{metric.id}</div>
+                    <p className="mt-1 text-sm leading-6 text-gray-600">{metric.description}</p>
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {metric.supportedBy.length} supported plan
+                    {metric.supportedBy.length === 1 ? "" : "s"}
+                  </div>
                 </div>
-              )}
 
-              <div className="mt-4 space-y-2">
-                {metric.supportedBy.map((support) => {
-                  const plan = company.plans.find((entry) => entry.slug === support.planSlug);
-                  return (
-                    <div
-                      key={`${metric.id}-${support.companySlug}-${support.planSlug}`}
-                      className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2"
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <div className="text-sm font-medium text-gray-900">
-                          {plan?.name ?? support.planSlug}
-                        </div>
-                        {support.vendorName && (
-                          <div className="text-xs text-gray-500">
-                            Vendor label: {support.vendorName}
+                {vendorNames.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {vendorNames.map((vendorName) => (
+                      <span
+                        key={`${metric.id}-${vendorName}`}
+                        className="rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700"
+                      >
+                        {vendorName}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                <div className="mt-4 space-y-2">
+                  {metric.supportedBy.map((support) => {
+                    const plan = company.plans.find((entry) => entry.slug === support.planSlug);
+                    return (
+                      <div
+                        key={`${metric.id}-${support.companySlug}-${support.planSlug}`}
+                        className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div className="text-sm font-medium text-gray-900">
+                            {plan?.name ?? support.planSlug}
                           </div>
+                          {support.vendorName && (
+                            <div className="text-xs text-gray-500">
+                              Vendor label: {support.vendorName}
+                            </div>
+                          )}
+                        </div>
+                        {support.caveats && (
+                          <p className="mt-1 text-sm leading-6 text-gray-600">{support.caveats}</p>
                         )}
                       </div>
-                      {support.caveats && (
-                        <p className="mt-1 text-sm leading-6 text-gray-600">{support.caveats}</p>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </article>
-          );
-        })}
-      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="mt-4 border-t border-gray-100 pt-3">
+                  <Link
+                    to="/metrics/$id"
+                    params={{ id: metric.id }}
+                    className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:underline"
+                  >
+                    View metric page
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="2"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                      />
+                    </svg>
+                  </Link>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }
