@@ -1,6 +1,7 @@
 import type { CompanyDesignProps } from "./company-design-props";
 import {
   PlansSection,
+  MetricDefinitionsSection,
   ScreenshotsSection,
   VideosSection,
   RatingsSection,
@@ -21,6 +22,7 @@ export function TwoColumnLayout({
       {/* Left column: Plans + Media */}
       <div className="lg:col-span-3">
         <PlansSection company={company} onEditPlan={onEditPlan} onAddPlan={onAddPlan} />
+        <MetricDefinitionsSection company={company} onOpenMedia={onOpenMedia} />
         <ScreenshotsSection company={company} onOpenMedia={onOpenMedia} />
         <VideosSection company={company} onOpenMedia={onOpenMedia} />
       </div>

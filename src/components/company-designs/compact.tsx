@@ -3,6 +3,7 @@ import { REVIEW_SITE_PLATFORMS } from "@llm-tracker/shared";
 import type { CompanyDesignProps } from "./company-design-props";
 import {
   PlansSection,
+  MetricDefinitionsSection,
   ScreenshotsSection,
   VideosSection,
   RatingsSection,
@@ -28,6 +29,7 @@ export function CompactLayout({
 
   const sections: AccordionEntry[] = [
     { id: "plans", label: "Plans", count: company.plans.length },
+    { id: "metrics", label: "Metric Definitions", count: company.metricDefinitions.length },
     { id: "screenshots", label: "Screenshots", count: company.screenshots.length },
     { id: "videos", label: "Videos", count: company.videos.length },
     { id: "ratings", label: "Ratings", count: ratingsCount },
@@ -153,6 +155,8 @@ function AccordionContent({
           className=""
         />
       );
+    case "metrics":
+      return <MetricDefinitionsSection company={company} onOpenMedia={onOpenMedia} className="" />;
     case "screenshots":
       return <ScreenshotsSection company={company} onOpenMedia={onOpenMedia} className="" />;
     case "videos":

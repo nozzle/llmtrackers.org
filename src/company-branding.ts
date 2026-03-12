@@ -22,6 +22,10 @@ export const COMPANY_BRANDING: Record<string, CompanyBranding> = {
     logo: "/company-assets/conductor-logo.svg",
     favicon: "/company-assets/conductor-favicon.ico",
   },
+  accuranker: {
+    logo: "/company-assets/accuranker-logo.svg",
+    favicon: "/company-assets/accuranker-favicon.ico",
+  },
   demandsphere: {
     logo: "/company-assets/demandsphere-logo.png",
   },

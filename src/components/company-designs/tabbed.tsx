@@ -3,6 +3,7 @@ import { REVIEW_SITE_PLATFORMS } from "@llm-tracker/shared";
 import type { CompanyDesignProps } from "./company-design-props";
 import {
   PlansSection,
+  MetricDefinitionsSection,
   ScreenshotsSection,
   VideosSection,
   RatingsSection,
@@ -31,6 +32,9 @@ export function TabbedLayout({
 
   const tabs: TabDef[] = [
     { id: "plans", label: "Plans", count: company.plans.length },
+    ...(company.metricDefinitions.length > 0
+      ? [{ id: "metrics", label: "Metrics", count: company.metricDefinitions.length }]
+      : []),
     ...(mediaCount > 0 ? [{ id: "media", label: "Media", count: mediaCount }] : []),
     ...(ratingsCount > 0 ? [{ id: "reviews", label: "Reviews", count: ratingsCount }] : []),
     ...(socialCount > 0 ? [{ id: "social", label: "Social & Links", count: socialCount }] : []),
@@ -77,6 +81,10 @@ export function TabbedLayout({
       {/* Tab content */}
       {activeTab === "plans" && (
         <PlansSection company={company} onEditPlan={onEditPlan} onAddPlan={onAddPlan} />
+      )}
+
+      {activeTab === "metrics" && (
+        <MetricDefinitionsSection company={company} onOpenMedia={onOpenMedia} />
       )}
 
       {activeTab === "media" && (

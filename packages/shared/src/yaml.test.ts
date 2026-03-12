@@ -234,12 +234,26 @@ describe("yaml helpers", () => {
     const { company } = parseCompanyYaml(baseYaml);
 
     const yamlWithoutScreenshots = stringifyCompanyYaml(company);
+    expect(yamlWithoutScreenshots).not.toMatch(/\nmetricDefinitions:/);
     expect(yamlWithoutScreenshots).not.toMatch(/\nscreenshotSources:/);
     expect(yamlWithoutScreenshots).not.toMatch(/\nscreenshots:/);
     expect(yamlWithoutScreenshots).not.toMatch(/\nvideos:/);
 
     const yamlWithScreenshots = stringifyCompanyYaml({
       ...company,
+      metricDefinitions: [
+        {
+          slug: "visibility",
+          name: "Visibility",
+          summary: "How often the brand appears across tracked responses.",
+          description: "Aggregated across supported engines.",
+          aliases: ["presence"],
+          sourceUrls: ["https://example.com/help/visibility"],
+          screenshotIds: ["dashboard-overview"],
+          status: "live",
+          lastUpdated: "2026-03-11",
+        },
+      ],
       screenshotSources: [
         {
           url: "https://example.com/features",
@@ -283,11 +297,15 @@ describe("yaml helpers", () => {
       ],
     });
 
+    expect(yamlWithScreenshots).toMatch(/metricDefinitions:/);
     expect(yamlWithScreenshots).toMatch(/screenshotSources:/);
     expect(yamlWithScreenshots).toMatch(/screenshots:/);
     expect(yamlWithScreenshots).toMatch(/videos:/);
 
     const reparsed = parseCompanyYaml(yamlWithScreenshots);
+    expect(reparsed.company.metricDefinitions[0]?.aliases).toEqual(["presence"]);
+    expect(reparsed.company.metricDefinitions[0]?.screenshotIds).toEqual(["dashboard-overview"]);
+    expect(reparsed.company.metricDefinitions[0]?.lastUpdated).toBe("2026-03-11");
     expect(reparsed.company.screenshotSources[0]?.label).toBe("Features page");
     expect(reparsed.company.screenshots[0]?.assetPath).toBe(
       "/company-assets/test-company/screenshots/dashboard-overview.png",

@@ -30,6 +30,100 @@ plans:
       grok: false
       aiOverviews: true
       aiMode: true
+metricDefinitions:
+  - slug: presence
+    name: Presence
+    summary: Count or percentage of prompt responses that mention any of the tracked brand terms.
+    description: Calculated per response, so multiple appearances within one response are only counted once.
+    aliases:
+      - Current presence in responses
+    sourceUrls:
+      - https://help.getstat.com/ai-brand-visibility-open-beta
+      - https://getstat.com/blog/ai-search-measurement
+    screenshotIds:
+      - some-very-smart-people-love-stat
+    status: live
+    lastUpdated: 2026-03-04
+  - slug: depth
+    name: Depth
+    summary: Average position of the first brand mention within collected AI responses.
+    description: Lower values are better because they mean the brand appears earlier in the response.
+    aliases:
+      - Average depth
+      - Depth of first mention
+    sourceUrls:
+      - https://help.getstat.com/ai-brand-visibility-open-beta
+      - https://getstat.com/blog/ai-search-measurement
+    screenshotIds:
+      - some-very-smart-people-love-stat
+    status: live
+    lastUpdated: 2026-03-04
+  - slug: individual-brand-term-presence
+    name: Individual Brand Term Presence
+    summary: Shows which tracked brand terms appear most often across prompt responses.
+    description: Uses the same per-response counting logic as Presence, but broken out by individual brand term.
+    aliases: []
+    sourceUrls:
+      - https://help.getstat.com/ai-brand-visibility-open-beta
+    screenshotIds:
+      - some-very-smart-people-love-stat
+    status: live
+    lastUpdated: 2025-12-02
+  - slug: response-snippets
+    name: Response Snippets
+    summary: Prompt-table snippets that preview the text surrounding tracked brand mentions.
+    description: Announced as part of the upcoming prompt overview table for AI Brand Visibility.
+    aliases: []
+    sourceUrls:
+      - https://help.getstat.com/ai-brand-visibility-open-beta
+    screenshotIds:
+      - some-very-smart-people-love-stat
+    status: upcoming
+    lastUpdated: 2025-12-02
+  - slug: response-length
+    name: Response Length
+    summary: Planned prompt-level metric showing how long each tracked AI response is.
+    description: Listed as one of the prompt overview table metrics coming next in open beta.
+    aliases: []
+    sourceUrls:
+      - https://help.getstat.com/ai-brand-visibility-open-beta
+    screenshotIds:
+      - some-very-smart-people-love-stat
+    status: upcoming
+    lastUpdated: 2025-12-02
+  - slug: brand-term-mentions
+    name: Brand Term Mentions
+    summary: Planned prompt-level count of how many tracked brand terms appear in a response.
+    description: Separate from Presence because a single response can mention more than one tracked brand term.
+    aliases: []
+    sourceUrls:
+      - https://help.getstat.com/ai-brand-visibility-open-beta
+    screenshotIds:
+      - some-very-smart-people-love-stat
+    status: upcoming
+    lastUpdated: 2025-12-02
+  - slug: full-prompt-responses
+    name: Full Prompt Responses
+    summary: Planned full-response view with tracked brand mentions highlighted in context.
+    description: Gives teams the full generated output instead of only charted aggregates.
+    aliases: []
+    sourceUrls:
+      - https://help.getstat.com/ai-brand-visibility-open-beta
+    screenshotIds:
+      - some-very-smart-people-love-stat
+    status: upcoming
+    lastUpdated: 2025-12-02
+  - slug: historical-metric-history
+    name: Historical Data
+    summary: Planned historical reporting for the dashboard and upcoming prompt-level metrics.
+    description: Extends current daily tracking with longer-term metric history across AI responses.
+    aliases: []
+    sourceUrls:
+      - https://help.getstat.com/ai-brand-visibility-open-beta
+    screenshotIds:
+      - some-very-smart-people-love-stat
+    status: upcoming
+    lastUpdated: 2025-12-02
 reviewSites:
   trustradius:
     url: https://www.trustradius.com/products/stat-search-analytics/reviews

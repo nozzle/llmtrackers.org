@@ -2,6 +2,7 @@ import { Document, parseDocument } from "yaml";
 import { CompanySchema, PublishedReviewSchema } from "./schema.js";
 import type {
   Company,
+  MetricDefinition,
   CompanyScreenshot,
   CompanyScreenshotSource,
   CompanyVideo,
@@ -276,6 +277,7 @@ function mergeReviewSiteData(
 }
 
 function sortCompanyKeys(company: CompanyYamlValue): CompanyYamlValue {
+  const hasMetricDefinitions = company.metricDefinitions.length > 0;
   const hasReviewSites = Object.keys(company.reviewSites).length > 0;
   const hasScreenshotSources = company.screenshotSources.length > 0;
   const hasScreenshots = company.screenshots.length > 0;
@@ -288,6 +290,11 @@ function sortCompanyKeys(company: CompanyYamlValue): CompanyYamlValue {
     website: company.website,
     description: company.description,
     plans: company.plans.map(sortPlanKeys),
+    ...(hasMetricDefinitions
+      ? {
+          metricDefinitions: company.metricDefinitions.map(sortMetricDefinitionKeys),
+        }
+      : {}),
     ...(hasReviewSites ? { reviewSites: company.reviewSites } : {}),
     tweets: company.tweets,
     ...(company.pricingUrl !== undefined ? { pricingUrl: company.pricingUrl } : {}),
@@ -309,6 +316,20 @@ function sortCompanyKeys(company: CompanyYamlValue): CompanyYamlValue {
       : {}),
     ...(company.lastChecked !== undefined ? { lastChecked: company.lastChecked } : {}),
   } as CompanyYamlValue;
+}
+
+function sortMetricDefinitionKeys(metric: MetricDefinition): MetricDefinition {
+  return {
+    slug: metric.slug,
+    name: metric.name,
+    summary: metric.summary,
+    ...(metric.description ? { description: metric.description } : {}),
+    aliases: metric.aliases,
+    sourceUrls: metric.sourceUrls,
+    screenshotIds: metric.screenshotIds,
+    status: metric.status,
+    lastUpdated: metric.lastUpdated,
+  };
 }
 
 function sortScreenshotSourceKeys(source: CompanyScreenshotSource): CompanyScreenshotSource {

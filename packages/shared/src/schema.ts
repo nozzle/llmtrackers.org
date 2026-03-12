@@ -114,6 +114,20 @@ export const CompanyVideoSchema = z.object({
   description: z.string().min(1).optional(),
 });
 
+export const MetricDefinitionStatusSchema = z.enum(["live", "upcoming"]);
+
+export const MetricDefinitionSchema = z.object({
+  slug: z.string().min(1),
+  name: z.string().min(1),
+  summary: z.string().min(1),
+  description: z.string().min(1).optional(),
+  aliases: z.array(z.string().min(1)).default([]),
+  sourceUrls: z.array(z.url()).default([]),
+  screenshotIds: z.array(z.string().min(1)).default([]),
+  status: MetricDefinitionStatusSchema.default("live"),
+  lastUpdated: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+});
+
 // --- Tweet ---
 export const TweetSchema = z.object({
   author: z.string(),
@@ -180,6 +194,7 @@ export const CompanySchema = z.object({
   website: z.url(),
   description: z.string(),
   plans: z.array(PlanSchema).min(1),
+  metricDefinitions: z.array(MetricDefinitionSchema).default([]),
   reviewSites: ReviewSitesSchema.default({}),
   tweets: z.array(TweetSchema).default([]),
   pricingUrl: z.url().nullable().optional(),

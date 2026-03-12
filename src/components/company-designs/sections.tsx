@@ -175,6 +175,131 @@ function PlanCard({ plan, onEdit }: { plan: Plan; onEdit: (plan: Plan) => void }
 }
 
 // ---------------------------------------------------------------------------
+// Metric Definitions Section
+// ---------------------------------------------------------------------------
+
+export function MetricDefinitionsSection({
+  company,
+  onOpenMedia,
+  className,
+}: {
+  company: Company;
+  onOpenMedia: (overlay: { type: "screenshot" | "video"; index: number }) => void;
+  className?: string;
+}) {
+  if (company.metricDefinitions.length === 0) return null;
+
+  return (
+    <section className={className ?? "mb-12"}>
+      <div className="mb-4">
+        <h2 className="text-xl font-semibold text-gray-900">Metric Definitions</h2>
+        <p className="mt-1 text-sm text-gray-600">
+          How {company.name} defines and reports its AI visibility metrics, including upcoming
+          additions when they are documented publicly.
+        </p>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        {company.metricDefinitions.map((metric) => {
+          const screenshots = metric.screenshotIds
+            .map((screenshotId) => {
+              const index = company.screenshots.findIndex(
+                (screenshot) => screenshot.id === screenshotId,
+              );
+              if (index === -1) return null;
+              return {
+                index,
+                screenshot: company.screenshots[index],
+              };
+            })
+            .filter(
+              (entry): entry is { index: number; screenshot: Company["screenshots"][number] } =>
+                entry !== null,
+            );
+
+          return (
+            <article
+              key={metric.slug}
+              className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="text-lg font-semibold text-gray-900">{metric.name}</h3>
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                        metric.status === "upcoming"
+                          ? "bg-amber-100 text-amber-800"
+                          : "bg-emerald-100 text-emerald-800"
+                      }`}
+                    >
+                      {metric.status === "upcoming" ? "Upcoming" : "Live"}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-sm leading-6 text-gray-600">{metric.summary}</p>
+                </div>
+                <div className="text-sm text-gray-500">Last updated {metric.lastUpdated}</div>
+              </div>
+
+              {metric.description && (
+                <p className="mt-3 text-sm leading-6 text-gray-700">{metric.description}</p>
+              )}
+
+              {metric.aliases.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {metric.aliases.map((alias) => (
+                    <span
+                      key={`${metric.slug}-${alias}`}
+                      className="rounded-full border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-600"
+                    >
+                      {alias}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {(screenshots.length > 0 || metric.sourceUrls.length > 0) && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {screenshots.map(({ index, screenshot }) => (
+                    <button
+                      key={`${metric.slug}-${screenshot.id}`}
+                      type="button"
+                      onClick={() => {
+                        onOpenMedia({ type: "screenshot", index });
+                      }}
+                      className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-left text-xs font-medium text-gray-700 hover:bg-gray-100"
+                    >
+                      <img
+                        src={screenshot.assetPath}
+                        alt={screenshot.alt}
+                        loading="lazy"
+                        className="h-8 w-10 rounded object-cover"
+                      />
+                      <span>{screenshot.contextHeading ?? screenshot.alt}</span>
+                    </button>
+                  ))}
+                  {metric.sourceUrls.map((sourceUrl) => (
+                    <a
+                      key={`${metric.slug}-${sourceUrl}`}
+                      href={sourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center rounded-md border border-blue-200 bg-blue-50 px-2.5 py-1.5 text-xs font-medium text-blue-700 hover:bg-blue-100"
+                    >
+                      Source
+                    </a>
+                  ))}
+                </div>
+              )}
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Screenshots Section
 // ---------------------------------------------------------------------------
 

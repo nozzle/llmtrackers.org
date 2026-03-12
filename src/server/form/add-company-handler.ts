@@ -408,6 +408,7 @@ export async function handleAddCompany(
     website: newData.website,
     description: newData.description,
     plans,
+    metricDefinitions: [],
     reviewSites: {},
     tweets: [],
     ...(newData.pricingUrl ? { pricingUrl: newData.pricingUrl } : {}),

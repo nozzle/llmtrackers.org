@@ -1,0 +1,427 @@
+slug: accuranker
+name: AccuRanker
+group: AccuRanker
+website: https://www.accuranker.com/
+description: LLM prompt tracking inside AccuRanker with KPI, source, and competitor reporting.
+plans:
+  - name: Custom
+    slug: custom
+    price:
+      amount: null
+      currency: USD
+      period: monthly
+      note: null
+    includedLlmModels: 4
+    llmSupport:
+      chatgpt: true
+      gemini: false
+      perplexity: true
+      claude: false
+      llama: false
+      grok: false
+      aiOverviews: true
+      aiMode: true
+metricDefinitions:
+  - slug: prompts
+    name: Prompts
+    summary: Number of prompts currently tracked in AccuLLM.
+    description: Displayed as a dashboard KPI for the active filters and date range.
+    aliases: []
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/accullm/
+    screenshotIds:
+      - accullm-kpis-dashboard
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: visibility
+    name: Visibility
+    summary: Average visibility score based on how often the brand and domain are mentioned in prompt responses.
+    description: At the engine level visibility is binary, and aggregate views average that visibility across the selected engines.
+    aliases: []
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/accullm/
+      - https://www.accuranker.com/help/getting-started/llm-metrics-and-advanced-concepts/
+    screenshotIds:
+      - accullm-kpis-dashboard
+      - accullm-visibility-widget
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: sentiment
+    name: Sentiment
+    summary: Average sentiment score from 1 to 100 for how favorably the LLM talks about the brand.
+    description: AccuLLM analyzes the brand mention plus surrounding context and combines the relevant snippets into one prompt-level score.
+    aliases: []
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/accullm/
+      - https://www.accuranker.com/help/getting-started/llm-metrics-and-advanced-concepts/
+    screenshotIds:
+      - accullm-kpis-dashboard
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: rank
+    name: Rank
+    summary: Average rank based on how early the tracked brand is mentioned relative to defined competitors.
+    description: Only tracked competitors count toward ranking, and aggregate views average rank across engines unless an engine filter is applied.
+    aliases: []
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/accullm/
+      - https://www.accuranker.com/help/getting-started/llm-metrics-and-advanced-concepts/
+    screenshotIds:
+      - accullm-kpis-dashboard
+      - accullm-rank-widget
+      - accullm-ranking-distribution-widget
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: mentions
+    name: Mentions
+    summary: Total number of times the brand is mentioned across tracked prompt responses.
+    description: Multiple mentions can be recorded within a single prompt on a single engine.
+    aliases:
+      - Brand mentions
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/accullm/
+      - https://www.accuranker.com/help/getting-started/llm-metrics-and-advanced-concepts/
+    screenshotIds:
+      - accullm-kpis-dashboard
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: citations
+    name: Citations
+    summary: Total number of times the tracked domain is cited across prompt responses.
+    description: One prompt on one engine can contribute multiple citations if the domain is cited more than once.
+    aliases: []
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/accullm/
+      - https://www.accuranker.com/help/getting-started/llm-metrics-and-advanced-concepts/
+    screenshotIds:
+      - accullm-kpis-dashboard
+      - accullm-sources-table
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: share-of-citations
+    name: Share of Citations
+    summary: Percentage of all filtered citations owned by the tracked domain.
+    description: Designed for competitor comparison over time rather than raw citation totals alone.
+    aliases: []
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/accullm/
+    screenshotIds:
+      - accullm-share-of-citations-widget
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: share-of-brand-mentions
+    name: Share of Brand Mentions
+    summary: Percentage of all filtered brand mentions attributed to the tracked brand.
+    description: Shows how often the brand is mentioned relative to competitors inside the selected prompt set.
+    aliases: []
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/accullm/
+    screenshotIds:
+      - accullm-share-of-brand-mentions-widget
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: web-search-rate
+    name: Web Search Rate
+    summary: Percentage of prompt responses where the engine performs a web search.
+    description: A 50 percent web search rate means half of the tracked prompts used web results in their answers during the selected period.
+    aliases: []
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/accullm/
+    screenshotIds:
+      - accullm-web-search-rate-widget
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: top-proximity-score
+    name: Top Proximity Score
+    summary: Measures how early the first brand mention appears in a response, normalized by response length.
+    description: Earlier mentions receive higher scores because the first brand appearance happens closer to the top of the response.
+    aliases: []
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/accullm/
+    screenshotIds:
+      - accullm-top-proximity-score-widget
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: winners-and-losers
+    name: Winners and Losers
+    summary: Highlights prompts with the largest increases or decreases in average rank across LLM engines.
+    description: Intended to surface fast-moving prompt opportunities and regressions.
+    aliases:
+      - Top Winners and Losers
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/accullm/
+    screenshotIds:
+      - accullm-winners-and-losers-widget
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: ranking-distribution
+    name: Ranking Distribution
+    summary: Distribution of tracked ranks grouped into bands such as 1 to 2, 3 to 6, 7 to 10, 11 to 50, and not ranking.
+    description: Helps show how the overall quality of rankings changes over time, not just the average.
+    aliases: []
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/accullm/
+    screenshotIds:
+      - accullm-ranking-distribution-widget
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: sources
+    name: Sources
+    summary: Table of the domains cited most frequently in tracked responses.
+    description: Used to analyze which websites are most often referenced by the selected engines and prompts.
+    aliases: []
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/accullm/
+    screenshotIds:
+      - accullm-sources-table
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: source-landing-pages
+    name: Source Landing Pages
+    summary: Lists the landing page URLs most frequently cited in tracked LLM responses.
+    description: Also shows how many prompts cited each landing page so teams can identify the URLs earning the most AI citations.
+    aliases: []
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/accullm/
+    screenshotIds:
+      - accullm-source-landing-pages-table
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: top-brands
+    name: Top Brands
+    summary: Indicates which brand ranked first for each engine on a given prompt.
+    description: Clicking through exposes the top five ranked brands per engine for that prompt.
+    aliases: []
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/llm-metrics-and-advanced-concepts/
+    screenshotIds:
+      - accullm-prompt-view
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: top-sources
+    name: Top Sources
+    summary: Indicates which source was cited first for each engine on a given prompt.
+    description: The first cited source receives citation rank 1, and deeper views expose the top five cited sources per engine.
+    aliases: []
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/llm-metrics-and-advanced-concepts/
+    screenshotIds:
+      - accullm-prompt-view
+      - accullm-sources-table
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: source-count
+    name: Source Count
+    summary: Number of unique sources used across the prompt responses in the aggregated prompt row.
+    description: Engine-level counts do not necessarily sum to the aggregate because the same source can appear across multiple responses.
+    aliases: []
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/llm-metrics-and-advanced-concepts/
+    screenshotIds:
+      - accullm-prompt-view
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: brand-count
+    name: Brand Count
+    summary: Number of unique brands mentioned across the aggregated prompt responses.
+    description: Brand counts can differ from simple mention totals because repeated mentions of the same brand are deduplicated.
+    aliases: []
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/llm-metrics-and-advanced-concepts/
+    screenshotIds:
+      - accullm-prompt-view
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: average-citation-rank
+    name: Average Citation Rank
+    summary: Average position at which a source is cited across prompts, where lower values mean earlier citation.
+    description: This is source ranking, not brand ranking, and focuses strictly on citation order.
+    aliases: []
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/llm-metrics-and-advanced-concepts/
+    screenshotIds:
+      - accullm-sources-table
+    status: live
+    lastUpdated: 2026-03-05
+  - slug: cited-rate
+    name: Cited
+    summary: Percentage of prompts in which a source is cited at least once.
+    description: Calculated as unique prompts containing the source divided by the total number of prompts in scope.
+    aliases:
+      - Cited rate
+    sourceUrls:
+      - https://www.accuranker.com/help/getting-started/llm-metrics-and-advanced-concepts/
+    screenshotIds:
+      - accullm-sources-table
+    status: live
+    lastUpdated: 2026-03-05
+reviewSites: {}
+tweets: []
+pricingUrl: https://www.accuranker.com/pricing/
+featuresUrl: https://www.accuranker.com/features/accullm/
+screenshotSources:
+  - url: https://www.accuranker.com/help/getting-started/accullm/
+    type: help
+    label: AccuLLM help guide
+  - url: https://www.accuranker.com/help/getting-started/llm-metrics-and-advanced-concepts/
+    type: help
+    label: LLM metrics guide
+screenshots:
+  - id: accullm-kpis-dashboard
+    assetPath: /company-assets/accuranker/screenshots/accullm-kpis-dashboard.webp
+    sourcePageUrl: https://www.accuranker.com/help/getting-started/accullm/
+    sourceImageUrl: https://www.accuranker.com/opt-images/Screenshot_2026_01_12_at_09_36_03_1796f3330d.webp
+    sourceType: help
+    collectedAt: 2026-03-12T02:22:30.000Z
+    alt: AccuLLM KPI dashboard showing prompt, visibility, sentiment, rank, mention, and citation widgets.
+    kind: dashboard
+    contextHeading: KPIs
+    pageTitle: AccuLLM
+    tags:
+      - dashboard
+      - metrics
+  - id: accullm-visibility-widget
+    assetPath: /company-assets/accuranker/screenshots/accullm-visibility-widget.webp
+    sourcePageUrl: https://www.accuranker.com/help/getting-started/accullm/
+    sourceImageUrl: https://www.accuranker.com/opt-images/Screenshot_2025_09_23_at_12_56_03_d694cb8771.webp
+    sourceType: help
+    collectedAt: 2026-03-12T02:22:30.000Z
+    alt: AccuLLM visibility chart comparing brand visibility over time.
+    kind: chart
+    contextHeading: Visibility
+    pageTitle: AccuLLM
+    tags:
+      - visibility
+      - chart
+  - id: accullm-winners-and-losers-widget
+    assetPath: /company-assets/accuranker/screenshots/accullm-winners-and-losers-widget.webp
+    sourcePageUrl: https://www.accuranker.com/help/getting-started/accullm/
+    sourceImageUrl: https://www.accuranker.com/opt-images/Screenshot_2025_09_23_at_12_56_37_96a5c96ea3.webp
+    sourceType: help
+    collectedAt: 2026-03-12T02:22:30.000Z
+    alt: AccuLLM winners and losers widget showing rank change by prompt.
+    kind: table
+    contextHeading: Winners and losers
+    pageTitle: AccuLLM
+    tags:
+      - rank
+      - trends
+  - id: accullm-rank-widget
+    assetPath: /company-assets/accuranker/screenshots/accullm-rank-widget.webp
+    sourcePageUrl: https://www.accuranker.com/help/getting-started/accullm/
+    sourceImageUrl: https://www.accuranker.com/opt-images/Screenshot_2025_09_23_at_12_56_59_73dc780e3a.webp
+    sourceType: help
+    collectedAt: 2026-03-12T02:22:30.000Z
+    alt: AccuLLM rank chart comparing average rank over time.
+    kind: chart
+    contextHeading: Rank
+    pageTitle: AccuLLM
+    tags:
+      - rank
+      - chart
+  - id: accullm-ranking-distribution-widget
+    assetPath: /company-assets/accuranker/screenshots/accullm-ranking-distribution-widget.webp
+    sourcePageUrl: https://www.accuranker.com/help/getting-started/accullm/
+    sourceImageUrl: https://www.accuranker.com/opt-images/Screenshot_2025_09_23_at_12_57_10_2e8eaa1e00.webp
+    sourceType: help
+    collectedAt: 2026-03-12T02:22:30.000Z
+    alt: AccuLLM ranking distribution chart grouped by ranking bands.
+    kind: chart
+    contextHeading: Ranking distribution
+    pageTitle: AccuLLM
+    tags:
+      - rank
+      - distribution
+  - id: accullm-sources-table
+    assetPath: /company-assets/accuranker/screenshots/accullm-sources-table.webp
+    sourcePageUrl: https://www.accuranker.com/help/getting-started/accullm/
+    sourceImageUrl: https://www.accuranker.com/opt-images/Screenshot_2025_09_23_at_12_57_21_cbe1c85037.webp
+    sourceType: help
+    collectedAt: 2026-03-12T02:22:30.000Z
+    alt: AccuLLM sources table listing cited domains and related metrics.
+    kind: table
+    contextHeading: Sources
+    pageTitle: AccuLLM
+    tags:
+      - sources
+      - citations
+  - id: accullm-source-landing-pages-table
+    assetPath: /company-assets/accuranker/screenshots/accullm-source-landing-pages-table.webp
+    sourcePageUrl: https://www.accuranker.com/help/getting-started/accullm/
+    sourceImageUrl: https://www.accuranker.com/opt-images/Screenshot_2025_09_23_at_12_57_33_842a343424.webp
+    sourceType: help
+    collectedAt: 2026-03-12T02:22:30.000Z
+    alt: AccuLLM source landing pages table showing cited URLs and prompt counts.
+    kind: table
+    contextHeading: Source landing pages
+    pageTitle: AccuLLM
+    tags:
+      - sources
+      - landing-pages
+  - id: accullm-share-of-citations-widget
+    assetPath: /company-assets/accuranker/screenshots/accullm-share-of-citations-widget.webp
+    sourcePageUrl: https://www.accuranker.com/help/getting-started/accullm/
+    sourceImageUrl: https://www.accuranker.com/opt-images/Share_of_citations_widget_dd12232f28.webp
+    sourceType: help
+    collectedAt: 2026-03-12T02:22:30.000Z
+    alt: AccuLLM share of citations trend chart.
+    kind: chart
+    contextHeading: Share of citations
+    pageTitle: AccuLLM
+    tags:
+      - citations
+      - chart
+  - id: accullm-share-of-brand-mentions-widget
+    assetPath: /company-assets/accuranker/screenshots/accullm-share-of-brand-mentions-widget.webp
+    sourcePageUrl: https://www.accuranker.com/help/getting-started/accullm/
+    sourceImageUrl: https://www.accuranker.com/opt-images/Share_of_brand_mentions_widget_24266134a8.webp
+    sourceType: help
+    collectedAt: 2026-03-12T02:22:30.000Z
+    alt: AccuLLM share of brand mentions trend chart.
+    kind: chart
+    contextHeading: Share of brand mentions
+    pageTitle: AccuLLM
+    tags:
+      - mentions
+      - chart
+  - id: accullm-web-search-rate-widget
+    assetPath: /company-assets/accuranker/screenshots/accullm-web-search-rate-widget.webp
+    sourcePageUrl: https://www.accuranker.com/help/getting-started/accullm/
+    sourceImageUrl: https://www.accuranker.com/opt-images/Web_search_rate_widget_d74875f799.webp
+    sourceType: help
+    collectedAt: 2026-03-12T02:22:30.000Z
+    alt: AccuLLM web search rate chart.
+    kind: chart
+    contextHeading: Web search rate
+    pageTitle: AccuLLM
+    tags:
+      - web-search
+      - chart
+  - id: accullm-top-proximity-score-widget
+    assetPath: /company-assets/accuranker/screenshots/accullm-top-proximity-score-widget.webp
+    sourcePageUrl: https://www.accuranker.com/help/getting-started/accullm/
+    sourceImageUrl: https://www.accuranker.com/opt-images/Screenshot_2026_01_12_at_09_39_24_9527adb018.webp
+    sourceType: help
+    collectedAt: 2026-03-12T02:22:30.000Z
+    alt: AccuLLM top proximity score chart.
+    kind: chart
+    contextHeading: Top Proximity Score
+    pageTitle: AccuLLM
+    tags:
+      - proximity
+      - chart
+  - id: accullm-prompt-view
+    assetPath: /company-assets/accuranker/screenshots/accullm-prompt-view.webp
+    sourcePageUrl: https://www.accuranker.com/help/getting-started/accullm/
+    sourceImageUrl: https://www.accuranker.com/opt-images/Screenshot_2025_09_23_at_11_21_56_ef52adeb71.webp
+    sourceType: help
+    collectedAt: 2026-03-12T02:22:30.000Z
+    alt: AccuLLM prompt view with per-engine results and response snippets.
+    kind: table
+    contextHeading: Prompt view
+    pageTitle: AccuLLM
+    tags:
+      - prompts
+      - snippets
+videos: []
+lastChecked: 2026-03-12

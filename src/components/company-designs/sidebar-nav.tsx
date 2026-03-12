@@ -2,6 +2,7 @@ import { REVIEW_SITE_PLATFORMS } from "@llm-tracker/shared";
 import type { CompanyDesignProps } from "./company-design-props";
 import {
   PlansSection,
+  MetricDefinitionsSection,
   ScreenshotsSection,
   VideosSection,
   RatingsSection,
@@ -26,6 +27,9 @@ export function SidebarNavLayout({
 
   const navItems: NavEntry[] = [
     { id: "plans", label: "Plans" },
+    ...(company.metricDefinitions.length > 0
+      ? [{ id: "metrics", label: "Metric Definitions" }]
+      : []),
     ...(company.screenshots.length > 0 ? [{ id: "screenshots", label: "Screenshots" }] : []),
     ...(company.videos.length > 0 ? [{ id: "videos", label: "Videos" }] : []),
     ...(ratingsCount > 0 ? [{ id: "ratings", label: "Ratings" }] : []),
@@ -94,6 +98,14 @@ export function SidebarNavLayout({
                   <span className="font-medium text-gray-900">{company.screenshots.length}</span>
                 </div>
               )}
+              {company.metricDefinitions.length > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Metrics</span>
+                  <span className="font-medium text-gray-900">
+                    {company.metricDefinitions.length}
+                  </span>
+                </div>
+              )}
               {company.videos.length > 0 && (
                 <div className="flex justify-between">
                   <span className="text-gray-500">Videos</span>
@@ -153,6 +165,9 @@ export function SidebarNavLayout({
       <div>
         <div id="plans">
           <PlansSection company={company} onEditPlan={onEditPlan} onAddPlan={onAddPlan} />
+        </div>
+        <div id="metrics">
+          <MetricDefinitionsSection company={company} onOpenMedia={onOpenMedia} />
         </div>
         <div id="screenshots">
           <ScreenshotsSection company={company} onOpenMedia={onOpenMedia} />
