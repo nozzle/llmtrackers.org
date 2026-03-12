@@ -105,8 +105,8 @@ function ComparePage() {
 
   const planKeys = plansParam ? plansParam.split(",") : [];
   const plans = planKeys
-    .map((k) => getPlanByKey(k))
-    .filter((p): p is ComparisonPlan => p !== undefined);
+    .map((key: string) => getPlanByKey(key))
+    .filter((plan: ComparisonPlan | undefined): plan is ComparisonPlan => plan !== undefined);
 
   if (plans.length < 2) {
     return (
@@ -139,7 +139,7 @@ function ComparePage() {
               <th className="sticky left-0 z-10 bg-gray-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                 Feature
               </th>
-              {plans.map((plan) => {
+              {plans.map((plan: ComparisonPlan) => {
                 return (
                   <th
                     key={`${plan.companySlug}/${plan.slug}`}
@@ -169,7 +169,7 @@ function ComparePage() {
                 <td className="sticky left-0 z-10 bg-white px-4 py-3 text-sm font-medium text-gray-900 group-hover:bg-gray-50">
                   {row.label}
                 </td>
-                {plans.map((plan) => {
+                {plans.map((plan: ComparisonPlan) => {
                   const val = row.values(plan);
                   return (
                     <td key={`${plan.companySlug}/${plan.slug}`} className="px-4 py-3 text-sm">
@@ -196,15 +196,15 @@ function ComparePage() {
               <td className="sticky left-0 z-10 bg-white px-4 py-3 text-sm font-medium text-gray-900 group-hover:bg-gray-50">
                 Integrations
               </td>
-              {plans.map((plan) => (
+              {plans.map((plan: ComparisonPlan) => (
                 <td key={`${plan.companySlug}/${plan.slug}`} className="px-4 py-3 text-sm">
                   <div className="flex flex-wrap gap-1">
-                    {plan.integrations.map((int) => (
+                    {plan.integrations.map((integration: string) => (
                       <span
-                        key={int}
+                        key={integration}
                         className="rounded bg-blue-50 px-1.5 py-0.5 text-xs text-blue-700"
                       >
-                        {int}
+                        {integration}
                       </span>
                     ))}
                   </div>

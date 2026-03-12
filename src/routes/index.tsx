@@ -113,6 +113,19 @@ function parseCommaSeparated(value: string | undefined): string[] | undefined {
   return items.length > 0 ? items : undefined;
 }
 
+function isSortKey(value: string): value is NonNullable<HomeSearch["sort"]> {
+  return [
+    "name",
+    "g2",
+    "trustpilot",
+    "trustradius",
+    "capterra",
+    "price",
+    "costEfficiency",
+    "responses",
+  ].includes(value);
+}
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -224,7 +237,7 @@ const DESIGN_COMPONENTS: Record<
 function HomePage() {
   const allPlans = getAllPlansWithCompany();
   const companies = getAllCompanies();
-  const search = Route.useSearch();
+  const search: HomeSearch = Route.useSearch();
   const navigate = useNavigate();
 
   const [selectedPlans, setSelectedPlans] = useState<Set<string>>(new Set());
@@ -486,12 +499,14 @@ function HomePage() {
   }
 
   function toggleSort(column: string) {
+    if (!isSortKey(column)) return;
+
     if (sortBy === column) {
       const newDir = sortDir === "asc" ? "desc" : "asc";
       updateSearch({ dir: newDir });
     } else {
       updateSearch({
-        sort: column as HomeSearch["sort"],
+        sort: column,
         dir: undefined,
       });
     }

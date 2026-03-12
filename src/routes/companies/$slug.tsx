@@ -22,6 +22,10 @@ import { CompactLayout } from "~/components/company-designs/compact";
 import { TabbedLayout } from "~/components/company-designs/tabbed";
 import { SidebarNavLayout } from "~/components/company-designs/sidebar-nav";
 
+interface CompanySearch {
+  layout?: CompanyLayoutKey;
+}
+
 // ---------------------------------------------------------------------------
 // Layout renderer map
 // ---------------------------------------------------------------------------
@@ -126,7 +130,7 @@ function LayoutToggle({
 
 function CompanyPage() {
   const { slug } = Route.useParams();
-  const search = Route.useSearch();
+  const search: CompanySearch = Route.useSearch();
   const navigate = useNavigate();
 
   const company = getCompanyBySlug(slug);
